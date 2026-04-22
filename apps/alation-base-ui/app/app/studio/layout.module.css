@@ -1,0 +1,34 @@
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #00416b;
+  overflow: hidden;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.5rem;
+}
+
+.mainContainer {
+  display: flex;
+  flex: 1;
+}
+
+.main {
+  flex: 1;
+  background-color: white;
+  border-top-left-radius: 0.5rem;
+  overflow: hidden;
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+---
+title: Reasoning
+description: Displays AI chain-of-thought reasoning with collapsible sections and gradient text animation.
+---
+
+<PreviewBox>
+  <div className="space-y-4">
+    <Reasoning status="thinking">
+      <ReasoningTrigger />
+      <ReasoningContent>
+        First, I need to identify the key entities in the user's question. The query mentions "sales trends" and "Q3" — I'll cross-reference the uploaded report with the sales_data table to find relevant aggregates...
+      </ReasoningContent>
+    </Reasoning>
+    <Reasoning status="complete" duration={4} defaultOpen>
+      <ReasoningTrigger />
+      <ReasoningContent>
+        First, I need to identify the key entities in the user's question. The query mentions "sales trends" and "Q3" — I'll cross-reference the uploaded report with the sales_data table to find relevant aggregates. I should filter by date range and group by product category before summarizing.
+      </ReasoningContent>
+    </Reasoning>
+  </div>
+</PreviewBox>

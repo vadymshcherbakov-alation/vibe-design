@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "// targets": "to see all targets run: nx show project icons-neo --web",
+  "name": "icons-neo",
+  "projectType": "library",
+  "sourceRoot": "libs/icons-neo/src",
+  "tags": ["visibility:internal", "type:ui", "function:core"],
+  "targets": {}
+}

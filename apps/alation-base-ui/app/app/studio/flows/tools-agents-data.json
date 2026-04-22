@@ -1,0 +1,447 @@
+[
+  {
+    "id": "1",
+    "name": "analyze_catalog_question",
+    "type": "Tool",
+    "description": "Search over the entire Alation catalog to find data assets and objects. This is the main catalog search tool that allows you to find tables, schemas, columns, articles, glossary terms, and other catalog objects. You can filter results by object types and apply custom field filters to narrow down results.",
+    "inputParameters": [
+      {
+        "name": "search_term",
+        "type": "string",
+        "description": "Search term to filter data assets by name."
+      },
+      {
+        "name": "object_types",
+        "type": "string",
+        "description": "Optional list of object types to search over. Common types include: table, column, schema, article, glossary_term, datasource."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "results",
+        "type": "object",
+        "description": "Array of catalog objects matching the search criteria."
+      },
+      {
+        "name": "total_count",
+        "type": "number",
+        "description": "Total number of matching results found."
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "alation_context",
+    "type": "Tool",
+    "description": "Get context from Alation catalog.",
+    "inputParameters": [
+      {
+        "name": "context_id",
+        "type": "string",
+        "description": "The unique identifier for the context to retrieve."
+      },
+      {
+        "name": "include_metadata",
+        "type": "bool",
+        "description": "Whether to include metadata in the response."
+      },
+      {
+        "name": "depth",
+        "type": "number",
+        "description": "Depth level for context retrieval (1-5)."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "context_data",
+        "type": "object",
+        "description": "The context data retrieved from Alation."
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Query Flow Agent",
+    "type": "Agent",
+    "description": "An agent that helps with query flow operations and data processing.",
+    "inputParameters": [
+      {
+        "name": "query",
+        "type": "string",
+        "description": "The SQL query to execute."
+      },
+      {
+        "name": "timeout",
+        "type": "number",
+        "description": "Query timeout in seconds."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "query_result",
+        "type": "object",
+        "description": "The result set from the executed query."
+      },
+      {
+        "name": "execution_time",
+        "type": "number",
+        "description": "Query execution time in milliseconds."
+      },
+      {
+        "name": "success",
+        "type": "bool",
+        "description": "Whether the query executed successfully."
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "bulk_retrieval",
+    "type": "Tool",
+    "description": "Retrieve data in bulk from the catalog.",
+    "inputParameters": [
+      {
+        "name": "batch_size",
+        "type": "number",
+        "description": "Number of items to retrieve per batch."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "retrieved_items",
+        "type": "object",
+        "description": "Array of retrieved catalog items."
+      },
+      {
+        "name": "batch_count",
+        "type": "number",
+        "description": "Total number of batches processed."
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "get_data_sources",
+    "type": "Tool",
+    "description": "Get available data sources from the catalog.",
+    "inputParameters": [
+      {
+        "name": "filter_active",
+        "type": "bool",
+        "description": "Filter to show only active data sources."
+      },
+      {
+        "name": "source_type",
+        "type": "string",
+        "description": "Type of data source to filter (e.g., 'database', 'api', 'file')."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "data_sources",
+        "type": "object",
+        "description": "List of available data sources."
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "bi_report_search",
+    "type": "Tool",
+    "description": "Search for BI reports in the catalog.",
+    "inputParameters": [
+      {
+        "name": "search_query",
+        "type": "string",
+        "description": "Search query to find BI reports."
+      },
+      {
+        "name": "limit",
+        "type": "number",
+        "description": "Maximum number of results to return."
+      },
+      {
+        "name": "include_drafts",
+        "type": "bool",
+        "description": "Whether to include draft reports in results."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "reports",
+        "type": "object",
+        "description": "Array of matching BI reports."
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "name": "get_signature_creation_instructions",
+    "type": "Tool",
+    "description": "Get instructions for creating signatures.",
+    "inputParameters": [
+      {
+        "name": "signature_type",
+        "type": "string",
+        "description": "Type of signature to create instructions for."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "instructions",
+        "type": "string",
+        "description": "Step-by-step instructions for creating the signature."
+      },
+      {
+        "name": "example",
+        "type": "object",
+        "description": "Example signature structure."
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "name": "search_catalog",
+    "type": "Tool",
+    "description": "Search the catalog for various objects.",
+    "inputParameters": [
+      {
+        "name": "query",
+        "type": "string",
+        "description": "Search query string."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "matches",
+        "type": "object",
+        "description": "Catalog objects matching the search query."
+      },
+      {
+        "name": "match_count",
+        "type": "number",
+        "description": "Number of matches found."
+      },
+      {
+        "name": "has_more",
+        "type": "bool",
+        "description": "Whether there are more results available."
+      }
+    ]
+  },
+  {
+    "id": "9",
+    "name": "search_filter_fields",
+    "type": "Tool",
+    "description": "Search and filter fields in the catalog.",
+    "inputParameters": [
+      {
+        "name": "field_name",
+        "type": "string",
+        "description": "Name of the field to search for."
+      },
+      {
+        "name": "field_type",
+        "type": "string",
+        "description": "Type of field to filter by."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "fields",
+        "type": "object",
+        "description": "List of matching fields."
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "search_filter_values",
+    "type": "Tool",
+    "description": "Search and filter values in the catalog.",
+    "inputParameters": [
+      {
+        "name": "value_pattern",
+        "type": "string",
+        "description": "Pattern to match values against."
+      },
+      {
+        "name": "case_sensitive",
+        "type": "bool",
+        "description": "Whether the search should be case sensitive."
+      },
+      {
+        "name": "max_results",
+        "type": "number",
+        "description": "Maximum number of results to return."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "values",
+        "type": "object",
+        "description": "Array of matching values."
+      },
+      {
+        "name": "result_count",
+        "type": "number",
+        "description": "Number of values found."
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "name": "Data Validation Agent",
+    "type": "Agent",
+    "description": "An intelligent agent that validates data quality and integrity across multiple sources.",
+    "inputParameters": [
+      {
+        "name": "data_source",
+        "type": "string",
+        "description": "Identifier of the data source to validate."
+      },
+      {
+        "name": "validation_rules",
+        "type": "object",
+        "description": "Set of validation rules to apply."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "validation_report",
+        "type": "object",
+        "description": "Detailed validation report with findings."
+      },
+      {
+        "name": "is_valid",
+        "type": "bool",
+        "description": "Overall validation status."
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "name": "ETL Processing Agent",
+    "type": "Agent",
+    "description": "Agent that orchestrates Extract, Transform, Load operations for data pipelines.",
+    "inputParameters": [
+      {
+        "name": "source_config",
+        "type": "object",
+        "description": "Configuration for the data source."
+      },
+      {
+        "name": "transform_rules",
+        "type": "object",
+        "description": "Transformation rules to apply."
+      },
+      {
+        "name": "target_config",
+        "type": "object",
+        "description": "Configuration for the target destination."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "processing_stats",
+        "type": "object",
+        "description": "Statistics about the ETL processing."
+      },
+      {
+        "name": "records_processed",
+        "type": "number",
+        "description": "Total number of records processed."
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "description": "Status of the ETL operation."
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "name": "calculate_metrics",
+    "type": "Tool",
+    "description": "Calculate various metrics from data sets.",
+    "inputParameters": [
+      {
+        "name": "metric_type",
+        "type": "string",
+        "description": "Type of metric to calculate."
+      },
+      {
+        "name": "data_points",
+        "type": "object",
+        "description": "Array of data points to process."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "metric_value",
+        "type": "number",
+        "description": "Calculated metric value."
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "name": "format_output",
+    "type": "Tool",
+    "description": "Format output data according to specified template.",
+    "inputParameters": [
+      {
+        "name": "template",
+        "type": "string",
+        "description": "Format template to apply."
+      },
+      {
+        "name": "data",
+        "type": "object",
+        "description": "Data to format."
+      },
+      {
+        "name": "pretty_print",
+        "type": "bool",
+        "description": "Whether to pretty print the output."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "formatted_output",
+        "type": "string",
+        "description": "Formatted output string."
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "name": "Notification Agent",
+    "type": "Agent",
+    "description": "Agent that handles notifications and alerts based on configured triggers.",
+    "inputParameters": [
+      {
+        "name": "notification_type",
+        "type": "string",
+        "description": "Type of notification to send."
+      },
+      {
+        "name": "recipients",
+        "type": "object",
+        "description": "List of notification recipients."
+      }
+    ],
+    "outputParameters": [
+      {
+        "name": "notification_id",
+        "type": "string",
+        "description": "Unique identifier for the sent notification."
+      },
+      {
+        "name": "delivery_status",
+        "type": "bool",
+        "description": "Whether the notification was delivered successfully."
+      }
+    ]
+  }
+]

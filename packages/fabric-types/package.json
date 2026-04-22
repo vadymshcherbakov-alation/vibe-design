@@ -1,0 +1,32 @@
+{
+  "name": "@alation/fabric-types",
+  "version": "10.1096.6",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "devDependencies": {
+    "@types/react": "^19.0.0"
+  },
+  "dependencies": {
+    "@mui/material": "^7.3.4",
+    "@mui/system": "^7.3.4",
+    "csstype": "3.2.3",
+    "react": "17.x || 18.x || 19.x"
+  },
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "url": "ssh://git@github.com:alation/alation-ui.git"
+  }
+}

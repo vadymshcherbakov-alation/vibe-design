@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "// targets": "to see all targets run: nx show project fabric-types --web",
+  "name": "fabric-types",
+  "projectType": "library",
+  "sourceRoot": "libs/fabric-types/src",
+  "tags": ["visibility:internal", "type:ui", "function:core"],
+  "targets": {}
+}

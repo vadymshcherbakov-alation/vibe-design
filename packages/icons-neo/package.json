@@ -1,0 +1,26 @@
+{
+  "name": "@alation/icons-neo",
+  "version": "10.1096.6",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@mui/icons-material": "^7.3.4"
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "url": "ssh://git@github.com:alation/alation-ui.git"
+  }
+}

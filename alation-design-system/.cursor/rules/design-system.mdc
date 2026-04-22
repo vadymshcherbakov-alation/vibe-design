@@ -1,0 +1,34 @@
+---
+description: Alation design system — checklist, components, foundations, and patterns for every UI request
+alwaysApply: true
+---
+
+# Alation Design System
+
+You are working in a project that uses the Alation design system. All canonical rules live in the `alation-design` Claude skill at `skills/alation-design/`. `SKILL.md` is a pure redirection file — it tells you which reference file to open for which intent. Every UI request must consult it.
+
+## IMPORTANT: Run the checklist on every UI request
+
+Before generating any UI (code, markup, design), follow the pre-flight steps in the skill's `design-checklist.md`. After generating, run the post-flight verification and include the reporting summary in your response.
+
+@skills/alation-design/design-checklist.md
+
+## Skill entry (redirection table)
+
+@skills/alation-design/SKILL.md
+
+## Lookup rules
+
+- Foundations → `skills/alation-design/references/foundations/`
+- Base components → `skills/alation-design/references/components/base/`
+- Composite components → `skills/alation-design/references/components/composite/`
+- Patterns → `skills/alation-design/references/patterns/` (Phase II)
+- Page templates → `skills/alation-design/references/page-templates/` (Phase II)
+
+IMPORTANT: Do not invent components, tokens, or patterns that are not documented in `references/`. If something is missing, flag it in the output summary under `References missing:` and stop — do not improvise.
+
+## Usage tracking
+
+IMPORTANT: After every UI generation, append one JSONL entry to `.design-usage.jsonl` at the consumer project root. Spec in the file below.
+
+@skills/alation-design/references/_usage-tracking.md

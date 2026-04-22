@@ -1,0 +1,1902 @@
+[
+  {
+    "id": "1",
+    "name": "Data Quality Validation Flow",
+    "description": "Validates data quality across multiple sources",
+    "steps": 45,
+    "scheduled": {
+      "total": 12,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "AB",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "2",
+    "name": "Customer Onboarding Automation",
+    "description": "Automates customer onboarding process",
+    "steps": 28,
+    "scheduled": {
+      "total": 8,
+      "active": 8
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 14, 2025",
+    "creator": {
+      "initials": "CD",
+      "color": "#2e7d32"
+    }
+  },
+  {
+    "id": "3",
+    "name": "Invoice Processing Workflow",
+    "description": "Processes and validates invoices automatically",
+    "steps": 62,
+    "scheduled": {
+      "total": 24,
+      "active": 24
+    },
+    "lastRun": {
+      "status": "running",
+      "text": "Running"
+    },
+    "lastModified": "Dec 16, 2025",
+    "creator": {
+      "initials": "EF",
+      "color": "#ed6c02"
+    }
+  },
+  {
+    "id": "4",
+    "name": "Email Campaign Manager",
+    "description": "Manages and sends email campaigns",
+    "steps": 35,
+    "scheduled": {
+      "total": 6,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "failed",
+      "text": "Failed"
+    },
+    "lastModified": "Dec 16, 2025",
+    "creator": {
+      "initials": "GH",
+      "color": "#9c27b0"
+    }
+  },
+  {
+    "id": "5",
+    "name": "Inventory Sync Flow",
+    "description": "Synchronizes inventory across platforms",
+    "steps": 51,
+    "scheduled": {
+      "total": 4,
+      "active": 4
+    },
+    "lastRun": {
+      "status": "queue",
+      "text": "Queue"
+    },
+    "lastModified": "Dec 16, 2025",
+    "creator": {
+      "initials": "IJ",
+      "color": "#d32f2f"
+    }
+  },
+  {
+    "id": "6",
+    "name": "Report Generation Pipeline",
+    "description": "Generates weekly business reports",
+    "steps": 40,
+    "scheduled": {
+      "total": 7,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 11, 2025",
+    "creator": {
+      "initials": "KL",
+      "color": "#0288d1"
+    }
+  },
+  {
+    "id": "7",
+    "name": "User Authentication Flow",
+    "description": "Handles user authentication and authorization",
+    "steps": 22,
+    "scheduled": {
+      "total": 0,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 10, 2025",
+    "creator": {
+      "initials": "MN",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "8",
+    "name": "Data Migration Script",
+    "description": "Migrates data between systems",
+    "steps": 78,
+    "scheduled": {
+      "total": 1,
+      "active": 1
+    },
+    "lastRun": {
+      "status": "running",
+      "text": "Running"
+    },
+    "lastModified": "Dec 16, 2025",
+    "creator": {
+      "initials": "OP",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "9",
+    "name": "Order Fulfillment Process",
+    "description": "Processes and fulfills customer orders",
+    "steps": 55,
+    "scheduled": {
+      "total": 15,
+      "active": 15
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 9, 2025",
+    "creator": {
+      "initials": "QR",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "10",
+    "name": "Content Moderation Workflow",
+    "description": "Moderates user-generated content",
+    "steps": 33,
+    "scheduled": {
+      "total": 3,
+      "active": 1
+    },
+    "lastRun": {
+      "status": "failed",
+      "text": "Failed"
+    },
+    "lastModified": "Dec 16, 2025",
+    "creator": {
+      "initials": "ST",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "11",
+    "name": "Payment Processing Flow",
+    "description": "Processes payment transactions",
+    "steps": 47,
+    "scheduled": {
+      "total": 20,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 7, 2025",
+    "creator": {
+      "initials": "UV",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "12",
+    "name": "Notification Service",
+    "description": "Sends notifications to users",
+    "steps": 19,
+    "scheduled": {
+      "total": 5,
+      "active": 5
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 6, 2025",
+    "creator": {
+      "initials": "WX",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "13",
+    "name": "Analytics Data Pipeline",
+    "description": "Processes analytics data",
+    "steps": 64,
+    "scheduled": {
+      "total": 10,
+      "active": 5
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 5, 2025",
+    "creator": {
+      "initials": "YZ",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "14",
+    "name": "Backup Automation Flow",
+    "description": "Automates system backups",
+    "steps": 26,
+    "scheduled": {
+      "total": 2,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "AA",
+      "color": "#388e3c"
+    }
+  },
+  {
+    "id": "15",
+    "name": "Customer Support Ticket Flow",
+    "description": "Routes and processes support tickets",
+    "steps": 38,
+    "scheduled": {
+      "total": 9,
+      "active": 9
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 4, 2025",
+    "creator": {
+      "initials": "BB",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "16",
+    "name": "Product Catalog Sync",
+    "description": "Synchronizes product catalog data",
+    "steps": 52,
+    "scheduled": {
+      "total": 6,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 3, 2025",
+    "creator": {
+      "initials": "CC",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "17",
+    "name": "Document Processing Workflow",
+    "description": "Processes and extracts data from documents",
+    "steps": 71,
+    "scheduled": {
+      "total": 11,
+      "active": 11
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 2, 2025",
+    "creator": {
+      "initials": "DD",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "18",
+    "name": "API Integration Flow",
+    "description": "Integrates with external APIs",
+    "steps": 43,
+    "scheduled": {
+      "total": 8,
+      "active": 8
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 1, 2025",
+    "creator": {
+      "initials": "EE",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "19",
+    "name": "User Registration Process",
+    "description": "Handles new user registrations",
+    "steps": 29,
+    "scheduled": {
+      "total": 4,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 30, 2025",
+    "creator": {
+      "initials": "FF",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "20",
+    "name": "Data Export Pipeline",
+    "description": "Exports data to various formats",
+    "steps": 36,
+    "scheduled": {
+      "total": 3,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "GG",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "21",
+    "name": "Scheduled Report Generator",
+    "description": "Generates scheduled reports automatically",
+    "steps": 58,
+    "scheduled": {
+      "total": 14,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 29, 2025",
+    "creator": {
+      "initials": "HH",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "22",
+    "name": "Compliance Check Flow",
+    "description": "Checks compliance with regulations",
+    "steps": 41,
+    "scheduled": {
+      "total": 7,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 28, 2025",
+    "creator": {
+      "initials": "II",
+      "color": "#2e7d32"
+    }
+  },
+  {
+    "id": "23",
+    "name": "Lead Scoring Automation",
+    "description": "Scores and ranks sales leads",
+    "steps": 34,
+    "scheduled": {
+      "total": 5,
+      "active": 5
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 27, 2025",
+    "creator": {
+      "initials": "JJ",
+      "color": "#ed6c02"
+    }
+  },
+  {
+    "id": "24",
+    "name": "Database Cleanup Task",
+    "description": "Cleans up old database records",
+    "steps": 24,
+    "scheduled": {
+      "total": 1,
+      "active": 1
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 26, 2025",
+    "creator": {
+      "initials": "KK",
+      "color": "#9c27b0"
+    }
+  },
+  {
+    "id": "25",
+    "name": "Multi-Channel Marketing Flow",
+    "description": "Coordinates marketing across channels",
+    "steps": 67,
+    "scheduled": {
+      "total": 12,
+      "active": 6
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 25, 2025",
+    "creator": {
+      "initials": "LL",
+      "color": "#d32f2f"
+    }
+  },
+  {
+    "id": "26",
+    "name": "File Upload Processor",
+    "description": "Processes uploaded files",
+    "steps": 31,
+    "scheduled": {
+      "total": 6,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 24, 2025",
+    "creator": {
+      "initials": "MM",
+      "color": "#0288d1"
+    }
+  },
+  {
+    "id": "27",
+    "name": "Customer Feedback Analyzer",
+    "description": "Analyzes customer feedback",
+    "steps": 49,
+    "scheduled": {
+      "total": 8,
+      "active": 8
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "NN",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "28",
+    "name": "Price Update Workflow",
+    "description": "Updates product prices",
+    "steps": 27,
+    "scheduled": {
+      "total": 4,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 23, 2025",
+    "creator": {
+      "initials": "OO",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "29",
+    "name": "Security Audit Flow",
+    "description": "Performs security audits",
+    "steps": 56,
+    "scheduled": {
+      "total": 2,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 22, 2025",
+    "creator": {
+      "initials": "PP",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "30",
+    "name": "Inventory Alert System",
+    "description": "Sends inventory alerts",
+    "steps": 20,
+    "scheduled": {
+      "total": 3,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 21, 2025",
+    "creator": {
+      "initials": "QQ",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "31",
+    "name": "Data Transformation Pipeline",
+    "description": "Transforms data between formats",
+    "steps": 63,
+    "scheduled": {
+      "total": 10,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 20, 2025",
+    "creator": {
+      "initials": "RR",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "32",
+    "name": "User Activity Tracker",
+    "description": "Tracks user activities",
+    "steps": 32,
+    "scheduled": {
+      "total": 5,
+      "active": 5
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 19, 2025",
+    "creator": {
+      "initials": "SS",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "33",
+    "name": "Order Status Update Flow",
+    "description": "Updates order statuses",
+    "steps": 25,
+    "scheduled": {
+      "total": 7,
+      "active": 7
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 18, 2025",
+    "creator": {
+      "initials": "TT",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "34",
+    "name": "Content Publishing Workflow",
+    "description": "Publishes content to platforms",
+    "steps": 44,
+    "scheduled": {
+      "total": 9,
+      "active": 4
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "UU",
+      "color": "#388e3c"
+    }
+  },
+  {
+    "id": "35",
+    "name": "Payment Refund Process",
+    "description": "Processes payment refunds",
+    "steps": 37,
+    "scheduled": {
+      "total": 6,
+      "active": 6
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 17, 2025",
+    "creator": {
+      "initials": "VV",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "36",
+    "name": "Customer Segmentation Flow",
+    "description": "Segments customers by behavior",
+    "steps": 50,
+    "scheduled": {
+      "total": 11,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 16, 2025",
+    "creator": {
+      "initials": "WW",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "37",
+    "name": "Log Aggregation Pipeline",
+    "description": "Aggregates logs from multiple sources",
+    "steps": 39,
+    "scheduled": {
+      "total": 4,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 15, 2025",
+    "creator": {
+      "initials": "XX",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "38",
+    "name": "Product Recommendation Engine",
+    "description": "Generates product recommendations",
+    "steps": 65,
+    "scheduled": {
+      "total": 13,
+      "active": 13
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 14, 2025",
+    "creator": {
+      "initials": "YY",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "39",
+    "name": "Account Verification Flow",
+    "description": "Verifies user accounts",
+    "steps": 23,
+    "scheduled": {
+      "total": 2,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 13, 2025",
+    "creator": {
+      "initials": "ZZ",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "40",
+    "name": "Billing Cycle Automation",
+    "description": "Automates billing cycles",
+    "steps": 48,
+    "scheduled": {
+      "total": 8,
+      "active": 4
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 12, 2025",
+    "creator": {
+      "initials": "A1",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "41",
+    "name": "Data Validation Service",
+    "description": "Validates data integrity",
+    "steps": 42,
+    "scheduled": {
+      "total": 5,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "B1",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "42",
+    "name": "Social Media Integration",
+    "description": "Integrates with social media platforms",
+    "steps": 54,
+    "scheduled": {
+      "total": 7,
+      "active": 7
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 11, 2025",
+    "creator": {
+      "initials": "C1",
+      "color": "#2e7d32"
+    }
+  },
+  {
+    "id": "43",
+    "name": "Email Template Renderer",
+    "description": "Renders email templates",
+    "steps": 30,
+    "scheduled": {
+      "total": 3,
+      "active": 1
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 10, 2025",
+    "creator": {
+      "initials": "D1",
+      "color": "#ed6c02"
+    }
+  },
+  {
+    "id": "44",
+    "name": "Performance Monitoring Flow",
+    "description": "Monitors system performance",
+    "steps": 46,
+    "scheduled": {
+      "total": 6,
+      "active": 6
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 9, 2025",
+    "creator": {
+      "initials": "E1",
+      "color": "#9c27b0"
+    }
+  },
+  {
+    "id": "45",
+    "name": "Customer Retention Campaign",
+    "description": "Manages retention campaigns",
+    "steps": 59,
+    "scheduled": {
+      "total": 9,
+      "active": 9
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 8, 2025",
+    "creator": {
+      "initials": "F1",
+      "color": "#d32f2f"
+    }
+  },
+  {
+    "id": "46",
+    "name": "API Rate Limiter",
+    "description": "Manages API rate limiting",
+    "steps": 21,
+    "scheduled": {
+      "total": 1,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 7, 2025",
+    "creator": {
+      "initials": "G1",
+      "color": "#0288d1"
+    }
+  },
+  {
+    "id": "47",
+    "name": "Data Archival Process",
+    "description": "Archives old data",
+    "steps": 35,
+    "scheduled": {
+      "total": 4,
+      "active": 4
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 6, 2025",
+    "creator": {
+      "initials": "H1",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "48",
+    "name": "Workflow Orchestrator",
+    "description": "Orchestrates multiple workflows",
+    "steps": 72,
+    "scheduled": {
+      "total": 15,
+      "active": 15
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "I1",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "49",
+    "name": "Customer Survey Flow",
+    "description": "Manages customer surveys",
+    "steps": 28,
+    "scheduled": {
+      "total": 5,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 5, 2025",
+    "creator": {
+      "initials": "J1",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "50",
+    "name": "Real-time Sync Service",
+    "description": "Syncs data in real-time",
+    "steps": 53,
+    "scheduled": {
+      "total": 8,
+      "active": 8
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 4, 2025",
+    "creator": {
+      "initials": "K1",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "51",
+    "name": "Fraud Detection Pipeline",
+    "description": "Detects fraudulent activities",
+    "steps": 66,
+    "scheduled": {
+      "total": 12,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 3, 2025",
+    "creator": {
+      "initials": "L1",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "52",
+    "name": "Content Delivery Network Sync",
+    "description": "Syncs content to CDN",
+    "steps": 40,
+    "scheduled": {
+      "total": 6,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 2, 2025",
+    "creator": {
+      "initials": "M1",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "53",
+    "name": "User Preference Manager",
+    "description": "Manages user preferences",
+    "steps": 26,
+    "scheduled": {
+      "total": 3,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Nov 1, 2025",
+    "creator": {
+      "initials": "N1",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "54",
+    "name": "Transaction Logger",
+    "description": "Logs all transactions",
+    "steps": 18,
+    "scheduled": {
+      "total": 2,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 31, 2025",
+    "creator": {
+      "initials": "O1",
+      "color": "#388e3c"
+    }
+  },
+  {
+    "id": "55",
+    "name": "Multi-Language Content Flow",
+    "description": "Manages multi-language content",
+    "steps": 57,
+    "scheduled": {
+      "total": 10,
+      "active": 5
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "P1",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "56",
+    "name": "Cache Invalidation Flow",
+    "description": "Invalidates cache entries",
+    "steps": 22,
+    "scheduled": {
+      "total": 4,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 30, 2025",
+    "creator": {
+      "initials": "Q1",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "57",
+    "name": "Customer Journey Tracker",
+    "description": "Tracks customer journeys",
+    "steps": 61,
+    "scheduled": {
+      "total": 11,
+      "active": 11
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 29, 2025",
+    "creator": {
+      "initials": "R1",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "58",
+    "name": "Data Encryption Service",
+    "description": "Encrypts sensitive data",
+    "steps": 33,
+    "scheduled": {
+      "total": 5,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 28, 2025",
+    "creator": {
+      "initials": "S1",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "59",
+    "name": "Subscription Management Flow",
+    "description": "Manages user subscriptions",
+    "steps": 47,
+    "scheduled": {
+      "total": 7,
+      "active": 7
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 27, 2025",
+    "creator": {
+      "initials": "T1",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "60",
+    "name": "Image Processing Pipeline",
+    "description": "Processes and optimizes images",
+    "steps": 44,
+    "scheduled": {
+      "total": 6,
+      "active": 6
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 26, 2025",
+    "creator": {
+      "initials": "U1",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "61",
+    "name": "A/B Testing Framework",
+    "description": "Manages A/B tests",
+    "steps": 50,
+    "scheduled": {
+      "total": 9,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 25, 2025",
+    "creator": {
+      "initials": "V1",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "62",
+    "name": "Error Handling Workflow",
+    "description": "Handles system errors",
+    "steps": 29,
+    "scheduled": {
+      "total": 3,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "W1",
+      "color": "#2e7d32"
+    }
+  },
+  {
+    "id": "63",
+    "name": "Data Warehouse ETL",
+    "description": "ETL process for data warehouse",
+    "steps": 75,
+    "scheduled": {
+      "total": 14,
+      "active": 14
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 24, 2025",
+    "creator": {
+      "initials": "X1",
+      "color": "#ed6c02"
+    }
+  },
+  {
+    "id": "64",
+    "name": "Customer Onboarding Email",
+    "description": "Sends onboarding emails",
+    "steps": 24,
+    "scheduled": {
+      "total": 4,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 23, 2025",
+    "creator": {
+      "initials": "Y1",
+      "color": "#9c27b0"
+    }
+  },
+  {
+    "id": "65",
+    "name": "API Gateway Router",
+    "description": "Routes API requests",
+    "steps": 38,
+    "scheduled": {
+      "total": 8,
+      "active": 8
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 22, 2025",
+    "creator": {
+      "initials": "Z1",
+      "color": "#d32f2f"
+    }
+  },
+  {
+    "id": "66",
+    "name": "Data Deduplication Flow",
+    "description": "Removes duplicate data",
+    "steps": 41,
+    "scheduled": {
+      "total": 5,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 21, 2025",
+    "creator": {
+      "initials": "A2",
+      "color": "#0288d1"
+    }
+  },
+  {
+    "id": "67",
+    "name": "Customer Lifetime Value Calculator",
+    "description": "Calculates customer lifetime value",
+    "steps": 55,
+    "scheduled": {
+      "total": 10,
+      "active": 5
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 20, 2025",
+    "creator": {
+      "initials": "B2",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "68",
+    "name": "Session Management Flow",
+    "description": "Manages user sessions",
+    "steps": 27,
+    "scheduled": {
+      "total": 2,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 19, 2025",
+    "creator": {
+      "initials": "C2",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "69",
+    "name": "Content Moderation Queue",
+    "description": "Queues content for moderation",
+    "steps": 36,
+    "scheduled": {
+      "total": 6,
+      "active": 6
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 18, 2025",
+    "creator": {
+      "initials": "D2",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "70",
+    "name": "Payment Gateway Integration",
+    "description": "Integrates with payment gateways",
+    "steps": 48,
+    "scheduled": {
+      "total": 9,
+      "active": 4
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "E2",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "71",
+    "name": "Data Anonymization Flow",
+    "description": "Anonymizes personal data",
+    "steps": 32,
+    "scheduled": {
+      "total": 4,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 17, 2025",
+    "creator": {
+      "initials": "F2",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "72",
+    "name": "Customer Churn Prediction",
+    "description": "Predicts customer churn",
+    "steps": 60,
+    "scheduled": {
+      "total": 11,
+      "active": 11
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 16, 2025",
+    "creator": {
+      "initials": "G2",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "73",
+    "name": "File Compression Service",
+    "description": "Compresses files",
+    "steps": 25,
+    "scheduled": {
+      "total": 3,
+      "active": 1
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 15, 2025",
+    "creator": {
+      "initials": "H2",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "74",
+    "name": "Multi-Factor Authentication",
+    "description": "Handles MFA requests",
+    "steps": 34,
+    "scheduled": {
+      "total": 5,
+      "active": 5
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 14, 2025",
+    "creator": {
+      "initials": "I2",
+      "color": "#388e3c"
+    }
+  },
+  {
+    "id": "75",
+    "name": "Data Retention Policy Enforcer",
+    "description": "Enforces data retention policies",
+    "steps": 39,
+    "scheduled": {
+      "total": 7,
+      "active": 7
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 13, 2025",
+    "creator": {
+      "initials": "J2",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "76",
+    "name": "Customer Support Bot Flow",
+    "description": "Manages support bot interactions",
+    "steps": 52,
+    "scheduled": {
+      "total": 8,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 12, 2025",
+    "creator": {
+      "initials": "K2",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "77",
+    "name": "Real-time Analytics Aggregator",
+    "description": "Aggregates real-time analytics",
+    "steps": 58,
+    "scheduled": {
+      "total": 12,
+      "active": 12
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "L2",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "78",
+    "name": "Content Version Control",
+    "description": "Manages content versions",
+    "steps": 31,
+    "scheduled": {
+      "total": 4,
+      "active": 4
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 11, 2025",
+    "creator": {
+      "initials": "M2",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "79",
+    "name": "Database Migration Script",
+    "description": "Migrates database schemas",
+    "steps": 69,
+    "scheduled": {
+      "total": 13,
+      "active": 6
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 10, 2025",
+    "creator": {
+      "initials": "N2",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "80",
+    "name": "Customer Reward System",
+    "description": "Manages customer rewards",
+    "steps": 43,
+    "scheduled": {
+      "total": 6,
+      "active": 6
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 9, 2025",
+    "creator": {
+      "initials": "O2",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "81",
+    "name": "API Response Cache",
+    "description": "Caches API responses",
+    "steps": 23,
+    "scheduled": {
+      "total": 2,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 8, 2025",
+    "creator": {
+      "initials": "P2",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "82",
+    "name": "Data Quality Metrics Collector",
+    "description": "Collects data quality metrics",
+    "steps": 46,
+    "scheduled": {
+      "total": 7,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 7, 2025",
+    "creator": {
+      "initials": "Q2",
+      "color": "#2e7d32"
+    }
+  },
+  {
+    "id": "83",
+    "name": "Customer Communication Hub",
+    "description": "Centralizes customer communications",
+    "steps": 54,
+    "scheduled": {
+      "total": 9,
+      "active": 9
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 6, 2025",
+    "creator": {
+      "initials": "R2",
+      "color": "#ed6c02"
+    }
+  },
+  {
+    "id": "84",
+    "name": "Log Rotation Service",
+    "description": "Rotates log files",
+    "steps": 20,
+    "scheduled": {
+      "total": 1,
+      "active": 1
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 5, 2025",
+    "creator": {
+      "initials": "S2",
+      "color": "#9c27b0"
+    }
+  },
+  {
+    "id": "85",
+    "name": "Product Review Aggregator",
+    "description": "Aggregates product reviews",
+    "steps": 37,
+    "scheduled": {
+      "total": 5,
+      "active": 2
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 4, 2025",
+    "creator": {
+      "initials": "T2",
+      "color": "#d32f2f"
+    }
+  },
+  {
+    "id": "86",
+    "name": "Data Synchronization Flow",
+    "description": "Synchronizes data across systems",
+    "steps": 56,
+    "scheduled": {
+      "total": 10,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "U2",
+      "color": "#0288d1"
+    }
+  },
+  {
+    "id": "87",
+    "name": "Customer Profile Builder",
+    "description": "Builds customer profiles",
+    "steps": 49,
+    "scheduled": {
+      "total": 8,
+      "active": 8
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 3, 2025",
+    "creator": {
+      "initials": "V2",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "88",
+    "name": "System Health Checker",
+    "description": "Checks system health",
+    "steps": 28,
+    "scheduled": {
+      "total": 3,
+      "active": 1
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 2, 2025",
+    "creator": {
+      "initials": "W2",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "89",
+    "name": "Data Export Scheduler",
+    "description": "Schedules data exports",
+    "steps": 33,
+    "scheduled": {
+      "total": 4,
+      "active": 4
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Oct 1, 2025",
+    "creator": {
+      "initials": "X2",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "90",
+    "name": "Customer Feedback Collector",
+    "description": "Collects customer feedback",
+    "steps": 30,
+    "scheduled": {
+      "total": 5,
+      "active": 5
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 30, 2025",
+    "creator": {
+      "initials": "Y2",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "91",
+    "name": "API Request Validator",
+    "description": "Validates API requests",
+    "steps": 26,
+    "scheduled": {
+      "total": 2,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 29, 2025",
+    "creator": {
+      "initials": "Z2",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "92",
+    "name": "Data Backup Scheduler",
+    "description": "Schedules data backups",
+    "steps": 35,
+    "scheduled": {
+      "total": 6,
+      "active": 6
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 28, 2025",
+    "creator": {
+      "initials": "A3",
+      "color": "#455a64"
+    }
+  },
+  {
+    "id": "93",
+    "name": "Customer Engagement Tracker",
+    "description": "Tracks customer engagement",
+    "steps": 51,
+    "scheduled": {
+      "total": 9,
+      "active": 9
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 27, 2025",
+    "creator": {
+      "initials": "B3",
+      "color": "#1976d2"
+    }
+  },
+  {
+    "id": "94",
+    "name": "Content Approval Workflow",
+    "description": "Manages content approvals",
+    "steps": 38,
+    "scheduled": {
+      "total": 7,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Dec 15, 2025",
+    "creator": {
+      "initials": "C3",
+      "color": "#388e3c"
+    }
+  },
+  {
+    "id": "95",
+    "name": "Data Privacy Compliance Check",
+    "description": "Checks privacy compliance",
+    "steps": 45,
+    "scheduled": {
+      "total": 8,
+      "active": 8
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 26, 2025",
+    "creator": {
+      "initials": "D3",
+      "color": "#f57c00"
+    }
+  },
+  {
+    "id": "96",
+    "name": "Customer Segmentation Engine",
+    "description": "Segments customers dynamically",
+    "steps": 59,
+    "scheduled": {
+      "total": 11,
+      "active": 0
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 25, 2025",
+    "creator": {
+      "initials": "E3",
+      "color": "#7b1fa2"
+    }
+  },
+  {
+    "id": "97",
+    "name": "File Upload Validator",
+    "description": "Validates uploaded files",
+    "steps": 27,
+    "scheduled": {
+      "total": 3,
+      "active": 1
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 24, 2025",
+    "creator": {
+      "initials": "F3",
+      "color": "#c2185b"
+    }
+  },
+  {
+    "id": "98",
+    "name": "Data Transformation Engine",
+    "description": "Transforms data formats",
+    "steps": 62,
+    "scheduled": {
+      "total": 10,
+      "active": 10
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 23, 2025",
+    "creator": {
+      "initials": "G3",
+      "color": "#00796b"
+    }
+  },
+  {
+    "id": "99",
+    "name": "Customer Onboarding Checklist",
+    "description": "Manages onboarding checklists",
+    "steps": 32,
+    "scheduled": {
+      "total": 4,
+      "active": 4
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 22, 2025",
+    "creator": {
+      "initials": "H3",
+      "color": "#5d4037"
+    }
+  },
+  {
+    "id": "100",
+    "name": "System Configuration Manager",
+    "description": "Manages system configurations",
+    "steps": 41,
+    "scheduled": {
+      "total": 6,
+      "active": 3
+    },
+    "lastRun": {
+      "status": "success",
+      "text": "Success"
+    },
+    "lastModified": "Sep 21, 2025",
+    "creator": {
+      "initials": "I3",
+      "color": "#455a64"
+    }
+  }
+]

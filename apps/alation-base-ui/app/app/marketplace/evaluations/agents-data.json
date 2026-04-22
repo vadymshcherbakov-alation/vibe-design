@@ -1,0 +1,122 @@
+[
+  {
+    "id": "agent-1",
+    "name": "Query Flow Agent",
+    "type": "Agent",
+    "description": "An agent that helps with query flow operations and data analysis."
+  },
+  {
+    "id": "agent-2",
+    "name": "Data Quality Agent",
+    "type": "Agent",
+    "description": "An agent specialized in data quality checks and validation."
+  },
+  {
+    "id": "agent-3",
+    "name": "Catalog Search Agent",
+    "type": "Agent",
+    "description": "An agent that helps search and navigate the data catalog."
+  },
+  {
+    "id": "agent-4",
+    "name": "SQL Analysis Agent",
+    "type": "Agent",
+    "description": "An agent that analyzes SQL queries and provides insights."
+  },
+  {
+    "id": "agent-5",
+    "name": "Metadata Agent",
+    "type": "Agent",
+    "description": "An agent that manages and enriches metadata across the catalog."
+  },
+  {
+    "id": "agent-6",
+    "name": "Data Lineage Agent",
+    "type": "Agent",
+    "description": "An agent that tracks and visualizes data lineage across systems."
+  },
+  {
+    "id": "agent-7",
+    "name": "Schema Discovery Agent",
+    "type": "Agent",
+    "description": "An agent that automatically discovers and documents database schemas."
+  },
+  {
+    "id": "agent-8",
+    "name": "Compliance Agent",
+    "type": "Agent",
+    "description": "An agent that ensures data compliance with regulations and policies."
+  },
+  {
+    "id": "agent-9",
+    "name": "Performance Monitor Agent",
+    "type": "Agent",
+    "description": "An agent that monitors query performance and suggests optimizations."
+  },
+  {
+    "id": "agent-10",
+    "name": "Data Profiling Agent",
+    "type": "Agent",
+    "description": "An agent that profiles data to understand patterns and distributions."
+  },
+  {
+    "id": "agent-11",
+    "name": "Access Control Agent",
+    "type": "Agent",
+    "description": "An agent that manages data access permissions and security."
+  },
+  {
+    "id": "agent-12",
+    "name": "Documentation Agent",
+    "type": "Agent",
+    "description": "An agent that automatically generates and maintains data documentation."
+  },
+  {
+    "id": "agent-13",
+    "name": "Anomaly Detection Agent",
+    "type": "Agent",
+    "description": "An agent that detects anomalies and outliers in data patterns."
+  },
+  {
+    "id": "agent-14",
+    "name": "ETL Orchestration Agent",
+    "type": "Agent",
+    "description": "An agent that orchestrates ETL processes and data pipelines."
+  },
+  {
+    "id": "agent-15",
+    "name": "Data Validation Agent",
+    "type": "Agent",
+    "description": "An agent that validates data integrity and business rules."
+  },
+  {
+    "id": "agent-16",
+    "name": "Report Generation Agent",
+    "type": "Agent",
+    "description": "An agent that generates automated reports and dashboards."
+  },
+  {
+    "id": "agent-17",
+    "name": "Data Classification Agent",
+    "type": "Agent",
+    "description": "An agent that classifies and tags data based on content and context."
+  },
+  {
+    "id": "agent-18",
+    "name": "Backup Management Agent",
+    "type": "Agent",
+    "description": "An agent that manages data backups and recovery procedures."
+  },
+  {
+    "id": "agent-19",
+    "name": "Cost Optimization Agent",
+    "type": "Agent",
+    "description": "An agent that optimizes data storage and compute costs."
+  },
+  {
+    "id": "agent-20",
+    "name": "Integration Agent",
+    "type": "Agent",
+    "description": "An agent that facilitates data integration between different systems."
+  }
+]

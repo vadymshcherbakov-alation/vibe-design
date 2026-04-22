@@ -1,0 +1,50 @@
+[
+  {
+    "id": "dp-001",
+    "name": "Sales Analytics Dashboard"
+  },
+  {
+    "id": "dp-002",
+    "name": "User Engagement Metrics"
+  },
+  {
+    "id": "dp-003",
+    "name": "Product Performance Report"
+  },
+  {
+    "id": "dp-004",
+    "name": "Customer Analytics"
+  },
+  {
+    "id": "dp-005",
+    "name": "Marketing Performance Data"
+  },
+  {
+    "id": "dp-006",
+    "name": "Order Tracking System"
+  },
+  {
+    "id": "dp-007",
+    "name": "Inventory Management"
+  },
+  {
+    "id": "dp-008",
+    "name": "Customer Segmentation Analysis"
+  },
+  {
+    "id": "dp-009",
+    "name": "Support Ticket Analytics"
+  },
+  {
+    "id": "dp-010",
+    "name": "Financial Metrics Dashboard"
+  },
+  {
+    "id": "dp-011",
+    "name": "Supply Chain Analytics"
+  },
+  {
+    "id": "dp-012",
+    "name": "Quality Assurance Metrics"
+  }
+]

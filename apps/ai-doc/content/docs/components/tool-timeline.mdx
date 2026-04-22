@@ -1,0 +1,13 @@
+---
+title: Tool Timeline
+description: A chronological list of tool calls made during an AI session.
+---
+
+<PreviewBox>
+  <ToolTimeline defaultOpen>
+    <ToolTimelineHeader>search_catalog</ToolTimelineHeader>
+    <ToolTimelineInput>{"{\n  \"query\": \"sales data Q3 2024\",\n  \"limit\": 20,\n  \"filters\": { \"domain\": \"finance\" }\n}"}</ToolTimelineInput>
+    <ToolTimelineOutput>{"{\n  \"total\": 12,\n  \"results\": [\n    { \"id\": \"tbl_001\", \"name\": \"sales_data\", \"schema\": \"finance\" },\n    { \"id\": \"tbl_002\", \"name\": \"q3_revenue_summary\", \"schema\": \"finance\" }\n  ]\n}"}</ToolTimelineOutput>
+    <ToolTimelineFooter duration={120} acuCredits={123} />
+  </ToolTimeline>
+</PreviewBox>

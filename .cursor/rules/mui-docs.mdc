@@ -1,0 +1,107 @@
+---
+description: MUI component and customization docs reference — use to find the correct docs for any Material UI component or API
+globs:
+  - "packages/ui/**/*.{ts,tsx}"
+  - "apps/**/*.{ts,tsx}"
+---
+
+# Material UI Documentation Reference
+
+Source: https://mui.com/material-ui/llms.txt
+
+## Components
+
+- [App Bar](https://mui.com/material-ui/react-app-bar.md): Displays information and actions relating to the current screen.
+- [Backdrop](https://mui.com/material-ui/react-backdrop.md): Narrows the user's focus to a particular element on the screen.
+- [Bottom Navigation](https://mui.com/material-ui/react-bottom-navigation.md): Allows movement between primary destinations in an app.
+- [Progress (Circular, Linear)](https://mui.com/material-ui/react-progress.md): Spinners that express wait time or display process length.
+- [CSS Baseline](https://mui.com/material-ui/react-css-baseline.md): Kickstart an elegant, consistent baseline to build upon.
+- [Click-Away Listener](https://mui.com/material-ui/react-click-away-listener.md): Detects when a click event happens outside of its child element.
+- [Image List](https://mui.com/material-ui/react-image-list.md): Displays a collection of images in an organized grid.
+- [Link](https://mui.com/material-ui/react-link.md): Customize anchor elements with theme colors and typography styles.
+- [Number Field](https://mui.com/material-ui/react-number-field.md): Captures numeric input from users.
+- [Accordion](https://mui.com/material-ui/react-accordion.md): Show and hide sections of related content on a page.
+- [Alert](https://mui.com/material-ui/react-alert.md): Brief messages for the user without interrupting their use of the app.
+- [Autocomplete](https://mui.com/material-ui/react-autocomplete.md): A text input enhanced by a panel of suggested options.
+- [Avatar](https://mui.com/material-ui/react-avatar.md): Used in everything from tables to dialog menus.
+- [Badge](https://mui.com/material-ui/react-badge.md): Generates a small badge to the top-right of its children.
+- [Box](https://mui.com/material-ui/react-box.md): Generic, theme-aware container with access to CSS utilities from MUI System.
+- [Breadcrumbs](https://mui.com/material-ui/react-breadcrumbs.md): Visualize a page's location within a site's hierarchical structure.
+- [Button](https://mui.com/material-ui/react-button.md): Allow users to take actions and make choices with a single tap.
+- [Button Group](https://mui.com/material-ui/react-button-group.md): Group related buttons.
+- [Card](https://mui.com/material-ui/react-card.md): Content and actions about a single subject.
+- [Checkbox](https://mui.com/material-ui/react-checkbox.md): Select one or more items from a set.
+- [Chip](https://mui.com/material-ui/react-chip.md): Compact elements that represent an input, attribute, or action.
+- [Container](https://mui.com/material-ui/react-container.md): Centers content horizontally — the most basic layout element.
+- [Dialog](https://mui.com/material-ui/react-dialog.md): Inform users about a task; can contain critical information or require decisions.
+- [Divider](https://mui.com/material-ui/react-divider.md): Thin line for grouping elements to reinforce visual hierarchy.
+- [Drawer](https://mui.com/material-ui/react-drawer.md): Navigation sidebars for accessing destinations or switching accounts.
+- [Floating Action Button](https://mui.com/material-ui/react-floating-action-button.md): Performs the primary or most common action on a screen.
+- [Grid](https://mui.com/material-ui/react-grid.md): Responsive layout grid that adapts to screen size and orientation.
+- [Icons](https://mui.com/material-ui/icons.md): Guidance and suggestions for using icons with Material UI.
+- [List](https://mui.com/material-ui/react-list.md): Continuous, vertical indexes of text or images.
+- [Masonry](https://mui.com/material-ui/react-masonry.md): Lay out contents of varying dimensions as blocks with configurable gaps.
+- [Menu](https://mui.com/material-ui/react-menu.md): Display a list of choices on temporary surfaces.
+- [Modal](https://mui.com/material-ui/react-modal.md): Foundation for creating dialogs, popovers, lightboxes, etc.
+- [Pagination](https://mui.com/material-ui/react-pagination.md): Select a specific page from a range of pages.
+- [Paper](https://mui.com/material-ui/react-paper.md): Container for displaying content on an elevated surface.
+- [Popover](https://mui.com/material-ui/react-popover.md): Display content on top of another element.
+- [Popper](https://mui.com/material-ui/react-popper.md): Alternative to react-popper for displaying content on top of another.
+- [Portal](https://mui.com/material-ui/react-portal.md): Render children into a DOM node outside the Portal's own hierarchy.
+- [Radio Group](https://mui.com/material-ui/react-radio-button.md): Select one option from a set.
+- [Rating](https://mui.com/material-ui/react-rating.md): Provide insight regarding opinions and experiences; submit a rating.
+- [Select](https://mui.com/material-ui/react-select.md): Collect user-provided information from a list of options.
+- [Skeleton](https://mui.com/material-ui/react-skeleton.md): Placeholder preview before data loads.
+- [Slider](https://mui.com/material-ui/react-slider.md): Make selections from a range of values.
+- [Snackbar](https://mui.com/material-ui/react-snackbar.md): Brief notifications (toasts) of processes performed or to be performed.
+- [Speed Dial](https://mui.com/material-ui/react-speed-dial.md): Display three to six related actions from a floating action button.
+- [Stack](https://mui.com/material-ui/react-stack.md): Container for arranging elements vertically or horizontally.
+- [Stepper](https://mui.com/material-ui/react-stepper.md): Convey progress through numbered steps; wizard-like workflow.
+- [Switch](https://mui.com/material-ui/react-switch.md): Toggle the state of a single setting on or off.
+- [Table](https://mui.com/material-ui/react-table.md): Display sets of data, fully customizable.
+- [Tabs](https://mui.com/material-ui/react-tabs.md): Explore and switch between different views.
+- [Text Field](https://mui.com/material-ui/react-text-field.md): Let users enter and edit text.
+- [Timeline](https://mui.com/material-ui/react-timeline.md): Display a list of events in chronological order.
+- [Tooltip](https://mui.com/material-ui/react-tooltip.md): Informative text when users hover over, focus on, or tap an element.
+- [Transitions](https://mui.com/material-ui/transitions.md): Help make a UI expressive and easy to use.
+- [Typography](https://mui.com/material-ui/react-typography.md): Present design and content as clearly and efficiently as possible.
+- [Textarea Autosize](https://mui.com/material-ui/react-textarea-autosize.md): Automatically adjusts height to match content length.
+- [Toggle Button](https://mui.com/material-ui/react-toggle-button.md): Group related options.
+- [Transfer List](https://mui.com/material-ui/react-transfer-list.md): Move one or more list items between lists.
+- [useMediaQuery](https://mui.com/material-ui/react-use-media-query.md): Listen for matches to a CSS media query for responsive design.
+- [All components](https://mui.com/material-ui/all-components.md): Every Material UI component available.
+
+## Customization
+
+- [How to customize](https://mui.com/material-ui/customization/how-to-customize.md): Different strategies for specific use cases.
+- [Overriding component structure](https://mui.com/material-ui/customization/overriding-component-structure.md): Override the default DOM structure.
+- [Dark mode](https://mui.com/material-ui/customization/dark-mode.md): Light (default) and dark palette modes.
+- [Color](https://mui.com/material-ui/customization/color.md): All colors in the Material Design guidelines.
+- [Default theme viewer](https://mui.com/material-ui/customization/default-theme.md): Explore the theme object with default values.
+- [Theming](https://mui.com/material-ui/customization/theming.md): Customize colors, typography, and more.
+- [Creating themed components](https://mui.com/material-ui/customization/creating-themed-components.md): Fully custom components that accept your app's theme.
+- [Themed components](https://mui.com/material-ui/customization/theme-components.md): Customize styles, default props via the component key inside the theme.
+- [Palette](https://mui.com/material-ui/customization/palette.md): Modify component colors to suit your brand.
+- [Typography](https://mui.com/material-ui/customization/typography.md): Type sizes that work with the layout grid.
+- [Spacing](https://mui.com/material-ui/customization/spacing.md): Consistent spacing with `theme.spacing()`.
+- [Shape](https://mui.com/material-ui/customization/shape.md): Design token for border radius.
+- [Breakpoints](https://mui.com/material-ui/customization/breakpoints.md): Use breakpoints in a wide variety of contexts.
+- [Container queries](https://mui.com/material-ui/customization/container-queries.md): CSS container queries based on theme breakpoints.
+- [Transitions](https://mui.com/material-ui/customization/transitions.md): Custom CSS transitions with durations, easings, and more.
+- [CSS Layers](https://mui.com/material-ui/customization/css-layers.md): Generate styles with cascade layers.
+
+## Guides
+
+- [Building extensible themes](https://mui.com/material-ui/guides/building-extensible-themes.md)
+- [Minimizing bundle size](https://mui.com/material-ui/guides/minimizing-bundle-size.md)
+- [Server rendering](https://mui.com/material-ui/guides/server-rendering.md)
+- [Responsive UI](https://mui.com/material-ui/guides/responsive-ui.md)
+- [TypeScript](https://mui.com/material-ui/guides/typescript.md)
+- [Composition](https://mui.com/material-ui/guides/composition.md)
+
+## Integrations
+
+- [Next.js integration](https://mui.com/material-ui/integrations/nextjs.md)
+- [Routing libraries](https://mui.com/material-ui/integrations/routing.md)
+- [Style library interoperability](https://mui.com/material-ui/integrations/interoperability.md)
+- [Theme scoping](https://mui.com/material-ui/integrations/theme-scoping.md)

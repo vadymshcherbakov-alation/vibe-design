@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "types": [
+      "node",
+      "@nx/react/typings/cssmodule.d.ts",
+      "@nx/react/typings/image.d.ts",
+      "vite/client",
+      "@modyfi/vite-plugin-yaml/modules",
+      "vite-plugin-svgr/client"
+    ]
+  },
+  "exclude": [
+    "setup-jest.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/**/*.spec.tsx",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.js",
+    "src/**/*.test.js",
+    "src/**/*.spec.jsx",
+    "src/**/*.test.jsx",
+    "vite.config.ts"
+  ],
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
+  "references": [
+    {
+      "path": "../util/common/tsconfig.lib.json"
+    },
+    {
+      "path": "../icons-neo/tsconfig.lib.json"
+    },
+    {
+      "path": "../fabric-types/tsconfig.lib.json"
+    },
+    {
+      "path": "../api-core/tsconfig.lib.json"
+    }
+  ]
+}

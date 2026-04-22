@@ -1,0 +1,32 @@
+{
+  "name": "@alation/fabric-theme-morpheus",
+  "version": "10.1096.6",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.0",
+    "@types/react": "^19.0.0"
+  },
+  "dependencies": {
+    "@alation/fabric-types": "workspace:*",
+    "@alation/icons-neo": "workspace:*",
+    "@alation/util": "workspace:*",
+    "@fontsource/inter": "^5.x",
+    "@fontsource/jetbrains-mono": "^5.x",
+    "@mui/lab": "^7.0.1-beta.18",
+    "@mui/material": "^7.3.4",
+    "@mui/system": "^7.3.3",
+    "@mui/x-data-grid-pro": "^7.11.1",
+    "@mui/x-date-pickers": "^7.11.1",
+    "@mui/x-date-pickers-pro": "^7.11.1",
+    "@mui/x-license": "^7.11.1",
+    "@mui/x-tree-view": "^7.11.1",
+    "dayjs": "^1.11.12",
+    "lodash": "^4.18.0",
+    "mix-css-color": "^0.2.0",
+    "react": "17.x || 18.x || 19.x"
+  }
+}

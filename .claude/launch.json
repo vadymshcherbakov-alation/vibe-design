@@ -1,0 +1,37 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "base-ui",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "dev", "--port", "4200"],
+      "port": 4200,
+      "autoPort": false,
+      "cwd": "apps/alation-base-ui"
+    },
+    {
+      "name": "ai-doc",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "dev", "--port", "4201"],
+      "port": 4201,
+      "autoPort": false,
+      "cwd": "apps/ai-doc"
+    },
+    {
+      "name": "alation-ai-components",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--port", "4202"],
+      "port": 4202,
+      "autoPort": false,
+      "cwd": "apps/alation-ai-components"
+    },
+    {
+      "name": "design-bridge",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "dev", "--port", "4203"],
+      "port": 4203,
+      "autoPort": false,
+      "cwd": "apps/design-bridge"
+    }
+  ]
+}

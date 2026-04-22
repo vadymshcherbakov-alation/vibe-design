@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iconography</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --primary-soft:   #D9EEFF;
+      --primary-main:   #0073DD;
+
+      --radius-2: 12px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 960px; margin: 0 auto; }
+
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    p.page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 32px 0 12px 0;
+    }
+
+    /* Libraries + size tables */
+    .table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      overflow: hidden;
+    }
+    .table th, .table td {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--neutral-400);
+    }
+    .table th {
+      background: var(--neutral-300);
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 11px;
+    }
+    .table tr:last-child td { border-bottom: none; }
+    .table td.mono { font-family: var(--font-mono); color: var(--text-primary); }
+
+    /* Icon sample grid */
+    .icon-grid {
+      display: grid; gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    .icon-tile {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: 8px;
+      padding: 16px 12px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .icon-tile svg {
+      color: var(--text-primary);
+    }
+    .icon-tile .name {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Size-in-context examples */
+    .context-grid {
+      display: grid; gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    .context-card {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .context-card .label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Button demo */
+    .btn-demo {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 36px; padding: 0 14px; border-radius: 6px;
+      background: var(--primary-main); color: #fff;
+      font-size: 13px; font-weight: 500; line-height: 1;
+      border: none; width: fit-content;
+    }
+
+    /* IconButton demo */
+    .iconbtn-demo {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 6px;
+      border: 1px solid var(--neutral-500); background: transparent;
+      color: var(--text-primary);
+    }
+
+    /* SubNav demo */
+    .subnav-demo {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: 6px;
+      background: var(--primary-soft); color: var(--primary-main);
+      font-size: 13px; font-weight: 500;
+    }
+
+    /* Nav-rail demo */
+    .navrail-demo {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--primary-main); color: #fff;
+    }
+
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text-primary);
+    }
+
+    /* Library pointer callout */
+    .library-callout {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-left: 3px solid var(--primary-main);
+      border-radius: var(--radius-2);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      font-size: 13px; line-height: 1.55;
+      color: var(--text-primary);
+    }
+    .library-callout .title {
+      font-weight: 500; margin-bottom: 4px;
+    }
+    .library-callout a {
+      color: var(--primary-main); text-decoration: none; font-weight: 500;
+    }
+    .library-callout a:hover { text-decoration: underline; }
+    .library-callout .secondary {
+      color: var(--text-secondary); font-size: 12px; margin-top: 6px;
+    }
+
+    /* Code block for import snippet */
+    pre.snippet {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      overflow-x: auto;
+      margin: 0 0 16px 0;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Iconography</h1>
+    <p class="page-sub">
+      Icons are visual shortcuts — they reinforce a label, disambiguate an action, or stand in for one when space is tight. Every icon in Alation UI shares the same stroke weight and size so they read as one family across the app. Reach for an icon when an action, category, or status has a widely understood visual; pick it from <code>lucide-react</code> at the size that matches its context.
+    </p>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Foundation</li>
+      <li><strong>MUI base:</strong> <code>none</code></li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2899-12&amp;t=nzfgSH01EOC6MqS6-4" target="_blank" rel="noopener">Iconography · NEO 2.1</a> · <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2452-565&amp;t=nzfgSH01EOC6MqS6-1" target="_blank" rel="noopener">Icon library</a></li>
+      <li><strong>Code:</strong> <code>lucide-react</code> (npm) for UI icons; <code>src/layout/assets/icon/*.svg?react</code> (consumer project) for nav-rail assets</li>
+    </ul>
+    <!-- classification-end -->
+
+    <h2 class="section">Size conventions</h2>
+    <table class="table">
+      <thead>
+        <tr><th style="width:280px">Context</th><th>Size</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Button <code>startIcon</code> / <code>endIcon</code></td><td class="mono">size={16}</td></tr>
+        <tr><td>Standalone <code>IconButton</code></td><td class="mono">size={16}</td></tr>
+        <tr><td>SubNav item</td><td class="mono">width={16} height={16}</td></tr>
+        <tr><td>Nav rail</td><td class="mono">width={20} height={20}</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section">Icon in context</h2>
+    <div class="context-grid">
+      <div class="context-card">
+        <span class="label">Button · startIcon · size 16</span>
+        <button class="btn-demo" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          Build agent
+        </button>
+      </div>
+      <div class="context-card">
+        <span class="label">IconButton · size 16</span>
+        <button class="iconbtn-demo" type="button" aria-label="More actions">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </button>
+      </div>
+      <div class="context-card">
+        <span class="label">SubNav item · size 16</span>
+        <div class="subnav-demo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+          Catalog
+        </div>
+      </div>
+      <div class="context-card">
+        <span class="label">Nav rail · size 20</span>
+        <div class="navrail-demo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 2 9l10-7 10 7-1 3"/><path d="M5 10v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/><path d="M5 10 2 9"/><path d="m19 10 3-1"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section">Icon library</h2>
+
+    <div class="library-callout">
+      <div class="title">Browse the full set at <a href="https://lucide.dev/icons/" target="_blank" rel="noopener">lucide.dev/icons</a></div>
+      <div>Search by name or category, copy the PascalCase name, then import it from <code>lucide-react</code> (<a href="https://www.npmjs.com/package/lucide-react" target="_blank" rel="noopener">npm</a>). Figma mirror: <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2452-565&amp;t=nzfgSH01EOC6MqS6-1" target="_blank" rel="noopener">NEO — UI Icons</a>.</div>
+      <div class="secondary">A subset of the icons Alation uses most often is shown below the snippet — not exhaustive.</div>
+    </div>
+
+    <pre class="snippet">import { Plus, Search, MoreVertical, Trash2 } from 'lucide-react';
+
+&lt;Button startIcon={&lt;Plus size={16} /&gt;}&gt;New&lt;/Button&gt;
+&lt;IconButton aria-label="More"&gt;&lt;MoreVertical size={16} /&gt;&lt;/IconButton&gt;</pre>
+
+    <div class="icon-grid">
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        <span class="name">Plus</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        <span class="name">X</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <span class="name">Check</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span class="name">Trash2</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        <span class="name">Pencil</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span class="name">Search</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="name">MessageSquare</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <span class="name">Info</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        <span class="name">AlertTriangle</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.2-8.55"/><path d="M21 3v6h-6"/></svg>
+        <span class="name">RefreshCw</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        <span class="name">MoreVertical</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="name">ChevronDown</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        <span class="name">ChevronLeft</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="name">ChevronRight</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        <span class="name">ChevronUp</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span class="name">ArrowLeft</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+        <span class="name">ArrowRight</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span class="name">Ellipsis</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 6.34l1.41-1.41"/><path d="M22 12h-2"/><path d="M4 12H2"/><path d="M17.66 17.66l1.41 1.41"/><path d="M4.93 19.07l1.41-1.41"/><path d="M12 20v2"/><circle cx="12" cy="12" r="4"/></svg>
+        <span class="name">Settings</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+        <span class="name">Settings2</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+        <span class="name">Download</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        <span class="name">Upload</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="name">Eye</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="name">Copy</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <span class="name">ExternalLink</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span class="name">Play</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        <span class="name">Database</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span class="name">Calendar</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span class="name">HelpCircle</span>
+      </div>
+    </div>
+
+    <p class="note">
+      Static preview of what's documented in <code>iconography.md</code>. Inline SVGs approximate lucide-react output — the grid above is a sample, not the full catalog. Browse the complete set at <a href="https://lucide.dev/icons/" target="_blank" rel="noopener">lucide.dev/icons</a>. Nav-rail assets live at <code>src/layout/assets/icon/*.svg?react</code> in the consumer project.
+    </p>
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 0 40px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 0; }
+  .md-viewer-toggle {
+    all: unset; box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58; background: #F1F4F6;
+    border: 1px solid #E8EDF1; border-radius: 6px;
+    cursor: pointer; user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px; color: #B7B7C1; margin-left: 4px;
+  }
+
+  .md-viewer-pre {
+    display: none; margin: 12px 0 0 0; padding: 20px 24px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; line-height: 1.6; color: #0D1322;
+    white-space: pre-wrap; word-wrap: break-word;
+    overflow-x: auto; max-height: 640px; overflow-y: auto;
+  }
+  .md-viewer[data-open="source"] .md-viewer-pre { display: block; }
+
+  .md-rendered {
+    display: none; margin: 16px 0 0 0; padding: 28px 32px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    color: #0D1322; font-size: 14px; line-height: 1.65;
+  }
+  .md-viewer[data-open="rendered"] .md-rendered { display: block; }
+
+  .md-rendered h2 {
+    font-size: 17px; font-weight: 600; color: #0D1322;
+    margin: 28px 0 10px 0; letter-spacing: -0.005em;
+  }
+  .md-rendered h2:first-child { margin-top: 0; }
+  .md-rendered h3 {
+    font-size: 14px; font-weight: 600; color: #0D1322;
+    margin: 18px 0 8px 0; text-transform: none; letter-spacing: 0;
+  }
+  .md-rendered p  { margin: 0 0 12px 0; }
+  .md-rendered ul, .md-rendered ol { margin: 0 0 14px 0; padding-left: 22px; }
+  .md-rendered li { margin-bottom: 4px; }
+  .md-rendered a  { color: #0073DD; text-decoration: underline; }
+  .md-rendered code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; background: #F1F4F6; color: #0D1322;
+    padding: 1px 6px; border-radius: 4px;
+  }
+  .md-rendered pre {
+    background: #FAFBFC; border: 1px solid #E8EDF1; border-radius: 8px;
+    padding: 14px 18px; overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.7; margin: 0 0 14px 0;
+  }
+  .md-rendered pre code { background: transparent; padding: 0; }
+  .md-rendered strong { font-weight: 600; }
+  .md-rendered em { font-style: italic; }
+  .md-rendered hr { border: 0; border-top: 1px solid #E8EDF1; margin: 24px 0; }
+  .md-rendered table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid #E8EDF1; border-radius: 8px; overflow: hidden;
+    margin: 0 0 16px 0;
+  }
+  .md-rendered th, .md-rendered td {
+    text-align: left; padding: 9px 12px;
+    font-size: 12.5px; border-bottom: 1px solid #E8EDF1; vertical-align: top;
+  }
+  .md-rendered th {
+    background: #F1F4F6; color: #4E4E58; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px;
+  }
+  .md-rendered tr:last-child td { border-bottom: none; }
+
+  /* Callouts — green for Use/Guarantees, red for Prohibitions/Don'ts */
+  .md-rendered .callout {
+    border-radius: 8px; padding: 14px 18px;
+    margin: 0 0 16px 0; border: 1px solid transparent;
+  }
+  .md-rendered .callout.green { background: #F0F8EB; border-color: #CDE5BA; }
+  .md-rendered .callout.red   { background: #FFF0F0; border-color: #F2C0C0; }
+  .md-rendered .callout > .callout-title {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; margin: 0 0 8px 0;
+  }
+  .md-rendered .callout.green > .callout-title { color: #2E5E18; }
+  .md-rendered .callout.red   > .callout-title { color: #8E1A27; }
+  .md-rendered .callout ul { margin: 0; padding-left: 18px; }
+  .md-rendered .callout li { margin-bottom: 3px; }
+
+  /* Contract block — 3-card grid */
+  .md-rendered .contract-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    align-items: stretch; margin: 0 0 16px 0;
+  }
+  .md-rendered .contract-card {
+    background: #FFFFFF; border: 1px solid #E8EDF1;
+    border-radius: 12px; padding: 20px; border-top: 3px solid;
+  }
+  .md-rendered .contract-card.guarantees   { border-top-color: #3E9A17; }
+  .md-rendered .contract-card.prohibitions { border-top-color: #CA334A; }
+  .md-rendered .contract-card.conditions   { border-top-color: #0073DD; }
+  .md-rendered .contract-card h3 {
+    font-size: 13px; font-weight: 600; margin: 0 0 10px 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .md-rendered .contract-card h3 .sym {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+  }
+  .md-rendered .contract-card.guarantees h3 .sym   { background: #F0F8EB; color: #2E5E18; }
+  .md-rendered .contract-card.prohibitions h3 .sym { background: #FFF0F0; color: #8E1A27; }
+  .md-rendered .contract-card.conditions h3 .sym   { background: #E6F2FC; color: #0056A6; }
+  .md-rendered .contract-card ul { margin: 0; padding-left: 16px; }
+  .md-rendered .contract-card li {
+    font-size: 12.5px; line-height: 1.55; margin-bottom: 6px; color: #0D1322;
+  }
+  .md-rendered .contract-card li:last-child { margin-bottom: 0; }
+  @media (max-width: 720px) {
+    .md-rendered .contract-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="md-viewer" data-open="closed" data-exclude-h2="axes,classification,example,examples,icon,icon in context,icon library,inventory,palette,purpose,roles,scale,size,size conventions,specimens,the palette,the scale,tokens" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IGljb25vZ3JhcGh5CnRpdGxlOiBJY29ub2dyYXBoeQpjYXRlZ29yeTogZm91bmRhdGlvbgpsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjEKCmRlc2NyaXB0aW9uOiA+CiAgSWNvbiBkaXNjaXBsaW5lLiBgbHVjaWRlLXJlYWN0YCBpcyB0aGUgcHJpbWFyeSBpY29uIGxpYnJhcnkuIEFsYXRpb24gU1ZHCiAgYXNzZXRzIGFyZSByZXNlcnZlZCBmb3IgdGhlIG5hdmlnYXRpb24gcmFpbC4gU2l6ZXMgYXJlIGZpeGVkIHBlciBjb250ZXh0CiAgKDE2IGZvciBpbmxpbmU7IDIwIGZvciBuYXYgcmFpbCkuCnRhZ3M6IFtmb3VuZGF0aW9uLCBpY29ucywgaWNvbm9ncmFwaHldCgpmaWdtYV91cmw6ICJodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2d6c2Z0WGhLNWhLbFRhWk9zaXAxaHkvTkVPLS0tVUktSWNvbnM/bm9kZS1pZD0yODk5LTEyJnQ9bnpmZ1NIMDFFT0M2TXFTNi00Igpjb2RlX3JlZmVyZW5jZTogQ29uc3VtZXIgcHJvamVjdCDigJQgbHVjaWRlLXJlYWN0IChucG0pICsgc3JjL2xheW91dC9hc3NldHMvaWNvbi8gKG5hdi1yYWlsIFNWR3MpCmV4YW1wbGVfcGF0aDogLi9FeGFtcGxlLnRzeAoKbXVpX2Jhc2U6IG5vbmUKZGVwZW5kc19vbl90b2tlbnM6IFtdCmRlcGVuZHNfb25fY29tcG9uZW50czogW10KLS0tCgojIEljb25vZ3JhcGh5CgojIyAxLiBDbGFzc2lmaWNhdGlvbgoKLSAqKlR5cGU6KiogRm91bmRhdGlvbgotICoqTVVJIGJhc2U6KiogYG5vbmVgCi0gKipGaWdtYToqKiBbSWNvbm9ncmFwaHkgwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9nenNmdFhoSzVoS2xUYVpPc2lwMWh5L05FTy0tLVVJLUljb25zP25vZGUtaWQ9Mjg5OS0xMiZ0PW56ZmdTSDAxRU9DNk1xUzYtNCkgwrcgW0ljb24gbGlicmFyeV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9nenNmdFhoSzVoS2xUYVpPc2lwMWh5L05FTy0tLVVJLUljb25zP25vZGUtaWQ9MjQ1Mi01NjUmdD1uemZnU0gwMUVPQzZNcVM2LTEpCi0gKipDb2RlOioqIGBsdWNpZGUtcmVhY3RgIChucG0pIGZvciBVSSBpY29uczsgYHNyYy9sYXlvdXQvYXNzZXRzL2ljb24vKi5zdmc/cmVhY3RgIChjb25zdW1lciBwcm9qZWN0KSBmb3IgbmF2LXJhaWwgYXNzZXRzCgojIyAyLiBQdXJwb3NlCgpJY29ucyBhcmUgdmlzdWFsIHNob3J0Y3V0cyDigJQgdGhleSByZWluZm9yY2UgYSBsYWJlbCwgZGlzYW1iaWd1YXRlIGFuIGFjdGlvbiwgb3Igc3RhbmQgaW4gZm9yIG9uZSB3aGVuIHNwYWNlIGlzIHRpZ2h0LiBFdmVyeSBpY29uIGluIEFsYXRpb24gVUkgc2hhcmVzIHRoZSBzYW1lIHN0cm9rZSB3ZWlnaHQgYW5kIHNpemUgc28gdGhleSByZWFkIGFzIG9uZSBmYW1pbHkgYWNyb3NzIHRoZSBhcHAuIFJlYWNoIGZvciBhbiBpY29uIHdoZW4gYW4gYWN0aW9uLCBjYXRlZ29yeSwgb3Igc3RhdHVzIGhhcyBhIHdpZGVseSB1bmRlcnN0b29kIHZpc3VhbDsgcGljayBpdCBmcm9tIGBsdWNpZGUtcmVhY3RgIGF0IHRoZSBzaXplIHRoYXQgbWF0Y2hlcyBpdHMgY29udGV4dC4KCiMjIDMuIEhvdyB0byB1c2UKCioqVGhlIGljb24gbGlicmFyeSBpcyBbYGx1Y2lkZS1yZWFjdGBdKGh0dHBzOi8vd3d3Lm5wbWpzLmNvbS9wYWNrYWdlL2x1Y2lkZS1yZWFjdCkuKiogRXZlcnkgaW4tcGFnZSBVSSBpY29uIGNvbWVzIGZyb20gaXQuIFRoZSBvbmx5IGV4Y2VwdGlvbiBpcyB0aGUgbmF2aWdhdGlvbiByYWlsLCB3aGljaCB1c2VzIGxvY2FsIFNWRyBhc3NldHMgdW5kZXIgYHNyYy9sYXlvdXQvYXNzZXRzL2ljb24vKi5zdmc/cmVhY3RgIChoYW5kbGVkIGJ5IGBOYXZCdXR0b25gIOKAlCBjYWxsZXJzIG5ldmVyIGltcG9ydCB0aG9zZSBkaXJlY3RseSkuCgojIyMgQnJvd3NlIHRoZSBjYXRhbG9nCgpUaGUgZnVsbCBzZXQgbGl2ZXMgYXQgWyoqbHVjaWRlLmRldi9pY29ucyoqXShodHRwczovL2x1Y2lkZS5kZXYvaWNvbnMvKSDigJQgYnJvd3NlIGJ5IG5hbWUsIGNhdGVnb3J5LCBvciBzZWFyY2guIFRoZSBGaWdtYSBtaXJyb3IgaXMgW05FTyDigJQgVUkgSWNvbnNdKGh0dHBzOi8vd3d3LmZpZ21hLmNvbS9kZXNpZ24vZ3pzZnRYaEs1aEtsVGFaT3NpcDFoeS9ORU8tLS1VSS1JY29ucz9ub2RlLWlkPTI4OTktMTImdD1uemZnU0gwMUVPQzZNcVM2LTQpIChzZWUgQ2xhc3NpZmljYXRpb24gZm9yIHRoZSBpY29uLWxpYnJhcnkgc3ViLXBhZ2UpLgoKIyMjIEltcG9ydCBmcm9tIGNvZGUKCkV2ZXJ5IGljb24gZXhwb3J0cyB1bmRlciBpdHMgKipQYXNjYWxDYXNlIG5hbWUqKiAoYFBsdXNgLCBgTW9yZVZlcnRpY2FsYCwgYENoZXZyb25Eb3duYCkuIEx1Y2lkZSBhbHNvIHJlLWV4cG9ydHMgZWFjaCBpY29uIHdpdGggYW4gYEljb25gIHN1ZmZpeCAoYFBsdXNJY29uYCwgYE1vcmVWZXJ0aWNhbEljb25gKSDigJQgYm90aCBmb3JtcyByZXNvbHZlIHRvIHRoZSBzYW1lIGNvbXBvbmVudC4gUHJlZmVyIHRoZSB1bi1zdWZmaXhlZCBuYW1lIHVubGVzcyB0aGUgc3VmZml4IGF2b2lkcyBhIG5hbWUgY29sbGlzaW9uIHdpdGggYSBsb2NhbCBzeW1ib2wuCgpgYGB0c3gKaW1wb3J0IHsgUGx1cywgU2VhcmNoLCBNb3JlVmVydGljYWwsIFRyYXNoMiB9IGZyb20gJ2x1Y2lkZS1yZWFjdCc7Cgo8UGx1cyBzaXplPXsxNn0gLz4KYGBgCgpSZW5hbWUgYXQgaW1wb3J0IHRpbWUgdG8gZGlzYW1iaWd1YXRlIG9yIG1hdGNoIGEgbG9jYWwgY29udmVudGlvbjoKCmBgYHRzeAppbXBvcnQgeyBTZXR0aW5ncyBhcyBTZXR0aW5nc0ljb24sIFVwbG9hZCBhcyBVcGxvYWRJY29uIH0gZnJvbSAnbHVjaWRlLXJlYWN0JzsKYGBgCgpJY29ucyBhcmUgc3Ryb2tlLWJhc2VkIGFuZCByZXNwZWN0IGBjdXJyZW50Q29sb3JgLiBTdWItbmF2IGl0ZW1zIHBhc3MgYGljb25TdHlsZTogJ3N0cm9rZSdgIGluIHRoZWlyIGNvbmZpZy4KCiMjIyBTaXplIHBlciBjb250ZXh0CgotICoqQnV0dG9uIGBzdGFydEljb25gIC8gYGVuZEljb25gKiog4oCUIGBzaXplPXsxNn1gCi0gKipTdGFuZGFsb25lIGBJY29uQnV0dG9uYCoqIOKAlCBgc2l6ZT17MTZ9YAotICoqU3ViTmF2IGl0ZW0qKiDigJQgYHdpZHRoPXsxNn0gaGVpZ2h0PXsxNn1gCi0gKipOYXYgcmFpbCoqIOKAlCBgd2lkdGg9ezIwfSBoZWlnaHQ9ezIwfWAgKGhhbmRsZWQgYnkgYE5hdkJ1dHRvbmAsIG5vdCBhdXRob3JlZCBhdCBjYWxsIHNpdGVzKQoKIyMjIEZhbGxiYWNrCgpJZiB0aGUgaWNvbiB5b3UgbmVlZCBpc24ndCBpbiBsdWNpZGUg4oCUICoqc3RvcCBhbmQgZmxhZyoqLiBEbyBub3QgcmVhY2ggZm9yIGBAbXVpL2ljb25zLW1hdGVyaWFsYCBvciBoYW5kLXJvbGwgYW4gU1ZHLiBQcm9wb3NlIGEgbmV3IGFzc2V0IGFnYWluc3QgdGhlIE5FTyBpY29uIGxpYnJhcnkgaW4gRmlnbWEgaW5zdGVhZC4KCiMjIDQuIENvbnRyYWN0CgojIyMgR3VhcmFudGVlcwotIEFsbCBVSSBpY29ucyBzaGlwIGZyb20gYSBzaW5nbGUgbGlicmFyeSAoYGx1Y2lkZS1yZWFjdGApIOKAlCB2aXN1YWwgd2VpZ2h0IGFuZCBzdHJva2Ugc3R5bGUgc3RheSBjb25zaXN0ZW50IGFjcm9zcyB0aGUgYXBwLgotIFNpemUgY29udmVudGlvbnMgYWxpZ24gaWNvbnMgd2l0aCBhZGphY2VudCB0ZXh0IGFuZCBjb250cm9sIGhlaWdodCDigJQgMTYgcHggcGFpcnMgd2l0aCBib2R5LXNpemUgdGV4dCBhbmQgMzYgcHggY29udHJvbHMuCi0gRXZlcnkgaWNvbiBpcyBhbiBTVkcg4oCUIHNjYWxlcyBjbGVhbmx5IGF0IDIwMCAlIGJyb3dzZXIgem9vbSBhbmQgcmVzcGVjdHMgYGN1cnJlbnRDb2xvcmAgZm9yIHN0YXRlIGNoYW5nZXMuCgojIyMgUHJvaGliaXRpb25zCi0gTm8gYEBtdWkvaWNvbnMtbWF0ZXJpYWxgIGltcG9ydHMgYW55d2hlcmUuCi0gTm8gcmF3IFNWRyBsaXRlcmFscyBvciBjdXN0b20gaWNvbiBjb21wb25lbnRzIGluc2lkZSBwYWdlIGNvbXBvbmVudHMuCi0gTm8gZW1vamkgYXMgYW4gaWNvbi4KLSBObyBTVkcgZnJvbSBgc3JjL2xheW91dC9hc3NldHMvaWNvbi9gIHVzZWQgb3V0c2lkZSB0aGUgbmF2IHJhaWwuCi0gTm8gYXJiaXRyYXJ5IGljb24gc2l6ZXMuIE9ubHkgdGhlIHZhbHVlcyBpbiDCpzUgYXJlIHZhbGlkLgotIE5vIGhhcmQtY29kZWQgaWNvbiBjb2xvdXJzIOKAlCBpY29ucyBpbmhlcml0IGZyb20gcGFyZW50IHZpYSBgY3VycmVudENvbG9yYCwgb3IgdXNlIGFuIGV4cGxpY2l0IHRoZW1lIHRva2VuIHZpYSBgY29sb3JgIHByb3AuCgojIyMgQ29uZGl0aW9ucwotIERlY29yYXRpdmUgaWNvbnMgKHZpc3VhbGx5IHJlaW5mb3JjaW5nIGFuIGFkamFjZW50IGxhYmVsKSBjYXJyeSBgYXJpYS1oaWRkZW49InRydWUiYC4KLSBJY29uLW9ubHkgYWZmb3JkYW5jZXMgKGUuZy4gYEljb25CdXR0b25gIHdpdGhvdXQgYSBsYWJlbCkgbXVzdCBwcm92aWRlIGBhcmlhLWxhYmVsYCAob3duZWQgYnkgSWNvbkJ1dHRvbiwgbm90IHRoaXMgZm91bmRhdGlvbikuCi0gSWYgYSBuZWVkZWQgaWNvbiBkb2VzIG5vdCBleGlzdCBpbiBgbHVjaWRlLXJlYWN0YCwgc3RvcCBhbmQgZmxhZyDigJQgZG8gbm90IHJlYWNoIGZvciBgQG11aS9pY29ucy1tYXRlcmlhbGAgYXMgYSBzdWJzdGl0dXRlLgoKIyMgNS4gSW52ZW50b3J5CgojIyMgTGlicmFyaWVzIChleGhhdXN0aXZlKQoKfCBMaWJyYXJ5IHwgbnBtIHBhY2thZ2UgfCBTY29wZSB8CnwtLS18LS0tfC0tLXwKfCBgbHVjaWRlLXJlYWN0YCB8IFtgbHVjaWRlLXJlYWN0YF0oaHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2UvbHVjaWRlLXJlYWN0KSB8IEFsbCBpbi1wYWdlIFVJIGljb25zLiBCcm93c2UgbmFtZXMgYXQgW2x1Y2lkZS5kZXYvaWNvbnNdKGh0dHBzOi8vbHVjaWRlLmRldi9pY29ucy8pLiB8CnwgQWxhdGlvbiBuYXYtcmFpbCBTVkdzIHwg4oCUIHwgTG9jYWwgYXNzZXRzIHVuZGVyIGBzcmMvbGF5b3V0L2Fzc2V0cy9pY29uLyouc3ZnP3JlYWN0YC4gTmF2aWdhdGlvbiByYWlsICoqb25seSoqIOKAlCBuZXZlciBwYWdlIGNvbnRlbnQuIHwKCiMjIyBDb21tb25seSB1c2VkIGx1Y2lkZSBpY29ucwoKVGhlc2UgYXJlIHRoZSBpY29ucyB0aGF0IGFwcGVhciBtb3N0IG9mdGVuIGFjcm9zcyBBbGF0aW9uIFVJLiBUaGUgbGlzdCBpcyBub3QgZXhoYXVzdGl2ZSDigJQgc2VhcmNoIFtsdWNpZGUuZGV2L2ljb25zXShodHRwczovL2x1Y2lkZS5kZXYvaWNvbnMvKSBmb3IgYW55dGhpbmcgZWxzZSwgdGhlbiBpbXBvcnQgaXQgYnkgaXRzIFBhc2NhbENhc2UgbmFtZS4KCnwgQ2F0ZWdvcnkgfCBOYW1lcyB8CnwtLS18LS0tfAp8IEFjdGlvbiB8IGBQbHVzYCwgYFhgLCBgQ2hlY2tgLCBgVHJhc2hgLCBgVHJhc2gyYCwgYFNxdWFyZVBlbmAsIGBQZW5jaWxgLCBgQ29weWAsIGBEb3dubG9hZGAsIGBVcGxvYWRgLCBgRXh0ZXJuYWxMaW5rYCwgYFJlZnJlc2hDd2AsIGBQbGF5YCwgYEV5ZWAgfAp8IE5hdmlnYXRpb24gfCBgQ2hldnJvbkRvd25gLCBgQ2hldnJvblVwYCwgYENoZXZyb25MZWZ0YCwgYENoZXZyb25SaWdodGAsIGBBcnJvd0xlZnRgLCBgQXJyb3dSaWdodGAsIGBBcnJvd1VwYCwgYEFycm93RG93bmAsIGBBcnJvd1VwRG93bmAsIGBDb3JuZXJEb3duTGVmdGAsIGBQYW5lbExlZnRPcGVuYCwgYFBhbmVsTGVmdENsb3NlYCB8CnwgTWVudSAmIG92ZXJmbG93IHwgYE1vcmVWZXJ0aWNhbGAsIGBFbGxpcHNpc1ZlcnRpY2FsYCwgYEVsbGlwc2lzYCB8CnwgU3RhdHVzICYgZmVlZGJhY2sgfCBgSW5mb2AsIGBBbGVydFRyaWFuZ2xlYCwgYFRyaWFuZ2xlQWxlcnRgLCBgT2N0YWdvbkFsZXJ0YCwgYEhlbHBDaXJjbGVgLCBgQ2lyY2xlU3RvcGAsIGBUaHVtYnNVcGAsIGBUaHVtYnNEb3duYCB8CnwgQ29tbXVuaWNhdGlvbiB8IGBTZWFyY2hgLCBgTWVzc2FnZVNxdWFyZWAsIGBNZXNzYWdlc1NxdWFyZWAsIGBNYWlsYCwgYEJlbGxgIHwKfCBDb250ZW50ICYgb2JqZWN0cyB8IGBEYXRhYmFzZWAsIGBUYWJsZWAsIGBCb29rT3BlbmAsIGBCb29rVGV4dGAsIGBCb29rbWFya2AsIGBDbGlwYm9hcmRMaXN0YCwgYExpc3RDaGVja3NgLCBgQ2hhcnRDb2x1bW5gLCBgRmlsZVRleHRgLCBgQ2FsZW5kYXJgLCBgSGlzdG9yeWAsIGBMaW5rYCwgYExpbmsyYCwgYExpbmsyT2ZmYCB8CnwgQWdlbnQgJiB3b3JrZmxvdyB8IGBCb3RgLCBgQm9sdGAsIGBXb3JrZmxvd2AsIGBWYXJpYWJsZWAsIGBHbG9iZWAsIGBNb25pdG9yYCwgYFNldHRpbmdzYCwgYFNldHRpbmdzMmAsIGBVc2Vyc2AgfAoKIyMjIFNpemUgY29udmVudGlvbnMgKGV4aGF1c3RpdmUpCgp8IENvbnRleHQgfCBTaXplIHwKfC0tLXwtLS18CnwgQnV0dG9uIGBzdGFydEljb25gIC8gYGVuZEljb25gIHwgYHNpemU9ezE2fWAgfAp8IFN0YW5kYWxvbmUgYEljb25CdXR0b25gIHwgYHNpemU9ezE2fWAgfAp8IFN1Yk5hdiBpdGVtIHwgYHdpZHRoPXsxNn0gaGVpZ2h0PXsxNn1gIHwKfCBOYXYgcmFpbCB8IGB3aWR0aD17MjB9IGhlaWdodD17MjB9YCAodmlhIGBOYXZCdXR0b25gKSB8CgojIyAxMS4gRXhhbXBsZQoKYGBgdHN4CmltcG9ydCB7IFBsdXMsIE1vcmVWZXJ0aWNhbCwgU2VhcmNoIH0gZnJvbSAnbHVjaWRlLXJlYWN0JzsKaW1wb3J0IHsgQnV0dG9uLCBJY29uQnV0dG9uLCBUZXh0RmllbGQsIElucHV0QWRvcm5tZW50IH0gZnJvbSAnQG11aS9tYXRlcmlhbCc7Cgo8QnV0dG9uIHZhcmlhbnQ9ImNvbnRhaW5lZCIgc3RhcnRJY29uPXs8UGx1cyBzaXplPXsxNn0gLz59PgogIEJ1aWxkIGFnZW50CjwvQnV0dG9uPgoKPEljb25CdXR0b24gc2l6ZT0ic21hbGwiIGFyaWEtbGFiZWw9Ik1vcmUgYWN0aW9ucyI+CiAgPE1vcmVWZXJ0aWNhbCBzaXplPXsxNn0gLz4KPC9JY29uQnV0dG9uPgoKPFRleHRGaWVsZAogIHBsYWNlaG9sZGVyPSJTZWFyY2giCiAgSW5wdXRQcm9wcz17ewogICAgc3RhcnRBZG9ybm1lbnQ6ICgKICAgICAgPElucHV0QWRvcm5tZW50IHBvc2l0aW9uPSJzdGFydCI+CiAgICAgICAgPFNlYXJjaCBzaXplPXsxNn0gLz4KICAgICAgPC9JbnB1dEFkb3JubWVudD4KICAgICksCiAgfX0KLz4KYGBgCgpTZWUgW2BFeGFtcGxlLnRzeGBdKC4vRXhhbXBsZS50c3gpIGZvciB0aGUgY2Fub25pY2FsLCBydW5uYWJsZSBzb3VyY2UuCg==">
+  <div class="md-viewer-actions">
+    <button class="md-viewer-toggle" type="button" data-action="rendered" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      How to use it
+    </button>
+    <button class="md-viewer-toggle" type="button" data-action="source" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      View source
+      <span class="md-viewer-filename">iconography.md</span>
+    </button>
+  </div>
+  <div class="md-rendered" aria-hidden="true"></div>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+
+    // Sections already shown visually above — filtered out of the rendered panel.
+    // Per-file override via data-exclude-h2 attribute (comma-separated).
+    var EXCLUDED_H2 = (host.getAttribute('data-exclude-h2') || '')
+      .split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+
+    // Optional anchor H2: when set, rendering stops at the next H2 after this
+    // section ends. Used by composites to truncate after the Contract, so
+    // Anatomy / Custom / Mock data / Example stay in the md (and in
+    // "View source") but don't appear in the rendered "How to use it" panel.
+    var TRUNCATE_AFTER = (host.getAttribute('data-truncate-after-h2') || '')
+      .trim().toLowerCase();
+
+    var rawMd = '';
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      rawMd = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      rawMd = '(failed to load source)';
+    }
+
+    var pre = host.querySelector('.md-viewer-pre');
+    var rendered = host.querySelector('.md-rendered');
+    pre.textContent = rawMd;
+    rendered.innerHTML = renderMarkdown(filterSections(stripFrontmatter(rawMd), EXCLUDED_H2, TRUNCATE_AFTER));
+
+    var btns = host.querySelectorAll('.md-viewer-toggle');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var mode = b.getAttribute('data-action');
+        var cur = host.getAttribute('data-open');
+        var next = (cur === mode) ? 'closed' : mode;
+        host.setAttribute('data-open', next);
+        btns.forEach(function (other) {
+          var on = other.getAttribute('data-action') === next;
+          other.setAttribute('aria-expanded', on ? 'true' : 'false');
+        });
+        pre.setAttribute('aria-hidden', next === 'source' ? 'false' : 'true');
+        rendered.setAttribute('aria-hidden', next === 'rendered' ? 'false' : 'true');
+      });
+    });
+
+    function stripFrontmatter(src) {
+      var m = src.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
+      return m ? src.slice(m[0].length) : src;
+    }
+
+    function filterSections(src, exclude, truncateAfter) {
+      var lines = src.split(/\r?\n/);
+      var out = [];
+      var skipping = false;
+      var seenH1 = false;
+      var passedAnchor = false;
+      function matches(title, t) {
+        return title === t
+          || title.indexOf(t + ' ') === 0
+          || title.indexOf(t + '/') === 0;
+      }
+      for (var i = 0; i < lines.length; i++) {
+        var ln = lines[i];
+        if (/^#(?!#)\s+/.test(ln)) {
+          if (!seenH1) { seenH1 = true; continue; }
+        }
+        var h2 = ln.match(/^##\s+(.*)$/);
+        if (h2) {
+          var title = h2[1].replace(/^\d+\.\s+/, '').trim().toLowerCase();
+          if (truncateAfter) {
+            if (passedAnchor) { break; }
+            if (matches(title, truncateAfter)) { passedAnchor = true; }
+          }
+          skipping = exclude.some(function (t) { return matches(title, t); });
+        }
+        if (!skipping) out.push(ln);
+      }
+      return out.join('\n').replace(/^\s+/, '');
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function inline(text) {
+      var codes = [];
+      text = text.replace(/`([^`]+)`/g, function (_, c) {
+        codes.push(c); return '\x00' + (codes.length - 1) + '\x00';
+      });
+      var links = [];
+      text = text.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_, label, url) {
+        links.push({ label: label, url: url }); return '\x01' + (links.length - 1) + '\x01';
+      });
+      text = escapeHtml(text);
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+      text = text.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+      text = text.replace(/\x01(\d+)\x01/g, function (_, i) {
+        var l = links[+i];
+        return '<a href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(l.label) + '</a>';
+      });
+      text = text.replace(/\x00(\d+)\x00/g, function (_, i) {
+        return '<code>' + escapeHtml(codes[+i]) + '</code>';
+      });
+      return text;
+    }
+    function renderMarkdown(src) {
+      var lines = src.split(/\r?\n/);
+      var out = [], i = 0, n = lines.length;
+
+      function parseTable(startIdx) {
+        var sep = lines[startIdx + 1];
+        if (!/^\s*\|[\s:\-|]+\|\s*$/.test(sep)) return null;
+        var rows = [lines[startIdx]];
+        var k = startIdx + 2;
+        while (k < n && /^\s*\|.*\|\s*$/.test(lines[k])) { rows.push(lines[k]); k++; }
+        function cells(row) {
+          var s = row.trim().replace(/^\|/, '').replace(/\|$/, '');
+          return s.split('|').map(function (c) { return c.trim(); });
+        }
+        var head = cells(rows[0]), body = rows.slice(1).map(cells);
+        var html = '<table><thead><tr>';
+        head.forEach(function (h) { html += '<th>' + inline(h) + '</th>'; });
+        html += '</tr></thead><tbody>';
+        body.forEach(function (r) {
+          html += '<tr>';
+          r.forEach(function (c) { html += '<td>' + inline(c) + '</td>'; });
+          html += '</tr>';
+        });
+        html += '</tbody></table>';
+        return { html: html, consumed: k - startIdx };
+      }
+
+      function calloutKind(s) {
+        var t = s.trim().replace(/^\*\*|\*\*$/g, '').replace(/^###\s+/, '').toLowerCase();
+        if (/^use when\b/.test(t) || /^guarantees\b/.test(t)) return 'green';
+        if (/^do not use when\b/.test(t) || /^prohibitions\b/.test(t) || /^don'?ts\b/.test(t)) return 'red';
+        return null;
+      }
+
+      while (i < n) {
+        var ln = lines[i];
+        var s = ln.trim();
+        if (!s) { i++; continue; }
+
+        if (/^-{3,}\s*$/.test(s)) { out.push('<hr>'); i++; continue; }
+
+        var m = s.match(/^```(\w*)\s*$/);
+        if (m) {
+          i++;
+          var buf = [];
+          while (i < n && !/^```\s*$/.test(lines[i].trim())) { buf.push(lines[i]); i++; }
+          i++;
+          out.push('<pre><code>' + escapeHtml(buf.join('\n')) + '</code></pre>');
+          continue;
+        }
+
+        var h = s.match(/^(#{1,3})\s+(.*)$/);
+        if (h) {
+          var lvl = h[1].length;
+          var txt = h[2].replace(/^\d+\.\s+/, '');
+
+          // H2 "Contract" → 3-card grid
+          if (lvl === 2 && txt.trim().toLowerCase() === 'contract') {
+            out.push('<h2>' + inline(txt) + '</h2>');
+            i++;
+            var cards = [];
+            while (i < n) {
+              var cS = lines[i].trim();
+              if (!cS) { i++; continue; }
+              if (/^##\s+/.test(cS)) break;
+              var h3m = cS.match(/^###\s+(.*)$/);
+              if (h3m) {
+                var h3title = h3m[1];
+                var slug = h3title.toLowerCase().trim();
+                var cls = slug === 'guarantees'   ? 'guarantees'
+                        : slug === 'prohibitions' ? 'prohibitions'
+                        : slug === 'conditions'   ? 'conditions'
+                        : '';
+                var sym = cls === 'guarantees'   ? '\u2713'
+                        : cls === 'prohibitions' ? '\u2717'
+                        : cls === 'conditions'   ? 'i'
+                        : '';
+                i++;
+                var citems = [];
+                while (i < n) {
+                  var ics = lines[i].trim();
+                  if (!ics) break;
+                  if (/^#{1,3}\s+/.test(ics)) break;
+                  var cbm = /^[-*+]\s+(.*)$/.exec(ics);
+                  if (cbm) { citems.push(cbm[1]); i++; continue; }
+                  if (/^ {2,}/.test(lines[i])) { citems[citems.length - 1] += ' ' + ics; i++; continue; }
+                  break;
+                }
+                cards.push({ cls: cls, sym: sym, title: h3title, items: citems });
+                continue;
+              }
+              i++;
+            }
+            var grid = '<div class="contract-grid">';
+            cards.forEach(function (c) {
+              grid += '<div class="contract-card ' + c.cls + '">';
+              grid += '<h3><span class="sym">' + escapeHtml(c.sym) + '</span> ' + escapeHtml(c.title) + '</h3>';
+              grid += '<ul>';
+              c.items.forEach(function (it) { grid += '<li>' + inline(it) + '</li>'; });
+              grid += '</ul></div>';
+            });
+            grid += '</div>';
+            out.push(grid);
+            continue;
+          }
+
+          // H3 callout (outside Contract)
+          if (lvl === 3) {
+            var kind3 = calloutKind(txt);
+            if (kind3 && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+              i++;
+              var items3 = [];
+              while (i < n) {
+                var ls3 = lines[i].trim();
+                if (!ls3) break;
+                var bm3 = /^[-*+]\s+(.*)$/.exec(ls3);
+                if (bm3) { items3.push(bm3[1]); i++; continue; }
+                if (/^ {2,}/.test(lines[i])) { items3[items3.length - 1] += ' ' + ls3; i++; continue; }
+                break;
+              }
+              var html3 = '<div class="callout ' + kind3 + '"><div class="callout-title">' + escapeHtml(txt) + '</div><ul>';
+              items3.forEach(function (it) { html3 += '<li>' + inline(it) + '</li>'; });
+              html3 += '</ul></div>';
+              out.push(html3);
+              continue;
+            }
+          }
+          out.push('<h' + lvl + '>' + inline(txt) + '</h' + lvl + '>');
+          i++; continue;
+        }
+
+        if (s.startsWith('|') && i + 1 < n && /^\s*\|[\s:\-|]+\|\s*$/.test(lines[i + 1])) {
+          var t = parseTable(i);
+          if (t) { out.push(t.html); i += t.consumed; continue; }
+        }
+
+        var labelMatch = /^\*\*([^*]+)\*\*\s*$/.exec(s);
+        if (labelMatch && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+          var kind = calloutKind(s);
+          if (kind) {
+            var title = labelMatch[1];
+            i++;
+            var items = [];
+            while (i < n) {
+              var ls = lines[i].trim();
+              if (!ls) break;
+              var bm = /^[-*+]\s+(.*)$/.exec(ls);
+              if (bm) { items.push(bm[1]); i++; continue; }
+              if (/^ {2,}/.test(lines[i])) { items[items.length - 1] += ' ' + ls; i++; continue; }
+              break;
+            }
+            var html = '<div class="callout ' + kind + '"><div class="callout-title">' + escapeHtml(title) + '</div><ul>';
+            items.forEach(function (it) { html += '<li>' + inline(it) + '</li>'; });
+            html += '</ul></div>';
+            out.push(html);
+            continue;
+          }
+        }
+
+        if (/^[-*+]\s+/.test(s)) {
+          var items2 = [];
+          while (i < n) {
+            var ls2 = lines[i].trim();
+            if (!ls2) break;
+            var bm2 = /^[-*+]\s+(.*)$/.exec(ls2);
+            if (bm2) { items2.push(bm2[1]); i++; continue; }
+            if (/^ {2,}/.test(lines[i])) { items2[items2.length - 1] += ' ' + ls2; i++; continue; }
+            break;
+          }
+          var ulHtml = '<ul>';
+          items2.forEach(function (it) { ulHtml += '<li>' + inline(it) + '</li>'; });
+          ulHtml += '</ul>';
+          out.push(ulHtml);
+          continue;
+        }
+
+        if (/^\d+\.\s+/.test(s)) {
+          var items4 = [];
+          while (i < n) {
+            var ls4 = lines[i].trim();
+            if (!ls4) break;
+            var bm4 = /^\d+\.\s+(.*)$/.exec(ls4);
+            if (bm4) { items4.push(bm4[1]); i++; continue; }
+            break;
+          }
+          var olHtml = '<ol>';
+          items4.forEach(function (it) { olHtml += '<li>' + inline(it) + '</li>'; });
+          olHtml += '</ol>';
+          out.push(olHtml);
+          continue;
+        }
+
+        var pBuf = [s]; i++;
+        while (i < n) {
+          var ns = lines[i].trim();
+          if (!ns) break;
+          if (/^(#{1,6})\s+/.test(ns)) break;
+          if (/^[-*+]\s+/.test(ns)) break;
+          if (/^\d+\.\s+/.test(ns)) break;
+          if (ns.startsWith('|')) break;
+          if (/^```/.test(ns)) break;
+          if (/^-{3,}\s*$/.test(ns)) break;
+          pBuf.push(ns); i++;
+        }
+        out.push('<p>' + inline(pBuf.join(' ')) + '</p>');
+      }
+      return out.join('\n');
+    }
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

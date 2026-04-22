@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "// targets": "to see all targets run: nx show project yaml --web",
+  "name": "yaml",
+  "projectType": "library",
+  "sourceRoot": "libs/util/yaml/src",
+  "tags": ["visibility:internal", "type:logic", "function:core"],
+  "targets": {}
+}
