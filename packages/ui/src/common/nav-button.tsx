@@ -1,3 +1,4 @@
+// PROTOTYPE-ONLY: scaffolding for the vibe-design prototype. Not part of the design system.
 import { Box, Tooltip } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { type LucideIcon } from "lucide-react";

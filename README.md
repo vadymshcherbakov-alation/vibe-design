@@ -2,7 +2,7 @@
 
 A prototyping workspace for Alation UI. Sketch, iterate, and demo new pages and flows using the real Alation design system — same components, same tokens, same theme as production.
 
-Every UI generated in this project is routed through the Alation design system skill, so prototypes stay on-brand and in-spec by default.
+Every UI generated in this project is routed through the Alation design system skill at `.claude/skills/alation-design/`, so prototypes stay on-brand and in-spec by default.
 
 ## Getting started
 
@@ -12,58 +12,45 @@ Every UI generated in this project is routed through the Alation design system s
 git clone git@github.com:vadymshcherbakov-alation/vibe-design.git
 cd vibe-design
 pnpm install
-pnpm dev
+pnpm --filter alation-base-ui dev
 ```
 
-All apps boot in parallel. Open whichever one you're working on:
-
-| App | URL | Stack |
-|-----|-----|-------|
-| `alation-base-ui` | http://localhost:4200 | Next.js 16 — main app shell, most prototyping happens here |
-| `ai-doc` | http://localhost:4201 | Next.js 16 — documentation (Fumadocs) |
-| `alation-ai-components` | http://localhost:4202 | Vite + Tailwind — AI component prototypes |
-| `design-bridge` | http://localhost:4203 | Next.js 16 — bridge / demo app |
-
-Run a single app: `pnpm --filter alation-base-ui dev`.
+Open `http://localhost:4200`.
 
 ## Project structure
 
-Monorepo managed by [Turborepo](https://turborepo.dev/) and [pnpm workspaces](https://pnpm.io/workspaces).
+pnpm workspace.
 
 ```
 apps/
-  alation-base-ui/        # Core shell — start here for most work
-  ai-doc/                 # Fumadocs documentation site
-  alation-ai-components/  # AI component sandbox (Vite)
-  design-bridge/          # Bridge / demo app
+  alation-base-ui/        # Next.js 16 — the only prototype app
 
 packages/
-  ui/                     # Shared component library (@repo/ui)
-  ai-ui/                  # Shared AI UI utilities
+  ui/                     # Shared component library (@repo/ui) — theme + prototype layout
   fabric-theme-morpheus/  # Alation theme (MUI overrides, tokens)
   fabric-types/           # Shared type definitions
   icons-neo/              # Icon library
-  util/                   # Utilities
   eslint-config/          # Shared ESLint config
   typescript-config/      # Shared TypeScript config
 
-alation-design-system/    # Design system skill + reference docs
+.claude/
+  skills/alation-design/  # Design system skill + reference docs (synced from the canonical alation-design-system repo)
 ```
 
 ### `alation-base-ui`
 
-The primary shell. All routes live under `app/app/` (the nested `app` is intentional — it represents the authenticated product). Studio, compose, analytics, governance, data quality, marketplace, add-ons, and cde-hub sections are all here. New prototypes typically land under `app/app/<section>/`.
+The primary shell. All routes live under `app/app/` (the nested `app` is intentional — it represents the authenticated product). New prototypes typically land under `app/app/<section>/`.
 
 ### `packages/ui`
 
 Shared component library imported as `@repo/ui`. Two key areas:
 
 - **Theme** (`src/theme/`): `ThemeProvider` wraps MUI with Alation tokens — a 12-family × 9-shade palette plus semantic tokens for border, background, text, and icon across all interactive states. Access via `theme.tokens.color.text.primary`, `theme.tokens.palette.neutral[800]`, etc.
-- **Common layout** (`src/common/`): `AlationLayout` provides the full shell (sidebar, header, sub-nav, content area).
+- **Common layout** (`src/common/`): `AlationLayout` provides the full shell (sidebar, header, sub-nav, content area). Everything here is **prototype-only scaffolding** — not production components.
 
-### `alation-design-system/`
+### `.claude/skills/alation-design/`
 
-The canonical Alation design system — foundations, base components, composite components, patterns, and page templates — along with the Claude skill that enforces them. Browse it locally by opening `alation-design-system/index.html`, or see the live version at [alation-design-system](https://github.com/vadymshcherbakov-alation/alation-design-system).
+The Alation design system skill — foundations, base components, composite components, patterns, and page templates — synced from the canonical `alation-design-system` repo. When a reference changes there, re-sync the `references/` tree into this folder.
 
 ## Generating UI with Claude
 
@@ -92,16 +79,6 @@ Add a new page under `apps/alation-base-ui/app/app/<your-section>/page.tsx`, wir
 import { Box, Typography } from "@mui/material";
 import { Button } from "@repo/ui";
 ```
-
-If you need a fresh playground app instead, create it under `apps/`:
-
-```sh
-mkdir apps/my-prototype
-cd apps/my-prototype
-pnpm init
-```
-
-It'll be picked up by the workspace automatically. Import `@repo/ui`, `@repo/ai-ui`, or `@alation/fabric-theme-morpheus` just like the other apps do.
 
 ## Scripts
 

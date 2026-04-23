@@ -1,3 +1,4 @@
+// PROTOTYPE-ONLY: scaffolding for the vibe-design prototype. Not part of the design system.
 // Shared field type definitions for create field modals
 export const MODAL_FIELD_TYPES = [
   {

@@ -1,3 +1,4 @@
+// PROTOTYPE-ONLY: scaffolding for the vibe-design prototype. Not part of the design system.
 "use client";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";

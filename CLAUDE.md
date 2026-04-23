@@ -4,31 +4,22 @@ A prototyping workspace for Alation UI. Use this project to sketch, iterate, and
 
 ## Stack
 
-Turborepo + pnpm monorepo. Apps under `apps/`, shared packages under `packages/` (theme, UI components, icons, types). React 19 + TypeScript + MUI 7 (Alation theme) + Inter / JetBrains Mono.
+pnpm monorepo. The only prototype app is `apps/alation-base-ui`; shared packages under `packages/` (theme, UI components, icons, types). React 19 + TypeScript + MUI 7 (Alation theme) + Inter / JetBrains Mono.
 
 ## Running locally
 
 ```bash
 pnpm install
-pnpm dev
+pnpm --filter alation-base-ui dev
 ```
 
-Dev ports:
-
-| App | Port |
-|-----|------|
-| `alation-base-ui` (Next.js) | http://localhost:4200 |
-| `ai-doc` (Next.js) | http://localhost:4201 |
-| `alation-ai-components` (Vite) | http://localhost:4202 |
-| `design-bridge` (Next.js) | http://localhost:4203 |
-
-Scoped runs: `pnpm --filter alation-base-ui dev`.
+App runs at `http://localhost:4200`.
 
 ## Generating UI with Claude
 
 This project uses the Alation design system skill for all UI generation. For any prompt that asks to create, modify, or prototype UI — a page, a screen, a component, a flow — follow the skill first. It handles components, tokens, typography, spacing, and the full design-system rulebook via a redirection table: the right reference file for every design intent.
 
-@alation-design-system/CLAUDE.md
+@.claude/skills/alation-design/SKILL.md
 
 Do not invent components or tokens outside the skill's references. If the skill flags a missing reference, surface it and stop — do not improvise.
 
@@ -43,13 +34,7 @@ The primary Next.js 16 App Router shell. All routes live under `app/app/` (neste
 Shared component library imported as `@repo/ui`. Two key areas:
 
 - **Theme system** (`src/theme/`): `ThemeProvider` extends MUI's theme with custom `tokens`. A 12-family × 9-shade palette plus semantic tokens for border, background, text, and icon across default/hover/disabled/focused/error/warning/success states. 37+ component overrides in `componentOverrides/`. Access via `theme.tokens.color.text.primary`, `theme.tokens.palette.neutral[800]`.
-- **Common layout** (`src/common/`): `AlationLayout` provides the full-viewport shell (sidebar, header, sub-nav, content area).
-
-### Other apps
-
-- `ai-doc` — documentation with Fumadocs
-- `alation-ai-components` — AI component prototypes (Vite + Tailwind)
-- `design-bridge` — bridge/demo app
+- **Common layout** (`src/common/`): `AlationLayout` provides the full-viewport shell (sidebar, header, sub-nav, content area). These are **prototype-only scaffolding** — not production components.
 
 ### Key dependencies
 

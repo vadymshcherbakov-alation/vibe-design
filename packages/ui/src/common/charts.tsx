@@ -1,3 +1,4 @@
+// PROTOTYPE-ONLY: scaffolding for the vibe-design prototype. Not part of the design system.
 import React, { useState } from "react";
 import { Box, Typography, IconButton, Menu, MenuItem, Tooltip as MuiTooltip } from "@mui/material";
 import {

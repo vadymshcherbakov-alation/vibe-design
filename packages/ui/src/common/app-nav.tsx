@@ -1,3 +1,4 @@
+// PROTOTYPE-ONLY: scaffolding for the vibe-design prototype. Not part of the design system.
 "use client";
 import { Box } from "@mui/material";
 import { NavButton } from "./nav-button";

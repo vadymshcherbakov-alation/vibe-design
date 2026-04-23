@@ -10,10 +10,6 @@ dist
 out
 build
 
-# Apps not deployed to Vercel
-apps/alation-ai-components
-apps/ai-doc
-
 # Misc
 .turbo
 **/.turbo

@@ -1,3 +1,4 @@
+// PROTOTYPE-ONLY: scaffolding for the vibe-design prototype. Not part of the design system.
 "use client";
 import { Box, TextField, IconButton, Avatar, Menu, MenuItem, ListItemIcon, Divider } from "@mui/material";
 import { Search, Settings, User, LogOut } from "lucide-react";

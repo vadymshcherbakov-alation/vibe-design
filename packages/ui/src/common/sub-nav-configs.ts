@@ -1,3 +1,4 @@
+// PROTOTYPE-ONLY: scaffolding for the vibe-design prototype. Not part of the design system.
 import NavMcpIcon from "../assets/icon/nav-mcp.svg";
 import AgentIcon from "../assets/icon/type-agent.svg";
 import ToolIcon from "../assets/icon/type-tool.svg";

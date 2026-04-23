@@ -1,9 +1,0 @@
-{
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "// targets": "to see all targets run: nx show project browser --web",
-  "name": "browser",
-  "projectType": "library",
-  "sourceRoot": "libs/util/browser/src",
-  "tags": ["visibility:public", "type:logic", "function:core"],
-  "targets": {}
-}
