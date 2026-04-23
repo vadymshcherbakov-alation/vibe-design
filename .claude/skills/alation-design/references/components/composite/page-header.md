@@ -9,7 +9,7 @@ description: >
 tags: [page-header, layout, title, breadcrumb, tabs]
 
 figma_url: ""
-code_reference: design-playground/apps/plugins/alation-design/template/src/blocks/page-header/Example.tsx
+code_reference: "no shared generic `<PageHeader>` wrapper in @alation/alation-ui — production uses domain-specific headers (e.g. `ObjectHeaderActions`, `TabHeaderWithNumber`). Prototype code in @repo/ui uses `<PageHeaderSection>` as a layout scaffold; this doc describes the composition contract."
 example_path: ./Example.tsx
 
 mui_base: none
@@ -21,10 +21,10 @@ depends_on_components: [Typography, Button, Tabs, Breadcrumbs, Chip, PageHeaderS
 
 ## 1. Classification
 
-- **Type:** Composite component
-- **MUI base:** none (wraps `PageHeaderSection` layout primitive + MUI `Tabs`, `Breadcrumbs`, `Chip`)
+- **Type:** Composite component — **composition pattern, not a shared wrapper**
+- **MUI base:** none (composes `<Box>` / `Typography` / `Button` / MUI `Tabs` / `Breadcrumbs` / [Chip](../base/chip.md))
 - **Figma:** Page header — to be linked
-- **Code:** `design-playground/apps/plugins/alation-design/template/src/blocks/page-header/Example.tsx`
+- **Code:** There is **no shared generic `<PageHeader>` component** in `@alation/alation-ui`. Production assembles page headers ad-hoc at the call site and uses domain-specific wrappers (`ObjectHeaderActions`, `TabHeaderWithNumber`) for repeated domains. Prototype code in `@repo/ui` exposes `PageHeaderSection` as a layout scaffold — it is prototype-only and not part of the design system contract.
 
 ## 2. Purpose
 
@@ -58,7 +58,7 @@ The page header sits at the top of every page inside the white main area. It pro
 ### Conditions
 - When page content is split across tabs, disable the header's default border (`hideBorder`) and move `borderBottom: 1` to a `Box` below the tabs.
 - When the page is a detail view navigated from a list, prepend a `Breadcrumbs` row above the title with `sx={{ mb: 1 }}`.
-- When the entity has a status, mount a `Chip` with `icon` right after the title (gap `1.5`) — page-level status badges may carry icons, unlike body chips which must use [`LabelChip`](../base/chip.md).
+- When the entity has a status, mount a [Chip](../base/chip.md) right after the title (gap `1.5`) — page-level status badges may carry a leading `icon` prop, while body / table chips should stay plain.
 - When a primary action button is present and the page is a creation context, use `variant="contained"` + `startIcon={<Plus size={16} />}`. When the page is a state/detail context, use `variant="outlined"`.
 
 ## 5. Anatomy & Composed of
@@ -156,7 +156,7 @@ Use for detail pages where the user navigated from a list, the entity has a stat
 
 Rules:
 - Breadcrumb row `sx={{ mb: 1 }}` above title row.
-- Status badge uses `Chip` directly (not `LabelChip`) — page-level badges may carry icons.
+- Status badge uses [Chip](../base/chip.md) with an `icon` prop (page-level badges may carry icons; body / table chips stay plain).
 - Badge colours use `theme.palette.<hue>[100]` / `[900]` tokens.
 - Secondary action uses `variant="outlined"` when it reflects a page state (not creation).
 

@@ -2,16 +2,17 @@
 name: layout
 title: Layout
 category: foundation
-last_updated: 2026-04-21
+last_updated: 2026-04-23
 
 description: >
-  The Alation page shell and content widths. Every page renders inside the
-  `AlationLayout` main area; widths, page padding, and responsive rules
-  all come from this foundation.
+  Page-width discipline + the conventional Alation page shell. Breakpoints
+  are MUI defaults (no theme overrides). `AlationLayout` / `PageHeaderSection`
+  live in the consumer project / prototype — not in the shared design-system
+  packages.
 tags: [foundation, layout, page-shell, responsive]
 
 figma_url: "https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-6706&t=eS5ReSD4ZsCMa08a-1"
-code_reference: fabric-theme-morpheus/src/lib (breakpoints) + consumer project src/layout/
+code_reference: "breakpoints: MUI defaults (no override in fabric-theme-morpheus). AlationLayout / PageHeaderSection: consumer-project / prototype-only."
 example_path: ./Example.tsx
 
 mui_base: breakpoints
@@ -24,9 +25,9 @@ depends_on_components: []
 ## 1. Classification
 
 - **Type:** Foundation
-- **MUI base:** `breakpoints`
+- **MUI base:** `breakpoints` (MUI defaults — `fabric-theme-morpheus` does **not** override them)
 - **Figma:** [Layout grid · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-6706&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `fabric-theme-morpheus` — breakpoint + layout primitives in `src/lib/`; page shell in consumer project `src/layout/`
+- **Code:** Breakpoints come from MUI defaults. The page shell (`AlationLayout`, `PageHeaderSection`) is **not** in `@alation/fabric-theme-morpheus` or `@alation/alation-ui` — it lives per consumer app (production) or in `@repo/ui` (vibe-design prototype). Treat shell primitives as composition conventions, not shared components.
 
 ## 2. Purpose
 

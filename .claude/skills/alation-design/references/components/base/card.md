@@ -90,6 +90,8 @@ The name **Card Wrapper** distinguishes this base primitive from the *composite*
 |---|---|
 | `outlined` (default) | Bordered surface — standard in product UI |
 | `elevation` | Raised surface — use only when the surface must visually float |
+| `gradient` | Branded gradient fill. Emphasis / marketing surfaces only. Not for standard product UI. |
+| `gradientOutlined` | Branded gradient border on a neutral fill. Same restriction — emphasis only. |
 
 ### 5.2 `elevation` prop (Paper only, when `variant="elevation"`)
 

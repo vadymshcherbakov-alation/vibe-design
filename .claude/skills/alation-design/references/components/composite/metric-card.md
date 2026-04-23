@@ -9,7 +9,7 @@ description: >
 tags: [card, metric, stat, quota, dashboard]
 
 figma_url: ""
-code_reference: design-playground/apps/plugins/alation-design/template/src/blocks/card/Example.tsx
+code_reference: "no shared `<MetricCard>` wrapper in @alation/alation-ui — production composes `<Paper variant=\"outlined\">` + `<Typography variant=\"hero\">` + `<LinearProgress>` ad-hoc"
 example_path: ./metric-card-preview.html
 
 mui_base: Paper
@@ -35,10 +35,10 @@ depends_on_components:
 
 ## 1. Classification
 
-- **Type:** Composite component
-- **MUI base:** `Paper`
+- **Type:** Composite component — **composition pattern, not a shared wrapper**
+- **MUI base:** `Paper` (via the [Card Wrapper](../base/card.md) primitive)
 - **Figma:** Metric card — to be linked
-- **Code:** `design-playground/apps/plugins/alation-design/template/src/blocks/card/Example.tsx`
+- **Code:** There is **no shared `<MetricCard>` component** in `@alation/alation-ui`. Production composes `<Paper variant="outlined">` + `<Typography variant="hero">` + `<LinearProgress>` directly at the call site. This reference defines the composition contract so metric tiles across dashboards read consistently.
 
 ## 2. Purpose
 
@@ -68,7 +68,7 @@ A Metric card puts a single headline number front and centre — an object count
 - Never use `variant="h1"` / `"h4"` for the headline value — always `variant="hero"`.
 - Never hardcode progress bar colour — use `color="primary"` or `color="error"` on `<LinearProgress>`.
 - Never hardcode hex anywhere — all colour comes from `theme.palette.*`.
-- Never mount a bare `<Chip>` for the badge — use [`LabelChip`](../base/chip.md).
+- Never invent a bespoke badge pill — use the [Chip](../base/chip.md) pattern (`<Chip variant="filledLight" color="…" size="xsmall" />`).
 - Never put more than one primary action on a Metric card — additional actions belong behind a menu or on the page chrome.
 
 ### Conditions
@@ -91,7 +91,7 @@ A Metric card puts a single headline number front and centre — an object count
 └─────────────────────────────────────────┘
 ```
 
-- **Title row** — `subtitle1` title + optional right-aligned badge (`LabelChip` or neutral pill).
+- **Title row** — `subtitle1` title + optional right-aligned [Chip](../base/chip.md) (e.g. `<Chip label="This quarter" variant="outlined" size="xsmall" />`).
 - **Value row** — `hero` value on the left + `body2` subtitle below + optional right-aligned stat (percent, status).
 - **Progress bar** — `LinearProgress` at `color="primary"` (or `"error"` when critical).
 - **Remaining line** — `body2`, `text.secondary`, one line describing what's left (e.g. "3,734,550 remaining").
@@ -115,7 +115,7 @@ A Metric card puts a single headline number front and centre — an object count
 ```tsx
 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
   <Typography variant="subtitle1">{title}</Typography>
-  {badge && <LabelChip label={badge} />}
+  {badge && <Chip label={badge} variant="outlined" size="xsmall" />}
 </Box>
 ```
 
@@ -180,7 +180,7 @@ Placeholder — fill with Alation-domain metrics when this composite is used in 
 >
   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
     <Typography variant="subtitle1">Catalog objects</Typography>
-    <LabelChip label="This quarter" />
+    <Chip label="This quarter" variant="outlined" size="xsmall" />
   </Box>
 
   <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>

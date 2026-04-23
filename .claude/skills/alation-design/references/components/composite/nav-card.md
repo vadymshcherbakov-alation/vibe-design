@@ -9,7 +9,7 @@ description: >
 tags: [card, nav, tile, navigation]
 
 figma_url: ""
-code_reference: design-playground/apps/plugins/alation-design/template/src/blocks/card/Example.tsx
+code_reference: "no shared `<NavCard>` wrapper in @alation/alation-ui — production composes `<Card variant=\"outlined\">` + `<Box>` (tinted icon container) + `<Typography>` ad-hoc"
 example_path: ./nav-card-preview.html
 
 mui_base: Card
@@ -33,10 +33,10 @@ depends_on_components:
 
 ## 1. Classification
 
-- **Type:** Composite component
-- **MUI base:** `Card`
+- **Type:** Composite component — **composition pattern, not a shared wrapper**
+- **MUI base:** `Card` (via the [Card Wrapper](../base/card.md) primitive)
 - **Figma:** Nav card — to be linked
-- **Code:** `design-playground/apps/plugins/alation-design/template/src/blocks/card/Example.tsx`
+- **Code:** There is **no shared `<NavCard>` component** in `@alation/alation-ui`. Production composes `<Card variant="outlined">` + a tinted icon `<Box>` + `<Typography>` directly at the call site. This reference documents that composition contract so every tile looks the same across pages.
 
 ## 2. Purpose
 
@@ -68,7 +68,7 @@ A Nav card is a clickable tile that represents one navigable entity — a data s
 - Never use `bgcolor: 'white'` on the icon container — always `palette.<hue>[100]`.
 - Never invent a custom hover style — use the standard tile hover rule (see §6).
 - Never style the Nav card with `bgcolor` at rest — it must be `"transparent"` until hover.
-- Never mount a bare `<Chip>` inside a Nav card — use [`LabelChip`](../base/chip.md) if a status label is needed.
+- If a status label is needed, use the [Chip](../base/chip.md) pattern (`<Chip variant="filledLight" color="…" size="xsmall" />`), not an inline badge.
 
 ### Conditions
 - Every Nav card is clickable — if it isn't, do not use this composite.

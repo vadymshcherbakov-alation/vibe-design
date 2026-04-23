@@ -62,22 +62,63 @@ Consume via `<Typography variant="…">`. The variant is the source of truth —
 
 Exhaustive. Nothing outside this list is valid.
 
+### Display & headings
+
 | Variant | Use for |
 |---|---|
-| `h1` | Page titles — inside `PageHeaderSection` |
-| `h3` | Major section headings inside a page |
-| `h4` | Section headings inside a page |
-| `h5` | Card or panel headings (legacy — prefer `subtitle1` for new work) |
-| `subtitle1` | Card and panel titles — 14 px, weight 500, renders as `<h6>` |
-| `subtitle2` | Secondary card label or compact heading — 13 px, weight 500 |
-| `body0` | Slightly larger body (Alation custom) |
+| `heroXl` | Extra-large display numbers (rare, landing / marketing) |
+| `heroLg` | Large display numbers (hero numbers on dashboards) |
+| `hero` | Large display numbers (big-number stat cards) |
+| `h1` | Page titles (rendered at the top of every page) |
+| `h2` | Major section title within a page |
+| `h3` | Section heading inside a page |
+| `h4` | Sub-section heading inside a page |
+| `h5` | Card or panel heading (legacy — prefer `subtitle1` for new work) |
+| `h6` | Very compact heading (legacy) |
+| `subtitle1` | Card and panel titles — renders as `<h6>` |
+| `subtitle2` | Secondary card label or compact heading |
+
+### Body & meta
+
+| Variant | Use for |
+|---|---|
+| `body0` | Slightly larger body (Alation custom — used in form-field labels) |
 | `body1` | Primary body text |
 | `body2` | Secondary body text, descriptions |
 | `caption` | Timestamps, metadata, fine print |
 | `overline` | Category labels, eyebrow text |
-| `hero` | Large display numbers (big-number stat cards) |
+
+### Button typography (theme-owned — you won't pass these directly, but `<Button>` consumes them)
+
+| Variant | Use for |
+|---|---|
+| `buttonLg` | Large Button label |
+| `button` | Default / medium Button label |
+| `buttonSm` | Small / xsmall Button label |
+
+### Machine (monospace — JetBrains Mono)
+
+| Variant | Use for |
+|---|---|
+| `machineHero` | Large monospace display (rare — identifiers in hero slots) |
+| `machineH1`–`machineH6` | Monospace headings |
+| `machineSubtitle1`, `machineSubtitle2` | Monospace subtitles |
+| `machineBody0` | Slightly larger monospace body |
 | `machineBody1` | Monospace body — code, identifiers |
 | `machineBody2` | Monospace compact — inline code, short identifiers |
+| `machineOverline` | Monospace eyebrow label |
+| `machineButton`, `machineButtonLg`, `machineButtonSm` | Monospace button labels (theme-owned) |
+
+### Icon size tokens (typography-level — consumed by icon containers, not by `<Typography>`)
+
+Icon sizes live in the typography layer so every icon container can read them by key. See [iconography.md](./iconography.md) for the container → size mapping.
+
+| Token | Value |
+|---|---|
+| `typography.iconXSmall` | `1.2rem` |
+| `typography.iconSmall` | `1.6rem` |
+| `typography.iconMedium` | `2rem` |
+| `typography.iconLarge` | `2.4rem` |
 
 ## 6. Type families
 

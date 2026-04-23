@@ -2,11 +2,13 @@
 name: icon-button
 title: Icon Button
 category: base-component
-last_updated: 2026-04-21
+last_updated: 2026-04-23
 
 description: >
   Icon-only action trigger. Use for row-level overflow menus, dense toolbars,
-  and inline controls where a full Button would crowd the layout.
+  and inline controls where a full Button would crowd the layout. Supports
+  four sizes (`xsmall` / `small` / `medium` / `large`) and three surface
+  variants (`contained` / `outlined` / `text`) from the Alation theme.
 tags: [action, interactive, icon]
 
 figma_url: "https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?node-id=4-311&t=eS5ReSD4ZsCMa08a-4"
@@ -16,9 +18,17 @@ example_path: ./Example.tsx
 mui_base: IconButton
 depends_on_tokens:
   - palette.primary.main
+  - palette.error.main
+  - palette.warning.main
+  - palette.success.main
+  - palette.info.main
   - palette.text.primary
   - palette.text.disabled
   - palette.action.hover
+  - typography.iconXSmall
+  - typography.iconSmall
+  - typography.iconMedium
+  - typography.iconLarge
 depends_on_components:
   - lucide-react
 ---
@@ -52,44 +62,61 @@ An Icon Button is a clickable icon — an action you can trigger without a text 
 
 ### Guarantees
 - Always renders an accessible name via `aria-label` (icon alone does not announce).
-- Uses `lucide-react` icons at `size={16}` inside the control.
+- Icon sizes are theme-baked per IconButton size: `xsmall` → `typography.iconXSmall` (1.2rem), `small` → `iconSmall` (1.6rem), `medium` → `iconMedium` (2rem), `large` → `iconLarge` (2.4rem). Do not pass an icon `size` prop — the container handles it.
 - Focus ring is visible on keyboard focus.
 - Disabled state is inert (no activation, not focusable).
+- Production uses `@alation/icons-neo` icons wrapped in MUI `SvgIcon`. Prototype / `vibe-design` code uses `lucide-react` per the project's UI-icon convention; both are rendered inside an `IconButton` the same way.
 
 ### Prohibitions
 - No icon-only IconButton without an `aria-label`.
-- No `@mui/icons-material` inside an IconButton. `lucide-react` only.
+- No `@mui/icons-material` inside an IconButton in product UI — use `@alation/icons-neo` (production) or `lucide-react` (prototype) to match the surrounding app.
 - No hard-coded hex / px / font values — consume via theme.
-- No `sx` colour or radius overrides — use the `color` prop.
-- No icon `size` other than `16` inside an IconButton.
+- No `sx` colour, size, or radius overrides — use the `color` / `size` / `variant` props.
+- No custom icon `size` prop — the IconButton size governs the icon size.
 
 ### Conditions
-- Destructive IconButtons (e.g. row-delete) must pair with a ConfirmDialog before committing.
+- Destructive IconButtons (e.g. row-delete) must pair with a [ConfirmDialog](../composite/dialog.md) before committing.
 - If the action is ambiguous without a label, prefer a full `<Button>` — do not rely on tooltip alone.
 - Tooltip is strongly encouraged on icon-only controls but does not replace `aria-label`.
+- When an IconButton sits in a toolbar alongside surfaced actions, prefer `variant="text"` (default) — reserve `contained` / `outlined` for standalone, emphasised controls.
 
 ## 5. Variants
 
 ### 5.1 `size` prop
 
-| Size | Use |
-|---|---|
-| `small` | Dense tables, row actions, inline controls — pairs with `size={16}` icons |
-| `medium` (default) | Standalone icon actions in toolbars |
+| Size | Icon size (from theme) | Use |
+|---|---|---|
+| `xsmall` | `iconXSmall` (1.2rem) | Very dense tables, row-level mini actions |
+| `small` | `iconSmall` (1.6rem) | Dense tables, row actions, inline controls |
+| `medium` (default) | `iconMedium` (2rem) | Standalone icon actions in toolbars |
+| `large` | `iconLarge` (2.4rem) | Rare — hero / empty-state icon affordances |
 
-### 5.2 `color` prop
+### 5.2 `variant` prop
+
+The Alation theme exposes three IconButton surface variants via `className` (applied automatically by the `variant` prop in this codebase).
+
+| Variant | Role |
+|---|---|
+| `text` (default) | No surface — icon sits on the parent background. Standard for toolbars / row actions. |
+| `outlined` | Bordered surface — standalone icon control that needs a visible target |
+| `contained` | Filled surface — emphasised icon action (rare) |
+
+### 5.3 `color` prop
 
 | Colour | Role | Notes |
 |---|---|---|
-| `inherit` (default) | Follows parent text colour | Most common |
+| `default` / `inherit` | Follows parent text colour | Most common |
 | `primary` | Highlight a primary icon action | Rare in product UI |
+| `secondary` | Alt emphasis | Rare |
 | `error` | Destructive icon action (pair with ConfirmDialog) | — |
-| ~~`secondary`~~ | ❌ Do not use. Morpheus has no visual "secondary" style. | — |
+| `warning` | Attention-grabbing icon state | — |
+| `success` | Positive / healthy icon state | — |
+| `info` | Informational icon state | — |
 
 ## 6. Anatomy
 
-- **Container** — circular hit target (theme-baked).
-- **Icon** — `lucide-react` at `size={16}`.
+- **Container** — circular hit target sized by the `size` prop; surface per `variant`.
+- **Icon** — child `SvgIcon` from `@alation/icons-neo` (production) or `lucide-react` (prototype); size governed by the IconButton `size`.
 - **Focus ring** — theme-baked on keyboard focus.
 
 ## 7. States
@@ -106,19 +133,26 @@ An Icon Button is a clickable icon — an action you can trigger without a text 
 
 ```tsx
 import { IconButton, Tooltip } from '@mui/material';
-import { MoreVertical, Trash2 } from 'lucide-react';
+import { MoreVertical, Trash2 } from 'lucide-react'; // or @alation/icons-neo in production
 
-// Standard row-level overflow
+// Standard row-level overflow (size drives the icon; no size on the icon itself)
 <Tooltip title="More actions">
   <IconButton size="small" aria-label="More actions">
-    <MoreVertical size={16} />
+    <MoreVertical />
+  </IconButton>
+</Tooltip>
+
+// Outlined standalone control
+<Tooltip title="Filter">
+  <IconButton size="medium" variant="outlined" aria-label="Filter">
+    <FilterIcon />
   </IconButton>
 </Tooltip>
 
 // Destructive — paired with a ConfirmDialog (not shown)
 <Tooltip title="Delete row">
   <IconButton size="small" color="error" aria-label="Delete row" onClick={openConfirm}>
-    <Trash2 size={16} />
+    <Trash2 />
   </IconButton>
 </Tooltip>
 ```

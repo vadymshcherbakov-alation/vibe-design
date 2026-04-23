@@ -61,7 +61,7 @@ An **Alert** is an inline status message — it tells the user something about t
 **Do not use when**
 - The message is transient and global → use a **Snackbar / toast** pattern (note: the `MuiSnackbarAlert` helper in `cdm-design-demo` is marked `@deprecated` — do not reuse; a replacement has not yet been documented)
 - The message blocks the user until dismissed → use [Dialog](../composite/dialog.md)
-- The message is a single word label → use **LabelChip**
+- The message is a single word label → use [Chip](./chip.md)
 
 ## 4. Contract
 

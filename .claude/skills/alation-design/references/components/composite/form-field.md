@@ -46,10 +46,10 @@ depends_on_components:
 
 ## 1. Classification
 
-- **Type:** Composite component
+- **Type:** Composite component — **composition pattern, not a shared wrapper**
 - **MUI base:** `FormControl`
 - **Figma:** [Form Field · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=1-564&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `fabric-theme-morpheus` — `src/lib/` (Label + HelperText overrides + input-surface overrides: TextField / Select / Autocomplete / Checkbox / Radio / DatePicker)
+- **Code:** `@alation/fabric-theme-morpheus` — `src/lib/` (Label + HelperText overrides + input-surface overrides: TextField / Select / Autocomplete / Checkbox / Radio / DatePicker). **There is no shared `<FormField>` component in `@alation/alation-ui`** — production composes `FormControl` + `InputLabel` + one input + `FormHelperText` directly at the call site. This reference describes that composition contract; it is not a wrapper API.
 
 ## 2. Purpose
 

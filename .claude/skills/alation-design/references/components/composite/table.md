@@ -9,22 +9,22 @@ description: >
 tags: [table, data-grid, list]
 
 figma_url: ""
-code_reference: design-playground/apps/plugins/alation-design/template/src/blocks/table/Example.tsx
+code_reference: "@alation/fabric-theme-morpheus/src/lib/MuiDataGrid.overrides.tsx (Alation DataGrid theme). There is no shared `<Table>` wrapper in @alation/alation-ui — production consumes `<DataGrid>` directly from @mui/x-data-grid-pro."
 example_path: ./Example.tsx
 
-mui_base: DataGrid (MUI X)
+mui_base: DataGrid (MUI X Data Grid Pro)
 depends_on_tokens: [typography.body1, typography.body2, palette.text.secondary, palette.divider]
-depends_on_components: [DataGrid, LabelChip, Avatar, IconButton, Tooltip, Typography, Box, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight]
+depends_on_components: [DataGrid, Chip, Avatar, IconButton, Tooltip, Typography, Box]
 ---
 
 # Table
 
 ## 1. Classification
 
-- **Type:** Composite component
-- **MUI base:** `DataGrid` (MUI X Data Grid)
+- **Type:** Composite component — **composition pattern, not a shared wrapper**
+- **MUI base:** `DataGrid` from `@mui/x-data-grid-pro` (MUI X Data Grid Pro)
 - **Figma:** Table — to be linked
-- **Code:** `design-playground/apps/plugins/alation-design/template/src/blocks/table/Example.tsx`
+- **Code:** There is **no shared `<Table>` component** in `@alation/alation-ui`. Production consumes `<DataGrid>` directly from `@mui/x-data-grid-pro`, styled by `@alation/fabric-theme-morpheus/src/lib/MuiDataGrid.overrides.tsx`. Shared table utilities (`useTablePagination`, `useApiDrivenTablePagination`, `SaveTableViewAlert`) exist as hooks / helpers around the grid, not as a wrapper.
 
 ## 2. Purpose
 
@@ -45,13 +45,13 @@ A data table for listing entities (agents, tools, data sources, OAuth clients, e
 ## 4. Contract
 
 ### Guarantees
-- Every chip cell uses [`LabelChip`](../base/chip.md) — never raw `<Chip>` with visual `sx`.
+- Every chip cell uses MUI `<Chip>` with a documented `variant` + `color` from [chip.md](../base/chip.md) — never a chip with visual `sx` (`bgcolor`, `fontSize`, `height`).
 - All UI icons (row icons, action icons, sort indicators) come from `lucide-react`.
 - Row text uses Typography variants (`body1` primary, `body2` secondary) — no inline font overrides.
 - Text follows sentence case — branded module names (Agent Studio, MCP servers) keep proper capitalization.
 
 ### Prohibitions
-- Never mount `<Chip sx={{ bgcolor: ..., color: ... }}>` for label cells — use `LabelChip`.
+- Never mount `<Chip sx={{ bgcolor: ..., color: ... }}>` in a cell — use the `variant` + `color` + `size` props per [chip.md](../base/chip.md).
 - Never use `fontSize` / `fontWeight` inline on Typography cells — use variant.
 - Never import SVG icons for in-table icons — lucide-react only (nav-rail SVG is the only `?react` exception).
 - Never hardcode colors — use `theme.palette.*` or semantic tokens (`text.secondary`, `divider`, `background.paper`).
@@ -59,7 +59,7 @@ A data table for listing entities (agents, tools, data sources, OAuth clients, e
 - Never put more than one primary action in a row — row-level actions live behind the `MoreVertical` menu.
 
 ### Conditions
-- When a column represents a type or status → use a `LabelChip` column (see the colour rule in §6).
+- When a column represents a type or status → use a [Chip](../base/chip.md) cell (`variant="filledLight"` + semantic `color` for status, `variant="outlined"` for neutral type labels).
 - When a column represents a creator → use a 24px `Avatar` with initials wrapped in a `Tooltip` showing the full name.
 - When a row has actions → mount a `MoreVertical` `IconButton` in the last column, width 60.
 - When the table is empty → render an empty-state block (title + subtitle + optional CTA) — do not show the grid with zero rows.
@@ -73,8 +73,8 @@ A data table for listing entities (agents, tools, data sources, OAuth clients, e
 | Column | Content | Width |
 |---|---|---|
 | Name | lucide icon + name (`body1`) + description (`body2`, `text.secondary`) | flex / flexible |
-| Access | `LabelChip` — neutral (default) | 140 |
-| Type | `LabelChip` — `blue` for native, `neutral` for custom | 100 |
+| Access | [Chip](../base/chip.md) `variant="outlined"` + `color="default"` + `size="xsmall"` | 140 |
+| Type | [Chip](../base/chip.md) — `filledLight` + `color="info"` (native) or `outlined` + `color="default"` (custom) | 100 |
 | Created | Formatted date string — `body1`, `text.secondary` | 140 |
 | Creator | 24px `Avatar` with initials + `Tooltip` with full name | 88 |
 | Actions | `MoreVertical` `IconButton` (lucide-react) | 60 |
@@ -88,8 +88,8 @@ A data table for listing entities (agents, tools, data sources, OAuth clients, e
 - **Pagination footer** — sits *outside* the bordered grid shell, directly below it, with `mt: 2`. Anatomy: `Show rows` label + size `<select>` on the left; range counter ("1–5 of N") + first / previous / next / last chevron `IconButton`s on the right.
 
 **Composed of**
-- `DataGrid` (MUI X) — grid primitive
-- [LabelChip](../base/chip.md) — type / access / status cells
+- `DataGrid` from `@mui/x-data-grid-pro` — grid primitive
+- [Chip](../base/chip.md) — type / access / status cells
 - [IconButton](../base/icon-button.md) — row-level action trigger
 - `Avatar` + `Tooltip` — creator column
 - [Typography](../foundations/typography.md) — cell text
@@ -115,19 +115,19 @@ Icon + stacked text in a flex `Box`:
 </Box>
 ```
 
-### Label chip cell
+### Chip cell
 
-Always use `LabelChip` — never raw `<Chip>` with visual `sx`:
+Use MUI `<Chip>` with the documented `variant` + `color` + `size` from [chip.md](../base/chip.md). `size="xsmall"` is the standard for table rows.
 
 ```tsx
-import { LabelChip } from '../../components/LabelChip';
+import { Chip } from '@mui/material';
 
-<LabelChip label="MCP" />
-<LabelChip label="Native" color="blue" />
-<LabelChip label="Custom" />  {/* defaults to neutral */}
+<Chip label="MCP" variant="outlined" color="default" size="xsmall" />
+<Chip label="Native" variant="filledLight" color="info" size="xsmall" />
+<Chip label="Active" variant="filledLight" color="success" size="xsmall" />
 ```
 
-`sx` on `LabelChip` is for layout only (e.g. `maxWidth`, `margin`). Never pass `fontSize`, `height`, `backgroundColor`, or `color` via `sx`. Colour list lives in [`chip.md`](../base/chip.md).
+`sx` on `<Chip>` is for layout only (`maxWidth`, `margin`). Never pass `fontSize`, `height`, `backgroundColor`, or `color` via `sx`.
 
 ### Creator avatar
 

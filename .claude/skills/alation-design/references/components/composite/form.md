@@ -9,7 +9,7 @@ description: >
 tags: [form, stack, create, edit]
 
 figma_url: ""
-code_reference: design-playground/apps/plugins/alation-design/template/src/blocks/form/Example.tsx
+code_reference: "no shared `<Form>` wrapper in @alation/alation-ui — production composes `<Stack>` + `FormControl` / `InputLabel` / `TextField` / `Autocomplete` ad-hoc"
 example_path: ./Example.tsx
 
 mui_base: none
@@ -21,10 +21,10 @@ depends_on_components: [FormField, TextField, Autocomplete, Stack, MenuItem, Typ
 
 ## 1. Classification
 
-- **Type:** Composite component
-- **MUI base:** none (composition of `Stack` + `FormField` + `TextField` + `Autocomplete`)
+- **Type:** Composite component — **composition pattern, not a shared wrapper**
+- **MUI base:** none (composition of `Stack` + `FormControl` / `InputLabel` / `TextField` / `Autocomplete`)
 - **Figma:** Form — to be linked
-- **Code:** `design-playground/apps/plugins/alation-design/template/src/blocks/form/Example.tsx`
+- **Code:** There is **no shared `<Form>` component** in `@alation/alation-ui`. Production forms compose `<Stack>` + the Form Field pattern ([form-field.md](./form-field.md)) directly at the call site. This reference documents that composition.
 
 ## 2. Purpose
 

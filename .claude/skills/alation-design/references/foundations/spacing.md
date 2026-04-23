@@ -2,15 +2,15 @@
 name: spacing
 title: Spacing
 category: foundation
-last_updated: 2026-04-21
+last_updated: 2026-04-23
 
 description: >
   The Alation spacing scale. Drives every padding, margin, and gap via
-  `theme.spacing(n)` — an 8 px base with half-step support.
+  `theme.spacing(n)` — a rem-based 8 px rhythm with half-step support.
 tags: [foundation, spacing, layout]
 
 figma_url: "https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-6706&t=eS5ReSD4ZsCMa08a-1"
-code_reference: fabric-theme-morpheus/src/lib/SpacingOverrides.ts
+code_reference: "fabric-theme-morpheus/src/index.ts (spacing fn, inline) + MuiCssBaseline html { fontSize: '62.5%' }"
 example_path: ./Example.tsx
 
 mui_base: spacing
@@ -25,7 +25,7 @@ depends_on_components: []
 - **Type:** Foundation
 - **MUI base:** `spacing`
 - **Figma:** [Spacing scale · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-6706&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `fabric-theme-morpheus` — `src/lib/SpacingOverrides.ts`
+- **Code:** `fabric-theme-morpheus/src/index.ts` — `spacing: (factor) => \`${0.8 * factor}rem\`` + `MuiCssBaseline` sets `html { fontSize: '62.5%' }` (so `1rem = 10px`, `0.8rem = 8px`).
 
 ## 2. Purpose
 
@@ -33,7 +33,9 @@ Spacing is the breathing room between elements — how close or how separated th
 
 ## 3. How to use
 
-Consume via `theme.spacing(n)` or the `sx` numeric shorthand (`p: 2` → `theme.spacing(2)` → `16px`). Half-steps (`1.5`, `2.5`) are supported.
+Consume via `theme.spacing(n)` or the `sx` numeric shorthand (`p: 2` → `theme.spacing(2)` → `1.6rem` → `16px`). Half-steps (`1.5`, `2.5`) are supported.
+
+Under the hood, `theme.spacing(factor)` returns `${0.8 * factor}rem` and the baseline `html { font-size: 62.5% }` rule makes `1rem = 10px`. Consumers don't need to think about rem — use the numeric scale and the render value falls on the 8 px rhythm.
 
 - **Page body padding** — `<Box sx={{ p: 4 }}>` (32 px) inside the main content area.
 - **Form stack spacing** — `<Stack spacing={3}>` (24 px) between fields.

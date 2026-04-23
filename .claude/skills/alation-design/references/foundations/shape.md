@@ -2,16 +2,17 @@
 name: shape
 title: Shape
 category: foundation
-last_updated: 2026-04-21
+last_updated: 2026-04-23
 
 description: >
   Border-radius and elevation rules. Every rounded surface derives from
   `shape.borderRadius` (6 px base). Cards, Papers, and modal surfaces use
-  `borderRadius: 2` (12 px) by default.
+  `borderRadius: 2` (12 px) by default. A `theme.borderRadiusToRem(px)`
+  utility converts px → rem for `sx` values that need a specific pixel size.
 tags: [foundation, shape, radius, elevation]
 
 figma_url: "https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-6706&t=eS5ReSD4ZsCMa08a-1"
-code_reference: fabric-theme-morpheus/src/lib (shape + ShadowsOverrides)
+code_reference: "fabric-theme-morpheus/src/index.ts (shape.borderRadius = 6, borderRadiusToRem utility, shadows array — all inline)"
 example_path: ./Example.tsx
 
 mui_base: shape
@@ -26,7 +27,7 @@ depends_on_components: []
 - **Type:** Foundation
 - **MUI base:** `shape`
 - **Figma:** [Shape / radius · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-6706&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `fabric-theme-morpheus` — `src/lib/` (shape base + `ShadowsOverrides.ts`)
+- **Code:** `fabric-theme-morpheus/src/index.ts` (inline): `shape: { borderRadius: 6 }`, `borderRadiusToRem: (r) => \`${r/10}rem\``, and the 25-slot `shadows` array. There is no standalone `ShadowsOverrides.ts`.
 
 ## 2. Purpose
 
@@ -35,6 +36,8 @@ Shape is how a surface reads as a surface — rounded enough to feel like a dist
 ## 3. How to use
 
 `theme.shape.borderRadius` is the base unit (6 px). `sx={{ borderRadius: n }}` is a multiplier — `borderRadius: 2` resolves to `12 px`, `borderRadius: 1` to `6 px`.
+
+For cases where a specific pixel radius is required (e.g. Dialog surfaces use `borderRadius: 1.2rem` = 12 px in the MuiDialog override), the theme exposes a `theme.borderRadiusToRem(px)` helper — e.g. `theme.borderRadiusToRem(12)` → `'1.2rem'`. Prefer the multiplier form in `sx` unless the radius doesn't land on the scale.
 
 - **Default component radius** — morpheus components (Button, Chip, TextField) already ship with the right radius; do not override.
 - **Card / Paper containers** — `borderRadius: 2` (12 px).
@@ -72,12 +75,15 @@ Shape is how a surface reads as a surface — rounded enough to feel like a dist
 
 ### Elevation tokens (use `<Paper elevation={n}>`)
 
+The theme ships a 25-slot `shadows` array (`theme.shadows[0]`–`theme.shadows[24]`). Slots 0–4 are distinct ramp steps; slots 5–24 all repeat the slot-4 shadow — in practice only 0–4 are meaningful.
+
 | `elevation` | Use |
 |---|---|
 | `0` | Flat — prefer `<Paper variant="outlined">` instead |
 | `1` | Subtle raise (rare in product UI) |
 | `2` | Floating panel, popover |
 | `3` | Modal surface (handled by Dialog composite — don't override) |
+| `4` | Heavy floating (rare — e.g. drag preview) |
 
 ## 11. Example
 

@@ -9,7 +9,7 @@ description: >
 tags: [dialog, modal, confirm]
 
 figma_url: "https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=136-1787&t=eS5ReSD4ZsCMa08a-1"
-code_reference: design-playground/apps/plugins/alation-design/template/src/blocks/dialog/Example.tsx
+code_reference: "@alation/fabric-theme-morpheus/src/lib/MuiDialog.overrides.ts (Alation theme only; there is no shared generic ConfirmDialog wrapper in @alation/alation-ui — production assembles `<Dialog>` directly or uses domain wrappers like `DeleteObjectConfirmDialog`)"
 example_path: ./Example.tsx
 
 mui_base: Dialog
@@ -24,7 +24,7 @@ depends_on_components: [Dialog, DialogTitle, DialogContent, DialogActions, Butto
 - **Type:** Composite component
 - **MUI base:** `Dialog` (+ `DialogTitle`, `DialogContent`, `DialogActions`)
 - **Figma:** [Dialog · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=136-1787&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `design-playground/apps/plugins/alation-design/template/src/blocks/dialog/Example.tsx`
+- **Code:** `@alation/fabric-theme-morpheus` — `src/lib/MuiDialog.overrides.ts`. Note: there is **no shared generic `<ConfirmDialog>` wrapper** in `@alation/alation-ui` — production assembles `<Dialog>` directly or uses domain-specific wrappers (e.g. `DeleteObjectConfirmDialog`, `MoveDialog`).
 
 ## 2. Purpose
 

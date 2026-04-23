@@ -200,6 +200,10 @@ Exhaustive. Nothing outside this list is valid.
 | `palette.background.darken30` | `rgba(78, 78, 88, 0.3)` | *(theme-scaled)* |
 | `palette.background.lighten30` | `rgba(255, 255, 255, 0.3)` | *(theme-scaled)* |
 | `palette.background.gradient` | 65° gradient (purple / blue / orange) | — |
+| `palette.background.gradientOutline` | Gradient-tinted border (pairs with `gradient` on `<Paper variant="gradientOutlined">`) | — |
+| `palette.background.gradientOrange` | Warm orange gradient (accent / marketing) | — |
+
+> **Production also ships extra colour families** consumed ad-hoc by specific surfaces: `cyan`, `violet`, `green`, `emerald`, `lineage`, `diff`, plus the semantic family aliases (`brand`). These are defined in `fabric-theme-morpheus/src/lib/palettes/*.ts` but are not part of the core semantic layer in §6. Do not reach for them in product UI without a design review — stick to the semantic tokens above.
 
 ### Contrast pairings (light-mode audit)
 
