@@ -13,7 +13,7 @@ pnpm install
 pnpm --filter alation-base-ui dev
 ```
 
-App runs at `http://localhost:4200`.
+App runs at `http://localhost:4300` (vibe-design's reserved port — avoids clashing with `cdm-design-demo` on 3000, `design-playground` on 4100, and `alation-ui` on 4200 so all four can run simultaneously).
 
 ## Generating UI with Claude
 

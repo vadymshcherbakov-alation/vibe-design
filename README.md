@@ -15,7 +15,7 @@ pnpm install
 pnpm --filter alation-base-ui dev
 ```
 
-Open `http://localhost:4200`.
+Open `http://localhost:4300`.
 
 ## Project structure
 

@@ -4,8 +4,8 @@
     {
       "name": "base-ui",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["next", "dev", "--port", "4200"],
-      "port": 4200,
+      "runtimeArgs": ["next", "dev", "--port", "4300"],
+      "port": 4300,
       "autoPort": false,
       "cwd": "apps/alation-base-ui"
     }

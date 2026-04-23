@@ -1732,7 +1732,7 @@ export default function AnalyticsPage() {
             <Typography variant="body1" color="text.secondary">
               No custom visualizations enabled.{" "}
               <a
-                href="http://localhost:4200/app/settings/alation_analytics_settings"
+                href="http://localhost:4300/app/settings/alation_analytics_settings"
                 style={{
                   color: designTokens.palette.blue[600],
                   textDecoration: "none",
