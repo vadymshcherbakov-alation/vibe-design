@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alert</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+
+      --success-main:   #2E7D47;
+      --success-light:  #DBF2E1;
+      --success-text:   #1F6B35;
+
+      --info-main:      #0073DD;
+      --info-light:     #D9EEFF;
+      --info-text:      #0056A6;
+
+      --warning-main:   #C17810;
+      --warning-light:  #FCEBB0;
+      --warning-text:   #8E5A0B;
+
+      --error-main:     #CA334A;
+      --error-light:    #FBE2E6;
+      --error-text:     #A62839;
+
+      --radius-2: 12px;
+      --radius-alert: 6px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 720px; margin: 0 auto; }
+
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    p.page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 32px 0 12px 0;
+    }
+
+    /* Alert — standard (tinted) */
+    .alert {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-alert);
+      margin-bottom: 12px;
+      font-size: 13px; line-height: 1.5;
+    }
+    .alert .icon { flex-shrink: 0; margin-top: 2px; }
+    .alert .body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .alert .title { font-size: 13px; font-weight: 600; line-height: 1.4; }
+    .alert .action { flex-shrink: 0; align-self: flex-start; }
+    .alert .close {
+      background: transparent; border: none; cursor: pointer; color: inherit;
+      padding: 2px 4px; border-radius: 4px;
+    }
+    .alert .close:hover { background: rgba(0,0,0,0.05); }
+
+    /* Severity tints */
+    .alert-success { background: var(--success-light); color: var(--success-text); }
+    .alert-info    { background: var(--info-light);    color: var(--info-text); }
+    .alert-warning { background: var(--warning-light); color: var(--warning-text); }
+    .alert-error   { background: var(--error-light);   color: var(--error-text); }
+
+    /* Outlined */
+    .alert-outlined {
+      background: var(--paper);
+      border: 1px solid currentColor;
+    }
+    .alert-success.alert-outlined { border-color: var(--success-main); color: var(--success-text); }
+    .alert-info.alert-outlined    { border-color: var(--info-main);    color: var(--info-text); }
+    .alert-warning.alert-outlined { border-color: var(--warning-main); color: var(--warning-text); }
+    .alert-error.alert-outlined   { border-color: var(--error-main);   color: var(--error-text); }
+
+    /* Filled */
+    .alert-filled { color: #fff; }
+    .alert-success.alert-filled { background: var(--success-main); }
+    .alert-info.alert-filled    { background: var(--info-main); }
+    .alert-warning.alert-filled { background: var(--warning-main); }
+    .alert-error.alert-filled   { background: var(--error-main); }
+
+    /* Inline action button */
+    .btn-inline {
+      all: unset; cursor: pointer;
+      font-size: 12px; font-weight: 600;
+      padding: 4px 10px; border-radius: 4px;
+      color: inherit;
+      border: 1px solid currentColor;
+    }
+
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Alert</h1>
+    <p class="page-sub">
+      An Alert is an inline status message — it tells the user something about the region of the view they're looking at. Severity (success, info, warning, error) carries the icon and colour that match. Alation uses plain MUI <code>&lt;Alert&gt;</code> themed with custom <code>@alation/icons-neo</code> icons, the <code>outlined</code> default variant, <code>theme.spacing(2)</code> padding, and <code>body1</code> / <code>subtitle1</code> typography — so every Alert reads the same without any <code>sx</code> at the call site. Reach for an Alert when feedback belongs next to the content it describes; use a Dialog if the message must block work.
+    </p>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Base component</li>
+      <li><strong>MUI base:</strong> <code>Alert</code> (+ <code>AlertTitle</code>)</li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&amp;node-id=58-417&amp;t=eS5ReSD4ZsCMa08a-1" target="_blank" rel="noopener">Alert · NEO 2.1</a></li>
+      <li><strong>Code:</strong> <code>fabric-theme-morpheus</code> — <code>src/lib/MuiAlert.overrides.tsx</code> (the template mirrors the same override at <code>src/theme/overrides/MuiAlert.overrides.tsx</code>)</li>
+    </ul>
+    <!-- classification-end -->
+
+    <h2 class="section">Severity · all four (default variant: outlined)</h2>
+
+    <div class="alert alert-success">
+      <span class="icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </span>
+      <div class="body"><span>Settings saved.</span></div>
+    </div>
+
+    <div class="alert alert-info">
+      <span class="icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      </span>
+      <div class="body"><span>Indexing begins within 10 minutes of connection.</span></div>
+    </div>
+
+    <div class="alert alert-warning">
+      <span class="icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      </span>
+      <div class="body">
+        <span class="title">Credentials expiring</span>
+        <span>These credentials expire in 3 days. Renew to avoid interruption.</span>
+      </div>
+      <button class="btn-inline" type="button">View details</button>
+    </div>
+
+    <div class="alert alert-error">
+      <span class="icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </span>
+      <div class="body"><span>Sync failed — check connection settings.</span></div>
+      <button class="close" aria-label="Dismiss">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <h2 class="section">Variant · standard (tinted, no border)</h2>
+    <div class="alert alert-success alert-outlined">
+      <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+      <div class="body"><span>Connection verified.</span></div>
+    </div>
+    <div class="alert alert-warning alert-outlined">
+      <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+      <div class="body"><span>Approaching credit limit.</span></div>
+    </div>
+
+    <h2 class="section">Variant · filled (reserve for legacy toast / must-dominate cases)</h2>
+    <div class="alert alert-error alert-filled">
+      <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></span>
+      <div class="body"><span>Critical — connection dropped. Retrying…</span></div>
+    </div>
+    <div class="alert alert-info alert-filled">
+      <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+      <div class="body"><span>Scheduled maintenance this weekend.</span></div>
+    </div>
+
+    <p class="note">Static preview of what's documented in <code>alert.md</code>. Icon, tint, border, padding, and typography come from the theme override — the call site only sets <code>severity</code> (and optionally <code>variant</code> / <code>onClose</code> / <code>action</code>). Icons are Alation's own (from <code>@alation/icons-neo</code>): CheckCircle, Information, Warning, Stop. The SVGs above approximate them. Note: <code>MuiSnackbarAlert</code> in <code>cdm-design-demo</code> is marked <code>@deprecated</code> — do not reuse for new toasts.</p>
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 32px 40px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-toggle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58;
+    background: #F1F4F6;
+    border: 1px solid #E8EDF1;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer[data-open="true"] .md-viewer-toggle .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #B7B7C1;
+    margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none;
+    margin: 12px 0 0 0;
+    padding: 20px 24px;
+    background: #FFFFFF;
+    border: 1px solid #E8EDF1;
+    border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #0D1322;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    max-height: 640px;
+    overflow-y: auto;
+  }
+  .md-viewer[data-open="true"] .md-viewer-pre { display: block; }
+</style>
+<div class="md-viewer" data-open="false" data-md-b64="LS0tCm5hbWU6IGFsZXJ0CnRpdGxlOiBBbGVydApjYXRlZ29yeTogYmFzZS1jb21wb25lbnQKbGFzdF91cGRhdGVkOiAyMDI2LTA0LTIyCgpkZXNjcmlwdGlvbjogPgogIElubGluZSBiYW5uZXIgY2FycnlpbmcgYSBzdGF0dXMgbWVzc2FnZSAoc3VjY2VzcywgaW5mbywgd2FybmluZywgZXJyb3IpLgogIFVzZSBmb3IgZmVlZGJhY2sgdGllZCB0byBhIHZpZXcgcmVnaW9uIOKAlCBub3QgZm9yIGdsb2JhbCB0b2FzdHMgKHNlZQogIGBNdWlTbmFja2JhckFsZXJ0YCwgZGVwcmVjYXRlZCkgb3IgbW9kYWwgd2FybmluZ3MgKHVzZSBEaWFsb2cpLiBBbGF0aW9uCiAgdGhlbWVzIE1VSSBgPEFsZXJ0PmAgd2l0aCBjdXN0b20gYEBhbGF0aW9uL2ljb25zLW5lb2AgaWNvbnMsIGBvdXRsaW5lZGAKICBkZWZhdWx0IHZhcmlhbnQsIGB0aGVtZS5zcGFjaW5nKDIpYCBwYWRkaW5nLCBhbmQgYGJvZHkxYCAvIGBzdWJ0aXRsZTFgCiAgdHlwb2dyYXBoeSDigJQgYWxsIGJha2VkIGluOyBjYWxsZXJzIG5ldmVyIHNldCBgc3hgLgp0YWdzOiBbZmVlZGJhY2ssIHN0YXR1cywgaW5saW5lXQoKZmlnbWFfdXJsOiAiaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP209YXV0byZub2RlLWlkPTU4LTQxNyZ0PWVTNVJlU0Q0WnNDTWEwOGEtMSIKY29kZV9yZWZlcmVuY2U6IGZhYnJpYy10aGVtZS1tb3JwaGV1cy9zcmMvbGliL011aUFsZXJ0Lm92ZXJyaWRlcy50c3ggKG1pcnJvcmVkIGluIGFsYXRpb24tZGVzaWduL3RlbXBsYXRlL3NyYy90aGVtZS9vdmVycmlkZXMvTXVpQWxlcnQub3ZlcnJpZGVzLnRzeCkKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogQWxlcnQKZGVwZW5kc19vbl90b2tlbnM6CiAgLSBwYWxldHRlLnN1Y2Nlc3MubWFpbgogIC0gcGFsZXR0ZS5zdWNjZXNzLmxpZ2h0CiAgLSBwYWxldHRlLmVycm9yLm1haW4KICAtIHBhbGV0dGUuZXJyb3IubGlnaHQKICAtIHBhbGV0dGUud2FybmluZy5tYWluCiAgLSBwYWxldHRlLndhcm5pbmcubGlnaHQKICAtIHBhbGV0dGUuaW5mby5tYWluCiAgLSBwYWxldHRlLmluZm8ubGlnaHQKICAtIHBhbGV0dGUudGV4dC5wcmltYXJ5CiAgLSBzcGFjaW5nCiAgLSB0eXBvZ3JhcGh5LmJvZHkxCiAgLSB0eXBvZ3JhcGh5LnN1YnRpdGxlMQpkZXBlbmRzX29uX2NvbXBvbmVudHM6CiAgLSBBbGVydAogIC0gQWxlcnRUaXRsZQotLS0KCiMgQWxlcnQKCiMjIDEuIENsYXNzaWZpY2F0aW9uCgotICoqVHlwZToqKiBCYXNlIGNvbXBvbmVudAotICoqTVVJIGJhc2U6KiogYEFsZXJ0YCAoKyBgQWxlcnRUaXRsZWApCi0gKipGaWdtYToqKiBbQWxlcnQgwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP209YXV0byZub2RlLWlkPTU4LTQxNyZ0PWVTNVJlU0Q0WnNDTWEwOGEtMSkKLSAqKkNvZGU6KiogYGZhYnJpYy10aGVtZS1tb3JwaGV1c2Ag4oCUIGBzcmMvbGliL011aUFsZXJ0Lm92ZXJyaWRlcy50c3hgICh0aGUgdGVtcGxhdGUgbWlycm9ycyB0aGUgc2FtZSBvdmVycmlkZSBhdCBgc3JjL3RoZW1lL292ZXJyaWRlcy9NdWlBbGVydC5vdmVycmlkZXMudHN4YCkKCiMjIDIuIFB1cnBvc2UKCkFuICoqQWxlcnQqKiBpcyBhbiBpbmxpbmUgc3RhdHVzIG1lc3NhZ2Ug4oCUIGl0IHRlbGxzIHRoZSB1c2VyIHNvbWV0aGluZyBhYm91dCB0aGUgcmVnaW9uIG9mIHRoZSB2aWV3IHRoZXkncmUgbG9va2luZyBhdC4gU2V2ZXJpdHkgKGBzdWNjZXNzYCwgYGluZm9gLCBgd2FybmluZ2AsIGBlcnJvcmApIGNvbW11bmljYXRlcyBob3cgdXJnZW50IHRoZSBtZXNzYWdlIGlzIGFuZCBjYXJyaWVzIHRoZSBtYXRjaGluZyBpY29uICsgdGludC4gUmVhY2ggZm9yIGFuIEFsZXJ0IHdoZW4gZmVlZGJhY2sgYmVsb25ncyBuZXh0IHRvIHRoZSBjb250ZW50IGl0IGRlc2NyaWJlcyAoYSBmb3JtLCBhIHNlY3Rpb24sIGEgcm93KSBhbmQgY2FuIGJlIGFja25vd2xlZGdlZCBwYXNzaXZlbHk7IHVzZSBhICoqRGlhbG9nKiogd2hlbiB0aGUgbWVzc2FnZSBtdXN0IGJsb2NrIHdvcmssIGFuZCB0aGUgZGVwcmVjYXRlZCAqKlNuYWNrYmFyIC8gdG9hc3QqKiBwYXR0ZXJuIG9ubHkgZm9yIHRyYW5zaWVudCBnbG9iYWwgY29uZmlybWF0aW9ucy4KCioqVGhpcyBpcyBwbGFpbiBNVUkgYDxBbGVydD5gLCB0aGVtZWQuKiogTm8gQWxhdGlvbiB3cmFwcGVyIGNvbXBvbmVudCDigJQgY2FsbGVycyBpbXBvcnQgYEFsZXJ0YCAvIGBBbGVydFRpdGxlYCBkaXJlY3RseSBmcm9tIGBAbXVpL21hdGVyaWFsYC4gVGhlIHRoZW1lIG92ZXJyaWRlIChgTXVpQWxlcnQub3ZlcnJpZGVzLnRzeGApIHN3YXBzIE1VSSdzIGRlZmF1bHQgaWNvbnMgZm9yIGBAYWxhdGlvbi9pY29ucy1uZW9gIChTdG9wIC8gSW5mb3JtYXRpb24gLyBDaGVja0NpcmNsZSAvIFdhcm5pbmcpLCBzZXRzIHRoZSBkZWZhdWx0IHZhcmlhbnQgdG8gYG91dGxpbmVkYCwgcGFkcyBhdCBgdGhlbWUuc3BhY2luZygyKWAsIGFuZCBzaXplcyB0eXBvZ3JhcGh5IChgYm9keTFgIGJvZHksIGBzdWJ0aXRsZTFgIHRpdGxlKSDigJQgc28gZXZlcnkgQWxlcnQgaW4gdGhlIGFwcCBsb29rcyBhbmQgcmVhZHMgdGhlIHNhbWUgd2l0aG91dCBhbnkgYHN4YCBhdCB0aGUgY2FsbCBzaXRlLgoKIyMgMy4gV2hlbiB0byB1c2UgLyBXaGVuIG5vdCB0byB1c2UKCioqVXNlIHdoZW4qKgotIEEgZm9ybSBzZWN0aW9uIG5lZWRzIGlubGluZSB3YXJuaW5nIC8gZXJyb3IgLyBzdWNjZXNzIGZlZWRiYWNrIHRoYXQgc2l0cyBuZXh0IHRvIHRoZSB0aGluZyBpdCBkZXNjcmliZXMKLSBBIHBhZ2UtbGV2ZWwgcGFuZWwgYW5ub3VuY2VzIGEgc3RhdGUgdGhlIHVzZXIgbmVlZHMgdG8gYWNrbm93bGVkZ2UgcGFzc2l2ZWx5ICgiQ3JlZGVudGlhbHMgZXhwaXJpbmcgaW4gMyBkYXlzIikKLSBBbiBlbXB0eS1zdGF0ZSBvciBwYXJ0aWFsLW91dGFnZSBub3RpY2UgZml0cyBuYXR1cmFsbHkgYWJvdmUgdGhlIGNvbnRlbnQgaXQgYWZmZWN0cwoKKipEbyBub3QgdXNlIHdoZW4qKgotIFRoZSBtZXNzYWdlIGlzIHRyYW5zaWVudCBhbmQgZ2xvYmFsIOKGkiB1c2UgYSAqKlNuYWNrYmFyIC8gdG9hc3QqKiBwYXR0ZXJuIChub3RlOiB0aGUgYE11aVNuYWNrYmFyQWxlcnRgIGhlbHBlciBpbiBgY2RtLWRlc2lnbi1kZW1vYCBpcyBtYXJrZWQgYEBkZXByZWNhdGVkYCDigJQgZG8gbm90IHJldXNlOyBhIHJlcGxhY2VtZW50IGhhcyBub3QgeWV0IGJlZW4gZG9jdW1lbnRlZCkKLSBUaGUgbWVzc2FnZSBibG9ja3MgdGhlIHVzZXIgdW50aWwgZGlzbWlzc2VkIOKGkiB1c2UgW0RpYWxvZ10oLi4vY29tcG9zaXRlL2RpYWxvZy91c2FnZS5tZCkKLSBUaGUgbWVzc2FnZSBpcyBhIHNpbmdsZSB3b3JkIGxhYmVsIOKGkiB1c2UgW0NoaXBdKC4vY2hpcC91c2FnZS5tZCkKCiMjIDQuIENvbnRyYWN0CgojIyMgR3VhcmFudGVlcwotIEV2ZXJ5IEFsZXJ0IGNhcnJpZXMgYSBzZW1hbnRpYyBgc2V2ZXJpdHlgIHRoYXQgbWFwcyB0byB0aGUgbWF0Y2hpbmcgYHBhbGV0dGUuPHNldmVyaXR5PmAgZmFtaWx5IGZvciBpY29uIGNvbG91ciBhbmQgYm9yZGVyIC8gdGludC4KLSBJY29uLCBiYWNrZ3JvdW5kIHRpbnQsIGFuZCBib3JkZXIgY29sb3VyIGNvbWUgZnJvbSB0aGUgc2V2ZXJpdHkgdmlhIHRoZSB0aGVtZSBvdmVycmlkZSDigJQgbm8gYHN4YCBuZWVkZWQgYXQgdGhlIGNhbGwgc2l0ZS4KLSBJY29ucyBhcmUgQWxhdGlvbidzIG93biAoZnJvbSBgQGFsYXRpb24vaWNvbnMtbmVvYCk6IGBTdG9wYCAoZXJyb3IpLCBgSW5mb3JtYXRpb25gIChpbmZvKSwgYENoZWNrQ2lyY2xlYCAoc3VjY2VzcyksIGBXYXJuaW5nYCAod2FybmluZykuIFRoZXkgYXJlIGJha2VkIGludG8gdGhlIG92ZXJyaWRlJ3MgYGljb25NYXBwaW5nYDsgY2FsbGVycyBkbyBub3QgaW1wb3J0IHRoZW0uCi0gRGVmYXVsdCB2YXJpYW50IGlzICoqYG91dGxpbmVkYCoqIChzZXQgYnkgdGhlIG92ZXJyaWRlKS4gYHN0YW5kYXJkYCBhbmQgYGZpbGxlZGAgYXJlIGF2YWlsYWJsZSBidXQgbm90IGRlZmF1bHQuCi0gUGFkZGluZyBpcyAqKmB0aGVtZS5zcGFjaW5nKDIpYCoqOyBtZXNzYWdlIGxpbmUgaXMgYGJvZHkxYCB3aXRoIGBsaW5lLWhlaWdodDogMS44NWA7IHRpdGxlIGlzIGBzdWJ0aXRsZTFgLgotIGByb2xlPSJhbGVydCJgIGlzIHNldCBieSBNVUkgc28gYXNzaXN0aXZlIHRlY2ggYW5ub3VuY2VzIHRoZSBjb250ZW50LgoKIyMjIFByb2hpYml0aW9ucwotIE5vIGBzeGAgb3ZlcnJpZGUgb2YgYm9yZGVyLCBjb2xvdXIsIGJhY2tncm91bmQsIHBhZGRpbmcsIG9yIHR5cG9ncmFwaHkgb24gYDxBbGVydD5gLiBUaGUgdGhlbWUgaXMgdGhlIGNvbnRyYWN0LgotIE5vIGhhcmQtY29kZWQgaWNvbnMgaW5zaWRlIHRoZSBBbGVydCDigJQgdGhlIHNldmVyaXR5LWJha2VkIGljb24gY2FycmllcyB0aGUgbWVhbmluZy4gRG8gbm90IHBhc3MgYSBjdXN0b20gYGljb25gIHByb3AuCi0gTm8gaGFyZC1jb2RlZCBoZXggLyBweCAvIGZvbnQgdmFsdWVzLgotIE5vIEFsZXJ0IHVzZWQgYXMgYSBidXR0b24g4oCUIHRyaWdnZXIgY29weSBiZWxvbmdzIGluIHRoZSBgYWN0aW9uYCBzbG90IChhIGA8QnV0dG9uPmApLCBub3QgaW4gdGhlIGJvZHkuCi0gTm90aGluZyBvdXRzaWRlIHRoZSBzZXZlcml0eSBzZXQgYHN1Y2Nlc3MgfCBpbmZvIHwgd2FybmluZyB8IGVycm9yYCBpcyB2YWxpZC4KLSBObyBgTXVpU25hY2tiYXJBbGVydGAgaW4gbmV3IGNvZGUg4oCUIGl0J3MgZGVwcmVjYXRlZDsgZmxhZyB0aGUgbWlzc2luZyB0b2FzdCBwYXR0ZXJuIGluIHRoZSBvdXRwdXQgc3VtbWFyeS4KCiMjIyBDb25kaXRpb25zCi0gKipEaXNtaXNzaWJsZSBBbGVydHMqKiAoYG9uQ2xvc2VgIHNldCkgcmVuZGVyIGEgY2xvc2UgYnV0dG9uIGF1dG9tYXRpY2FsbHk7IGRvIG5vdCBhZGQgYSBjdXN0b20gY2xvc2UgYnV0dG9uLiBJbiBjdXJyZW50IHByb2R1Y3QgY29kZSwgYG9uQ2xvc2VgIGlzIG9ubHkgdXNlZCBpbnNpZGUgYSAqKlNuYWNrYmFyIC8gdG9hc3QqKiB3cmFwcGVyIOKAlCBpbmxpbmUgQWxlcnRzIG9uIGEgcGFnZSB0eXBpY2FsbHkgZG8gbm90IGRpc21pc3MuCi0gKipMb25nIG1lc3NhZ2VzKiogc2hvdWxkIHVzZSBgPEFsZXJ0VGl0bGU+YCBmb3IgdGhlIGhlYWRsaW5lIGFuZCB0aGUgYm9keSBzbG90IGZvciBkZXRhaWw7IGRvIG5vdCBjcmFtIG11bHRpLXBhcmFncmFwaCBjb250ZW50IGludG8gdGhlIGRlZmF1bHQgc2xvdC4KLSAqKkFjdGlvbiBzbG90KiogKGBhY3Rpb25gIHByb3ApIHRha2VzIGEgc2luZ2xlIGA8QnV0dG9uIGNvbG9yPSJpbmhlcml0IiBzaXplPSJzbWFsbCI+YCDigJQgdXNlIGl0IG9ubHkgd2hlbiB0aGUgQWxlcnQgaGFzIGEgY2xlYXIgbmV4dCBzdGVwICgiVmlldyBkZXRhaWxzIikuIFRoZSBwcm9wIGlzIHN1cHBvcnRlZCBieSB0aGUgdGhlbWUgb3ZlcnJpZGUgYnV0IGlzIHJhcmVseSB1c2VkIGluIHByYWN0aWNlIHRvZGF5OyBrZWVwIGFjdGlvbiBjb3B5IHNob3J0IGFuZCB2ZXJiLWZpcnN0LgotICoqRGVzdHJ1Y3RpdmUgYWN0aW9ucyoqIOKAlCBhbiBBbGVydCB3aXRoIGBzZXZlcml0eT0iZXJyb3IiYCBpcyAqKmZlZWRiYWNrKiosIG5vdCBhbiBhY3Rpb24gdHJpZ2dlci4gQSBkZXN0cnVjdGl2ZSAqYWN0aW9uKiBzdGlsbCByZXF1aXJlcyBhIERlc3RydWN0aXZlIFtCdXR0b25dKC4vYnV0dG9uL3VzYWdlLm1kKSArIFtDb25maXJtRGlhbG9nXSguLi9jb21wb3NpdGUvZGlhbG9nL3VzYWdlLm1kKS4KCiMjIDUuIFZhcmlhbnRzCgojIyMgNS4xIGBzZXZlcml0eWAgcHJvcCAoZXhoYXVzdGl2ZSkKCnwgU2V2ZXJpdHkgfCBJY29uIChmcm9tIGBAYWxhdGlvbi9pY29ucy1uZW9gKSB8IFVzZSB8CnwtLS18LS0tfC0tLXwKfCBgc3VjY2Vzc2AgfCBgQ2hlY2tDaXJjbGVgIHwgT3V0Y29tZSBjb25maXJtYXRpb24gKCJTZXR0aW5ncyBzYXZlZCIpIHwKfCBgaW5mb2AgfCBgSW5mb3JtYXRpb25gIHwgTmV1dHJhbCBpbmZvcm1hdGlvbiwgb25ib2FyZGluZyBoaW50cyB8CnwgYHdhcm5pbmdgIHwgYFdhcm5pbmdgIHwgTmVlZHMgYXR0ZW50aW9uIGJ1dCBub3QgYmxvY2tpbmcgKCJDcmVkZW50aWFscyBleHBpcmUgaW4gMyBkYXlzIikgfAp8IGBlcnJvcmAgfCBgU3RvcGAgfCBTb21ldGhpbmcgZmFpbGVkIG9yIGlzIGludmFsaWQgKCJTeW5jIGZhaWxlZCDigJQgY2hlY2sgY29ubmVjdGlvbiIpIHwKCiMjIyA1LjIgYHZhcmlhbnRgIHByb3AKCnwgVmFyaWFudCB8IERlZmF1bHQ/IHwgVXNlIHwKfC0tLXwtLS18LS0tfAp8IGBvdXRsaW5lZGAgfCDinIUgKip5ZXMg4oCUIGRlZmF1bHQgdmlhIG92ZXJyaWRlKiogfCBTdGFuZGFyZCBpbmxpbmUgQWxlcnQg4oCUIGJvcmRlcmVkLCBzdWJ0bGUgdGludCB8CnwgYHN0YW5kYXJkYCB8IG5vIHwgVGludGVkIGJhY2tncm91bmQsIG5vIGJvcmRlciB8CnwgYGZpbGxlZGAgfCBubyB8IFNvbGlkIGZpbGwg4oCUIHJlc2VydmUgZm9yIGNhc2VzIHdoZXJlIHRoZSBBbGVydCBtdXN0IGRvbWluYXRlIChsZWdhY3kgdG9hc3Qgd3JhcHBlcnMgc3RpbGwgdXNlIGBmaWxsZWRgKSB8CgojIyA2LiBBbmF0b215CgotICoqSWNvbioqIOKAlCBzZXZlcml0eS1iYWtlZCAoYEBhbGF0aW9uL2ljb25zLW5lb2ApLCBzaXplZCBhdCBgaWNvbkxhcmdlYCwgcmVuZGVyZWQgYXV0b21hdGljYWxseSBieSB0aGUgdGhlbWUgb3ZlcnJpZGUuCi0gKipUaXRsZSoqICoob3B0aW9uYWwsIHZpYSBgPEFsZXJ0VGl0bGU+YCkqIOKAlCBzaG9ydCBoZWFkbGluZSBzdW1tYXJpc2luZyB0aGUgc3RhdGU7IHJlbmRlcmVkIGF0IGBzdWJ0aXRsZTFgIHdpdGggYSBgc3BhY2luZygwLjUpYCBib3R0b20gbWFyZ2luLgotICoqQm9keSoqIOKAlCB0aGUgbWVzc2FnZTsgYGJvZHkxYCB3aXRoIGBsaW5lLWhlaWdodDogMS44NWAuCi0gKipBY3Rpb24gc2xvdCoqICoob3B0aW9uYWwsIHZpYSBgYWN0aW9uYCBwcm9wKSog4oCUIGEgc2luZ2xlIGA8QnV0dG9uIGNvbG9yPSJpbmhlcml0IiBzaXplPSJzbWFsbCI+YCBhbGlnbmVkIHRvIHRoZSB0cmFpbGluZyBlZGdlLgotICoqQ2xvc2UgYWZmb3JkYW5jZSoqICoob3B0aW9uYWwsIHdoZW4gYG9uQ2xvc2VgIGlzIHNldCkqIOKAlCBNVUktcmVuZGVyZWQgZGlzbWlzcyBjb250cm9sICh0eXBpY2FsbHkgb25seSB1c2VkIGluIFNuYWNrYmFyIC8gdG9hc3QgY29udGV4dHMpLgoKIyMgNy4gU3RhdGVzCgp8IFN0YXRlIHwgVHJpZ2dlciB8IFZpc3VhbCB8IE5vdGVzIHwKfC0tLXwtLS18LS0tfC0tLXwKfCBEZWZhdWx0IHwgTW91bnQgfCBTZXZlcml0eS10aW50ZWQgLyBib3JkZXJlZCBzdXJmYWNlIHdpdGggaWNvbiB8IOKAlCB8CnwgSG92ZXIgKGRpc21pc3NpYmxlKSB8IFBvaW50ZXIgb3ZlciBjbG9zZSBjb250cm9sIHwgQ2xvc2UgaWNvbiBnZXRzIGhvdmVyIHRyZWF0bWVudCB8IOKAlCB8CnwgRm9jdXMtdmlzaWJsZSAoZGlzbWlzc2libGUpIHwgS2V5Ym9hcmQgZm9jdXMgb24gY2xvc2UgfCBWaXNpYmxlIHJpbmcgb24gY2xvc2UgY29udHJvbCB8IFJlcXVpcmVkIHwKfCBEaXNtaXNzZWQgfCBgb25DbG9zZWAgZmlyZXMgfCBDb21wb25lbnQgdW5tb3VudHMgfCBDYWxsZXIgY29udHJvbHMgc3RhdGUgfAoKIyMgMTEuIEV4YW1wbGUKCmBgYHRzeAppbXBvcnQgeyBBbGVydCwgQWxlcnRUaXRsZSwgQnV0dG9uIH0gZnJvbSAnQG11aS9tYXRlcmlhbCc7CgovLyBJbmxpbmUgc3VjY2VzcyDigJQgdGhlIG1vc3QgY29tbW9uIHNoYXBlCjxBbGVydCBzZXZlcml0eT0ic3VjY2VzcyI+U2V0dGluZ3Mgc2F2ZWQuPC9BbGVydD4KCi8vIFdpdGggdGl0bGUgKG91dGxpbmVkIGlzIHRoZSBkZWZhdWx0IHZhcmlhbnQpCjxBbGVydCBzZXZlcml0eT0ic3VjY2VzcyI+CiAgPEFsZXJ0VGl0bGU+U3VjY2VzczwvQWxlcnRUaXRsZT4KICBUaGUgY2F0YWxvZyBvYmplY3Qgd2FzIHVwZGF0ZWQgc3VjY2Vzc2Z1bGx5Lgo8L0FsZXJ0PgoKLy8gV2FybmluZyB3aXRoIHRpdGxlICsgYWN0aW9uCjxBbGVydAogIHNldmVyaXR5PSJ3YXJuaW5nIgogIGFjdGlvbj17PEJ1dHRvbiBjb2xvcj0iaW5oZXJpdCIgc2l6ZT0ic21hbGwiPlZpZXcgZGV0YWlsczwvQnV0dG9uPn0KPgogIDxBbGVydFRpdGxlPkNyZWRlbnRpYWxzIGV4cGlyaW5nPC9BbGVydFRpdGxlPgogIFRoZXNlIGNyZWRlbnRpYWxzIGV4cGlyZSBpbiAzIGRheXMuCjwvQWxlcnQ+CgovLyBFcnJvcgo8QWxlcnQgc2V2ZXJpdHk9ImVycm9yIj5TeW5jIGZhaWxlZCDigJQgY2hlY2sgY29ubmVjdGlvbiBzZXR0aW5ncy48L0FsZXJ0PgpgYGAKClNlZSBbYEV4YW1wbGUudHN4YF0oLi9FeGFtcGxlLnRzeCkgZm9yIHRoZSBjYW5vbmljYWwsIHJ1bm5hYmxlIHNvdXJjZS4K">
+  <button class="md-viewer-toggle" type="button" aria-expanded="false">
+    <span class="chev" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+    View source
+    <span class="md-viewer-filename">alert/usage.md</span>
+  </button>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+    var btn = host.querySelector('.md-viewer-toggle');
+    var pre = host.querySelector('.md-viewer-pre');
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      // UTF-8 safe base64 → string
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      pre.textContent = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      pre.textContent = '(failed to load source)';
+    }
+    btn.addEventListener('click', function () {
+      var open = host.getAttribute('data-open') === 'true';
+      host.setAttribute('data-open', open ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      pre.setAttribute('aria-hidden', open ? 'true' : 'false');
+    });
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nav Card</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg-default:     #FFFFFF;
+      --bg-paper:       #FFFFFF;
+      --neutral-200:    #F9F9FB;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --primary-main:   #0073DD;
+
+      --blue-100:       #ECF6FF;
+      --blue-600:       #0073DD;
+      --purple-100:     #F0EAFD;
+      --purple-600:     #6B4FDB;
+      --teal-100:       #DEF3F0;
+      --teal-600:       #008876;
+      --emerald-100:    #E4F3E8;
+      --emerald-600:    #277800;
+
+      --radius-2: 12px;
+
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--neutral-200);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 960px; margin: 0 auto; }
+
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 4px 0; color: var(--text-primary);
+    }
+    p.page-sub {
+      font-size: 14px; line-height: 1.5; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 24px 0 12px 0;
+    }
+
+    .t-subtitle1 {
+      font-size: 14px; font-weight: 500; line-height: 1.43;
+      color: var(--text-primary); margin: 0 0 4px 0;
+    }
+    .t-body0 {
+      font-size: 15px; font-weight: 400; line-height: 1.5; margin: 0;
+    }
+    .c-secondary { color: var(--text-secondary); }
+
+    .grid-nav {
+      display: grid; gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+    .nav-card {
+      background: transparent;
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      min-height: 98px;
+      display: flex; align-items: center;
+      padding: 16px; gap: 16px;
+      cursor: pointer;
+      transition: background-color .2s, border-color .2s;
+    }
+    .nav-card:hover {
+      background: var(--bg-paper);
+      border-color: var(--neutral-500);
+    }
+    .nav-card:focus-visible {
+      outline: 2px solid var(--primary-main); outline-offset: 2px;
+    }
+    .nav-card .icon {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .nav-card .body { min-width: 0; flex: 1; }
+    .nav-card .body .desc { color: var(--text-secondary); }
+
+    .hue-blue    { background: var(--blue-100);    color: var(--blue-600); }
+    .hue-purple  { background: var(--purple-100);  color: var(--purple-600); }
+    .hue-teal    { background: var(--teal-100);    color: var(--teal-600); }
+    .hue-emerald { background: var(--emerald-100); color: var(--emerald-600); }
+
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Nav Card</h1>
+    <p class="page-sub">
+      A Nav card is a clickable tile that represents one navigable entity — a data source, an agent, a dashboard, a catalog section. It communicates "this is an object you can open" by pairing a tinted circular icon with a short title and a one-line description. Reach for a Nav card when the user is choosing between a small set of entities (roughly 3–8) and each one deserves a distinct visual identity; for longer lists, use a Table instead.
+    </p>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Composite component</li>
+      <li><strong>MUI base:</strong> <code>Card</code></li>
+      <li><strong>Figma:</strong> Nav card — to be linked</li>
+      <li><strong>Code:</strong> <code>design-playground/apps/plugins/alation-design/template/src/blocks/card/Example.tsx</code></li>
+    </ul>
+    <!-- classification-end -->
+
+    <h2 class="section">Nav cards — four entity tiles</h2>
+    <div class="grid-nav">
+
+      <div class="nav-card" tabindex="0" role="button" aria-label="Data sources">
+        <div class="icon hue-blue" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+        </div>
+        <div class="body">
+          <p class="t-subtitle1">Data sources</p>
+          <p class="t-body0 desc">Connect and manage data sources across your organization.</p>
+        </div>
+      </div>
+
+      <div class="nav-card" tabindex="0" role="button" aria-label="Agents">
+        <div class="icon hue-purple" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        </div>
+        <div class="body">
+          <p class="t-subtitle1">Agents</p>
+          <p class="t-body0 desc">Build and manage AI agents that automate catalog and lineage work.</p>
+        </div>
+      </div>
+
+      <div class="nav-card" tabindex="0" role="button" aria-label="Dashboards">
+        <div class="icon hue-teal" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        </div>
+        <div class="body">
+          <p class="t-subtitle1">Dashboards</p>
+          <p class="t-body0 desc">Browse and subscribe to curated dashboards and reports.</p>
+        </div>
+      </div>
+
+      <div class="nav-card" tabindex="0" role="button" aria-label="Catalog">
+        <div class="icon hue-emerald" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="body">
+          <p class="t-subtitle1">Catalog</p>
+          <p class="t-body0 desc">Search tables, columns, and business terms across every data source.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="note">
+      Static preview only — this file mirrors the Contract Block of
+      <code>nav-card.md</code> but is not React. Canonical runnable source:
+      <code>design-playground/.../blocks/card/Example.tsx</code>.
+      Purple / teal / emerald hue pairs are illustrative pending the full Alation palette export.
+    </p>
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 32px 40px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-toggle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58;
+    background: #F1F4F6;
+    border: 1px solid #E8EDF1;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer[data-open="true"] .md-viewer-toggle .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #B7B7C1;
+    margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none;
+    margin: 12px 0 0 0;
+    padding: 20px 24px;
+    background: #FFFFFF;
+    border: 1px solid #E8EDF1;
+    border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #0D1322;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    max-height: 640px;
+    overflow-y: auto;
+  }
+  .md-viewer[data-open="true"] .md-viewer-pre { display: block; }
+</style>
+<div class="md-viewer" data-open="false" data-md-b64="LS0tCm5hbWU6IG5hdi1jYXJkCnRpdGxlOiBOYXYgQ2FyZApjYXRlZ29yeTogY29tcG9zaXRlLWNvbXBvbmVudApsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjEKCmRlc2NyaXB0aW9uOiA+CiAgQSBjbGlja2FibGUgdGlsZSBmb3IgYSBuYXZpZ2FibGUgZW50aXR5IOKAlCBkYXRhIHNvdXJjZSwgYWdlbnQsIGRhc2hib2FyZCwgY2F0YWxvZyBzZWN0aW9uLiBQYWlycyBhIHRpbnRlZCBpY29uIGNvbnRhaW5lciB3aXRoIGEgdGl0bGUgYW5kIHNob3J0IGRlc2NyaXB0aW9uIGluc2lkZSBhbiBvdXRsaW5lZCBDYXJkLgp0YWdzOiBbY2FyZCwgbmF2LCB0aWxlLCBuYXZpZ2F0aW9uXQoKZmlnbWFfdXJsOiAiIgpjb2RlX3JlZmVyZW5jZTogIm5vIHNoYXJlZCBgPE5hdkNhcmQ+YCB3cmFwcGVyIGluIEBhbGF0aW9uL2FsYXRpb24tdWkg4oCUIHByb2R1Y3Rpb24gY29tcG9zZXMgYDxDYXJkIHZhcmlhbnQ9XCJvdXRsaW5lZFwiPmAgKyBgPEJveD5gICh0aW50ZWQgaWNvbiBjb250YWluZXIpICsgYDxUeXBvZ3JhcGh5PmAgYWQtaG9jIgpleGFtcGxlX3BhdGg6IC4vRXhhbXBsZS50c3gKCm11aV9iYXNlOiBDYXJkCmRlcGVuZHNfb25fdG9rZW5zOgogIC0gcGFsZXR0ZS5ibHVlWzEwMF0KICAtIHBhbGV0dGUuYmx1ZVs2MDBdCiAgLSBwYWxldHRlLm5ldXRyYWxbMzAwXQogIC0gcGFsZXR0ZS5uZXV0cmFsWzUwMF0KICAtIHBhbGV0dGUuYmFja2dyb3VuZC5wYXBlcgogIC0gc2hhcGUuYm9yZGVyUmFkaXVzCiAgLSB0eXBvZ3JhcGh5LnN1YnRpdGxlMQogIC0gdHlwb2dyYXBoeS5ib2R5MApkZXBlbmRzX29uX2NvbXBvbmVudHM6CiAgLSBDYXJkCiAgLSBDYXJkQ29udGVudAogIC0gQm94CiAgLSBUeXBvZ3JhcGh5Ci0tLQoKIyBOYXYgQ2FyZAoKIyMgMS4gQ2xhc3NpZmljYXRpb24KCi0gKipUeXBlOioqIENvbXBvc2l0ZSBjb21wb25lbnQg4oCUICoqY29tcG9zaXRpb24gcGF0dGVybiwgbm90IGEgc2hhcmVkIHdyYXBwZXIqKgotICoqTVVJIGJhc2U6KiogYENhcmRgICh2aWEgdGhlIFtDYXJkIFdyYXBwZXJdKC4uL2Jhc2UvY2FyZC91c2FnZS5tZCkgcHJpbWl0aXZlKQotICoqRmlnbWE6KiogTmF2IGNhcmQg4oCUIHRvIGJlIGxpbmtlZAotICoqQ29kZToqKiBUaGVyZSBpcyAqKm5vIHNoYXJlZCBgPE5hdkNhcmQ+YCBjb21wb25lbnQqKiBpbiBgQGFsYXRpb24vYWxhdGlvbi11aWAuIFByb2R1Y3Rpb24gY29tcG9zZXMgYDxDYXJkIHZhcmlhbnQ9Im91dGxpbmVkIj5gICsgYSB0aW50ZWQgaWNvbiBgPEJveD5gICsgYDxUeXBvZ3JhcGh5PmAgZGlyZWN0bHkgYXQgdGhlIGNhbGwgc2l0ZS4gVGhpcyByZWZlcmVuY2UgZG9jdW1lbnRzIHRoYXQgY29tcG9zaXRpb24gY29udHJhY3Qgc28gZXZlcnkgdGlsZSBsb29rcyB0aGUgc2FtZSBhY3Jvc3MgcGFnZXMuCgojIyAyLiBQdXJwb3NlCgpBIE5hdiBjYXJkIGlzIGEgY2xpY2thYmxlIHRpbGUgdGhhdCByZXByZXNlbnRzIG9uZSBuYXZpZ2FibGUgZW50aXR5IOKAlCBhIGRhdGEgc291cmNlLCBhbiBhZ2VudCwgYSBkYXNoYm9hcmQsIGEgY2F0YWxvZyBzZWN0aW9uLiBJdCBjb21tdW5pY2F0ZXMgInRoaXMgaXMgYW4gb2JqZWN0IHlvdSBjYW4gb3BlbiIgYnkgcGFpcmluZyBhIHRpbnRlZCBjaXJjdWxhciBpY29uIHdpdGggYSBzaG9ydCB0aXRsZSBhbmQgYSBvbmUtbGluZSBkZXNjcmlwdGlvbi4gUmVhY2ggZm9yIGEgTmF2IGNhcmQgd2hlbiB0aGUgdXNlciBpcyBjaG9vc2luZyBiZXR3ZWVuIGEgc21hbGwgc2V0IG9mIGVudGl0aWVzIChyb3VnaGx5IDPigJM4KSBhbmQgZWFjaCBvbmUgZGVzZXJ2ZXMgYSBkaXN0aW5jdCB2aXN1YWwgaWRlbnRpdHk7IGZvciBsb25nZXIgbGlzdHMsIHVzZSBhIFtUYWJsZV0oLi90YWJsZS91c2FnZS5tZCkgaW5zdGVhZC4KCiMjIDMuIFdoZW4gdG8gdXNlIC8gV2hlbiBub3QgdG8gdXNlCgoqKlVzZSB3aGVuKioKLSBBIGxhbmRpbmcgcGFnZSBvZmZlcnMgYSBoYW5kZnVsIG9mIG5hdmlnYWJsZSBlbnRpdGllcyDigJQgIkRhdGEgc291cmNlcyIsICJBZ2VudHMiLCAiRGFzaGJvYXJkcyIg4oCUIGFuZCBlYWNoIG9wZW5zIGl0cyBvd24gdmlldy4KLSBUaGUgdXNlciBiZW5lZml0cyBmcm9tIGEgcmVjb2duaXNhYmxlIGljb24gKyBzaG9ydCBkZXNjcmlwdGlvbiBhdCBhIGdsYW5jZS4KLSBUaGUgZW50aXR5IGNvdW50IGlzIHJvdWdobHkgM+KAkzguIEEgZ3JpZCBvZiA0IHRpbGVzIHJlYWRzIHdlbGw7IDIwIGRvZXMgbm90LgoKKipEbyBub3QgdXNlIHdoZW4qKgotIFRoZSBsaXN0IGlzIGxvbmdlciB0aGFuIH44IGVudHJpZXMg4oaSIHVzZSBhIFtUYWJsZV0oLi90YWJsZS91c2FnZS5tZCkuCi0gVGhlIHRpbGUgaGFzIG5vIGFjdGlvbiBvbiBjbGljayDihpIgdXNlIHRoZSBiYXNlIFtDYXJkXSguLi9iYXNlL2NhcmQvdXNhZ2UubWQpIHByaW1pdGl2ZTsgYSBub24tY2xpY2thYmxlIHRpbGUgc2hvdWxkIG5vdCBsb29rIGNsaWNrYWJsZS4KLSBUaGUgY29udGVudCBpcyBhIG1ldHJpYyAvIHN0YXQg4oaSIHVzZSBbTWV0cmljIENhcmRdKC4vbWV0cmljLWNhcmQvdXNhZ2UubWQpLgotIFRoZSB0YXJnZXQgaXMgYSBsYWJlbGxlZCBmb3JtIGNvbnRyb2wg4oaSIHVzZSBbRm9ybSBGaWVsZF0oLi9mb3JtLWZpZWxkL3VzYWdlLm1kKS4KCiMjIDQuIENvbnRyYWN0CgojIyMgR3VhcmFudGVlcwotIEV2ZXJ5IFR5cG9ncmFwaHkgbm9kZSB1c2VzIGEgdGhlbWUgdmFyaWFudCAoYHN1YnRpdGxlMWAgZm9yIHRpdGxlLCBgYm9keTBgIGZvciBkZXNjcmlwdGlvbikg4oCUIG5vIGlubGluZSBgZm9udFNpemVgIC8gYGZvbnRXZWlnaHRgLgotIEljb24gY29udGFpbmVyIHJlbmRlcnMgYXQgZXhhY3RseSA0MCDDlyA0MCBweCB3aXRoIGNpcmN1bGFyIHNoYXBlLCB0aW50ZWQgYmFja2dyb3VuZCwgYW5kIG1hdGNoaW5nLWh1ZSBpY29uIGNvbG91ci4KLSBIb3ZlciBzdGF0ZSBpcyB1bmlmb3JtIGFjcm9zcyBldmVyeSBOYXYgY2FyZCDigJQgb25lIGRvY3VtZW50ZWQgcnVsZSwgbm90IGEgcGVyLXRpbGUgZGVjaXNpb24uCi0gQXQgcmVzdCB0aGUgY2FyZCBoYXMgbm8gYmFja2dyb3VuZCBmaWxsIOKAlCBvbmx5IHRoZSBvdXRsaW5lIGJvcmRlci4KCiMjIyBQcm9oaWJpdGlvbnMKLSBOZXZlciBoYXJkY29kZSBgIiNmZmYiYCBvciBgIndoaXRlImAg4oCUIHVzZSBgImJhY2tncm91bmQucGFwZXIiYC4KLSBOZXZlciB1c2UgYGJnY29sb3I6ICd3aGl0ZSdgIG9uIHRoZSBpY29uIGNvbnRhaW5lciDigJQgYWx3YXlzIGBwYWxldHRlLjxodWU+WzEwMF1gLgotIE5ldmVyIGludmVudCBhIGN1c3RvbSBob3ZlciBzdHlsZSDigJQgdXNlIHRoZSBzdGFuZGFyZCB0aWxlIGhvdmVyIHJ1bGUgKHNlZSDCpzYpLgotIE5ldmVyIHN0eWxlIHRoZSBOYXYgY2FyZCB3aXRoIGBiZ2NvbG9yYCBhdCByZXN0IOKAlCBpdCBtdXN0IGJlIGAidHJhbnNwYXJlbnQiYCB1bnRpbCBob3Zlci4KLSBJZiBhIHN0YXR1cyBsYWJlbCBpcyBuZWVkZWQsIHVzZSB0aGUgW0NoaXBdKC4uL2Jhc2UvY2hpcC91c2FnZS5tZCkgcGF0dGVybiAoYDxDaGlwIHZhcmlhbnQ9ImZpbGxlZExpZ2h0IiBjb2xvcj0i4oCmIiBzaXplPSJ4c21hbGwiIC8+YCksIG5vdCBhbiBpbmxpbmUgYmFkZ2UuCgojIyMgQ29uZGl0aW9ucwotIEV2ZXJ5IE5hdiBjYXJkIGlzIGNsaWNrYWJsZSDigJQgaWYgaXQgaXNuJ3QsIGRvIG5vdCB1c2UgdGhpcyBjb21wb3NpdGUuCi0gYG9uQ2xpY2tgIG11c3QgYmUgb24gdGhlIGBDYXJkYCAobm90IGEgbmVzdGVkIGNoaWxkKSwgc28gdGhlIHdob2xlIHRpbGUgaXMgdGhlIGhpdCB0YXJnZXQuCi0gQ3Vyc29yIGlzIGAicG9pbnRlciJgIGFuZCB0aGUgc3RhbmRhcmQgaG92ZXIgdHJhbnNpdGlvbiBpcyBhcHBsaWVkLgotIEFjY2Vzc2libGUgbmFtZSDigJQgZWl0aGVyIHRoZSB0aXRsZSB0ZXh0IChyZWFkIGF1dG9tYXRpY2FsbHkpIG9yIGFuIGV4cGxpY2l0IGBhcmlhLWxhYmVsYCB3aGVuIHRoZSB0aXRsZSBpcyBhbWJpZ3VvdXMuCgojIyA1LiBBbmF0b215CgpgYGAK4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQCuKUgiAg4pSM4pSA4pSA4pSQICBDYXJkIHRpdGxlICAgICAgICAgICAgICAgICAgICAgICDilIIK4pSCICDilIIgIOKUgiAgU2hvcnQgZGVzY3JpcHRpb24gdGV4dOKApiAgICAgICAgICDilIIK4pSCICDilJTilIDilIDilJggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKUggrilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJgKYGBgCgotICoqU2hlbGwqKiDigJQgb3V0bGluZWQgYDxDYXJkPmAsIGBib3JkZXJSYWRpdXM6IDJgLCBgbWluSGVpZ2h0OiA5OGAsIHBhZGRpbmcgYHA6IDJgLCBob3Jpem9udGFsIGZsZXggcm93IHdpdGggYGdhcDogMmAuCi0gKipJY29uIGNvbnRhaW5lcioqIOKAlCA0MCDDlyA0MCBgPEJveD5gLCBjaXJjdWxhciwgaHVlLXRpbnRlZCBiYWNrZ3JvdW5kIHdpdGggbWF0Y2hpbmcgaWNvbiBjb2xvdXIuCi0gKipUaXRsZSoqIOKAlCBgPFR5cG9ncmFwaHkgdmFyaWFudD0ic3VidGl0bGUxIj5gLgotICoqRGVzY3JpcHRpb24qKiDigJQgYDxUeXBvZ3JhcGh5IHZhcmlhbnQ9ImJvZHkwIiBjb2xvcj0idGV4dC5zZWNvbmRhcnkiPmAsIHNpbmdsZSBsaW5lIG9yIHNob3J0IHBhcmFncmFwaC4KCiMjIDYuIEN1c3RvbQoKIyMjIFNoZWxsIHJ1bGUKCmBgYHRzeAo8Q2FyZAogIHZhcmlhbnQ9Im91dGxpbmVkIgogIG9uQ2xpY2s9e2hhbmRsZUNsaWNrfQogIHN4PXt7CiAgICBjdXJzb3I6ICdwb2ludGVyJywKICAgIGJnY29sb3I6ICd0cmFuc3BhcmVudCcsCiAgICBib3JkZXJSYWRpdXM6IDIsCiAgICBtaW5IZWlnaHQ6IDk4LAogICAgZGlzcGxheTogJ2ZsZXgnLAogICAgYWxpZ25JdGVtczogJ2NlbnRlcicsCiAgICB0cmFuc2l0aW9uOiAnYWxsIDAuMnMnLAogICAgJyY6aG92ZXInOiB7CiAgICAgIGJnY29sb3I6ICdiYWNrZ3JvdW5kLnBhcGVyJywKICAgICAgYm9yZGVyOiBgMXB4IHNvbGlkICR7dGhlbWUucGFsZXR0ZS5uZXV0cmFsWzUwMF19YCwKICAgIH0sCiAgfX0KPgogIDxDYXJkQ29udGVudCBzeD17eyBwOiAwLCB3aWR0aDogJzEwMCUnLCAnJjpsYXN0LWNoaWxkJzogeyBwYjogMCB9IH19PgogICAgey8qIC4uLiAqL30KICA8L0NhcmRDb250ZW50Pgo8L0NhcmQ+CmBgYAoKIyMjIFN0YW5kYXJkIHRpbGUgaG92ZXIgKHJ1bGUpCgpBbGwgTmF2IGNhcmRzIHVzZSB0aGUgc2FtZSBob3ZlciBzdHlsZSDigJQgZG8gbm90IGludmVudCBjdXN0b20gaG92ZXIgc3RhdGVzOgoKfCBQcm9wZXJ0eSB8IFZhbHVlIHwKfC0tLXwtLS18CnwgYGJnY29sb3JgIHwgYCJiYWNrZ3JvdW5kLnBhcGVyImAgfAp8IGBib3JkZXJgIHwgYGAgYDFweCBzb2xpZCAke3RoZW1lLnBhbGV0dGUubmV1dHJhbFs1MDBdfWAgYGAgfAoKIyMjIEljb24gY29udGFpbmVyCgpVc2UgYSBwbGFpbiBgPEJveD5gLCBub3QgYEF2YXRhcmAuIEx1Y2lkZSBpY29ucyBpbmhlcml0IGBjdXJyZW50Q29sb3JgLCBzbyBzZXQgYGNvbG9yYCBvbiB0aGUgQm94OgoKYGBgdHN4CjxCb3gKICBzeD17ewogICAgZGlzcGxheTogJ2ZsZXgnLAogICAgYWxpZ25JdGVtczogJ2NlbnRlcicsCiAgICBqdXN0aWZ5Q29udGVudDogJ2NlbnRlcicsCiAgICB3aWR0aDogNDAsCiAgICBoZWlnaHQ6IDQwLAogICAgYm9yZGVyUmFkaXVzOiAxMCwKICAgIGJnY29sb3I6IHRoZW1lLnBhbGV0dGUuYmx1ZVsxMDBdLAogICAgY29sb3I6IHRoZW1lLnBhbGV0dGUuYmx1ZVs2MDBdLAogICAgZmxleFNocmluazogMCwKICB9fQo+CiAgPERhdGFiYXNlIHNpemU9ezIwfSAvPgo8L0JveD4KYGBgCgpSdWxlczoKLSBTaXplICoqNDAgw5cgNDAqKiwgYGJvcmRlclJhZGl1czogMTBgIChyZW5kZXJzIGNpcmN1bGFyIHZpYSB0aGVtZSBtdWx0aXBsaWVyKS4KLSBDb2xvdXIgcGFpcjogcGFsZXR0ZSBgWzEwMF1gIGJhY2tncm91bmQgKyBtYXRjaGluZyBgWzYwMF1gIGljb24gY29sb3VyLgotIENob29zZSBwYWxldHRlIGh1ZSBieSBlbnRpdHkgdHlwZSDigJQgYmx1ZSBmb3IgZGF0YSBzb3VyY2VzLCBwdXJwbGUgZm9yIGFnZW50cywgdGVhbCBmb3IgZGFzaGJvYXJkcywgZW1lcmFsZCBmb3IgY2F0YWxvZywgZXRjLgoKIyMjIFRpdGxlICsgZGVzY3JpcHRpb24KCmBgYHRzeAo8VHlwb2dyYXBoeSB2YXJpYW50PSJzdWJ0aXRsZTEiIHN4PXt7IG1iOiAwLjUgfX0+e3RpdGxlfTwvVHlwb2dyYXBoeT4KPFR5cG9ncmFwaHkgdmFyaWFudD0iYm9keTAiIGNvbG9yPSJ0ZXh0LnNlY29uZGFyeSI+e2Rlc2NyaXB0aW9ufTwvVHlwb2dyYXBoeT4KYGBgCgojIyA3LiBNb2NrIGRhdGEgY29udGVudAoKUGxhY2Vob2xkZXIg4oCUIGZpbGwgd2l0aCBBbGF0aW9uLWRvbWFpbiB0aWxlcyB3aGVuIHRoaXMgY29tcG9zaXRlIGlzIHVzZWQgaW4gYSBwaWxvdC4gQ2FuZGlkYXRlczogRGF0YSBzb3VyY2VzIChTbm93Zmxha2UsIEJpZ1F1ZXJ5LCBQb3N0Z3JlcyksIEFnZW50cyAoQ2F0YWxvZyBBSSwgU1FMIEFJKSwgRGFzaGJvYXJkcyAoRXhlY3V0aXZlIHN1bW1hcnksIERhdGEgaGVhbHRoKSwgQ2F0YWxvZyBzZWN0aW9ucyAoVGFibGVzLCBCdXNpbmVzcyB0ZXJtcywgUXVlcmllcykuCgojIyAxMS4gRXhhbXBsZQoKYGBgdHN4CjxDYXJkCiAgdmFyaWFudD0ib3V0bGluZWQiCiAgb25DbGljaz17b3BlbkRhdGFTb3VyY2VzfQogIHN4PXt7CiAgICBjdXJzb3I6ICdwb2ludGVyJywKICAgIGJnY29sb3I6ICd0cmFuc3BhcmVudCcsCiAgICBib3JkZXJSYWRpdXM6IDIsCiAgICBtaW5IZWlnaHQ6IDk4LAogICAgZGlzcGxheTogJ2ZsZXgnLAogICAgYWxpZ25JdGVtczogJ2NlbnRlcicsCiAgICAnJjpob3Zlcic6IHsKICAgICAgYmdjb2xvcjogJ2JhY2tncm91bmQucGFwZXInLAogICAgICBib3JkZXI6IGAxcHggc29saWQgJHt0aGVtZS5wYWxldHRlLm5ldXRyYWxbNTAwXX1gLAogICAgfSwKICB9fQo+CiAgPENhcmRDb250ZW50IHN4PXt7IHA6IDAsIHdpZHRoOiAnMTAwJScsICcmOmxhc3QtY2hpbGQnOiB7IHBiOiAwIH0gfX0+CiAgICA8Qm94IHN4PXt7IGRpc3BsYXk6ICdmbGV4JywgYWxpZ25JdGVtczogJ2NlbnRlcicsIGdhcDogMiwgcDogMiB9fT4KICAgICAgPEJveAogICAgICAgIHN4PXt7CiAgICAgICAgICB3aWR0aDogNDAsIGhlaWdodDogNDAsIGJvcmRlclJhZGl1czogMTAsCiAgICAgICAgICBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBqdXN0aWZ5Q29udGVudDogJ2NlbnRlcicsCiAgICAgICAgICBiZ2NvbG9yOiB0aGVtZS5wYWxldHRlLmJsdWVbMTAwXSwKICAgICAgICAgIGNvbG9yOiB0aGVtZS5wYWxldHRlLmJsdWVbNjAwXSwKICAgICAgICB9fQogICAgICA+CiAgICAgICAgPERhdGFiYXNlIHNpemU9ezIwfSAvPgogICAgICA8L0JveD4KICAgICAgPEJveCBzeD17eyBmbGV4OiAxLCBtaW5XaWR0aDogMCB9fT4KICAgICAgICA8VHlwb2dyYXBoeSB2YXJpYW50PSJzdWJ0aXRsZTEiIHN4PXt7IG1iOiAwLjUgfX0+RGF0YSBzb3VyY2VzPC9UeXBvZ3JhcGh5PgogICAgICAgIDxUeXBvZ3JhcGh5IHZhcmlhbnQ9ImJvZHkwIiBjb2xvcj0idGV4dC5zZWNvbmRhcnkiPgogICAgICAgICAgQ29ubmVjdCBhbmQgbWFuYWdlIGRhdGEgc291cmNlcyBhY3Jvc3MgeW91ciBvcmdhbml6YXRpb24uCiAgICAgICAgPC9UeXBvZ3JhcGh5PgogICAgICA8L0JveD4KICAgIDwvQm94PgogIDwvQ2FyZENvbnRlbnQ+CjwvQ2FyZD4KYGBgCgpTZWUgW2BFeGFtcGxlLnRzeGBdKC4vRXhhbXBsZS50c3gpIGZvciB0aGUgY2Fub25pY2FsLCBydW5uYWJsZSBzb3VyY2UuCg==">
+  <button class="md-viewer-toggle" type="button" aria-expanded="false">
+    <span class="chev" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+    View source
+    <span class="md-viewer-filename">nav-card/usage.md</span>
+  </button>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+    var btn = host.querySelector('.md-viewer-toggle');
+    var pre = host.querySelector('.md-viewer-pre');
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      // UTF-8 safe base64 → string
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      pre.textContent = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      pre.textContent = '(failed to load source)';
+    }
+    btn.addEventListener('click', function () {
+      var open = host.getAttribute('data-open') === 'true';
+      host.setAttribute('data-open', open ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      pre.setAttribute('aria-hidden', open ? 'true' : 'false');
+    });
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

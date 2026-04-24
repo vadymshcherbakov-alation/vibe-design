@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Metric Card</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg-default:     #FFFFFF;
+      --bg-paper:       #FFFFFF;
+      --neutral-200:    #F9F9FB;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --primary-main:   #0073DD;
+      --error-main:     #CA334A;
+
+      --radius-2: 12px;
+
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--neutral-200);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 960px; margin: 0 auto; }
+
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 4px 0; color: var(--text-primary);
+    }
+    p.page-sub {
+      font-size: 14px; line-height: 1.5; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 24px 0 12px 0;
+    }
+
+    .t-subtitle1 {
+      font-size: 14px; font-weight: 500; line-height: 1.43;
+      color: var(--text-primary); margin: 0;
+    }
+    .t-body2 {
+      font-size: 13px; font-weight: 400; line-height: 1.5; margin: 0;
+    }
+    .t-hero {
+      font-size: 32px; font-weight: 400; line-height: 1.15;
+      letter-spacing: -0.01em; color: var(--text-primary); margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .c-secondary { color: var(--text-secondary); }
+    .c-error     { color: var(--error-main); }
+
+    .grid-metric {
+      display: grid; gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    }
+    .metric-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .metric-card .title-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .metric-card .badge {
+      display: inline-flex; align-items: center; height: 20px; padding: 0 8px;
+      border-radius: 10px; background: var(--neutral-300);
+      color: var(--text-secondary); font-size: 12px; font-weight: 500;
+    }
+    .metric-card .value-row {
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .metric-card .value-row .sub { margin-top: 4px; }
+    .metric-card .value-row .right {
+      display: flex; align-items: center; gap: 4px;
+      margin-top: 2px;
+    }
+    .progress {
+      width: 100%; height: 6px; border-radius: 4px;
+      background: var(--neutral-300); overflow: hidden;
+    }
+    .progress > span {
+      display: block; height: 100%;
+      background: var(--primary-main); transition: width .3s ease;
+    }
+    .progress.is-error > span { background: var(--error-main); }
+
+    .btn {
+      all: unset; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 6px; height: 32px; padding: 0 12px; border-radius: 6px;
+      border: 1px solid var(--neutral-500); color: var(--text-primary);
+      background: transparent; font-size: 13px; font-weight: 500;
+      line-height: 1; transition: background .15s;
+      width: fit-content;
+    }
+    .btn:hover { background: var(--neutral-300); }
+    .btn:focus-visible { outline: 2px solid var(--primary-main); outline-offset: 2px; }
+
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Metric Card</h1>
+    <p class="page-sub">
+      A Metric card puts a single headline number front and centre — an object count, a credit balance, a quota, a health score — with just enough context around it to read without a caption. It communicates "here's where this number stands right now, and (optionally) how close to a limit." Reach for a Metric card on dashboards, billing pages, usage panels, and anywhere the user needs to scan several numbers quickly and act on the ones that need attention.
+    </p>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Composite component</li>
+      <li><strong>MUI base:</strong> <code>Paper</code></li>
+      <li><strong>Figma:</strong> Metric card — to be linked</li>
+      <li><strong>Code:</strong> <code>design-playground/apps/plugins/alation-design/template/src/blocks/card/Example.tsx</code></li>
+    </ul>
+    <!-- classification-end -->
+
+    <h2 class="section">Metric cards — normal + critical</h2>
+    <div class="grid-metric">
+
+      <!-- Normal threshold -->
+      <div class="metric-card">
+        <div class="title-row">
+          <p class="t-subtitle1">Catalog objects</p>
+          <span class="badge">This quarter</span>
+        </div>
+        <div class="value-row">
+          <div>
+            <p class="t-hero">21,265,450</p>
+            <p class="t-body2 c-secondary sub">of 25,000,000 objects</p>
+          </div>
+          <div class="right">
+            <p class="t-subtitle1">85%</p>
+          </div>
+        </div>
+        <div class="progress"><span style="width:85%"></span></div>
+        <p class="t-body2 c-secondary">3,734,550 remaining</p>
+        <button class="btn" type="button">View breakdown</button>
+      </div>
+
+      <!-- Critical threshold -->
+      <div class="metric-card">
+        <div class="title-row">
+          <p class="t-subtitle1">Query credits</p>
+          <span class="badge">Billing period</span>
+        </div>
+        <div class="value-row">
+          <div>
+            <p class="t-hero">960,000</p>
+            <p class="t-body2 c-secondary sub">of 1,000,000 credits</p>
+          </div>
+          <div class="right">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--error-main)"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <p class="t-subtitle1 c-error">96%</p>
+          </div>
+        </div>
+        <div class="progress is-error"><span style="width:96%"></span></div>
+        <p class="t-body2 c-secondary">40,000 credits remaining</p>
+        <button class="btn" type="button">View breakdown</button>
+      </div>
+
+    </div>
+
+    <p class="note">
+      Static preview only — this file mirrors the Contract Block of
+      <code>metric-card.md</code> but is not React. Canonical runnable source:
+      <code>design-playground/.../blocks/card/Example.tsx</code>.
+    </p>
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 32px 40px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-toggle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58;
+    background: #F1F4F6;
+    border: 1px solid #E8EDF1;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer[data-open="true"] .md-viewer-toggle .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #B7B7C1;
+    margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none;
+    margin: 12px 0 0 0;
+    padding: 20px 24px;
+    background: #FFFFFF;
+    border: 1px solid #E8EDF1;
+    border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #0D1322;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    max-height: 640px;
+    overflow-y: auto;
+  }
+  .md-viewer[data-open="true"] .md-viewer-pre { display: block; }
+</style>
+<div class="md-viewer" data-open="false" data-md-b64="LS0tCm5hbWU6IG1ldHJpYy1jYXJkCnRpdGxlOiBNZXRyaWMgQ2FyZApjYXRlZ29yeTogY29tcG9zaXRlLWNvbXBvbmVudApsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjEKCmRlc2NyaXB0aW9uOiA+CiAgQSBzdGF0IHN1cmZhY2Ugc2hvd2luZyBhIGhlYWRsaW5lIHZhbHVlLCBzdXBwb3J0aW5nIGRldGFpbCwgYW5kIG9wdGlvbmFsIHByb2dyZXNzIHRvd2FyZCBhIGNhcC4gVXNlZCBmb3IgdXNhZ2UgcXVvdGFzLCBiaWxsaW5nIGNvdW50ZXJzLCBoZWFsdGggbWV0cmljcywgYW5kIGFueSBkYXNoYm9hcmQgdGlsZSB3aGVyZSB0aGUgbnVtYmVyIGlzIHRoZSBwb2ludC4KdGFnczogW2NhcmQsIG1ldHJpYywgc3RhdCwgcXVvdGEsIGRhc2hib2FyZF0KCmZpZ21hX3VybDogIiIKY29kZV9yZWZlcmVuY2U6ICJubyBzaGFyZWQgYDxNZXRyaWNDYXJkPmAgd3JhcHBlciBpbiBAYWxhdGlvbi9hbGF0aW9uLXVpIOKAlCBwcm9kdWN0aW9uIGNvbXBvc2VzIGA8UGFwZXIgdmFyaWFudD1cIm91dGxpbmVkXCI+YCArIGA8VHlwb2dyYXBoeSB2YXJpYW50PVwiaGVyb1wiPmAgKyBgPExpbmVhclByb2dyZXNzPmAgYWQtaG9jIgpleGFtcGxlX3BhdGg6IC4vRXhhbXBsZS50c3gKCm11aV9iYXNlOiBQYXBlcgpkZXBlbmRzX29uX3Rva2VuczoKICAtIHBhbGV0dGUucHJpbWFyeS5tYWluCiAgLSBwYWxldHRlLmVycm9yLm1haW4KICAtIHBhbGV0dGUubmV1dHJhbFsyMDBdCiAgLSBwYWxldHRlLm5ldXRyYWxbMzAwXQogIC0gcGFsZXR0ZS50ZXh0LnNlY29uZGFyeQogIC0gc2hhcGUuYm9yZGVyUmFkaXVzCiAgLSB0eXBvZ3JhcGh5LnN1YnRpdGxlMQogIC0gdHlwb2dyYXBoeS5ib2R5MgogIC0gdHlwb2dyYXBoeS5oZXJvCmRlcGVuZHNfb25fY29tcG9uZW50czoKICAtIFBhcGVyCiAgLSBCb3gKICAtIFR5cG9ncmFwaHkKICAtIExpbmVhclByb2dyZXNzCiAgLSBCdXR0b24KLS0tCgojIE1ldHJpYyBDYXJkCgojIyAxLiBDbGFzc2lmaWNhdGlvbgoKLSAqKlR5cGU6KiogQ29tcG9zaXRlIGNvbXBvbmVudCDigJQgKipjb21wb3NpdGlvbiBwYXR0ZXJuLCBub3QgYSBzaGFyZWQgd3JhcHBlcioqCi0gKipNVUkgYmFzZToqKiBgUGFwZXJgICh2aWEgdGhlIFtDYXJkIFdyYXBwZXJdKC4uL2Jhc2UvY2FyZC91c2FnZS5tZCkgcHJpbWl0aXZlKQotICoqRmlnbWE6KiogTWV0cmljIGNhcmQg4oCUIHRvIGJlIGxpbmtlZAotICoqQ29kZToqKiBUaGVyZSBpcyAqKm5vIHNoYXJlZCBgPE1ldHJpY0NhcmQ+YCBjb21wb25lbnQqKiBpbiBgQGFsYXRpb24vYWxhdGlvbi11aWAuIFByb2R1Y3Rpb24gY29tcG9zZXMgYDxQYXBlciB2YXJpYW50PSJvdXRsaW5lZCI+YCArIGA8VHlwb2dyYXBoeSB2YXJpYW50PSJoZXJvIj5gICsgYDxMaW5lYXJQcm9ncmVzcz5gIGRpcmVjdGx5IGF0IHRoZSBjYWxsIHNpdGUuIFRoaXMgcmVmZXJlbmNlIGRlZmluZXMgdGhlIGNvbXBvc2l0aW9uIGNvbnRyYWN0IHNvIG1ldHJpYyB0aWxlcyBhY3Jvc3MgZGFzaGJvYXJkcyByZWFkIGNvbnNpc3RlbnRseS4KCiMjIDIuIFB1cnBvc2UKCkEgTWV0cmljIGNhcmQgcHV0cyBhIHNpbmdsZSBoZWFkbGluZSBudW1iZXIgZnJvbnQgYW5kIGNlbnRyZSDigJQgYW4gb2JqZWN0IGNvdW50LCBhIGNyZWRpdCBiYWxhbmNlLCBhIHF1b3RhLCBhIGhlYWx0aCBzY29yZSDigJQgd2l0aCBqdXN0IGVub3VnaCBjb250ZXh0IGFyb3VuZCBpdCB0byByZWFkIHdpdGhvdXQgYSBjYXB0aW9uLiBJdCBjb21tdW5pY2F0ZXMgImhlcmUncyB3aGVyZSB0aGlzIG51bWJlciBzdGFuZHMgcmlnaHQgbm93LCBhbmQgKG9wdGlvbmFsbHkpIGhvdyBjbG9zZSB0byBhIGxpbWl0LiIgUmVhY2ggZm9yIGEgTWV0cmljIGNhcmQgb24gZGFzaGJvYXJkcywgYmlsbGluZyBwYWdlcywgdXNhZ2UgcGFuZWxzLCBhbmQgYW55d2hlcmUgdGhlIHVzZXIgbmVlZHMgdG8gc2NhbiBzZXZlcmFsIG51bWJlcnMgcXVpY2tseSBhbmQgYWN0IG9uIHRoZSBvbmVzIHRoYXQgbmVlZCBhdHRlbnRpb24uCgojIyAzLiBXaGVuIHRvIHVzZSAvIFdoZW4gbm90IHRvIHVzZQoKKipVc2Ugd2hlbioqCi0gQSBkYXNoYm9hcmQgb3IgcGFuZWwgc2hvd3Mgc2V2ZXJhbCBtZWFzdXJlZCBxdWFudGl0aWVzIGFuZCBlYWNoIGRlc2VydmVzIGl0cyBvd24gc3VyZmFjZS4KLSBUaGUgbnVtYmVyIGhhcyBhIGNhcCBvciB0YXJnZXQgYW5kIGEgcHJvZ3Jlc3MgYmFyIGFkZHMgaW5mb3JtYXRpb24gKHF1b3RhcywgYmlsbGluZyBjcmVkaXRzLCBhZG9wdGlvbiAlKS4KLSBBIHRocmVzaG9sZCBtYXR0ZXJzIOKAlCB0aGUgY2FyZCBzaG91bGQgc2hpZnQgdG8gYW4gZXJyb3Igc3RhdGUgd2hlbiB0aGUgbnVtYmVyIGNyb3NzZXMgYSBjcml0aWNhbCBsaW5lLgoKKipEbyBub3QgdXNlIHdoZW4qKgotIFRoZSBudW1iZXIgaXMgYSBvbmUtb2ZmIGlubGluZSBzdGF0IOKGkiB1c2UgYSBwbGFpbiBgPFR5cG9ncmFwaHkgdmFyaWFudD0iaGVybyI+YCBpbiBhIGA8UGFwZXI+YCBvciBpbmxpbmUgaW4gZmxvd2luZyBjb250ZW50LgotIFRoZSBzdXJmYWNlIGlzIGEgY2xpY2thYmxlIGVudGl0eSB0aWxlIOKGkiB1c2UgW05hdiBDYXJkXSguL25hdi1jYXJkL3VzYWdlLm1kKS4KLSBUaGUgZGF0YSBpcyBhIGxpc3Qgb3IgY29tcGFyaXNvbiBhY3Jvc3MgdGltZSDihpIgdXNlIGEgY2hhcnQgKG5vdCB5ZXQgZG9jdW1lbnRlZCkuCgojIyA0LiBDb250cmFjdAoKIyMjIEd1YXJhbnRlZXMKLSBIZWFkbGluZSB2YWx1ZSB1c2VzIGA8VHlwb2dyYXBoeSB2YXJpYW50PSJoZXJvIj5gIOKAlCBubyBgaDFgLCBubyBgaDRgLCBubyBgc3hgIGZvbnQgb3ZlcnJpZGVzLgotIEV2ZXJ5IHN1cHBvcnRpbmcgVHlwb2dyYXBoeSBub2RlIHVzZXMgYSB0aGVtZSB2YXJpYW50IChgc3VidGl0bGUxYCwgYGJvZHkyYCkuCi0gU2hlbGwgdXNlcyBgPFBhcGVyIHZhcmlhbnQ9Im91dGxpbmVkIj5gIGF0IGBib3JkZXJSYWRpdXM6IDJgLCBgcDogMmAsIHdpdGggYSB2ZXJ0aWNhbCBmbGV4IGxheW91dCBhdCBgZ2FwOiAxLjVgLgotIFByb2dyZXNzIGJhciBoZWlnaHQsIHJhZGl1cywgYW5kIHRyYWNrIGNvbG91ciBhcmUgdGhlbWUtY29uc2lzdGVudCBhY3Jvc3MgZXZlcnkgTWV0cmljIGNhcmQuCgojIyMgUHJvaGliaXRpb25zCi0gTmV2ZXIgdXNlIGB2YXJpYW50PSJoMSJgIC8gYCJoNCJgIGZvciB0aGUgaGVhZGxpbmUgdmFsdWUg4oCUIGFsd2F5cyBgdmFyaWFudD0iaGVybyJgLgotIE5ldmVyIGhhcmRjb2RlIHByb2dyZXNzIGJhciBjb2xvdXIg4oCUIHVzZSBgY29sb3I9InByaW1hcnkiYCBvciBgY29sb3I9ImVycm9yImAgb24gYDxMaW5lYXJQcm9ncmVzcz5gLgotIE5ldmVyIGhhcmRjb2RlIGhleCBhbnl3aGVyZSDigJQgYWxsIGNvbG91ciBjb21lcyBmcm9tIGB0aGVtZS5wYWxldHRlLipgLgotIE5ldmVyIGludmVudCBhIGJlc3Bva2UgYmFkZ2UgcGlsbCDigJQgdXNlIHRoZSBbQ2hpcF0oLi4vYmFzZS9jaGlwL3VzYWdlLm1kKSBwYXR0ZXJuIChgPENoaXAgdmFyaWFudD0iZmlsbGVkTGlnaHQiIGNvbG9yPSLigKYiIHNpemU9InhzbWFsbCIgLz5gKS4KLSBOZXZlciBwdXQgbW9yZSB0aGFuIG9uZSBwcmltYXJ5IGFjdGlvbiBvbiBhIE1ldHJpYyBjYXJkIOKAlCBhZGRpdGlvbmFsIGFjdGlvbnMgYmVsb25nIGJlaGluZCBhIG1lbnUgb3Igb24gdGhlIHBhZ2UgY2hyb21lLgoKIyMjIENvbmRpdGlvbnMKLSBXaGVuIHRoZSBtZXRyaWMgY3Jvc3NlcyBhIGNyaXRpY2FsIHRocmVzaG9sZCwgZmxpcCBgTGluZWFyUHJvZ3Jlc3MgY29sb3JgIHRvIGAiZXJyb3IiYCAqKmFuZCoqIGFkZCBhIHJpZ2h0LXNpZGUgc3RhdCBpbiB0aGUgdmFsdWUgcm93IHdpdGggYW4gYEFsZXJ0VHJpYW5nbGVgIChsdWNpZGUpIGljb24gKyBgY29sb3I9ImVycm9yLm1haW4iYC4KLSBXaGVuIGEgImNyaXRpY2FsIiBjb252ZW50aW9uIGlzIHVuY2xlYXIsIHRyZWF0IOKJpSA5NSAlIG9mIGNhcCBhcyBjcml0aWNhbCAoYWRqdXN0YWJsZSBwZXIgbWV0cmljKS4KLSBXaGVuIGEgY2FyZCBoYXMgYW4gYWN0aW9uIGJ1dHRvbiwgdXNlIHRoZSAqKkdyZXkgb3V0bGluZWQqKiBuYW1lZCBzdHlsZSAoYHZhcmlhbnQ9Im91dGxpbmVkImAgKyBgY29sb3I9ImluaGVyaXQiYCkgYXQgYHNpemU9InNtYWxsImAg4oCUIHNlY29uZGFyeSBjZXJlbW9ueSwgbm90IHByaW1hcnkuCi0gV2hlbiB0aGUgY2FyZCBjb250YWlucyBhIGRlc3RydWN0aXZlIGFjdGlvbiwgdGhlIGRlc3RydWN0aXZlIEJ1dHRvbiBtdXN0IGZvbGxvdyB0aGUgW0J1dHRvbl0oLi4vYmFzZS9idXR0b24vdXNhZ2UubWQpIGRlc3RydWN0aXZlIGNvbnRyYWN0IChDb25maXJtRGlhbG9nIHJlcXVpcmVkIGZvciBpcnJldmVyc2libGUgYWN0aW9ucykuCgojIyA1LiBBbmF0b215CgpgYGAK4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQCuKUgiAgTWV0cmljIHRpdGxlICAgICAgICAgICAgICBbYmFkZ2VdICAgICAg4pSCCuKUgiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCCuKUgiAgMjEsMjY1LDQ1MCAgICAgICAgICAgICAgICAgICAgODUlICAgICAg4pSCCuKUgiAgb2YgMjUsMDAwLDAwMCBvYmplY3RzICAgICAgICAgICAgICAgICAg4pSCCuKUgiAg4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4pSB4paR4paR4paRICAgIOKUggrilIIgIDMsNzM0LDU1MCByZW1haW5pbmcgICAgICAgICAgICAgICAgICAgIOKUggrilIIgIFtWaWV3IGJyZWFrZG93bl0gICAgICAgICAgICAgICAgICAgICAgIOKUggrilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJgKYGBgCgotICoqVGl0bGUgcm93Kiog4oCUIGBzdWJ0aXRsZTFgIHRpdGxlICsgb3B0aW9uYWwgcmlnaHQtYWxpZ25lZCBbQ2hpcF0oLi4vYmFzZS9jaGlwL3VzYWdlLm1kKSAoZS5nLiBgPENoaXAgbGFiZWw9IlRoaXMgcXVhcnRlciIgdmFyaWFudD0ib3V0bGluZWQiIHNpemU9InhzbWFsbCIgLz5gKS4KLSAqKlZhbHVlIHJvdyoqIOKAlCBgaGVyb2AgdmFsdWUgb24gdGhlIGxlZnQgKyBgYm9keTJgIHN1YnRpdGxlIGJlbG93ICsgb3B0aW9uYWwgcmlnaHQtYWxpZ25lZCBzdGF0IChwZXJjZW50LCBzdGF0dXMpLgotICoqUHJvZ3Jlc3MgYmFyKiog4oCUIGBMaW5lYXJQcm9ncmVzc2AgYXQgYGNvbG9yPSJwcmltYXJ5ImAgKG9yIGAiZXJyb3IiYCB3aGVuIGNyaXRpY2FsKS4KLSAqKlJlbWFpbmluZyBsaW5lKiog4oCUIGBib2R5MmAsIGB0ZXh0LnNlY29uZGFyeWAsIG9uZSBsaW5lIGRlc2NyaWJpbmcgd2hhdCdzIGxlZnQgKGUuZy4gIjMsNzM0LDU1MCByZW1haW5pbmciKS4KLSAqKkFjdGlvbioqICoob3B0aW9uYWwpKiDigJQgR3JleSBvdXRsaW5lZCBzbWFsbCBCdXR0b24gKGUuZy4gIlZpZXcgYnJlYWtkb3duIikuCgojIyA2LiBDdXN0b20KCiMjIyBTaGVsbCBydWxlCgpgYGB0c3gKPFBhcGVyCiAgdmFyaWFudD0ib3V0bGluZWQiCiAgc3g9e3sgcDogMiwgYm9yZGVyUmFkaXVzOiAyLCBkaXNwbGF5OiAnZmxleCcsIGZsZXhEaXJlY3Rpb246ICdjb2x1bW4nLCBnYXA6IDEuNSB9fQo+CiAgey8qIC4uLiAqL30KPC9QYXBlcj4KYGBgCgojIyMgVGl0bGUgcm93CgpgYGB0c3gKPEJveCBzeD17eyBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBqdXN0aWZ5Q29udGVudDogJ3NwYWNlLWJldHdlZW4nIH19PgogIDxUeXBvZ3JhcGh5IHZhcmlhbnQ9InN1YnRpdGxlMSI+e3RpdGxlfTwvVHlwb2dyYXBoeT4KICB7YmFkZ2UgJiYgPENoaXAgbGFiZWw9e2JhZGdlfSB2YXJpYW50PSJvdXRsaW5lZCIgc2l6ZT0ieHNtYWxsIiAvPn0KPC9Cb3g+CmBgYAoKIyMjIFZhbHVlIHJvdwoKTGFyZ2UgaGVhZGxpbmUgdmFsdWUgdXNlcyBgdmFyaWFudD0iaGVybyJgLiBGb3IgY3JpdGljYWwgdGhyZXNob2xkcywgbW91bnQgYSByaWdodC1zaWRlIHN0YXQgd2l0aCBgQWxlcnRUcmlhbmdsZWAgKyBgY29sb3I9ImVycm9yLm1haW4iYDoKCmBgYHRzeAo8Qm94IHN4PXt7IGRpc3BsYXk6ICdmbGV4JywgYWxpZ25JdGVtczogJ2ZsZXgtc3RhcnQnLCBqdXN0aWZ5Q29udGVudDogJ3NwYWNlLWJldHdlZW4nIH19PgogIDxCb3g+CiAgICA8VHlwb2dyYXBoeSB2YXJpYW50PSJoZXJvIj57dmFsdWV9PC9UeXBvZ3JhcGh5PgogICAgPFR5cG9ncmFwaHkgdmFyaWFudD0iYm9keTIiIGNvbG9yPSJ0ZXh0LnNlY29uZGFyeSIgc3g9e3sgbXQ6IDAuNSB9fT57c3VidGl0bGV9PC9UeXBvZ3JhcGh5PgogIDwvQm94PgogIHtpc0NyaXRpY2FsID8gKAogICAgPEJveCBzeD17eyBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBnYXA6IDAuNSwgbXQ6IDAuMjUgfX0+CiAgICAgIDxBbGVydFRyaWFuZ2xlIHNpemU9ezE0fSBjb2xvcj17dGhlbWUucGFsZXR0ZS5lcnJvci5tYWlufSAvPgogICAgICA8VHlwb2dyYXBoeSB2YXJpYW50PSJzdWJ0aXRsZTEiIGNvbG9yPSJlcnJvci5tYWluIj57cGVyY2VudH0lPC9UeXBvZ3JhcGh5PgogICAgPC9Cb3g+CiAgKSA6ICgKICAgIDxUeXBvZ3JhcGh5IHZhcmlhbnQ9InN1YnRpdGxlMSIgc3g9e3sgbXQ6IDAuMjUgfX0+e3BlcmNlbnR9JTwvVHlwb2dyYXBoeT4KICApfQo8L0JveD4KYGBgCgojIyMgUHJvZ3Jlc3MgYmFyCgpgYGB0c3gKPExpbmVhclByb2dyZXNzCiAgdmFyaWFudD0iZGV0ZXJtaW5hdGUiCiAgdmFsdWU9ezg1fQogIGNvbG9yPXtpc0NyaXRpY2FsID8gJ2Vycm9yJyA6ICdwcmltYXJ5J30KICBzeD17eyBoZWlnaHQ6IDYsIGJvcmRlclJhZGl1czogNCwgYmdjb2xvcjogdGhlbWUucGFsZXR0ZS5uZXV0cmFsWzIwMF0gfX0KLz4KYGBgCgojIyMgUmVtYWluaW5nIGxpbmUKCmBgYHRzeAo8VHlwb2dyYXBoeSB2YXJpYW50PSJib2R5MiIgY29sb3I9InRleHQuc2Vjb25kYXJ5Ij57cmVtYWluaW5nTGFiZWx9PC9UeXBvZ3JhcGh5PgpgYGAKCiMjIyBBY3Rpb24KCmBgYHRzeAo8QnV0dG9uIHZhcmlhbnQ9Im91dGxpbmVkIiBjb2xvcj0iaW5oZXJpdCIgc2l6ZT0ic21hbGwiPlZpZXcgYnJlYWtkb3duPC9CdXR0b24+CmBgYAoKIyMgNy4gTW9jayBkYXRhIGNvbnRlbnQKClBsYWNlaG9sZGVyIOKAlCBmaWxsIHdpdGggQWxhdGlvbi1kb21haW4gbWV0cmljcyB3aGVuIHRoaXMgY29tcG9zaXRlIGlzIHVzZWQgaW4gYSBwaWxvdC4gQ2FuZGlkYXRlczoKLSAqKkNhdGFsb2cgb2JqZWN0cyoqIOKAlCAiMjEsMjY1LDQ1MCBvZiAyNSwwMDAsMDAwIG9iamVjdHMiICg4NSAlLCBub3JtYWwpLgotICoqUXVlcnkgY3JlZGl0cyoqIOKAlCAiOTYwLDAwMCBvZiAxLDAwMCwwMDAgY3JlZGl0cyIgKDk2ICUsIGNyaXRpY2FsKS4KLSAqKkFjdGl2ZSBhZ2VudHMqKiDigJQgIjEyIG9mIDI1IHNlYXRzIiAoNDggJSwgbm9ybWFsKS4KLSAqKkNhdGFsb2cgYWRvcHRpb24qKiDigJQgIjM0ICUgb2YgYnVzaW5lc3MgdW5pdHMgb25ib2FyZGVkIiAobm8gY2FwKS4KCiMjIDExLiBFeGFtcGxlCgpgYGB0c3gKPFBhcGVyCiAgdmFyaWFudD0ib3V0bGluZWQiCiAgc3g9e3sgcDogMiwgYm9yZGVyUmFkaXVzOiAyLCBkaXNwbGF5OiAnZmxleCcsIGZsZXhEaXJlY3Rpb246ICdjb2x1bW4nLCBnYXA6IDEuNSB9fQo+CiAgPEJveCBzeD17eyBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBqdXN0aWZ5Q29udGVudDogJ3NwYWNlLWJldHdlZW4nIH19PgogICAgPFR5cG9ncmFwaHkgdmFyaWFudD0ic3VidGl0bGUxIj5DYXRhbG9nIG9iamVjdHM8L1R5cG9ncmFwaHk+CiAgICA8Q2hpcCBsYWJlbD0iVGhpcyBxdWFydGVyIiB2YXJpYW50PSJvdXRsaW5lZCIgc2l6ZT0ieHNtYWxsIiAvPgogIDwvQm94PgoKICA8Qm94IHN4PXt7IGRpc3BsYXk6ICdmbGV4JywgYWxpZ25JdGVtczogJ2ZsZXgtc3RhcnQnLCBqdXN0aWZ5Q29udGVudDogJ3NwYWNlLWJldHdlZW4nIH19PgogICAgPEJveD4KICAgICAgPFR5cG9ncmFwaHkgdmFyaWFudD0iaGVybyI+MjEsMjY1LDQ1MDwvVHlwb2dyYXBoeT4KICAgICAgPFR5cG9ncmFwaHkgdmFyaWFudD0iYm9keTIiIGNvbG9yPSJ0ZXh0LnNlY29uZGFyeSIgc3g9e3sgbXQ6IDAuNSB9fT4KICAgICAgICBvZiAyNSwwMDAsMDAwIG9iamVjdHMKICAgICAgPC9UeXBvZ3JhcGh5PgogICAgPC9Cb3g+CiAgICA8VHlwb2dyYXBoeSB2YXJpYW50PSJzdWJ0aXRsZTEiIHN4PXt7IG10OiAwLjI1IH19Pjg1JTwvVHlwb2dyYXBoeT4KICA8L0JveD4KCiAgPExpbmVhclByb2dyZXNzCiAgICB2YXJpYW50PSJkZXRlcm1pbmF0ZSIKICAgIHZhbHVlPXs4NX0KICAgIGNvbG9yPSJwcmltYXJ5IgogICAgc3g9e3sgaGVpZ2h0OiA2LCBib3JkZXJSYWRpdXM6IDQsIGJnY29sb3I6IHRoZW1lLnBhbGV0dGUubmV1dHJhbFsyMDBdIH19CiAgLz4KICA8VHlwb2dyYXBoeSB2YXJpYW50PSJib2R5MiIgY29sb3I9InRleHQuc2Vjb25kYXJ5Ij4zLDczNCw1NTAgcmVtYWluaW5nPC9UeXBvZ3JhcGh5PgoKICA8QnV0dG9uIHZhcmlhbnQ9Im91dGxpbmVkIiBjb2xvcj0iaW5oZXJpdCIgc2l6ZT0ic21hbGwiPlZpZXcgYnJlYWtkb3duPC9CdXR0b24+CjwvUGFwZXI+CmBgYAoKU2VlIFtgRXhhbXBsZS50c3hgXSguL0V4YW1wbGUudHN4KSBmb3IgdGhlIGNhbm9uaWNhbCwgcnVubmFibGUgc291cmNlLgo=">
+  <button class="md-viewer-toggle" type="button" aria-expanded="false">
+    <span class="chev" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+    View source
+    <span class="md-viewer-filename">metric-card/usage.md</span>
+  </button>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+    var btn = host.querySelector('.md-viewer-toggle');
+    var pre = host.querySelector('.md-viewer-pre');
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      // UTF-8 safe base64 → string
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      pre.textContent = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      pre.textContent = '(failed to load source)';
+    }
+    btn.addEventListener('click', function () {
+      var open = host.getAttribute('data-open') === 'true';
+      host.setAttribute('data-open', open ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      pre.setAttribute('aria-hidden', open ? 'true' : 'false');
+    });
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

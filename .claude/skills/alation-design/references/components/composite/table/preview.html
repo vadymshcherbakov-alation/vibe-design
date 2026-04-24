@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Table</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-100:    #F9F9FB;
+      --neutral-200:    #F4F5F8;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --divider:        #D4DDE2;
+      --primary-main:   #0073DD;
+      --primary-soft:   #D9EEFF;
+      --primary-dark:   #0056A6;
+
+      --blue-100:       #D9EEFF;
+      --blue-900:       #0B3A66;
+      --neutral-chip-bg:#EEF1F4;
+      --neutral-chip-fg:#2B3342;
+
+      --avatar-1-bg:    #D9EEFF;
+      --avatar-1-fg:    #0056A6;
+      --avatar-2-bg:    #E7F4E3;
+      --avatar-2-fg:    #275E1E;
+      --avatar-3-bg:    #FCEBB0;
+      --avatar-3-fg:    #6B4308;
+      --avatar-4-bg:    #F5E3F0;
+      --avatar-4-fg:    #6A2D5A;
+
+      --radius-2: 12px;
+      --radius-chip: 12px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 1040px; margin: 0 auto; }
+
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    p.page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 32px 0 12px 0;
+    }
+
+    /* Grid container */
+    .grid-wrap {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 140px 100px 140px 88px 60px;
+      font-size: 14px;
+    }
+
+    .h-cell {
+      position: relative;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--paper);
+      border-bottom: 1px solid var(--divider);
+      display: flex; align-items: center; gap: 6px;
+      user-select: none;
+    }
+    .h-cell.active { cursor: pointer; }
+    .h-cell .sort {
+      display: inline-flex; color: var(--text-disabled);
+    }
+    .h-cell.active .sort { color: var(--text-primary); }
+
+    /* Column separator / resize handle — sits at the trailing edge of each header */
+    .h-cell .col-sep {
+      position: absolute;
+      top: 0; right: 0;
+      width: 10px; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: col-resize;
+      color: var(--neutral-500);
+    }
+    .h-cell:last-of-type .col-sep { display: none; }
+    .h-cell .col-sep::after {
+      content: ""; width: 1px; height: 60%;
+      background: var(--neutral-500);
+    }
+    .h-cell:hover .col-sep::after { background: var(--text-secondary); }
+
+    .cell {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--divider);
+      display: flex; align-items: flex-start;
+      min-width: 0;
+    }
+    .row { display: contents; }
+    .row:last-child .cell { border-bottom: none; }
+    .row:hover .cell { background: var(--neutral-100); }
+
+    /* Pagination footer — "Show rows" select + "1–5 of N" + first/prev/next/last chevrons */
+    .pagination {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0 0 0; margin-bottom: 16px;
+    }
+    .pagination .group { display: flex; align-items: center; gap: 8px; }
+    .pagination .muted { font-size: 13px; color: var(--text-secondary); }
+    .pagination .size-select {
+      display: inline-flex; align-items: center; gap: 4px;
+      border: 1px solid var(--neutral-500);
+      border-radius: 4px;
+      padding: 2px 4px 2px 8px;
+      font-size: 13px; color: var(--text-primary);
+      background: transparent;
+    }
+    .pagination .pager { display: flex; align-items: center; gap: 2px; }
+    .pagination .pager .icon-btn[disabled] {
+      color: var(--text-disabled); cursor: default;
+    }
+    .pagination .pager .icon-btn[disabled]:hover { background: transparent; color: var(--text-disabled); }
+
+    /* Name cell */
+    .name-cell {
+      gap: 12px;
+    }
+    .name-cell .icon {
+      display: inline-flex; color: var(--text-secondary); margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .name-stack { min-width: 0; }
+    .name-stack .name {
+      font-size: 14px; color: var(--text-primary); line-height: 1.5;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .name-stack .desc {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.45;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    /* Label chip */
+    .chip {
+      display: inline-flex; align-items: center;
+      height: 24px; padding: 0 10px;
+      border-radius: var(--radius-chip);
+      font-size: 12px; font-weight: 500;
+    }
+    .chip.neutral { background: var(--neutral-chip-bg); color: var(--neutral-chip-fg); }
+    .chip.blue    { background: var(--blue-100);        color: var(--blue-900); }
+
+    /* Created cell */
+    .created { color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+
+    /* Avatar */
+    .avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+    }
+    .avatar.a1 { background: var(--avatar-1-bg); color: var(--avatar-1-fg); }
+    .avatar.a2 { background: var(--avatar-2-bg); color: var(--avatar-2-fg); }
+    .avatar.a3 { background: var(--avatar-3-bg); color: var(--avatar-3-fg); }
+    .avatar.a4 { background: var(--avatar-4-bg); color: var(--avatar-4-fg); }
+
+    /* Icon button */
+    .icon-btn {
+      all: unset; cursor: pointer;
+      width: 28px; height: 28px; border-radius: 6px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+    }
+    .icon-btn:hover { background: var(--neutral-300); color: var(--text-primary); }
+
+    /* State panels (empty + loading) */
+    .state-panel {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      padding: 48px 24px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .state-panel .state-icon {
+      display: inline-flex; width: 44px; height: 44px;
+      align-items: center; justify-content: center;
+      border-radius: 50%; background: var(--neutral-300);
+      color: var(--text-secondary); margin-bottom: 16px;
+    }
+    .state-panel .state-title {
+      font-size: 16px; font-weight: 600; margin: 0 0 6px 0;
+    }
+    .state-panel .state-sub {
+      font-size: 13px; color: var(--text-secondary); margin: 0 0 20px 0;
+      line-height: 1.55;
+    }
+    .btn {
+      all: unset; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 6px; padding: 0 14px; height: 36px;
+      border-radius: 6px; font-size: 14px; font-weight: 500; line-height: 1;
+    }
+    .btn-primary { background: var(--primary-main); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    /* Loading — grid with skeleton rows */
+    .skel {
+      height: 12px; border-radius: 4px;
+      background: linear-gradient(90deg, var(--neutral-300) 0%, var(--neutral-200) 50%, var(--neutral-300) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s linear infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .skel.w60 { width: 60%; }
+    .skel.w80 { width: 80%; }
+    .skel.w40 { width: 40%; }
+    .skel-circle {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--neutral-300);
+    }
+    .skel-chip {
+      height: 24px; width: 72px; border-radius: var(--radius-chip);
+      background: var(--neutral-300);
+    }
+
+    .label {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin: 0 0 8px 0; display: block;
+    }
+
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Table</h1>
+    <p class="page-sub">
+      A data table for listing entities (agents, tools, data sources, OAuth clients, etc.) with type/status indicators, creator info, and row-level actions. Canonical list-page pattern — every list view in the app uses this shape.
+    </p>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Composite component</li>
+      <li><strong>MUI base:</strong> <code>DataGrid</code> (MUI X Data Grid)</li>
+      <li><strong>Figma:</strong> Table — to be linked</li>
+      <li><strong>Code:</strong> <code>design-playground/apps/plugins/alation-design/template/src/blocks/table/Example.tsx</code></li>
+    </ul>
+    <!-- classification-end -->
+
+    <h2 class="section">Canonical list · Agents · 5 rows</h2>
+    <span class="label">Name (icon + title + description) · Access · Type · Created · Creator · Actions</span>
+    <div class="grid-wrap">
+      <div class="grid">
+        <div class="h-cell active">
+          Name
+          <span class="sort">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+          </span>
+          <span class="col-sep"></span>
+        </div>
+        <div class="h-cell">Access<span class="col-sep"></span></div>
+        <div class="h-cell">Type<span class="col-sep"></span></div>
+        <div class="h-cell">Created<span class="col-sep"></span></div>
+        <div class="h-cell" style="justify-content:center">Creator<span class="col-sep"></span></div>
+        <div class="h-cell" style="justify-content:center"></div>
+
+        <!-- Row 1 -->
+        <div class="row">
+          <div class="cell name-cell">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </span>
+            <div class="name-stack">
+              <div class="name">Data analyst agent</div>
+              <div class="desc">Answers ad-hoc catalog questions and drafts SQL for analysts.</div>
+            </div>
+          </div>
+          <div class="cell"><span class="chip neutral">Catalog</span></div>
+          <div class="cell"><span class="chip blue">Native</span></div>
+          <div class="cell created">17 Apr 2026</div>
+          <div class="cell" style="justify-content:center">
+            <span class="avatar a1" title="Vadym Shcherbakov">VS</span>
+          </div>
+          <div class="cell" style="justify-content:center">
+            <button class="icon-btn" aria-label="Actions for Data analyst agent">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="row">
+          <div class="cell name-cell">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </span>
+            <div class="name-stack">
+              <div class="name">Query assistant</div>
+              <div class="desc">Helps stewards write and refine Compose queries with contextual suggestions.</div>
+            </div>
+          </div>
+          <div class="cell"><span class="chip neutral">Catalog</span></div>
+          <div class="cell"><span class="chip blue">Native</span></div>
+          <div class="cell created">14 Apr 2026</div>
+          <div class="cell" style="justify-content:center">
+            <span class="avatar a2" title="Chao Li">CL</span>
+          </div>
+          <div class="cell" style="justify-content:center">
+            <button class="icon-btn" aria-label="Actions for Query assistant">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="row">
+          <div class="cell name-cell">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </span>
+            <div class="name-stack">
+              <div class="name">Lineage explainer</div>
+              <div class="desc">Summarises upstream and downstream impact for a selected table or column.</div>
+            </div>
+          </div>
+          <div class="cell"><span class="chip neutral">Lineage</span></div>
+          <div class="cell"><span class="chip neutral">Custom</span></div>
+          <div class="cell created">09 Apr 2026</div>
+          <div class="cell" style="justify-content:center">
+            <span class="avatar a3" title="Avery Tan">AT</span>
+          </div>
+          <div class="cell" style="justify-content:center">
+            <button class="icon-btn" aria-label="Actions for Lineage explainer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="row">
+          <div class="cell name-cell">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </span>
+            <div class="name-stack">
+              <div class="name">Governance reviewer</div>
+              <div class="desc">Flags policy violations against the data standards library on every new asset.</div>
+            </div>
+          </div>
+          <div class="cell"><span class="chip neutral">Governance</span></div>
+          <div class="cell"><span class="chip neutral">Custom</span></div>
+          <div class="cell created">02 Apr 2026</div>
+          <div class="cell" style="justify-content:center">
+            <span class="avatar a4" title="Priya Iyer">PI</span>
+          </div>
+          <div class="cell" style="justify-content:center">
+            <button class="icon-btn" aria-label="Actions for Governance reviewer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 5 -->
+        <div class="row">
+          <div class="cell name-cell">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </span>
+            <div class="name-stack">
+              <div class="name">MCP servers onboarder</div>
+              <div class="desc">Walks admins through registering a new MCP server and validating its tool list.</div>
+            </div>
+          </div>
+          <div class="cell"><span class="chip neutral">MCP</span></div>
+          <div class="cell"><span class="chip blue">Native</span></div>
+          <div class="cell created">28 Mar 2026</div>
+          <div class="cell" style="justify-content:center">
+            <span class="avatar a1" title="Vadym Shcherbakov">VS</span>
+          </div>
+          <div class="cell" style="justify-content:center">
+            <button class="icon-btn" aria-label="Actions for MCP servers onboarder">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pagination">
+      <div class="group">
+        <span class="muted">Show rows</span>
+        <span class="size-select">
+          5
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+      </div>
+      <div class="group">
+        <span class="muted">1–5 of 5</span>
+        <div class="pager">
+          <button class="icon-btn" disabled aria-label="First page">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+          </button>
+          <button class="icon-btn" disabled aria-label="Previous page">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="icon-btn" disabled aria-label="Next page">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="icon-btn" disabled aria-label="Last page">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section">Loading state · DataGrid loading prop</h2>
+    <span class="label">Never replace with a separate skeleton wrapper — the grid owns the loading surface.</span>
+    <div class="grid-wrap">
+      <div class="grid">
+        <div class="h-cell">Name<span class="col-sep"></span></div>
+        <div class="h-cell">Access<span class="col-sep"></span></div>
+        <div class="h-cell">Type<span class="col-sep"></span></div>
+        <div class="h-cell">Created<span class="col-sep"></span></div>
+        <div class="h-cell" style="justify-content:center">Creator<span class="col-sep"></span></div>
+        <div class="h-cell"></div>
+
+        <div class="row">
+          <div class="cell name-cell">
+            <span class="icon"><div class="skel-circle" style="width:16px;height:16px;border-radius:4px"></div></span>
+            <div class="name-stack" style="flex:1">
+              <div class="skel w60"></div>
+              <div class="skel w80" style="margin-top:6px; height:10px"></div>
+            </div>
+          </div>
+          <div class="cell"><div class="skel-chip"></div></div>
+          <div class="cell"><div class="skel-chip" style="width:56px"></div></div>
+          <div class="cell" style="flex:1"><div class="skel w60"></div></div>
+          <div class="cell" style="justify-content:center"><div class="skel-circle"></div></div>
+          <div class="cell" style="justify-content:center"><div class="skel w40" style="width:14px; height:14px"></div></div>
+        </div>
+        <div class="row">
+          <div class="cell name-cell">
+            <span class="icon"><div class="skel-circle" style="width:16px;height:16px;border-radius:4px"></div></span>
+            <div class="name-stack" style="flex:1">
+              <div class="skel w80"></div>
+              <div class="skel w60" style="margin-top:6px; height:10px"></div>
+            </div>
+          </div>
+          <div class="cell"><div class="skel-chip"></div></div>
+          <div class="cell"><div class="skel-chip" style="width:56px"></div></div>
+          <div class="cell" style="flex:1"><div class="skel w60"></div></div>
+          <div class="cell" style="justify-content:center"><div class="skel-circle"></div></div>
+          <div class="cell" style="justify-content:center"><div class="skel w40" style="width:14px; height:14px"></div></div>
+        </div>
+        <div class="row">
+          <div class="cell name-cell">
+            <span class="icon"><div class="skel-circle" style="width:16px;height:16px;border-radius:4px"></div></span>
+            <div class="name-stack" style="flex:1">
+              <div class="skel w60"></div>
+              <div class="skel w40" style="margin-top:6px; height:10px"></div>
+            </div>
+          </div>
+          <div class="cell"><div class="skel-chip"></div></div>
+          <div class="cell"><div class="skel-chip" style="width:56px"></div></div>
+          <div class="cell" style="flex:1"><div class="skel w60"></div></div>
+          <div class="cell" style="justify-content:center"><div class="skel-circle"></div></div>
+          <div class="cell" style="justify-content:center"><div class="skel w40" style="width:14px; height:14px"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section">Empty state · replaces the grid entirely</h2>
+    <span class="label">Do not render the grid header with zero rows — render this block in its place.</span>
+    <div class="state-panel">
+      <span class="state-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+      </span>
+      <h3 class="state-title">No agents yet</h3>
+      <p class="state-sub">Build your first agent to let users ask catalog questions in natural language.</p>
+      <button class="btn btn-primary" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        Build agent
+      </button>
+    </div>
+
+    <p class="note">Static preview of what's documented in <code>table.md</code>. Canonical runnable source: <code>design-playground/.../blocks/table/Example.tsx</code>. Every chip cell uses <code>LabelChip</code>; every row icon is <code>lucide-react</code>; creator avatars are 24px with initials and a Tooltip of the full name. Headers are draggable for reorder in the live DataGrid; a 10px handle at the trailing edge resizes the column (try dragging it in this preview — pure-CSS fallback of MUI's built-in resize). Pagination (Show rows + range + first/prev/next/last chevrons) sits outside the bordered grid shell. A dedicated empty-state block replaces the grid when there are zero rows — never show a header with no rows.</p>
+  </div>
+
+  <script>
+    (function () {
+      const MIN_PX = 60;
+      document.querySelectorAll('.grid').forEach((grid) => {
+        const headers = Array.from(grid.querySelectorAll('.h-cell'));
+        grid.querySelectorAll('.col-sep').forEach((sep) => {
+          sep.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const header = sep.closest('.h-cell');
+            const index = headers.indexOf(header);
+            const startX = e.clientX;
+            const startWidth = header.getBoundingClientRect().width;
+
+            // Snapshot the current column widths so we can mutate only one.
+            const current = headers.map((h) => Math.round(h.getBoundingClientRect().width) + 'px');
+
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+
+            const onMove = (me) => {
+              const delta = me.clientX - startX;
+              const next = Math.max(MIN_PX, startWidth + delta);
+              current[index] = next + 'px';
+              grid.style.gridTemplateColumns = current.join(' ');
+            };
+            const onUp = () => {
+              document.body.style.cursor = '';
+              document.body.style.userSelect = '';
+              window.removeEventListener('mousemove', onMove);
+              window.removeEventListener('mouseup', onUp);
+            };
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onUp);
+          });
+        });
+      });
+    })();
+  </script>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 32px 40px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-toggle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58;
+    background: #F1F4F6;
+    border: 1px solid #E8EDF1;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer[data-open="true"] .md-viewer-toggle .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #B7B7C1;
+    margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none;
+    margin: 12px 0 0 0;
+    padding: 20px 24px;
+    background: #FFFFFF;
+    border: 1px solid #E8EDF1;
+    border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #0D1322;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    max-height: 640px;
+    overflow-y: auto;
+  }
+  .md-viewer[data-open="true"] .md-viewer-pre { display: block; }
+</style>
+<div class="md-viewer" data-open="false" data-md-b64="LS0tCm5hbWU6IHRhYmxlCnRpdGxlOiBUYWJsZQpjYXRlZ29yeTogY29tcG9zaXRlLWNvbXBvbmVudApsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjEKCmRlc2NyaXB0aW9uOiA+CiAgQSBkYXRhIHRhYmxlIChNVUkgWCBEYXRhIEdyaWQpIGZvciBsaXN0aW5nIGVudGl0aWVzIHdpdGggdHlwZS9zdGF0dXMgbGFiZWwgY2hpcHMsIGNyZWF0b3IgaW5mbywgYW5kIHJvdy1sZXZlbCBhY3Rpb25zLiBGb2xsb3dzIHRoZSBhZ2VudHMtdGFibGUgcGF0dGVybiBmcm9tIGFsYXRpb24tYmFzZS11aS4KdGFnczogW3RhYmxlLCBkYXRhLWdyaWQsIGxpc3RdCgpmaWdtYV91cmw6ICIiCmNvZGVfcmVmZXJlbmNlOiAiQGFsYXRpb24vZmFicmljLXRoZW1lLW1vcnBoZXVzL3NyYy9saWIvTXVpRGF0YUdyaWQub3ZlcnJpZGVzLnRzeCAoQWxhdGlvbiBEYXRhR3JpZCB0aGVtZSkuIFRoZXJlIGlzIG5vIHNoYXJlZCBgPFRhYmxlPmAgd3JhcHBlciBpbiBAYWxhdGlvbi9hbGF0aW9uLXVpIOKAlCBwcm9kdWN0aW9uIGNvbnN1bWVzIGA8RGF0YUdyaWQ+YCBkaXJlY3RseSBmcm9tIEBtdWkveC1kYXRhLWdyaWQtcHJvLiIKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogRGF0YUdyaWQgKE1VSSBYIERhdGEgR3JpZCBQcm8pCmRlcGVuZHNfb25fdG9rZW5zOiBbdHlwb2dyYXBoeS5ib2R5MSwgdHlwb2dyYXBoeS5ib2R5MiwgcGFsZXR0ZS50ZXh0LnNlY29uZGFyeSwgcGFsZXR0ZS5kaXZpZGVyXQpkZXBlbmRzX29uX2NvbXBvbmVudHM6IFtEYXRhR3JpZCwgQ2hpcCwgQXZhdGFyLCBJY29uQnV0dG9uLCBUb29sdGlwLCBUeXBvZ3JhcGh5LCBCb3hdCi0tLQoKIyBUYWJsZQoKIyMgMS4gQ2xhc3NpZmljYXRpb24KCi0gKipUeXBlOioqIENvbXBvc2l0ZSBjb21wb25lbnQg4oCUICoqY29tcG9zaXRpb24gcGF0dGVybiwgbm90IGEgc2hhcmVkIHdyYXBwZXIqKgotICoqTVVJIGJhc2U6KiogYERhdGFHcmlkYCBmcm9tIGBAbXVpL3gtZGF0YS1ncmlkLXByb2AgKE1VSSBYIERhdGEgR3JpZCBQcm8pCi0gKipGaWdtYToqKiBUYWJsZSDigJQgdG8gYmUgbGlua2VkCi0gKipDb2RlOioqIFRoZXJlIGlzICoqbm8gc2hhcmVkIGA8VGFibGU+YCBjb21wb25lbnQqKiBpbiBgQGFsYXRpb24vYWxhdGlvbi11aWAuIFByb2R1Y3Rpb24gY29uc3VtZXMgYDxEYXRhR3JpZD5gIGRpcmVjdGx5IGZyb20gYEBtdWkveC1kYXRhLWdyaWQtcHJvYCwgc3R5bGVkIGJ5IGBAYWxhdGlvbi9mYWJyaWMtdGhlbWUtbW9ycGhldXMvc3JjL2xpYi9NdWlEYXRhR3JpZC5vdmVycmlkZXMudHN4YC4gU2hhcmVkIHRhYmxlIHV0aWxpdGllcyAoYHVzZVRhYmxlUGFnaW5hdGlvbmAsIGB1c2VBcGlEcml2ZW5UYWJsZVBhZ2luYXRpb25gLCBgU2F2ZVRhYmxlVmlld0FsZXJ0YCkgZXhpc3QgYXMgaG9va3MgLyBoZWxwZXJzIGFyb3VuZCB0aGUgZ3JpZCwgbm90IGFzIGEgd3JhcHBlci4KCiMjIDIuIFB1cnBvc2UKCkEgZGF0YSB0YWJsZSBmb3IgbGlzdGluZyBlbnRpdGllcyAoYWdlbnRzLCB0b29scywgZGF0YSBzb3VyY2VzLCBPQXV0aCBjbGllbnRzLCBldGMuKSB3aXRoIHR5cGUvc3RhdHVzIGluZGljYXRvcnMsIGNyZWF0b3IgaW5mbywgYW5kIHJvdy1sZXZlbCBhY3Rpb25zLiBDYW5vbmljYWwgbGlzdC1wYWdlIHBhdHRlcm4g4oCUIGV2ZXJ5IGxpc3QgdmlldyBpbiB0aGUgYXBwIHVzZXMgdGhpcyBzaGFwZS4KCiMjIDMuIFdoZW4gdG8gdXNlIC8gV2hlbiBub3QgdG8gdXNlCgoqKlVzZSB3aGVuKioKLSBZb3UgbmVlZCB0byBsaXN0IG1vcmUgdGhhbiB+NSBlbnRpdGllcyB3aXRoIG11bHRpcGxlIGNvbHVtbnMgb2YgbWV0YWRhdGEuCi0gVGhlIHVzZXIgbmVlZHMgdG8gc29ydCwgZmlsdGVyLCBvciBwYWdpbmF0ZSB0aGUgbGlzdC4KLSBFYWNoIHJvdyBoYXMgcm93LWxldmVsIGFjdGlvbnMgKG1lbnUsIHF1aWNrIGFjdGlvbnMpLgoKKipEbyBub3QgdXNlIHdoZW4qKgotIFRoZSBsaXN0IGlzIDHigJM1IGl0ZW1zIG9mIHRoZSBzYW1lIHR5cGUg4oaSIHVzZSBhIGA8U3RhY2s+YCBvZiBbQ2FyZCAoTmF2IHZhcmlhbnQpXSguL2NhcmQvdXNhZ2UubWQpIHRpbGVzLgotIFRoZSBkYXRhIGlzIGhpZXJhcmNoaWNhbCAvIHRyZWUtc2hhcGVkIOKGkiB1c2UgYSB0cmVlIGNvbXBvbmVudCAobm90IHlldCBkb2N1bWVudGVkKS4KLSBUaGUgbGlzdCBpcyBhIHBpY2tlciBpbnNpZGUgYSBmb3JtIOKGkiB1c2UgW0F1dG9jb21wbGV0ZV0oLi9mb3JtL3VzYWdlLm1kKSBpbnN0ZWFkLgoKIyMgNC4gQ29udHJhY3QKCiMjIyBHdWFyYW50ZWVzCi0gRXZlcnkgY2hpcCBjZWxsIHVzZXMgTVVJIGA8Q2hpcD5gIHdpdGggYSBkb2N1bWVudGVkIGB2YXJpYW50YCArIGBjb2xvcmAgZnJvbSBbY2hpcC5tZF0oLi4vYmFzZS9jaGlwL3VzYWdlLm1kKSDigJQgbmV2ZXIgYSBjaGlwIHdpdGggdmlzdWFsIGBzeGAgKGBiZ2NvbG9yYCwgYGZvbnRTaXplYCwgYGhlaWdodGApLgotIEFsbCBVSSBpY29ucyAocm93IGljb25zLCBhY3Rpb24gaWNvbnMsIHNvcnQgaW5kaWNhdG9ycykgY29tZSBmcm9tIGBsdWNpZGUtcmVhY3RgLgotIFJvdyB0ZXh0IHVzZXMgVHlwb2dyYXBoeSB2YXJpYW50cyAoYGJvZHkxYCBwcmltYXJ5LCBgYm9keTJgIHNlY29uZGFyeSkg4oCUIG5vIGlubGluZSBmb250IG92ZXJyaWRlcy4KLSBUZXh0IGZvbGxvd3Mgc2VudGVuY2UgY2FzZSDigJQgYnJhbmRlZCBtb2R1bGUgbmFtZXMgKEFnZW50IFN0dWRpbywgTUNQIHNlcnZlcnMpIGtlZXAgcHJvcGVyIGNhcGl0YWxpemF0aW9uLgoKIyMjIFByb2hpYml0aW9ucwotIE5ldmVyIG1vdW50IGA8Q2hpcCBzeD17eyBiZ2NvbG9yOiAuLi4sIGNvbG9yOiAuLi4gfX0+YCBpbiBhIGNlbGwg4oCUIHVzZSB0aGUgYHZhcmlhbnRgICsgYGNvbG9yYCArIGBzaXplYCBwcm9wcyBwZXIgW2NoaXAubWRdKC4uL2Jhc2UvY2hpcC91c2FnZS5tZCkuCi0gTmV2ZXIgdXNlIGBmb250U2l6ZWAgLyBgZm9udFdlaWdodGAgaW5saW5lIG9uIFR5cG9ncmFwaHkgY2VsbHMg4oCUIHVzZSB2YXJpYW50LgotIE5ldmVyIGltcG9ydCBTVkcgaWNvbnMgZm9yIGluLXRhYmxlIGljb25zIOKAlCBsdWNpZGUtcmVhY3Qgb25seSAobmF2LXJhaWwgU1ZHIGlzIHRoZSBvbmx5IGA/cmVhY3RgIGV4Y2VwdGlvbikuCi0gTmV2ZXIgaGFyZGNvZGUgY29sb3JzIOKAlCB1c2UgYHRoZW1lLnBhbGV0dGUuKmAgb3Igc2VtYW50aWMgdG9rZW5zIChgdGV4dC5zZWNvbmRhcnlgLCBgZGl2aWRlcmAsIGBiYWNrZ3JvdW5kLnBhcGVyYCkuCi0gTmV2ZXIgc2tpcCB0aGUgYFRvb2x0aXBgIG9uIHRoZSBBdmF0YXIg4oCUIGNyZWF0b3IgaW5pdGlhbHMgYWxvbmUgYXJlIG5vdCBhY2Nlc3NpYmxlLgotIE5ldmVyIHB1dCBtb3JlIHRoYW4gb25lIHByaW1hcnkgYWN0aW9uIGluIGEgcm93IOKAlCByb3ctbGV2ZWwgYWN0aW9ucyBsaXZlIGJlaGluZCB0aGUgYE1vcmVWZXJ0aWNhbGAgbWVudS4KCiMjIyBDb25kaXRpb25zCi0gV2hlbiBhIGNvbHVtbiByZXByZXNlbnRzIGEgdHlwZSBvciBzdGF0dXMg4oaSIHVzZSBhIFtDaGlwXSguLi9iYXNlL2NoaXAvdXNhZ2UubWQpIGNlbGwgKGB2YXJpYW50PSJmaWxsZWRMaWdodCJgICsgc2VtYW50aWMgYGNvbG9yYCBmb3Igc3RhdHVzLCBgdmFyaWFudD0ib3V0bGluZWQiYCBmb3IgbmV1dHJhbCB0eXBlIGxhYmVscykuCi0gV2hlbiBhIGNvbHVtbiByZXByZXNlbnRzIGEgY3JlYXRvciDihpIgdXNlIGEgMjRweCBgQXZhdGFyYCB3aXRoIGluaXRpYWxzIHdyYXBwZWQgaW4gYSBgVG9vbHRpcGAgc2hvd2luZyB0aGUgZnVsbCBuYW1lLgotIFdoZW4gYSByb3cgaGFzIGFjdGlvbnMg4oaSIG1vdW50IGEgYE1vcmVWZXJ0aWNhbGAgYEljb25CdXR0b25gIGluIHRoZSBsYXN0IGNvbHVtbiwgd2lkdGggNjAuCi0gV2hlbiB0aGUgdGFibGUgaXMgZW1wdHkg4oaSIHJlbmRlciBhbiBlbXB0eS1zdGF0ZSBibG9jayAodGl0bGUgKyBzdWJ0aXRsZSArIG9wdGlvbmFsIENUQSkg4oCUIGRvIG5vdCBzaG93IHRoZSBncmlkIHdpdGggemVybyByb3dzLgotIFdoZW4gdGhlIHRhYmxlIGlzIGxvYWRpbmcg4oaSIHVzZSB0aGUgRGF0YUdyaWQncyBidWlsdC1pbiBgbG9hZGluZ2AgcHJvcDsgZG8gbm90IHJlcGxhY2Ugd2l0aCBhIHNlcGFyYXRlIHNrZWxldG9uLgotIFdoZW4gY29sdW1ucyBjYW4gYmUgcmVvcmRlcmVkIG9yIHJlc2l6ZWQg4oaSIHJlbHkgb24gdGhlIERhdGFHcmlkJ3MgYnVpbHQtaW4gYWZmb3JkYW5jZXMgKGRyYWdnYWJsZSBoZWFkZXIgKyB0cmFpbGluZy1lZGdlIHJlc2l6ZSBoYW5kbGUpLiBEbyBub3QgYnVpbGQgY3VzdG9tIGRyYWcgaGFuZGxlcy4KLSBXaGVuIHRoZSByb3cgc2V0IGV4Y2VlZHMgdGhlIHBhZ2Ugc2l6ZSDihpIgbW91bnQgYSBwYWdpbmF0aW9uIGZvb3RlciBiZWxvdyB0aGUgZ3JpZCAoU2hvdy1yb3dzIHNlbGVjdCArIHJhbmdlIGNvdW50ZXIgKyBmaXJzdC9wcmV2L25leHQvbGFzdCBjaGV2cm9uIGBJY29uQnV0dG9uYHMpLiBUaGUgZm9vdGVyIHNpdHMgb3V0c2lkZSB0aGUgYm9yZGVyZWQgZ3JpZCBzaGVsbC4KCiMjIDUuIEFuYXRvbXkgJiBDb21wb3NlZCBvZgoKKipBbmF0b215Kiog4oCUIGNhbm9uaWNhbCBjb2x1bW4gc2V0CnwgQ29sdW1uIHwgQ29udGVudCB8IFdpZHRoIHwKfC0tLXwtLS18LS0tfAp8IE5hbWUgfCBsdWNpZGUgaWNvbiArIG5hbWUgKGBib2R5MWApICsgZGVzY3JpcHRpb24gKGBib2R5MmAsIGB0ZXh0LnNlY29uZGFyeWApIHwgZmxleCAvIGZsZXhpYmxlIHwKfCBBY2Nlc3MgfCBbQ2hpcF0oLi4vYmFzZS9jaGlwL3VzYWdlLm1kKSBgdmFyaWFudD0ib3V0bGluZWQiYCArIGBjb2xvcj0iZGVmYXVsdCJgICsgYHNpemU9InhzbWFsbCJgIHwgMTQwIHwKfCBUeXBlIHwgW0NoaXBdKC4uL2Jhc2UvY2hpcC91c2FnZS5tZCkg4oCUIGBmaWxsZWRMaWdodGAgKyBgY29sb3I9ImluZm8iYCAobmF0aXZlKSBvciBgb3V0bGluZWRgICsgYGNvbG9yPSJkZWZhdWx0ImAgKGN1c3RvbSkgfCAxMDAgfAp8IENyZWF0ZWQgfCBGb3JtYXR0ZWQgZGF0ZSBzdHJpbmcg4oCUIGBib2R5MWAsIGB0ZXh0LnNlY29uZGFyeWAgfCAxNDAgfAp8IENyZWF0b3IgfCAyNHB4IGBBdmF0YXJgIHdpdGggaW5pdGlhbHMgKyBgVG9vbHRpcGAgd2l0aCBmdWxsIG5hbWUgfCA4OCB8CnwgQWN0aW9ucyB8IGBNb3JlVmVydGljYWxgIGBJY29uQnV0dG9uYCAobHVjaWRlLXJlYWN0KSB8IDYwIHwKCioqSGVhZGVyIGFmZm9yZGFuY2VzKiogKGJ1aWx0IGludG8gZXZlcnkgY29sdW1uIGV4Y2VwdCB0aGUgdHJhaWxpbmcgQWN0aW9ucyBjb2x1bW4pCi0gKipEcmFnZ2FibGUgcmVvcmRlcioqIOKAlCB0aGUgY29sdW1uIGhlYWRlciBzaXRzIGluc2lkZSBgTXVpRGF0YUdyaWQtY29sdW1uSGVhZGVyRHJhZ2dhYmxlQ29udGFpbmVyYDsgdXNlcnMgY2FuIGRyYWcgYSBoZWFkZXIgdG8gYSBuZXcgcG9zaXRpb24uIERvIG5vdCBvdmVycmlkZSBgY3Vyc29yYCBvbiB0aGUgaGVhZGVyIOKAlCB0aGUgZGVmYXVsdCBjdXJzb3IgKyBEYXRhR3JpZCdzIGRyYWcgaGFuZGxpbmcgaXMgdGhlIGNvbnRyYWN0LgotICoqUmVzaXplIGhhbmRsZSoqIOKAlCBhIDEwcHggaGl0IHRhcmdldCBhdCB0aGUgdHJhaWxpbmcgZWRnZSBvZiBlYWNoIGhlYWRlciAoYE11aURhdGFHcmlkLWNvbHVtblNlcGFyYXRvci0tcmVzaXphYmxlYCkgZHJhZ3MgdG8gcmVzaXplIHRoZSBjb2x1bW4uIGBjdXJzb3I6IGNvbC1yZXNpemVgIGluc2lkZSB0aGUgaGFuZGxlIG9ubHkuCgoqKkdyaWQgY2hyb21lKioKLSAqKkZpbGxlciByb3cqKiDigJQgYE11aURhdGFHcmlkLWZpbGxlcmAgcmVuZGVycyBhIGJsYW5rIHN0cmlwIGJlbG93IHRoZSBsYXN0IGRhdGEgcm93IHRvIGV4dGVuZCB0aGUgZ3JpZCB0byB0aGUgY29udGFpbmVyIGhlaWdodC4gVGhpcyBpcyBidWlsdC1pbjsgZG8gbm90IHN1cHByZXNzIGl0LgotICoqUGFnaW5hdGlvbiBmb290ZXIqKiDigJQgc2l0cyAqb3V0c2lkZSogdGhlIGJvcmRlcmVkIGdyaWQgc2hlbGwsIGRpcmVjdGx5IGJlbG93IGl0LCB3aXRoIGBtdDogMmAuIEFuYXRvbXk6IGBTaG93IHJvd3NgIGxhYmVsICsgc2l6ZSBgPHNlbGVjdD5gIG9uIHRoZSBsZWZ0OyByYW5nZSBjb3VudGVyICgiMeKAkzUgb2YgTiIpICsgZmlyc3QgLyBwcmV2aW91cyAvIG5leHQgLyBsYXN0IGNoZXZyb24gYEljb25CdXR0b25gcyBvbiB0aGUgcmlnaHQuCgoqKkNvbXBvc2VkIG9mKioKLSBgRGF0YUdyaWRgIGZyb20gYEBtdWkveC1kYXRhLWdyaWQtcHJvYCDigJQgZ3JpZCBwcmltaXRpdmUKLSBbQ2hpcF0oLi4vYmFzZS9jaGlwL3VzYWdlLm1kKSDigJQgdHlwZSAvIGFjY2VzcyAvIHN0YXR1cyBjZWxscwotIFtJY29uQnV0dG9uXSguLi9iYXNlL2ljb24tYnV0dG9uL3VzYWdlLm1kKSDigJQgcm93LWxldmVsIGFjdGlvbiB0cmlnZ2VyCi0gYEF2YXRhcmAgKyBgVG9vbHRpcGAg4oCUIGNyZWF0b3IgY29sdW1uCi0gW1R5cG9ncmFwaHldKC4uL2ZvdW5kYXRpb25zL3R5cG9ncmFwaHkvdXNhZ2UubWQpIOKAlCBjZWxsIHRleHQKLSBgQm94YCDigJQgbGF5b3V0IHdyYXBwZXJzIGluc2lkZSBjZWxscwoKIyMgNi4gQ3VzdG9tCgojIyMgTmFtZSBjZWxsCgpJY29uICsgc3RhY2tlZCB0ZXh0IGluIGEgZmxleCBgQm94YDoKCmBgYHRzeAo8Qm94IHN4PXt7IGRpc3BsYXk6ICdmbGV4JywgYWxpZ25JdGVtczogJ2ZsZXgtc3RhcnQnLCBnYXA6IDEuNSwgbWluV2lkdGg6IDAgfX0+CiAgPEJvdCBzaXplPXsxNn0gLz4gIHsvKiBsdWNpZGUtcmVhY3QgaWNvbiAqL30KICA8Qm94IHN4PXt7IG1pbldpZHRoOiAwIH19PgogICAgPFR5cG9ncmFwaHkgdmFyaWFudD0iYm9keTEiIHN4PXt7IG92ZXJmbG93OiAnaGlkZGVuJywgdGV4dE92ZXJmbG93OiAnZWxsaXBzaXMnLCB3aGl0ZVNwYWNlOiAnbm93cmFwJyB9fT4KICAgICAge25hbWV9CiAgICA8L1R5cG9ncmFwaHk+CiAgICA8VHlwb2dyYXBoeSB2YXJpYW50PSJib2R5MiIgY29sb3I9InRleHQuc2Vjb25kYXJ5IiBzeD17eyBkaXNwbGF5OiAnYmxvY2snLCBvdmVyZmxvdzogJ2hpZGRlbicsIHRleHRPdmVyZmxvdzogJ2VsbGlwc2lzJywgd2hpdGVTcGFjZTogJ25vd3JhcCcgfX0+CiAgICAgIHtkZXNjcmlwdGlvbn0KICAgIDwvVHlwb2dyYXBoeT4KICA8L0JveD4KPC9Cb3g+CmBgYAoKIyMjIENoaXAgY2VsbAoKVXNlIE1VSSBgPENoaXA+YCB3aXRoIHRoZSBkb2N1bWVudGVkIGB2YXJpYW50YCArIGBjb2xvcmAgKyBgc2l6ZWAgZnJvbSBbY2hpcC5tZF0oLi4vYmFzZS9jaGlwL3VzYWdlLm1kKS4gYHNpemU9InhzbWFsbCJgIGlzIHRoZSBzdGFuZGFyZCBmb3IgdGFibGUgcm93cy4KCmBgYHRzeAppbXBvcnQgeyBDaGlwIH0gZnJvbSAnQG11aS9tYXRlcmlhbCc7Cgo8Q2hpcCBsYWJlbD0iTUNQIiB2YXJpYW50PSJvdXRsaW5lZCIgY29sb3I9ImRlZmF1bHQiIHNpemU9InhzbWFsbCIgLz4KPENoaXAgbGFiZWw9Ik5hdGl2ZSIgdmFyaWFudD0iZmlsbGVkTGlnaHQiIGNvbG9yPSJpbmZvIiBzaXplPSJ4c21hbGwiIC8+CjxDaGlwIGxhYmVsPSJBY3RpdmUiIHZhcmlhbnQ9ImZpbGxlZExpZ2h0IiBjb2xvcj0ic3VjY2VzcyIgc2l6ZT0ieHNtYWxsIiAvPgpgYGAKCmBzeGAgb24gYDxDaGlwPmAgaXMgZm9yIGxheW91dCBvbmx5IChgbWF4V2lkdGhgLCBgbWFyZ2luYCkuIE5ldmVyIHBhc3MgYGZvbnRTaXplYCwgYGhlaWdodGAsIGBiYWNrZ3JvdW5kQ29sb3JgLCBvciBgY29sb3JgIHZpYSBgc3hgLgoKIyMjIENyZWF0b3IgYXZhdGFyCgoyNHB4IHdpdGggaW5pdGlhbHMsIHdyYXBwZWQgaW4gYSBgVG9vbHRpcGAgZm9yIHRoZSBmdWxsIG5hbWU6CgpgYGB0c3gKPFRvb2x0aXAgdGl0bGU9e2NyZWF0b3J9PgogIDxBdmF0YXIgc3g9e3sgd2lkdGg6IDI0LCBoZWlnaHQ6IDI0IH19Pntpbml0aWFsc308L0F2YXRhcj4KPC9Ub29sdGlwPgpgYGAKCiMjIyBSb3cgYWN0aW9ucwoKTW91bnQgYSBgTW9yZVZlcnRpY2FsYCBsdWNpZGUgaWNvbiBpbnNpZGUgYW4gYEljb25CdXR0b25gIGFzIHRoZSBmaW5hbCBjb2x1bW4sIHdpZHRoIDYwOgoKYGBgdHN4CjxJY29uQnV0dG9uIGFyaWEtbGFiZWw9e2BBY3Rpb25zIGZvciAke3Jvdy5uYW1lfWB9IG9uQ2xpY2s9e29wZW5NZW51fT4KICA8TW9yZVZlcnRpY2FsIHNpemU9ezE2fSAvPgo8L0ljb25CdXR0b24+CmBgYAoKU2VlIFtgaWNvbi1idXR0b24ubWRgXSguLi9iYXNlL2ljb24tYnV0dG9uL3VzYWdlLm1kKSBmb3IgdGhlIGFjY2Vzc2liaWxpdHktbmFtZSBjb250cmFjdC4KCiMjIyBUYWJsZSBoZWFkZXIgc3R5bGluZwoKYGBgdHN4CmNvbnN0IGhlYWRlckNlbGxTeCA9IHsKICBwOiAnMTJweCcsCiAgZm9udFNpemU6IHRoZW1lLnR5cG9ncmFwaHkuYm9keTIuZm9udFNpemUsCiAgZm9udFdlaWdodDogNTAwLAogIGNvbG9yOiB0aGVtZS5wYWxldHRlLnRleHQuc2Vjb25kYXJ5LAogIGJvcmRlclRvcDogYDFweCBzb2xpZCAke2JvcmRlckNvbG9yfWAsCiAgYm9yZGVyQm90dG9tOiBgMXB4IHNvbGlkICR7Ym9yZGVyQ29sb3J9YCwKICBiYWNrZ3JvdW5kQ29sb3I6ICdiYWNrZ3JvdW5kLnBhcGVyJywKfTsKYGBgCgojIyMgU29ydCArIGZpbHRlcgoKLSBVc2UgdGhlIERhdGFHcmlkJ3MgYnVpbHQtaW4gY29sdW1uLWhlYWRlciBzb3J0IHRvZ2dsZSDigJQgZG8gbm90IGJ1aWxkIGEgY3VzdG9tIHNvcnQgVUkuCi0gVXNlIHRoZSBEYXRhR3JpZCB0b29sYmFyIGZvciBmaWx0ZXJzIOKAlCBkbyBub3QgYnVpbGQgYSBjdXN0b20gZmlsdGVyIGJhciBhYm92ZSB0aGUgZ3JpZC4KCiMjIyBDb2x1bW4gcmVvcmRlciArIHJlc2l6ZQoKQnVpbHQgaW50byB0aGUgRGF0YUdyaWQg4oCUIG5vIGN1c3RvbSB3aXJpbmcgb3Igb3ZlcnJpZGVzLiBUd28gYWZmb3JkYW5jZXMgdG8gYmUgYXdhcmUgb2Y6CgotICoqUmVvcmRlcioqIOKAlCBldmVyeSBjb2x1bW4gaGVhZGVyIGlzIHdyYXBwZWQgaW4gYE11aURhdGFHcmlkLWNvbHVtbkhlYWRlckRyYWdnYWJsZUNvbnRhaW5lcmAuIEEgdXNlciBkcmFnIG9uIHRoZSBoZWFkZXIgbW92ZXMgdGhlIGNvbHVtbi4gS2VlcCB0aGUgZGVmYXVsdCBoZWFkZXIgY3Vyc29yLgotICoqUmVzaXplKiog4oCUIHRoZSB0cmFpbGluZyBlZGdlIG9mIGVhY2ggaGVhZGVyIGlzIGEgMTBweCBgTXVpRGF0YUdyaWQtY29sdW1uU2VwYXJhdG9yLS1yZXNpemFibGVgIGhpdCB0YXJnZXQuIEhvdmVyIHJldmVhbHMgYSB0aGluIHZlcnRpY2FsIGxpbmU7IGRyYWcgcmVzaXplcyB0aGUgY29sdW1uLiBUaGUgbGFzdCBjb2x1bW4gZG9lcyBub3QgcmVuZGVyIGEgc2VwYXJhdG9yLgoKYGBgdHN4CjxEYXRhR3JpZAogIHJvd3M9e3Jvd3N9CiAgY29sdW1ucz17Y29sdW1uc30KICAvLyByZW9yZGVyICsgcmVzaXplIGFyZSBvbiBieSBkZWZhdWx0IOKAlCBub3RoaW5nIHRvIGVuYWJsZQovPgpgYGAKCk5ldmVyIGJ1aWxkIGEgY3VzdG9tIGRyYWcgZ3JpcCBvciByZXNpemUgaGFuZGxlIG9uIHRvcCBvZiB0aGUgRGF0YUdyaWQg4oCUIHRoZSBidWlsdC1pbnMgYXJlIHRoZSBjb250cmFjdC4KCiMjIyBQYWdpbmF0aW9uIGZvb3RlcgoKU2l0cyAqYmVsb3cqIHRoZSBib3JkZXJlZCBncmlkIHNoZWxsLCBub3QgaW5zaWRlLiBVc2UgYGhpZGVGb290ZXJgIG9uIHRoZSBEYXRhR3JpZCBhbmQgcmVuZGVyIGEgY3VzdG9tIGZvb3RlciByb3cgc28gdGhlIGNvbnRyb2xzIGNhbiBtYXRjaCB0aGUgcmVzdCBvZiB0aGUgYXBwJ3MgdmlzdWFsIGxhbmd1YWdlLgoKYGBgdHN4CjxCb3ggc3g9e3sgZGlzcGxheTogJ2ZsZXgnLCBqdXN0aWZ5Q29udGVudDogJ3NwYWNlLWJldHdlZW4nLCBhbGlnbkl0ZW1zOiAnY2VudGVyJywgbXQ6IDIgfX0+CiAgey8qIExlZnQg4oCUIHBhZ2Ugc2l6ZSAqL30KICA8Qm94IHN4PXt7IGRpc3BsYXk6ICdmbGV4JywgYWxpZ25JdGVtczogJ2NlbnRlcicsIGdhcDogMSB9fT4KICAgIDxUeXBvZ3JhcGh5IHZhcmlhbnQ9ImJvZHkyIiBjb2xvcj0idGV4dC5zZWNvbmRhcnkiPlNob3cgcm93czwvVHlwb2dyYXBoeT4KICAgIDxCb3ggY29tcG9uZW50PSJzZWxlY3QiIGRlZmF1bHRWYWx1ZT17NX0gc3g9e3sgLyogc21hbGwgb3V0bGluZWQgc2VsZWN0ICovIH19PgogICAgICB7WzUsIDEwLCAyNV0ubWFwKChzaXplKSA9PiA8b3B0aW9uIGtleT17c2l6ZX0gdmFsdWU9e3NpemV9PntzaXplfTwvb3B0aW9uPil9CiAgICA8L0JveD4KICA8L0JveD4KCiAgey8qIFJpZ2h0IOKAlCByYW5nZSArIGNoZXZyb25zICovfQogIDxCb3ggc3g9e3sgZGlzcGxheTogJ2ZsZXgnLCBhbGlnbkl0ZW1zOiAnY2VudGVyJywgZ2FwOiAyIH19PgogICAgPFR5cG9ncmFwaHkgdmFyaWFudD0iYm9keTIiIGNvbG9yPSJ0ZXh0LnNlY29uZGFyeSI+MeKAkzUgb2Yge3RvdGFsfTwvVHlwb2dyYXBoeT4KICAgIDxCb3ggc3g9e3sgZGlzcGxheTogJ2ZsZXgnLCBhbGlnbkl0ZW1zOiAnY2VudGVyJywgZ2FwOiAwLjUgfX0+CiAgICAgIDxJY29uQnV0dG9uIHNpemU9InNtYWxsIiBkaXNhYmxlZD17YXRTdGFydH0+PENoZXZyb25zTGVmdCBzaXplPXsxNn0gLz48L0ljb25CdXR0b24+CiAgICAgIDxJY29uQnV0dG9uIHNpemU9InNtYWxsIiBkaXNhYmxlZD17YXRTdGFydH0+PENoZXZyb25MZWZ0IHNpemU9ezE2fSAvPjwvSWNvbkJ1dHRvbj4KICAgICAgPEljb25CdXR0b24gc2l6ZT0ic21hbGwiIGRpc2FibGVkPXthdEVuZH0+PENoZXZyb25SaWdodCBzaXplPXsxNn0gLz48L0ljb25CdXR0b24+CiAgICAgIDxJY29uQnV0dG9uIHNpemU9InNtYWxsIiBkaXNhYmxlZD17YXRFbmR9PjxDaGV2cm9uc1JpZ2h0IHNpemU9ezE2fSAvPjwvSWNvbkJ1dHRvbj4KICAgIDwvQm94PgogIDwvQm94Pgo8L0JveD4KYGBgCgpSdWxlczoKLSBBbGwgZm91ciBjaGV2cm9uIGljb25zIGNvbWUgZnJvbSBgbHVjaWRlLXJlYWN0YCAoYENoZXZyb25zTGVmdGAsIGBDaGV2cm9uTGVmdGAsIGBDaGV2cm9uUmlnaHRgLCBgQ2hldnJvbnNSaWdodGApIGF0IGBzaXplPXsxNn1gLgotIGBJY29uQnV0dG9uIHNpemU9InNtYWxsImAgb25seSDigJQgbm8gY3VzdG9tIGBzeGAgZm9yIGFwcGVhcmFuY2UuCi0gIlNob3cgcm93cyIgKyB0aGUgcmFuZ2UgY291bnRlciB1c2UgYFR5cG9ncmFwaHkgdmFyaWFudD0iYm9keTIiIGNvbG9yPSJ0ZXh0LnNlY29uZGFyeSJgLgotIFdoZW4gYXQgdGhlIGZpcnN0IHBhZ2UsIGRpc2FibGUgYENoZXZyb25zTGVmdGAgKyBgQ2hldnJvbkxlZnRgOyB3aGVuIGF0IHRoZSBsYXN0IHBhZ2UsIGRpc2FibGUgYENoZXZyb25zUmlnaHRgICsgYENoZXZyb25SaWdodGAuCgojIyMgRW1wdHkgLyBsb2FkaW5nIHN0YXRlcwoKLSAqKkxvYWRpbmcqKiDigJQgYDxEYXRhR3JpZCBsb2FkaW5nIC8+YC4gRG8gbm90IHJlcGxhY2Ugd2l0aCBhIHNrZWxldG9uIHdyYXBwZXIuCi0gKipFbXB0eSoqIOKAlCByZW5kZXIgYSBkZWRpY2F0ZWQgZW1wdHktc3RhdGUgYmxvY2sgKHRpdGxlICsgc3VidGl0bGUgKyBvcHRpb25hbCBDVEEpIGluIHBsYWNlIG9mIHRoZSBncmlkLiBTaG93aW5nIHplcm8gcm93cyB3aXRoIHRoZSBncmlkIGhlYWRlciB2aXNpYmxlIGlzIG5vdCBhY2NlcHRhYmxlLgoKIyMjIEljb24gcnVsZSAoYWxsIHRhYmxlIGljb25zKQoKVXNlIGBsdWNpZGUtcmVhY3RgIGZvciBldmVyeSBpbi10YWJsZSBpY29uIChyb3cgaWNvbiwgYWN0aW9uIGljb24sIHNvcnQgaW5kaWNhdG9yLCBwYWdpbmF0aW9uIGNoZXZyb25zKS4gVGhlIGA/cmVhY3RgIFNWRyBpbXBvcnQgcGF0aCBpcyByZXNlcnZlZCBmb3IgdGhlIG5hdiByYWlsIG9ubHkuCgojIyA3LiBNb2NrIGRhdGEgY29udGVudAoKUGxhY2Vob2xkZXIg4oCUIGZpbGwgd2l0aCBBbGF0aW9uLWRvbWFpbiBtb2NrIGRhdGEgd2hlbiB0aGlzIGNvbXBvc2l0ZSBpcyB1c2VkIGluIGEgcGlsb3QuIENhbmRpZGF0ZXM6IEFnZW50cyBsaXN0IChuYW1lICsgZGVzY3JpcHRpb24gKyBhY2Nlc3MgY2hpcCArIHR5cGUgY2hpcCArIGNyZWF0ZWQtYnkgYXZhdGFyICsgYWN0aW9ucyk7IE1DUCBzZXJ2ZXJzIGxpc3QgKGFwcGxpY2F0aW9uIG5hbWUgKyBjbGllbnQgSUQgKyBjcmVhdGVkLWJ5ICsgY3JlYXRlZEF0KTsgRGF0YSBzb3VyY2VzIGxpc3QuCgpNb2NrIGRhdGEgcnVsZXM6Ci0gUmVmbGVjdHMgQWxhdGlvbiBkb21haW4gKGFnZW50cywgdG9vbHMsIGRhdGEgc291cmNlcywgbW9uaXRvcnMsIGNhdGFsb2cgb2JqZWN0cykuCi0gTmFtZXMgaW4gc2VudGVuY2UgY2FzZSDigJQgIkRhdGEgYW5hbHlzdCBhZ2VudCIsICJRdWVyeSBhc3Npc3RhbnQiLgotIEJyYW5kZWQgbW9kdWxlIG5hbWVzIGtlZXAgcHJvcGVyIGNhcGl0YWxpemF0aW9uIOKAlCAiQWdlbnQgU3R1ZGlvIiwgIk1DUCBzZXJ2ZXJzIi4KCiMjIDExLiBFeGFtcGxlCgpgYGB0c3gKPERhdGFHcmlkCiAgcm93cz17cm93c30KICBjb2x1bW5zPXtjb2x1bW5zfQogIGxvYWRpbmc9e2xvYWRpbmd9CiAgc2xvdHM9e3sgdG9vbGJhcjogQ3VzdG9tVG9vbGJhciB9fQovPgpgYGAKClNlZSBbYEV4YW1wbGUudHN4YF0oLi9FeGFtcGxlLnRzeCkgZm9yIHRoZSBjYW5vbmljYWwsIHJ1bm5hYmxlIHNvdXJjZSDigJQgaW5jbHVkZXMgY29sdW1uIGRlZmluaXRpb25zLCByb3cgcmVuZGVyaW5nLCBhbmQgYWN0aW9uIG1lbnUgd2lyaW5nLgo=">
+  <button class="md-viewer-toggle" type="button" aria-expanded="false">
+    <span class="chev" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+    View source
+    <span class="md-viewer-filename">table/usage.md</span>
+  </button>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+    var btn = host.querySelector('.md-viewer-toggle');
+    var pre = host.querySelector('.md-viewer-pre');
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      // UTF-8 safe base64 → string
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      pre.textContent = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      pre.textContent = '(failed to load source)';
+    }
+    btn.addEventListener('click', function () {
+      var open = host.getAttribute('data-open') === 'true';
+      host.setAttribute('data-open', open ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      pre.setAttribute('aria-hidden', open ? 'true' : 'false');
+    });
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

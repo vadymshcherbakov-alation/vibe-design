@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Button</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --neutral-600:    #9AA5B1;
+      --primary-main:   #0073DD;
+      --primary-dark:   #0056A6;
+      --error-main:     #CA334A;
+      --error-dark:     #A62839;
+
+      --radius-btn:    6px;
+      --radius-2:     12px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 960px; margin: 0 auto; }
+
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    p.page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 32px 0 12px 0;
+    }
+
+    /* Named-style grid */
+    .style-grid {
+      display: grid; gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    .style-card {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      padding: 20px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .style-card .label {
+      font-family: var(--font-mono);
+      font-size: 12px; color: var(--text-secondary);
+    }
+    .style-card .name {
+      font-size: 14px; font-weight: 500;
+    }
+    .style-card .demo {
+      display: flex; align-items: center;
+    }
+
+    /* Button base */
+    .btn {
+      all: unset; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 8px; padding: 0 16px; border-radius: var(--radius-btn);
+      font-size: 14px; font-weight: 500; line-height: 1;
+      height: 36px;
+      transition: background .15s, border-color .15s;
+      width: fit-content;
+    }
+    .btn svg { flex-shrink: 0; }
+    .btn:focus-visible { outline: 2px solid var(--primary-main); outline-offset: 2px; }
+
+    /* Named styles */
+    .btn-primary   { background: var(--primary-main); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary { background: transparent; color: var(--primary-main); border: 1px solid var(--primary-main); }
+    .btn-secondary:hover { background: #E6F2FC; }
+
+    .btn-grey      { background: transparent; color: var(--text-primary); border: 1px solid var(--neutral-500); }
+    .btn-grey:hover { background: var(--neutral-300); }
+
+    .btn-text      { background: transparent; color: var(--primary-main); padding: 0 8px; }
+    .btn-text:hover { background: #E6F2FC; }
+
+    .btn-destructive { background: var(--error-main); color: #fff; }
+    .btn-destructive:hover { background: var(--error-dark); }
+
+    .btn-disabled { background: var(--neutral-300); color: var(--text-disabled); cursor: not-allowed; }
+
+    /* Sizes */
+    .btn-xs { height: 24px; font-size: 12px; padding: 0 10px; }
+    .btn-sm { height: 32px; font-size: 13px; padding: 0 12px; }
+    .btn-md { height: 36px; font-size: 14px; padding: 0 16px; }
+    .btn-lg { height: 44px; font-size: 15px; padding: 0 20px; }
+
+    /* Table */
+    .table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      overflow: hidden;
+    }
+    .table th, .table td {
+      text-align: left; padding: 10px 14px;
+      font-size: 13px; border-bottom: 1px solid var(--neutral-400);
+    }
+    .table th {
+      background: var(--neutral-300); color: var(--text-secondary);
+      font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em;
+      font-size: 11px;
+    }
+    .table tr:last-child td { border-bottom: none; }
+    .table td.mono { font-family: var(--font-mono); color: var(--text-primary); }
+
+    .row-demos {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    }
+
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Button</h1>
+    <p class="page-sub">
+      An action trigger. Commits the user's intent — submits, confirms, navigates, or executes.
+    </p>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Base component</li>
+      <li><strong>MUI base:</strong> <code>Button</code></li>
+      <li><strong>Figma:</strong> Button · NEO 2.1 — <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&amp;node-id=2-9786&amp;t=eS5ReSD4ZsCMa08a-1" target="_blank" rel="noopener">Link</a></li>
+      <li><strong>Code:</strong> <code>fabric-theme-morpheus</code> — <code>src/lib/MuiButton.overrides.ts</code></li>
+    </ul>
+    <!-- classification-end -->
+
+    <h2 class="section">Named styles</h2>
+    <div class="style-grid">
+      <div class="style-card">
+        <span class="label">Primary</span>
+        <span class="name">Single primary action on the view</span>
+        <div class="demo"><button class="btn btn-primary" type="button">Save changes</button></div>
+      </div>
+      <div class="style-card">
+        <span class="label">Blue secondary</span>
+        <span class="name">Supporting action alongside a Primary</span>
+        <div class="demo"><button class="btn btn-secondary" type="button">Cancel</button></div>
+      </div>
+      <div class="style-card">
+        <span class="label">Grey outlined</span>
+        <span class="name">Neutral toolbar / chrome action</span>
+        <div class="demo"><button class="btn btn-grey" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button></div>
+      </div>
+      <div class="style-card">
+        <span class="label">Text</span>
+        <span class="name">Low-emphasis inline action</span>
+        <div class="demo"><button class="btn btn-text" type="button">Learn more</button></div>
+      </div>
+      <div class="style-card">
+        <span class="label">Destructive</span>
+        <span class="name">Irreversible commit — pair with ConfirmDialog</span>
+        <div class="demo"><button class="btn btn-destructive" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Delete source
+        </button></div>
+      </div>
+      <div class="style-card" style="border-style:dashed">
+        <span class="label">Gradient · brand only</span>
+        <span class="name">Never in product UI</span>
+        <div class="demo"><button class="btn" style="background:linear-gradient(90deg,#4A5AE8,#0073DD); color:#fff" type="button">Hero CTA</button></div>
+      </div>
+    </div>
+
+    <h2 class="section">Sizes</h2>
+    <div class="row-demos">
+      <button class="btn btn-primary btn-xs" type="button">xsmall</button>
+      <button class="btn btn-primary btn-sm" type="button">small</button>
+      <button class="btn btn-primary btn-md" type="button">medium</button>
+      <button class="btn btn-primary btn-lg" type="button">large</button>
+    </div>
+
+    <h2 class="section">States</h2>
+    <div class="row-demos">
+      <button class="btn btn-primary" type="button">Default</button>
+      <button class="btn btn-primary" style="background:var(--primary-dark)" type="button">Hover</button>
+      <button class="btn btn-primary" style="outline:2px solid var(--primary-main); outline-offset:2px" type="button">Focus</button>
+      <button class="btn btn-disabled" type="button" disabled>Disabled</button>
+    </div>
+
+    <h2 class="section">Underlying axes</h2>
+    <table class="table">
+      <thead>
+        <tr><th>variant</th><th>color</th><th>Named style</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono">contained</td><td class="mono">primary</td><td>Primary</td></tr>
+        <tr><td class="mono">outlined</td><td class="mono">primary</td><td>Blue secondary</td></tr>
+        <tr><td class="mono">outlined</td><td class="mono">inherit</td><td>Grey outlined</td></tr>
+        <tr><td class="mono">text</td><td class="mono">primary</td><td>Text</td></tr>
+        <tr><td class="mono">contained</td><td class="mono">error</td><td>Destructive (+ ConfirmDialog)</td></tr>
+        <tr><td class="mono">gradient</td><td class="mono">—</td><td>Gradient — brand only</td></tr>
+      </tbody>
+    </table>
+
+    <p class="note">Static preview of what's documented in <code>button.md</code>. Canonical runnable source lives at the example path listed in the doc's frontmatter.</p>
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 32px 40px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-toggle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58;
+    background: #F1F4F6;
+    border: 1px solid #E8EDF1;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer[data-open="true"] .md-viewer-toggle .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #B7B7C1;
+    margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none;
+    margin: 12px 0 0 0;
+    padding: 20px 24px;
+    background: #FFFFFF;
+    border: 1px solid #E8EDF1;
+    border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #0D1322;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    max-height: 640px;
+    overflow-y: auto;
+  }
+  .md-viewer[data-open="true"] .md-viewer-pre { display: block; }
+</style>
+<div class="md-viewer" data-open="false" data-md-b64="LS0tCm5hbWU6IGJ1dHRvbgp0aXRsZTogQnV0dG9uCmNhdGVnb3J5OiBiYXNlLWNvbXBvbmVudApsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjEKCmRlc2NyaXB0aW9uOiA+CiAgVHJpZ2dlcnMgYW4gYWN0aW9uIGluIHBsYWNlIG9yIG5hdmlnYXRlcyB0byBhIG5ldyB2aWV3LiBVc2UgZm9yIHRoZSBwcmltYXJ5IGFjdGlvbiBvbiBhIGZvcm0sIGNvbmZpcm1hdGlvbiBvZiBhIGNob2ljZSwgb3IgbmF2aWdhdGlvbiB0aGF0IGNvbW1pdHMgd29yay4gRG8gbm90IHVzZSBmb3IgZGVzdHJ1Y3RpdmUgYWN0aW9ucyB3aXRob3V0IGEgY29uZmlybWF0aW9uIHN0ZXAg4oCUIHVzZSBhIENvbmZpcm1EaWFsb2cgcGF0dGVybiBpbnN0ZWFkLgp0YWdzOiBbYWN0aW9uLCBpbnRlcmFjdGl2ZSwgZm9ybV0KCmZpZ21hX3VybDogaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP209YXV0byZub2RlLWlkPTItOTc4NiZ0PWVTNVJlU0Q0WnNDTWEwOGEtMQpjb2RlX3JlZmVyZW5jZTogZmFicmljLXRoZW1lLW1vcnBoZXVzL3NyYy9saWIvTXVpQnV0dG9uLm92ZXJyaWRlcy50cwpleGFtcGxlX3BhdGg6IC4vRXhhbXBsZS50c3gKCm11aV9iYXNlOiBCdXR0b24KZGVwZW5kc19vbl90b2tlbnM6CiAgLSBwYWxldHRlLnByaW1hcnkubWFpbgogIC0gcGFsZXR0ZS5wcmltYXJ5LmRhcmsKICAtIHBhbGV0dGUucHJpbWFyeS5saWdodAogIC0gcGFsZXR0ZS5lcnJvci5tYWluCiAgLSBwYWxldHRlLmdyZXlbNTAwXQogIC0gcGFsZXR0ZS50ZXh0LmRpc2FibGVkCiAgLSBzaGFwZS5ib3JkZXJSYWRpdXMKICAtIHR5cG9ncmFwaHkuYnV0dG9uCiAgLSB0eXBvZ3JhcGh5LmJ1dHRvbkxnCiAgLSB0eXBvZ3JhcGh5LmJ1dHRvblNtCmRlcGVuZHNfb25fY29tcG9uZW50czogW10KLS0tCgojIEJ1dHRvbgoKIyMgMS4gQ2xhc3NpZmljYXRpb24KCi0gKipUeXBlOioqIEJhc2UgY29tcG9uZW50Ci0gKipNVUkgYmFzZToqKiBgQnV0dG9uYAotICoqRmlnbWE6KiogQnV0dG9uIMK3IE5FTyAyLjEg4oCUIFtMaW5rXShodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2NIa2FtZHZQejFJa21RU3dqcVdIZFgvTkVPLTIuMS0tLURlc2lnbi1TeXN0ZW0/bT1hdXRvJm5vZGUtaWQ9Mi05Nzg2JnQ9ZVM1UmVTRDRac0NNYTA4YS0xKQotICoqQ29kZToqKiBgZmFicmljLXRoZW1lLW1vcnBoZXVzYCDigJQgYHNyYy9saWIvTXVpQnV0dG9uLm92ZXJyaWRlcy50c2AKCiMjIDIuIFB1cnBvc2UKCkFuIGFjdGlvbiB0cmlnZ2VyLiBDb21taXRzIHRoZSB1c2VyJ3MgaW50ZW50IOKAlCBzdWJtaXRzLCBjb25maXJtcywgbmF2aWdhdGVzLCBvciBleGVjdXRlcy4KCiMjIDMuIFdoZW4gdG8gdXNlIC8gV2hlbiBub3QgdG8gdXNlCgoqKlVzZSB3aGVuKioKLSBTdWJtaXR0aW5nIGEgZm9ybSBvciBjb21taXR0aW5nIGEgY2hhbmdlCi0gQ29uZmlybWluZyBhIHJldmVyc2libGUgY2hvaWNlCi0gUHJpbWFyeSBuYXZpZ2F0aW9uIHRoYXQgY29tbWl0cyB3b3JrIChlLmcuICJDb250aW51ZSIsICJTYXZlIGFuZCBleGl0IikKLSBUcmlnZ2VyaW5nIGFuIGFzeW5jaHJvbm91cyBvcGVyYXRpb24gd2l0aCB2aXNpYmxlIGxvYWRpbmcgZmVlZGJhY2sKCioqRG8gbm90IHVzZSB3aGVuKioKLSBUaGUgYWN0aW9uIG5hdmlnYXRlcyB3aXRob3V0IGNvbW1pdHRpbmcg4oaSIHVzZSBhICoqTGluayoqCi0gVGhlIGNvbnRyb2wgdG9nZ2xlcyBhIGJpbmFyeSBzdGF0ZSDihpIgdXNlIGEgKipTd2l0Y2gqKiBvciAqKkNoZWNrYm94KioKLSBUaGUgbGFiZWwgaXMgYW4gaWNvbiBvbmx5IGFuZCBzcGFjZSBpcyBkZW5zZSDihpIgdXNlIGFuIFsqKkljb25CdXR0b24qKl0oLi9pY29uLWJ1dHRvbi91c2FnZS5tZCkKCiMjIyBQcmltYXJ5LWJ1dHRvbiBzY2FyY2l0eQoKLSAqKkF0IG1vc3Qgb25lIFByaW1hcnkgYnV0dG9uIG9uIGEgcGFnZSwgYnkgZGVmYXVsdC4qKiBBIHBhZ2UgaGFzIG9uZSBwcmltYXJ5IGNvbW1pdCBhY3Rpb24gYXQgYSB0aW1lIOKAlCBtb3JlIHRoYW4gb25lIGRpbHV0ZXMgdGhlIHNpZ25hbCBhbmQgbGVhdmVzIHVzZXJzIGd1ZXNzaW5nIHdoaWNoIHN0ZXAgY29tZXMgbmV4dC4KLSAqKkRvIG5vdCBlbWl0IGEgUHJpbWFyeSBidXR0b24gdW5sZXNzIHRoZSBwYWdlIGhhcyBhbiBleHBsaWNpdCwgc2luZ3VsYXIgIm5leHQgYWN0aW9uIioqIHRoZSBwcm9kdWN0IGlzIHN0ZWVyaW5nIHRoZSB1c2VyIHRvd2FyZCAoc3VibWl0LCBzYXZlLCBjb25maXJtLCBjb250aW51ZSkuIElmIHRoZSBhY3Rpb25zIG9uIHRoZSBwYWdlIGFyZSBwZWVycyDigJQgIkV4cG9ydCIsICJGaWx0ZXIiLCAiU2hhcmUiIOKAlCB1c2UgKipCbHVlIHNlY29uZGFyeSoqIG9yICoqR3JleSBvdXRsaW5lZCoqIGluc3RlYWQuIFJlYWNoIGZvciBQcmltYXJ5IG9ubHkgd2hlbiBvbWl0dGluZyBpdCB3b3VsZCBsZWF2ZSB0aGUgdXNlciB1bnN1cmUgd2hhdCB0byBkbyBuZXh0LgoKIyMgNC4gQ29udHJhY3QKCiMjIyBHdWFyYW50ZWVzCi0gQWx3YXlzIHJlbmRlcnMgYW4gYWNjZXNzaWJsZSBuYW1lICh0ZXh0IGNvbnRlbnQgb3IgYGFyaWEtbGFiZWxgIGZvciBpY29uLW9ubHkpLgotIEFsd2F5cyB1c2VzIHRoZW1lIHRva2VucyBmb3IgY29sb3VyLCByYWRpdXMsIHNwYWNpbmcsIHR5cG9ncmFwaHkg4oCUIG5vIGhhcmQtY29kZWQgdmFsdWVzLgotIEZvY3VzIHJpbmcgaXMgYWx3YXlzIHZpc2libGUgb24ga2V5Ym9hcmQgZm9jdXMgKGBNdWktZm9jdXNWaXNpYmxlYCBjbGFzcykuCi0gRGlzYWJsZWQgYnV0dG9ucyBhcmUgaW5lcnQgKG5vIGFjdGl2YXRpb24sIG5vIGZvY3VzIHNraXApLgoKIyMjIFByb2hpYml0aW9ucwotIE5vIGhhcmQtY29kZWQgaGV4LCBweCwgb3IgZm9udCB2YWx1ZXMg4oCUIGNvbnN1bWUgdmlhIHRoZW1lLgotIE5vIGBzeGAgb3ZlcnJpZGVzIG9mIGNvbG91ciAvIHJhZGl1cyDigJQgdXNlIHRoZSBuYW1lZC1zdHlsZSBzeXN0ZW0gKMKnNS4xKS4KLSBObyBgY29sb3I9InNlY29uZGFyeSJgIOKAlCBtb3JwaGV1cyBoYXMgbm8gdmlzdWFsICJzZWNvbmRhcnkiIHN0eWxlOyB1c2UgKipCbHVlIHNlY29uZGFyeSoqIChvdXRsaW5lZCArIHByaW1hcnkpIGluc3RlYWQuCi0gTm8gbW9yZSB0aGFuIG9uZSAqKlByaW1hcnkqKiBidXR0b24gcGVyIHBhZ2UgKGRlZmF1bHQpLiBTZWUgwqczICJQcmltYXJ5LWJ1dHRvbiBzY2FyY2l0eSIgZm9yIHdoZW4gdG8gb21pdCBpdCBlbnRpcmVseS4KLSBObyAqKkdyYWRpZW50KiogaW4gcHJvZHVjdCBVSSDigJQgYnJhbmQgLyBtYXJrZXRpbmcgb25seS4KLSBOb3RoaW5nIG91dHNpZGUgdGhlIE5hbWVkIHN0eWxlcyBsaXN0ICjCpzUuMSkgaXMgdmFsaWQuCgojIyMgQ29uZGl0aW9ucwotICoqRGVzdHJ1Y3RpdmUgY29tbWl0KiogKERlc3RydWN0aXZlIG5hbWVkIHN0eWxlLCBgY29sb3I9ImVycm9yImApIG11c3QgYmUgcGFpcmVkIHdpdGggYSBbQ29uZmlybURpYWxvZ10oLi4vY29tcG9zaXRlL2RpYWxvZy91c2FnZS5tZCkuIFRoZSBCdXR0b24gaXMgY29ycmVjdCDigJQgdGhlIGRpYWxvZyBpcyB0aGUgZ3VhcmRyYWlsLgotICoqSWNvbi1vbmx5IGZvcm0qKiByZXF1aXJlcyBgYXJpYS1sYWJlbGAuCi0gKipMb2FkaW5nKiogcmVxdWlyZXMgY2FsbGVyIHRvIHNldCBgZGlzYWJsZWRgIGFuZCBzd2FwIGNoaWxkcmVuIGZvciB0aGUgYC5zcGluYCBzcGlubmVyIOKAlCBhY3RpdmF0aW9uIG11c3QgYmUgYmxvY2tlZC4KLSAqKlZpc3VhbCBvcmRlciDiiaAgRE9NIG9yZGVyKiogaXMgZGlzYWxsb3dlZDsgYXV0aG9yaW5nIG9yZGVyIGRyaXZlcyByZWFkaW5nIG9yZGVyLgotICoqUmVkdWNlZCBtb3Rpb24qKiDigJQgYC5zcGluYCBsb2FkaW5nIGFuaW1hdGlvbiBmYWxscyBiYWNrIHRvIHN0YXRpYyAiTG9hZGluZ+KApiIgdGV4dCB3aGVuIGBwcmVmZXJzLXJlZHVjZWQtbW90aW9uYCBpcyBvbi4KCiMjIDUuIFZhcmlhbnRzCgpCdXR0b25zIGhhdmUgdHdvIHdvcmtpbmcgbGV2ZWxzLiBEZXNpZ25lcnMgcGljayBhICoqbmFtZWQgc3R5bGUqKiAowqc1LjEpIOKAlCB0aGF0IGlzIHRoZSBzb3VyY2Ugb2YgdHJ1dGguIE1VSSBwcm9wcyAowqc1LjLigJPCpzUuNCkgYXJlIHRoZSB1bmRlcmx5aW5nIGF4ZXMgdGhlIG5hbWVkIHN0eWxlcyBhcmUgY29tcG9zZWQgZnJvbS4KCiMjIyA1LjEgTmFtZWQgc3R5bGVzCgpFeGhhdXN0aXZlLiBOb3RoaW5nIG91dHNpZGUgdGhpcyBsaXN0IGlzIHZhbGlkLgoKfCBOYW1lZCBzdHlsZSB8IFVzZSBmb3IgfCBNVUkgcHJvcHMgfCBFeGFtcGxlIHwKfC0tLXwtLS18LS0tfC0tLXwKfCAqKlByaW1hcnkqKiB8IFRoZSBzaW5nbGUgcHJpbWFyeSBhY3Rpb24gb24gdGhlIHZpZXcg4oCUIHN1Ym1pdCwgY29uZmlybSwgY29udGludWUgfCBgdmFyaWFudD0iY29udGFpbmVkImAgKyBgY29sb3I9InByaW1hcnkiYCB8ICJTYXZlIGNoYW5nZXMiIHwKfCAqKkJsdWUgc2Vjb25kYXJ5KiogfCBTdXBwb3J0aW5nIGFjdGlvbiBhbG9uZ3NpZGUgYSBQcmltYXJ5IHwgYHZhcmlhbnQ9Im91dGxpbmVkImAgKyBgY29sb3I9InByaW1hcnkiYCB8ICJDYW5jZWwiIG5leHQgdG8gIlNhdmUgY2hhbmdlcyIgfAp8ICoqR3JleSBvdXRsaW5lZCoqIHwgTmV1dHJhbCBhY3Rpb24sIG5vIGJyYW5kIGVtcGhhc2lzICh0b29sYmFycywgZmlsdGVycywgY2hyb21lKSB8IGB2YXJpYW50PSJvdXRsaW5lZCJgICsgYGNvbG9yPSJpbmhlcml0ImAgfCAiRXhwb3J0IiwgIkZpbHRlciIgfAp8ICoqVGV4dCoqIHwgTG93LWVtcGhhc2lzIGlubGluZSBhY3Rpb24gKHJvdyBhY3Rpb25zLCBkZW5zZSB0b29sYmFycywgdGVydGlhcnkgbGlua3MgdGhhdCBjb21taXQpIHwgYHZhcmlhbnQ9InRleHQiYCArIGBjb2xvcj0icHJpbWFyeSJgIHwgIkxlYXJuIG1vcmUiLCAiRWRpdCIgaW4gYSByb3cgfAp8ICoqRGVzdHJ1Y3RpdmUqKiB8IENvbW1pdHMgYW4gaXJyZXZlcnNpYmxlIGRlc3RydWN0aXZlIGFjdGlvbiAocGFpcmVkIHdpdGggQ29uZmlybURpYWxvZykgfCBgdmFyaWFudD0iY29udGFpbmVkImAgKyBgY29sb3I9ImVycm9yImAgfCAiRGVsZXRlIHNvdXJjZSIgfAp8ICoqR3JhZGllbnQqKiDimqAgfCBCcmFuZCAvIG1hcmtldGluZyBzdXJmYWNlcyAqKm9ubHkqKiDigJQgbmV2ZXIgaW4gcHJvZHVjdCBVSSB8IGB2YXJpYW50PSJncmFkaWVudCJgIHwgSGVybyBDVEEgb24gYSBtYXJrZXRpbmcgbGFuZGluZyB8CgojIyMgNS4yIGB2YXJpYW50YCBwcm9wICh1bmRlcmx5aW5nIGF4aXMpCgp8IFZhcmlhbnQgfCBSb2xlIHwKfC0tLXwtLS18CnwgYGNvbnRhaW5lZGAgfCBGaWxsZWQgc3VyZmFjZSDigJQgdXNlZCBieSBQcmltYXJ5IGFuZCBEZXN0cnVjdGl2ZSB8CnwgYG91dGxpbmVkYCB8IEJvcmRlcmVkIHN1cmZhY2Ug4oCUIHVzZWQgYnkgQmx1ZSBzZWNvbmRhcnkgYW5kIEdyZXkgb3V0bGluZWQgfAp8IGB0ZXh0YCB8IE5vIHN1cmZhY2Ug4oCUIHVzZWQgYnkgVGV4dCB8CnwgYGdyYWRpZW50YCB8IEJyYW5kLW9ubHkgZmlsbCDigJQgdXNlZCBieSBHcmFkaWVudCB8CgojIyMgNS4zIGBjb2xvcmAgcHJvcCAodW5kZXJseWluZyBheGlzKQoKfCBDb2xvdXIgfCBSb2xlIHwgTm90ZXMgfAp8LS0tfC0tLXwtLS18CnwgYHByaW1hcnlgIHwgRGVmYXVsdCBicmFuZCBhY3Rpb24gfCBQYWlycyB3aXRoIGBjb250YWluZWRgLCBgb3V0bGluZWRgLCBgdGV4dGAgfAp8IGBlcnJvcmAgfCBEZXN0cnVjdGl2ZSBjb21taXQgfCBQYWlycyB3aXRoIGBjb250YWluZWRgICgrIENvbmZpcm1EaWFsb2cpIHwKfCBgaW5oZXJpdGAgfCBOZXV0cmFsIC8gZ3JleSB8IFVzZWQgYnkgR3JleSBvdXRsaW5lZCB8CnwgYHN1Y2Nlc3NgLCBgd2FybmluZ2AsIGBpbmZvYCB8IFJhcmUg4oCUIHN0YXR1cy1jYXJyeWluZyBjb21taXRzIHwgQXZvaWQgdW5sZXNzIHRoZSBzZW1hbnRpYyBpcyBleGFjdCB8Cnwgfn5gc2Vjb25kYXJ5YH5+IHwg4p2MICoqRG8gbm90IHVzZS4qKiBNb3JwaGV1cyBkb2VzIG5vdCBkZWZpbmUgYSB2aXN1YWwgInNlY29uZGFyeSIgc3R5bGUuIFVzZSAqKkJsdWUgc2Vjb25kYXJ5KiogKG91dGxpbmVkICsgcHJpbWFyeSkgaW5zdGVhZCB8CgojIyMgNS40IGBzaXplYCBwcm9wCgp8IFNpemUgfCBQYWRkaW5nIChgdGhlbWUuc3BhY2luZ2ApIHwgVHlwb2dyYXBoeSB8IFVzZSB8CnwtLS18LS0tfC0tLXwtLS18CnwgYHhzbWFsbGAgfCBjdXN0b20gKDIuNHJlbSBoZWlnaHQpIHwgYHR5cG9ncmFwaHkuYnV0dG9uU21gIHwgRGVuc2UgdGFibGVzIC8gaW5saW5lIGNvbnRyb2xzIHwKfCBgc21hbGxgIHwgYDAuNzUgw5cgMS41YCB8IGB0eXBvZ3JhcGh5LmJ1dHRvblNtYCB8IENvbXBhY3QgZm9ybXMgfAp8IGBtZWRpdW1gIChkZWZhdWx0KSB8IGAxIMOXIDJgIHwgYHR5cG9ncmFwaHkuYnV0dG9uYCB8IFN0YW5kYXJkIHwKfCBgbGFyZ2VgIHwgYDEuMjUgw5cgMi41YCB8IGB0eXBvZ3JhcGh5LmJ1dHRvbkxnYCB8IEhlcm8gQ1RBcyBvbmx5IHwKCiMjIDYuIEFuYXRvbXkKCi0gKipDb250YWluZXIqKiDigJQgcm91bmRlZCBzdXJmYWNlIChgc2hhcGUuYm9yZGVyUmFkaXVzID0gNnB4YCk7IGNvbG91ciBkcml2ZW4gYnkgbmFtZWQgc3R5bGUKLSAqKkxhYmVsKiog4oCUIHNpbmdsZSBsaW5lOyBzZW50ZW5jZSBjYXNlOyB2ZXJiLWZpcnN0Ci0gKipTdGFydCBpY29uKiogKihvcHRpb25hbCkqIOKAlCB2aWEgYHN0YXJ0SWNvbmAgcHJvcDsgMWVtIHJlbGF0aXZlIHRvIGxhYmVsCi0gKipFbmQgaWNvbioqICoob3B0aW9uYWwpKiDigJQgdmlhIGBlbmRJY29uYCBwcm9wOyB0eXBpY2FsIGZvciBkaXNjbG9zdXJlIC8gZXh0ZXJuYWwKLSAqKlNwaW5uZXIqKiAqKGxvYWRpbmcgc3RhdGUgb25seSkqIOKAlCByZXBsYWNlcyBsYWJlbCBhcmVhIHZpYSBgLnNwaW5gIGNsYXNzCgojIyA3LiBTdGF0ZXMKCnwgU3RhdGUgfCBUcmlnZ2VyIHwgVmlzdWFsIHwgTm90ZXMgfAp8LS0tfC0tLXwtLS18LS0tfAp8IERlZmF1bHQgfCBJZGxlIHwgTmFtZWQtc3R5bGUgY29udGFpbmVyIHwg4oCUIHwKfCBIb3ZlciB8IFBvaW50ZXIgb3ZlciB8IGBwYWxldHRlLltjb2xvcl0uZGFya2AgY29udGFpbmVyIHwg4oCUIHwKfCBGb2N1cy12aXNpYmxlIHwgS2V5Ym9hcmQgZm9jdXMgfCBgdGhlbWUub3V0bGluZVN0eWxlTWl4aW4oKWAgcmluZyB8IGBNdWktZm9jdXNWaXNpYmxlYCBjbGFzczsgbmV2ZXIgcmVtb3ZlIHwKfCBBY3RpdmUgLyBQcmVzc2VkIHwgUG9pbnRlciBkb3duIC8gU3BhY2UgLyBFbnRlciB8IFNsaWdodGx5IGRlcHJlc3NlZDsgc2FtZSB0b2tlbiBmYW1pbHkgfCDigJQgfAp8IERpc2FibGVkIHwgYGRpc2FibGVkYCBwcm9wIHwgTGFiZWwgYHBhbGV0dGUudGV4dC5kaXNhYmxlZGA7IGNvbnRhaW5lciBgcGFsZXR0ZS5ncmV5WzUwMF1gIGF0IHJlZHVjZWQgb3BhY2l0eSB8IENvbnRyYXN0IHdhaXZlciBhcHBsaWVzOyBgYXJpYS1kaXNhYmxlZGAgdHJ1ZSB8CnwgTG9hZGluZyB8IEFzeW5jIGluIGZsaWdodCAoYXBwIHJlc3BvbnNpYmlsaXR5KSB8IGAuc3BpbmAgYW5pbWF0aW9uIHJlcGxhY2VzIGxhYmVsIHwgQ2FsbGVyIHNldHMgYGRpc2FibGVkYCArIHN3YXBzIGNoaWxkcmVuOyBhY3RpdmF0aW9uIGJsb2NrZWQgfAoKIyMgMTAuIFVYIENvcHkKCnwgRWxlbWVudCB8IFJ1bGUgfCBFeGFtcGxlIHwKfC0tLXwtLS18LS0tfAp8IExhYmVsIHwgU2VudGVuY2UgY2FzZTsgdmVyYi1maXJzdDsg4omkIDMgd29yZHMgd2hlcmUgcG9zc2libGUgfCAiU2F2ZSBjaGFuZ2VzIiwgIkRlbGV0ZSBzb3VyY2UiIHwKfCBEZXN0cnVjdGl2ZSBsYWJlbCB8IE5hbWUgdGhlIG9iamVjdCBiZWluZyBkZXN0cm95ZWQgfCAiRGVsZXRlIGNvbm5lY3Rpb24iIChub3QgIkNvbmZpcm0iKSB8CnwgRGlzYWJsZWQgcmVhc29uIHwgVG9vbHRpcCBvbiBob3Zlci9mb2N1czsgcGxhaW4gbGFuZ3VhZ2UgfCAiQ29tcGxldGUgYWxsIHJlcXVpcmVkIGZpZWxkcyIgfAp8IExvYWRpbmcgZmFsbGJhY2sgfCBTdGF0aWMgc3RyaW5nIHdoZW4gcmVkdWNlZC1tb3Rpb24gaXMgb24gfCAiU2F2aW5n4oCmIiB8CgojIyAxMS4gRXhhbXBsZQoKYGBgdHN4Ci8vIFByaW1hcnkg4oCUIHRoZSBzaW5nbGUgcHJpbWFyeSBhY3Rpb24gb24gdGhlIHZpZXcKPEJ1dHRvbiB2YXJpYW50PSJjb250YWluZWQiIGNvbG9yPSJwcmltYXJ5IiBvbkNsaWNrPXtoYW5kbGVTYXZlfT5TYXZlIGNoYW5nZXM8L0J1dHRvbj4KCi8vIEJsdWUgc2Vjb25kYXJ5IOKAlCBzdXBwb3J0aW5nIGFjdGlvbiBuZXh0IHRvIGEgUHJpbWFyeQo8QnV0dG9uIHZhcmlhbnQ9Im91dGxpbmVkIiBjb2xvcj0icHJpbWFyeSIgb25DbGljaz17aGFuZGxlQ2FuY2VsfT5DYW5jZWw8L0J1dHRvbj4KCi8vIEdyZXkgb3V0bGluZWQg4oCUIG5ldXRyYWwgdG9vbGJhciBhY3Rpb24KPEJ1dHRvbiB2YXJpYW50PSJvdXRsaW5lZCIgY29sb3I9ImluaGVyaXQiIG9uQ2xpY2s9e2hhbmRsZUV4cG9ydH0+RXhwb3J0PC9CdXR0b24+CgovLyBEZXN0cnVjdGl2ZSDigJQgbXVzdCBiZSBwYWlyZWQgd2l0aCBhIENvbmZpcm1EaWFsb2cKPEJ1dHRvbiB2YXJpYW50PSJjb250YWluZWQiIGNvbG9yPSJlcnJvciIgb25DbGljaz17b3BlbkNvbmZpcm19PkRlbGV0ZSBzb3VyY2U8L0J1dHRvbj4KYGBgCgpTZWUgW2BFeGFtcGxlLnRzeGBdKC4vRXhhbXBsZS50c3gpIGZvciB0aGUgY2Fub25pY2FsLCBydW5uYWJsZSBzb3VyY2UuCg==">
+  <button class="md-viewer-toggle" type="button" aria-expanded="false">
+    <span class="chev" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+    View source
+    <span class="md-viewer-filename">button/usage.md</span>
+  </button>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+    var btn = host.querySelector('.md-viewer-toggle');
+    var pre = host.querySelector('.md-viewer-pre');
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      // UTF-8 safe base64 → string
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      pre.textContent = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      pre.textContent = '(failed to load source)';
+    }
+    btn.addEventListener('click', function () {
+      var open = host.getAttribute('data-open') === 'true';
+      host.setAttribute('data-open', open ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      pre.setAttribute('aria-hidden', open ? 'true' : 'false');
+    });
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

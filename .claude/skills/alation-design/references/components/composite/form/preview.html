@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Form</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --divider:        #D4DDE2;
+      --primary-main:   #0073DD;
+      --primary-soft:   #D9EEFF;
+      --primary-dark:   #0056A6;
+
+      --radius-2: 12px;
+      --radius-input: 4px;
+      --radius-btn: 6px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 960px; margin: 0 auto; }
+
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    p.page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 32px 0 12px 0;
+    }
+
+    /* Canvas card wrapper */
+    .canvas {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      padding: 32px;
+    }
+
+    /* Typography used by form */
+    .t-subtitle1 {
+      font-size: 14px; font-weight: 500; line-height: 1.43; margin: 0 0 8px 0;
+      color: var(--text-primary);
+    }
+
+    /* Stack spacing 3 = 24px between fields */
+    .stack-3 { max-width: 680px; }
+    .stack-3 > .field + .field { margin-top: 24px; }
+
+    /* Form Field */
+    .field { display: flex; flex-direction: column; }
+    .field .outlined {
+      display: flex; align-items: center; min-height: 40px;
+      background: var(--paper);
+      border: 1.5px solid var(--divider);
+      border-radius: var(--radius-input);
+      padding: 0 12px; transition: border-color .15s;
+    }
+    .field .outlined.multiline { align-items: flex-start; padding: 8px 12px; min-height: auto; }
+    .field .outlined input, .field .outlined textarea, .field .outlined select {
+      all: unset; width: 100%; font-size: 14px; line-height: 1.5;
+      color: var(--text-primary); font-family: inherit;
+    }
+    .field .outlined input::placeholder,
+    .field .outlined textarea::placeholder { color: var(--text-disabled); }
+    .field .outlined textarea { resize: vertical; min-height: 80px; }
+    .field .outlined .adorn-right { margin-left: 8px; color: var(--text-secondary); }
+
+    /* Autocomplete-ish chip track */
+    .ac-track {
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center; width: 100%;
+    }
+    .ac-chip {
+      display: inline-flex; align-items: center; gap: 6px; height: 24px;
+      padding: 0 8px 0 10px; border-radius: 12px;
+      background: var(--neutral-300); color: var(--text-primary);
+      font-size: 12px; font-weight: 500;
+    }
+    .ac-chip svg { cursor: pointer; color: var(--text-secondary); }
+
+    /* Actions row */
+    .actions {
+      margin-top: 32px; display: flex; justify-content: flex-end; gap: 12px;
+    }
+    .btn {
+      all: unset; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 8px; padding: 0 16px; height: 36px;
+      border-radius: var(--radius-btn); font-size: 14px; font-weight: 500; line-height: 1;
+    }
+    .btn-primary { background: var(--primary-main); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: transparent; color: var(--primary-main); border: 1px solid var(--primary-main); }
+
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Form</h1>
+    <p class="page-sub">
+      A vertical stack of labeled fields for creating or editing an entity. Canonical shape: a <code>Stack spacing={3}</code> of Form Field wrappers, each containing a <code>TextField</code> (text, multiline, or select) or an <code>Autocomplete</code> for user/entity search.
+    </p>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Composite component</li>
+      <li><strong>MUI base:</strong> none (composition of <code>Stack</code> + <code>FormField</code> + <code>TextField</code> + <code>Autocomplete</code>)</li>
+      <li><strong>Figma:</strong> Form — to be linked</li>
+      <li><strong>Code:</strong> <code>design-playground/apps/plugins/alation-design/template/src/blocks/form/Example.tsx</code></li>
+    </ul>
+    <!-- classification-end -->
+
+    <h2 class="section">Canonical form · Stack spacing 3 · maxWidth 680</h2>
+    <div class="canvas">
+      <div class="stack-3">
+
+        <div class="field">
+          <label class="t-subtitle1">Standard Name</label>
+          <div class="outlined"><input type="text" value="Customer ID format" /></div>
+        </div>
+
+        <div class="field">
+          <label class="t-subtitle1">Description</label>
+          <div class="outlined multiline">
+            <textarea>Defines the canonical shape of Customer ID values across all catalog objects: 10-digit numeric, no leading zeros, globally unique.</textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="t-subtitle1">Column Data Type</label>
+          <div class="outlined">
+            <select>
+              <option>All</option>
+              <option>String</option>
+              <option>Integer</option>
+              <option>Decimal</option>
+              <option>Date</option>
+            </select>
+            <span class="adorn-right">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="t-subtitle1">Edit Access</label>
+          <div class="outlined" style="min-height:44px; padding:6px 8px">
+            <div class="ac-track">
+              <span class="ac-chip">
+                Vadym Shcherbakov
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </span>
+              <span class="ac-chip">
+                Chao Li
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </span>
+              <span class="ac-chip">
+                Data Governance team
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </span>
+              <input type="text" placeholder="Search users to grant edit access" style="flex:1; min-width:80px; border:none; outline:none; font-size:14px; padding:2px 4px;" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" type="button">Cancel</button>
+        <button class="btn btn-primary" type="button">Save standard</button>
+      </div>
+    </div>
+
+    <p class="note">Static preview of what's documented in <code>form.md</code>. Canonical runnable source: <code>design-playground/.../blocks/form/Example.tsx</code>. Labels are <code>Typography variant="subtitle1"</code>; fields use <code>FormField + TextField / Autocomplete</code>; the stack clamps to <code>maxWidth: 680</code>.</p>
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 32px 40px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-toggle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58;
+    background: #F1F4F6;
+    border: 1px solid #E8EDF1;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer[data-open="true"] .md-viewer-toggle .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #B7B7C1;
+    margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none;
+    margin: 12px 0 0 0;
+    padding: 20px 24px;
+    background: #FFFFFF;
+    border: 1px solid #E8EDF1;
+    border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #0D1322;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    max-height: 640px;
+    overflow-y: auto;
+  }
+  .md-viewer[data-open="true"] .md-viewer-pre { display: block; }
+</style>
+<div class="md-viewer" data-open="false" data-md-b64="LS0tCm5hbWU6IGZvcm0KdGl0bGU6IEZvcm0KY2F0ZWdvcnk6IGNvbXBvc2l0ZS1jb21wb25lbnQKbGFzdF91cGRhdGVkOiAyMDI2LTA0LTIxCgpkZXNjcmlwdGlvbjogPgogIEEgdmVydGljYWwgc3RhY2sgb2YgbGFiZWxlZCBmaWVsZHMgZm9yIGNyZWF0aW5nIG9yIGVkaXRpbmcgYW4gZW50aXR5IOKAlCBzaW5nbGUtbGluZSB0ZXh0LCBtdWx0aWxpbmUgdGV4dGFyZWEsIHNlbGVjdCwgYW5kIHVzZXItc2VhcmNoIGF1dG9jb21wbGV0ZSDigJQgY29tcG9zZWQgZnJvbSBGb3JtIEZpZWxkICsgVGV4dEZpZWxkICsgQXV0b2NvbXBsZXRlLgp0YWdzOiBbZm9ybSwgc3RhY2ssIGNyZWF0ZSwgZWRpdF0KCmZpZ21hX3VybDogIiIKY29kZV9yZWZlcmVuY2U6ICJubyBzaGFyZWQgYDxGb3JtPmAgd3JhcHBlciBpbiBAYWxhdGlvbi9hbGF0aW9uLXVpIOKAlCBwcm9kdWN0aW9uIGNvbXBvc2VzIGA8U3RhY2s+YCArIGBGb3JtQ29udHJvbGAgLyBgSW5wdXRMYWJlbGAgLyBgVGV4dEZpZWxkYCAvIGBBdXRvY29tcGxldGVgIGFkLWhvYyIKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogbm9uZQpkZXBlbmRzX29uX3Rva2VuczogW3R5cG9ncmFwaHkuc3VidGl0bGUxLCBzcGFjaW5nXQpkZXBlbmRzX29uX2NvbXBvbmVudHM6IFtGb3JtRmllbGQsIFRleHRGaWVsZCwgQXV0b2NvbXBsZXRlLCBTdGFjaywgTWVudUl0ZW0sIFR5cG9ncmFwaHldCi0tLQoKIyBGb3JtCgojIyAxLiBDbGFzc2lmaWNhdGlvbgoKLSAqKlR5cGU6KiogQ29tcG9zaXRlIGNvbXBvbmVudCDigJQgKipjb21wb3NpdGlvbiBwYXR0ZXJuLCBub3QgYSBzaGFyZWQgd3JhcHBlcioqCi0gKipNVUkgYmFzZToqKiBub25lIChjb21wb3NpdGlvbiBvZiBgU3RhY2tgICsgYEZvcm1Db250cm9sYCAvIGBJbnB1dExhYmVsYCAvIGBUZXh0RmllbGRgIC8gYEF1dG9jb21wbGV0ZWApCi0gKipGaWdtYToqKiBGb3JtIOKAlCB0byBiZSBsaW5rZWQKLSAqKkNvZGU6KiogVGhlcmUgaXMgKipubyBzaGFyZWQgYDxGb3JtPmAgY29tcG9uZW50KiogaW4gYEBhbGF0aW9uL2FsYXRpb24tdWlgLiBQcm9kdWN0aW9uIGZvcm1zIGNvbXBvc2UgYDxTdGFjaz5gICsgdGhlIEZvcm0gRmllbGQgcGF0dGVybiAoW2Zvcm0tZmllbGQubWRdKC4vZm9ybS1maWVsZC91c2FnZS5tZCkpIGRpcmVjdGx5IGF0IHRoZSBjYWxsIHNpdGUuIFRoaXMgcmVmZXJlbmNlIGRvY3VtZW50cyB0aGF0IGNvbXBvc2l0aW9uLgoKIyMgMi4gUHVycG9zZQoKQSB2ZXJ0aWNhbCBzdGFjayBvZiBsYWJlbGVkIGZpZWxkcyBmb3IgY3JlYXRpbmcgb3IgZWRpdGluZyBhbiBlbnRpdHkuIENhbm9uaWNhbCBzaGFwZTogYSBgU3RhY2sgc3BhY2luZz17M31gIG9mIFtGb3JtIEZpZWxkXSguL2Zvcm0tZmllbGQvdXNhZ2UubWQpIHdyYXBwZXJzLCBlYWNoIGNvbnRhaW5pbmcgYSBgVGV4dEZpZWxkYCAodGV4dCwgbXVsdGlsaW5lLCBvciBzZWxlY3QpIG9yIGFuIGBBdXRvY29tcGxldGVgIGZvciB1c2VyL2VudGl0eSBzZWFyY2guCgojIyAzLiBXaGVuIHRvIHVzZSAvIFdoZW4gbm90IHRvIHVzZQoKKipVc2Ugd2hlbioqCi0gWW91IGFyZSBjcmVhdGluZyBvciBlZGl0aW5nIGFuIGVudGl0eSBpbiBhIHBhZ2UsIHBhbmVsLCBvciBkaWFsb2cgYm9keS4KLSBZb3UgbmVlZCBhIHZlcnRpY2FsIHN0YWNrIG9mIGxhYmVsZWQgZmllbGRzLgoKKipEbyBub3QgdXNlIHdoZW4qKgotIFlvdSBuZWVkIGEgc2luZ2xlIGlubGluZSBmaWVsZCBpbnNpZGUgYSB0b29sYmFyIOKGkiB1c2UgW1RleHRGaWVsZF0oLi4vYmFzZS90ZXh0LWZpZWxkL3VzYWdlLm1kKSBkaXJlY3RseS4KLSBZb3UgbmVlZCBhIHNlYXJjaCBib3ggaW4gYSBwYWdlIGhlYWRlciDihpIgdXNlIFtUZXh0RmllbGRdKC4uL2Jhc2UvdGV4dC1maWVsZC91c2FnZS5tZCkgd2l0aCBhbiBgSW5wdXRBZG9ybm1lbnRgIGljb24uCi0gWW91IG5lZWQgYSBjb25maXJtL2Rlc3RydWN0aXZlIGZsb3cg4oaSIHdyYXAgdGhlIGZvcm0gaW5zaWRlIGEgW0RpYWxvZ10oLi9kaWFsb2cvdXNhZ2UubWQpIGlmIGFwcGxpY2FibGUuCgojIyA0LiBDb250cmFjdAoKIyMjIEd1YXJhbnRlZXMKLSBFdmVyeSBmaWVsZCB1c2VzIFtgRm9ybUZpZWxkYF0oLi9mb3JtLWZpZWxkL3VzYWdlLm1kKSDigJQgbGFiZWxzIHJlbmRlciBhcyBgVHlwb2dyYXBoeSB2YXJpYW50PSJzdWJ0aXRsZTEiYC4KLSBGaWVsZHMgc3RhY2sgdmVydGljYWxseSB3aXRoIGBzcGFjaW5nPXszfWAuCi0gRm9ybSBjb250YWluZXIgY2xhbXBzIHRvIGBtYXhXaWR0aDogNjgwYCAob3IgdGlnaHRlcikgdG8ga2VlcCByZWFkYWJsZSBvbiB3aWRlIHZpZXdwb3J0cy4KLSBFdmVyeSBpbnB1dCB1c2VzIFtgVGV4dEZpZWxkYF0oLi4vYmFzZS90ZXh0LWZpZWxkL3VzYWdlLm1kKSBvciBgQXV0b2NvbXBsZXRlYCDigJQgbm8gYmFyZSBgPGlucHV0PmAsIG5vIGJhcmUgTVVJIGBTZWxlY3RgLgoKIyMjIFByb2hpYml0aW9ucwotIE5ldmVyIHVzZSBhIGJhcmUgYFNlbGVjdGAg4oCUIHVzZSBgVGV4dEZpZWxkYCB3aXRoIGBzZWxlY3RgIHByb3AuCi0gTmV2ZXIgb3ZlcnJpZGUgZm9udCBwcm9wZXJ0aWVzIG9uIGxhYmVscyAoYGZvbnRTaXplYCwgYGZvbnRXZWlnaHRgKSDigJQgdGhlIGBzdWJ0aXRsZTFgIHZhcmlhbnQgaXMgdGhlIGNvbnRyYWN0LgotIE5ldmVyIHVzZSBgaGVpZ2h0YCBvdmVycmlkZSBvbiBtdWx0aWxpbmUgVGV4dEZpZWxkcyDigJQgbGV0IGByb3dzYCBjb250cm9sIGhlaWdodC4KLSBOZXZlciBhZGQgYGNvbXBvbmVudHNQcm9wcz17eyBwYXBlcjogLi4uIH19YCB0byBhIGBUZXh0RmllbGQgc2VsZWN0YCDigJQgdGhlIGRyb3Bkb3duIHN0eWxpbmcgbGl2ZXMgaW4gdGhlIGBNdWlNZW51YCB0aGVtZSBvdmVycmlkZS4KLSBOZXZlciByZW5kZXIgYSBmb3JtIHdpZGVyIHRoYW4gdGhlIGNvbnRlbnQgYWxsb3dzIOKAlCBkZWZhdWx0IGNsYW1wIGlzIGBtYXhXaWR0aDogNjgwYC4KLSBOZXZlciB1c2UgYHZhcmlhbnQ9ImZpbGxlZCJgIC8gYHZhcmlhbnQ9InN0YW5kYXJkImAgb24gVGV4dEZpZWxkIOKAlCBvbmx5IGBvdXRsaW5lZGAgKE1VSSBkZWZhdWx0IHdpdGggbW9ycGhldXMgdGhlbWUpLgoKIyMjIENvbmRpdGlvbnMKLSBXaGVuIHRoZSBmaWVsZCBpcyBtdWx0aS11c2VyIC8gbXVsdGktZW50aXR5IOKGkiB1c2UgYEF1dG9jb21wbGV0ZWAgd2l0aCBgbXVsdGlwbGVgLgotIFdoZW4gdGhlIGZpZWxkIGlzIHNpbmdsZS1saW5lIHRleHQgb3Igc2VsZWN0IOKGkiBhcHBseSBgc3g9e3sgJyYgLk11aU91dGxpbmVkSW5wdXQtcm9vdCc6IHsgaGVpZ2h0OiA0MCB9IH19YCBmb3IgdmVydGljYWwgcmh5dGhtLgotIFdoZW4gdGhlIGZpZWxkIGFjY2VwdHMgZnJlZS10ZXh0IG91dHNpZGUgdGhlIG9wdGlvbnMgbGlzdCDihpIgdXNlIGBBdXRvY29tcGxldGUgZnJlZVNvbG9gIChvbmx5IHdoZW4gaW50ZW50aW9uYWwpLgotIFdoZW4gdGhlIGZvcm0gaXMgaW5zaWRlIGEgRGlhbG9nIOKGkiB0aGUgb3V0ZXIgYFN0YWNrYCBzdGlsbCBvd25zIHNwYWNpbmc7IGRvIG5vdCBhZGQgcGFkZGluZyBvbiBjaGlsZHJlbi4KCiMjIDUuIEFuYXRvbXkgJiBDb21wb3NlZCBvZgoKKipBbmF0b215KioKYGBgClN0YWNrIHNwYWNpbmc9ezN9IG1heFdpZHRoPTY4MAog4pSc4pSAIEZvcm1GaWVsZCAobGFiZWw6ICJTdGFuZGFyZCBOYW1lIikKIOKUgiAgICDilJTilIAgVGV4dEZpZWxkIHNpbmdsZS1saW5lLCBoZWlnaHQgNDAKIOKUnOKUgCBGb3JtRmllbGQgKGxhYmVsOiAiRGVzY3JpcHRpb24iKQog4pSCICAgIOKUlOKUgCBUZXh0RmllbGQgbXVsdGlsaW5lLCByb3dzPTQKIOKUnOKUgCBGb3JtRmllbGQgKGxhYmVsOiAiQ29sdW1uIERhdGEgVHlwZSIpCiDilIIgICAg4pSU4pSAIFRleHRGaWVsZCBzZWxlY3QgKyBNZW51SXRlbVtdCiDilJTilIAgRm9ybUZpZWxkIChsYWJlbDogIkVkaXQgQWNjZXNzIikKICAgICAg4pSU4pSAIEF1dG9jb21wbGV0ZSBtdWx0aXBsZSArIFRleHRGaWVsZCByZW5kZXJJbnB1dApgYGAKCioqQ29tcG9zZWQgb2YqKgotIFtGb3JtIEZpZWxkXSguL2Zvcm0tZmllbGQvdXNhZ2UubWQpIOKAlCBsYWJlbCArIGhlbHBlciB3cmFwcGVyCi0gW1RleHRGaWVsZF0oLi4vYmFzZS90ZXh0LWZpZWxkL3VzYWdlLm1kKSDigJQgc2luZ2xlLWxpbmUsIG11bHRpbGluZSwgc2VsZWN0Ci0gYEF1dG9jb21wbGV0ZWAg4oCUIHNlYXJjaCAvIG11bHRpLXNlbGVjdAotIGBTdGFja2AsIGBNZW51SXRlbWAsIGBUeXBvZ3JhcGh5YCDigJQgTVVJIHByaW1pdGl2ZXMKCiMjIDYuIEN1c3RvbQoKIyMjIEZpZWxkIGxhYmVsCgpgYGB0c3gKPFR5cG9ncmFwaHkgdmFyaWFudD0ic3VidGl0bGUxIiBzeD17eyBtYjogMSwgZGlzcGxheTogJ2Jsb2NrJyB9fT4KICBGaWVsZCBsYWJlbAo8L1R5cG9ncmFwaHk+CmBgYAoKLSBgdmFyaWFudD0ic3VidGl0bGUxImAg4oCUIDEuNHJlbSAvIGZvbnRXZWlnaHQgNTAwCi0gYGRpc3BsYXk6ICdibG9jaydgIOKAlCBuZWVkZWQgd2hlbiByZW5kZXJpbmcgVHlwb2dyYXBoeSBhcyBpbmxpbmUgYnkgZGVmYXVsdAotIE5vIGBjb21wb25lbnQ9ImxhYmVsImAgbmVlZGVkIHVubGVzcyB0aGUgZmllbGQgcmVxdWlyZXMgc2VtYW50aWMgSFRNTCBhc3NvY2lhdGlvbgoKIyMjIFNpbmdsZS1saW5lIHRleHQgZmllbGQKCmBgYHRzeAo8VGV4dEZpZWxkCiAgZnVsbFdpZHRoCiAgdmFsdWU9e3ZhbHVlfQogIG9uQ2hhbmdlPXsoZSkgPT4gc2V0VmFsdWUoZS50YXJnZXQudmFsdWUpfQogIHN4PXt7ICcmIC5NdWlPdXRsaW5lZElucHV0LXJvb3QnOiB7IGhlaWdodDogNDAgfSB9fQovPgpgYGAKCmBoZWlnaHQ6IDQwYCBvbiBgTXVpT3V0bGluZWRJbnB1dC1yb290YCBpcyBhICoqbGF5b3V0Kiogb3ZlcnJpZGUg4oCUIG5vdCBhIGZvbnQgb3ZlcnJpZGUg4oCUIGFuZCBpcyBhbGxvd2VkIHVuZGVyIHRoZSBDb250cmFjdC4KCiMjIyBNdWx0aWxpbmUgdGV4dGFyZWEKCmBgYHRzeAo8VGV4dEZpZWxkCiAgZnVsbFdpZHRoCiAgbXVsdGlsaW5lCiAgcm93cz17NH0KICB2YWx1ZT17dmFsdWV9CiAgb25DaGFuZ2U9eyhlKSA9PiBzZXRWYWx1ZShlLnRhcmdldC52YWx1ZSl9CiAgcGxhY2Vob2xkZXI9IkRlc2NyaWJlIHRoZSBwdXJwb3NlIGFuZCBzY29wZSBvZiB0aGlzIHN0YW5kYXJkIgovPgpgYGAKCi0gTm8gaGVpZ2h0IG92ZXJyaWRlIOKAlCBsZXQgYHJvd3NgIGNvbnRyb2wgdGhlIGhlaWdodC4KLSBgcGxhY2Vob2xkZXJgIGZvciBlbXB0eS1zdGF0ZSBndWlkYW5jZS4KCiMjIyBTZWxlY3QgKGRyb3Bkb3duKQoKYGBgdHN4CjxUZXh0RmllbGQKICBmdWxsV2lkdGgKICBzZWxlY3QKICB2YWx1ZT17dmFsdWV9CiAgb25DaGFuZ2U9eyhlKSA9PiBzZXRWYWx1ZShlLnRhcmdldC52YWx1ZSl9CiAgc3g9e3sgJyYgLk11aU91dGxpbmVkSW5wdXQtcm9vdCc6IHsgaGVpZ2h0OiA0MCB9IH19Cj4KICA8TWVudUl0ZW0gdmFsdWU9ImFsbCI+QWxsPC9NZW51SXRlbT4KICA8TWVudUl0ZW0gdmFsdWU9InN0cmluZyI+U3RyaW5nPC9NZW51SXRlbT4KPC9UZXh0RmllbGQ+CmBgYAoKLSBVc2UgYFRleHRGaWVsZGAgd2l0aCBgc2VsZWN0YCDigJQgbm90IGEgYmFyZSBgU2VsZWN0YCBjb21wb25lbnQuCi0gVGhlIGRyb3Bkb3duIHBhcGVyIHN0eWxpbmcgaXMgaGFuZGxlZCBieSBgTXVpTWVudWAgdGhlbWUgb3ZlcnJpZGVzIOKAlCBubyBpbmxpbmUgYGNvbXBvbmVudHNQcm9wc2AgbmVlZGVkLgoKIyMjIEF1dG9jb21wbGV0ZSAodXNlciBzZWFyY2gpCgpgYGB0c3gKPEF1dG9jb21wbGV0ZQogIG11bHRpcGxlCiAgb3B0aW9ucz17dXNlckxpc3R9CiAgcmVuZGVySW5wdXQ9eyhwYXJhbXMpID0+ICgKICAgIDxUZXh0RmllbGQgey4uLnBhcmFtc30gcGxhY2Vob2xkZXI9IlNlYXJjaCB1c2VycyB0byBncmFudCBlZGl0IGFjY2VzcyIgLz4KICApfQovPgpgYGAKCi0gUGFzcyBgY29tcG9uZW50c1Byb3BzPXt7IHBhcGVyOiB7IHN4OiB7IGJvcmRlcjogMSwgYm9yZGVyQ29sb3I6ICdkaXZpZGVyJywgYm94U2hhZG93OiAxLCBib3JkZXJSYWRpdXM6IDEgfSB9IH19YCB0byBtYXRjaCB0aGUgU2VsZWN0IGRyb3Bkb3duIGFwcGVhcmFuY2Ug4oCUIHRoZSBjb3JlIHRoZW1lIGRvZXMgbm90IG92ZXJyaWRlIEF1dG9jb21wbGV0ZSBwYXBlci4KLSBVc2UgYG11bHRpcGxlYCB3aGVuIHNlbGVjdGluZyBtb3JlIHRoYW4gb25lIHVzZXIuCi0gUGFzcyByZWFsIG9wdGlvbnMgZnJvbSB5b3VyIGRhdGEgc291cmNlOyB1c2UgYGZyZWVTb2xvYCBvbmx5IHdoZW4gZnJlZS10ZXh0IGVudHJ5IGlzIGludGVudGlvbmFsLgoKIyMjIEZ1bGwgZm9ybSBsYXlvdXQKCmBgYHRzeAo8U3RhY2sgc3BhY2luZz17M30gc3g9e3sgbWF4V2lkdGg6IDY4MCB9fT4KICA8Rm9ybUZpZWxkIGxhYmVsPSJTdGFuZGFyZCBOYW1lIj4KICAgIDxUZXh0RmllbGQgZnVsbFdpZHRoIHZhbHVlPXtuYW1lfSBvbkNoYW5nZT174oCmfQogICAgICBzeD17eyAnJiAuTXVpT3V0bGluZWRJbnB1dC1yb290JzogeyBoZWlnaHQ6IDQwIH0gfX0gLz4KICA8L0Zvcm1GaWVsZD4KCiAgPEZvcm1GaWVsZCBsYWJlbD0iRGVzY3JpcHRpb24iPgogICAgPFRleHRGaWVsZCBmdWxsV2lkdGggbXVsdGlsaW5lIHJvd3M9ezR9IHZhbHVlPXtkZXNjcmlwdGlvbn0gb25DaGFuZ2U9e+KApn0KICAgICAgcGxhY2Vob2xkZXI9IkRlc2NyaWJlIHRoZSBwdXJwb3NlIGFuZCBzY29wZSBvZiB0aGlzIHN0YW5kYXJkIiAvPgogIDwvRm9ybUZpZWxkPgoKICA8Rm9ybUZpZWxkIGxhYmVsPSJDb2x1bW4gRGF0YSBUeXBlIj4KICAgIDxUZXh0RmllbGQgZnVsbFdpZHRoIHNlbGVjdCB2YWx1ZT17ZGF0YVR5cGV9IG9uQ2hhbmdlPXvigKZ9CiAgICAgIHN4PXt7ICcmIC5NdWlPdXRsaW5lZElucHV0LXJvb3QnOiB7IGhlaWdodDogNDAgfSB9fT4KICAgICAgPE1lbnVJdGVtIHZhbHVlPSJhbGwiPkFsbDwvTWVudUl0ZW0+CiAgICA8L1RleHRGaWVsZD4KICA8L0Zvcm1GaWVsZD4KCiAgPEZvcm1GaWVsZCBsYWJlbD0iRWRpdCBBY2Nlc3MiPgogICAgPEF1dG9jb21wbGV0ZSBtdWx0aXBsZSBvcHRpb25zPXt1c2Vyc30KICAgICAgcmVuZGVySW5wdXQ9eyhwYXJhbXMpID0+IDxUZXh0RmllbGQgey4uLnBhcmFtc30gcGxhY2Vob2xkZXI9IlNlYXJjaCB1c2Vyc+KApiIgLz59IC8+CiAgPC9Gb3JtRmllbGQ+CjwvU3RhY2s+CmBgYAoKIyMjIFZhbGlkYXRpb24gcnVsZXMKClBsYWNlaG9sZGVyLiBBbGF0aW9uLXNwZWNpZmljIHZhbGlkYXRpb24gbWVzc2FnZXMgKHJlcXVpcmVkIGZpZWxkcywgY2hhcmFjdGVyIGxpbWl0cywgdW5pcXVlbmVzcyBjb25zdHJhaW50cykgd2lsbCBiZSBmaWxsZWQgZHVyaW5nIHBpbG90cy4KCiMjIDcuIE1vY2sgZGF0YSBjb250ZW50CgpQbGFjZWhvbGRlciDigJQgZmlsbCB3aXRoIEFsYXRpb24tZG9tYWluIG1vY2sgZGF0YSB3aGVuIHRoaXMgY29tcG9zaXRlIGlzIHVzZWQgaW4gYSBwaWxvdC4gQ2FuZGlkYXRlczogU3RhbmRhcmQgTmFtZSAvIERlc2NyaXB0aW9uIC8gQ29sdW1uIERhdGEgVHlwZSAvIEVkaXQgQWNjZXNzIChEYXRhIFN0YW5kYXJkcyBmbG93KTsgU291cmNlIE5hbWUgLyBDb25uZWN0aW9uIFVSTCAvIENyZWRlbnRpYWxzIChEYXRhIFNvdXJjZSBjcmVhdGlvbik7IE1vbml0b3IgTmFtZSAvIFNjaGVkdWxlIC8gUmVjaXBpZW50cyAoTW9uaXRvciBjcmVhdGlvbikuCgojIyAxMS4gRXhhbXBsZQoKYGBgdHN4CjxTdGFjayBzcGFjaW5nPXszfSBzeD17eyBtYXhXaWR0aDogNjgwIH19PgogIDxGb3JtRmllbGQgbGFiZWw9IlN0YW5kYXJkIE5hbWUiPgogICAgPFRleHRGaWVsZCBmdWxsV2lkdGggdmFsdWU9e25hbWV9IG9uQ2hhbmdlPXtoYW5kbGVOYW1lfQogICAgICBzeD17eyAnJiAuTXVpT3V0bGluZWRJbnB1dC1yb290JzogeyBoZWlnaHQ6IDQwIH0gfX0gLz4KICA8L0Zvcm1GaWVsZD4KICA8Rm9ybUZpZWxkIGxhYmVsPSJEZXNjcmlwdGlvbiI+CiAgICA8VGV4dEZpZWxkIGZ1bGxXaWR0aCBtdWx0aWxpbmUgcm93cz17NH0gdmFsdWU9e2Rlc2NyaXB0aW9ufSBvbkNoYW5nZT17aGFuZGxlRGVzY3JpcHRpb259IC8+CiAgPC9Gb3JtRmllbGQ+CjwvU3RhY2s+CmBgYAoKU2VlIFtgRXhhbXBsZS50c3hgXSguL0V4YW1wbGUudHN4KSBmb3IgdGhlIGNhbm9uaWNhbCwgcnVubmFibGUgc291cmNlIOKAlCB0aGUgZnVsbCBmb3VyLWZpZWxkIGZvcm0uCg==">
+  <button class="md-viewer-toggle" type="button" aria-expanded="false">
+    <span class="chev" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+    View source
+    <span class="md-viewer-filename">form/usage.md</span>
+  </button>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+    var btn = host.querySelector('.md-viewer-toggle');
+    var pre = host.querySelector('.md-viewer-pre');
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      // UTF-8 safe base64 → string
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      pre.textContent = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      pre.textContent = '(failed to load source)';
+    }
+    btn.addEventListener('click', function () {
+      var open = host.getAttribute('data-open') === 'true';
+      host.setAttribute('data-open', open ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      pre.setAttribute('aria-hidden', open ? 'true' : 'false');
+    });
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

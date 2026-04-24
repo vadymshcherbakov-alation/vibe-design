@@ -27,29 +27,37 @@ Open the checklist and follow every pre-flight step before generating anything.
 
 For any intent on the left, open the file on the right. If a reference does not yet exist for a given intent, flag it in the output summary under `References missing:` and stop — do not improvise.
 
+Each reference lives in a per-element folder that contains three files:
+
+- `usage.md` — the rule content (read this first; **the contract block lives here**)
+- `Example.tsx` — the canonical runnable pattern. Copy this as the starting point for generated code — do not reconstruct from prose.
+- `preview.html` — static homepage preview (for the browsable catalog; humans view this, AI reads `usage.md` + `Example.tsx`)
+
 | Intent | Reference |
 |---|---|
-| Any colour or palette decision | `references/foundations/colours.md` |
-| Any typography / text variant choice | `references/foundations/typography.md` |
-| Any spacing / padding / margin value | `references/foundations/spacing.md` |
-| Any layout / page-width / responsive rule | `references/foundations/layout.md` |
-| Any border-radius / elevation | `references/foundations/shape.md` |
-| Any icon choice / size / library | `references/foundations/iconography.md` |
-| Any Button (variant, color, size, destructive) | `references/components/base/button.md` |
-| Any icon-only action trigger | `references/components/base/icon-button.md` |
-| Any chip / tag / label | `references/components/base/chip.md` |
-| Any free-text input (single-line, multi-line, email / password / number / URL / search) — **Text Field only** | `references/components/base/text-field.md` |
-| Any Select · Autocomplete · Checkbox · Radio group · DatePicker — all wrapped by a **Form Field** composite | `references/components/composite/form-field.md` |
-| Any bordered / padded surface (panel, container) — the **Card Wrapper** primitive. Not the composite Nav Card / Metric Card. | `references/components/base/card.md` |
-| Any inline alert / banner | `references/components/base/alert.md` |
-| Any horizontal / vertical separator | `references/components/base/divider.md` |
-| Any labeled form control wrapper | `references/components/composite/form-field.md` |
-| Any form layout / stack of fields | `references/components/composite/form.md` |
-| Any modal / confirm dialog | `references/components/composite/dialog.md` |
-| Any clickable entity tile (data source, agent, dashboard) | `references/components/composite/nav-card.md` |
-| Any metric / stat / quota surface | `references/components/composite/metric-card.md` |
-| Any data table / grid | `references/components/composite/table.md` |
-| Any page header (title + actions row) | `references/components/composite/page-header.md` |
+| Any colour or palette decision | `references/foundations/colours/usage.md` |
+| Any typography / text variant choice | `references/foundations/typography/usage.md` |
+| Any spacing / padding / margin value | `references/foundations/spacing/usage.md` |
+| Any layout / page-width / responsive rule | `references/foundations/layout/usage.md` |
+| Any border-radius / elevation | `references/foundations/shape/usage.md` |
+| Any icon choice / size / library | `references/foundations/iconography/usage.md` |
+| Any Button (variant, color, size, destructive) | `references/components/base/button/usage.md` |
+| Any icon-only action trigger | `references/components/base/icon-button/usage.md` |
+| Any chip / tag / label | `references/components/base/chip/usage.md` |
+| Any free-text input (single-line, multi-line, email / password / number / URL / search) — **Text Field only** | `references/components/base/text-field/usage.md` |
+| Any Select · Autocomplete · Checkbox · Radio group · DatePicker — all wrapped by a **Form Field** composite | `references/components/composite/form-field/usage.md` |
+| Any bordered / padded surface (panel, container) — the **Card Wrapper** primitive. Not the composite Nav Card / Metric Card. | `references/components/base/card/usage.md` |
+| Any inline alert / banner | `references/components/base/alert/usage.md` |
+| Any horizontal / vertical separator | `references/components/base/divider/usage.md` |
+| Any labeled form control wrapper | `references/components/composite/form-field/usage.md` |
+| Any form layout / stack of fields | `references/components/composite/form/usage.md` |
+| Any modal / confirm dialog | `references/components/composite/dialog/usage.md` |
+| Any clickable entity tile (data source, agent, dashboard) | `references/components/composite/nav-card/usage.md` |
+| Any metric / stat / quota surface | `references/components/composite/metric-card/usage.md` |
+| Any data table / grid | `references/components/composite/table/usage.md` |
+| Any page header (title + actions row) | `references/components/composite/page-header/usage.md` |
+
+**Workflow:** After opening `usage.md` for an element, also open the sibling `Example.tsx`. That file is the canonical, tested pattern — use it as the baseline for what you generate and deviate only when the request demands it.
 
 ## Post-flight
 

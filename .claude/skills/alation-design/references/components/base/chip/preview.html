@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chip</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+
+      --radius-2: 12px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      /* Chip color families: bg / fg */
+      --c-neutral-bg:#EEF1F4;  --c-neutral-fg:#3A4252;
+      --c-blue-bg:   #D9EEFF;  --c-blue-fg:   #0056A6;
+      --c-green-bg:  #DBF2E1;  --c-green-fg:  #1F6B35;
+      --c-red-bg:    #FBE2E6;  --c-red-fg:    #A62839;
+      --c-purple-bg: #EADDFB;  --c-purple-fg: #6A3BB8;
+      --c-orange-bg: #FDE6D0;  --c-orange-fg: #B5570B;
+      --c-teal-bg:   #D4EFEE;  --c-teal-fg:   #1D6E6B;
+      --c-emerald-bg:#D5EFDC;  --c-emerald-fg:#16734A;
+      --c-cyan-bg:   #D4EEF6;  --c-cyan-fg:   #096A84;
+      --c-amber-bg:  #FCEBB0;  --c-amber-fg:  #8E5A0B;
+      --c-pink-bg:   #FDDBE7;  --c-pink-fg:   #A82062;
+      --c-violet-bg: #E2DBF9;  --c-violet-fg: #5438BC;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 960px; margin: 0 auto; }
+
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    p.page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 32px 0 12px 0;
+    }
+
+    .grid {
+      display: grid; gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+    .tile {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .tile .label {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    .chip {
+      display: inline-flex; align-items: center; height: 22px;
+      padding: 0 10px; border-radius: 11px;
+      font-size: 12px; font-weight: 500; line-height: 1;
+      gap: 6px; width: fit-content;
+    }
+    .chip svg { flex-shrink: 0; }
+
+    .chip-neutral { background: var(--c-neutral-bg); color: var(--c-neutral-fg); }
+    .chip-blue    { background: var(--c-blue-bg);    color: var(--c-blue-fg); }
+    .chip-green   { background: var(--c-green-bg);   color: var(--c-green-fg); }
+    .chip-red     { background: var(--c-red-bg);     color: var(--c-red-fg); }
+    .chip-purple  { background: var(--c-purple-bg);  color: var(--c-purple-fg); }
+    .chip-orange  { background: var(--c-orange-bg);  color: var(--c-orange-fg); }
+    .chip-teal    { background: var(--c-teal-bg);    color: var(--c-teal-fg); }
+    .chip-emerald { background: var(--c-emerald-bg); color: var(--c-emerald-fg); }
+    .chip-cyan    { background: var(--c-cyan-bg);    color: var(--c-cyan-fg); }
+    .chip-amber   { background: var(--c-amber-bg);   color: var(--c-amber-fg); }
+    .chip-pink    { background: var(--c-pink-bg);    color: var(--c-pink-fg); }
+    .chip-violet  { background: var(--c-violet-bg);  color: var(--c-violet-fg); }
+
+    .row-demos {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      padding: 16px;
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+
+    .rowlike {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .rowlike .name { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+    .rowlike .chips { display: flex; gap: 6px; }
+
+    /* Object Chip — person */
+    .object-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 28px; padding: 0 10px;
+      background: var(--neutral-300);
+      color: var(--text-primary);
+      border-radius: 14px;
+      font-size: 13px; font-weight: 500; line-height: 1;
+    }
+    .object-chip svg { color: var(--text-secondary); flex-shrink: 0; }
+
+    /* Interactive MUI Chip — size small, outlined / filled */
+    .ichip {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 24px; padding: 0 10px;
+      border-radius: 12px;
+      font-size: 13px; font-weight: 500; line-height: 1;
+      background: var(--paper);
+      color: var(--text-primary);
+      border: 1px solid var(--neutral-500);
+      cursor: pointer;
+      user-select: none;
+    }
+    .ichip:hover { background: var(--neutral-300); }
+    .ichip-filled {
+      background: #0073DD; color: #FFFFFF; border-color: #0073DD;
+    }
+    .ichip-filled:hover { background: #005BA8; border-color: #005BA8; }
+    .ichip .x {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: rgba(0,0,0,0.12);
+      color: var(--text-secondary);
+      margin-left: 2px; margin-right: -4px;
+    }
+    .ichip-filled .x { background: rgba(255,255,255,0.25); color: #FFFFFF; }
+
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Chip</h1>
+    <p class="page-sub">
+      A Chip is a compact pill that rides inline with content and labels what it sits next to — a category, a status, a person, an applied filter. Alation code has two Chip wrappers on top of MUI <code>Chip</code>: <strong>LabelChip</strong> for categorical and status labels (12 semantic colours, no delete), and <strong>ObjectChip</strong> for naming a person with a leading <code>User</code> icon. Interactive filter / tag chips that need <code>onClick</code> or <code>onDelete</code> fall back to the raw MUI <code>&lt;Chip size="small"&gt;</code>. Never hand-paint a chip with appearance <code>sx</code>.
+    </p>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Base component</li>
+      <li><strong>MUI base:</strong> <code>Chip</code></li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&amp;node-id=1-5455&amp;t=eS5ReSD4ZsCMa08a-1" target="_blank" rel="noopener">Chip · NEO 2.1</a></li>
+      <li><strong>Code:</strong> Consumer project — <code>src/components/LabelChip.tsx</code> (wraps MUI <code>Chip</code>) + <code>src/common/object-chip.tsx</code> (custom, uses <code>Box</code> + <code>Typography</code> + <code>User</code> icon)</li>
+    </ul>
+    <!-- classification-end -->
+
+    <h2 class="section">Label Chip · colour palette (12)</h2>
+    <div class="grid">
+      <div class="tile"><span class="label">neutral</span><span class="chip chip-neutral">MCP</span></div>
+      <div class="tile"><span class="label">blue</span><span class="chip chip-blue">Native</span></div>
+      <div class="tile"><span class="label">green</span><span class="chip chip-green">Active</span></div>
+      <div class="tile"><span class="label">red</span><span class="chip chip-red">Deprecated</span></div>
+      <div class="tile"><span class="label">purple</span><span class="chip chip-purple">Catalog</span></div>
+      <div class="tile"><span class="label">orange</span><span class="chip chip-orange">Beta</span></div>
+      <div class="tile"><span class="label">teal</span><span class="chip chip-teal">Lineage</span></div>
+      <div class="tile"><span class="label">emerald</span><span class="chip chip-emerald">Healthy</span></div>
+      <div class="tile"><span class="label">cyan</span><span class="chip chip-cyan">Info</span></div>
+      <div class="tile"><span class="label">amber</span><span class="chip chip-amber">Warning</span></div>
+      <div class="tile"><span class="label">pink</span><span class="chip chip-pink">Preview</span></div>
+      <div class="tile"><span class="label">violet</span><span class="chip chip-violet">Custom</span></div>
+    </div>
+
+    <h2 class="section">Label Chip · status usage</h2>
+    <div class="row-demos">
+      <span class="chip chip-green">Active</span>
+      <span class="chip chip-red">Deprecated</span>
+      <span class="chip chip-amber">Warning</span>
+      <span class="chip chip-cyan">Info</span>
+      <span class="chip chip-emerald">Healthy</span>
+      <span class="chip chip-orange">Beta</span>
+    </div>
+
+    <h2 class="section">Label Chip · in context · rows with chips</h2>
+    <div>
+      <div class="rowlike">
+        <span class="name">finance_prod</span>
+        <span class="chips">
+          <span class="chip chip-blue">Native</span>
+          <span class="chip chip-green">Active</span>
+        </span>
+      </div>
+      <div class="rowlike">
+        <span class="name">legacy_hr_db</span>
+        <span class="chips">
+          <span class="chip chip-neutral">MCP</span>
+          <span class="chip chip-red">Deprecated</span>
+        </span>
+      </div>
+      <div class="rowlike">
+        <span class="name">agents_beta</span>
+        <span class="chips">
+          <span class="chip chip-violet">Custom</span>
+          <span class="chip chip-orange">Beta</span>
+        </span>
+      </div>
+    </div>
+
+    <h2 class="section">Object Chip · naming a person</h2>
+    <div class="row-demos">
+      <span class="object-chip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Vadym Shcherbakov
+      </span>
+      <span class="object-chip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Chao Li
+      </span>
+      <span class="object-chip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Jane Doe
+      </span>
+    </div>
+
+    <h2 class="section">Interactive MUI Chip · filter pills</h2>
+    <div class="row-demos">
+      <span class="ichip ichip-filled">Databases</span>
+      <span class="ichip">Dashboards</span>
+      <span class="ichip">Agents</span>
+      <span class="ichip">Terms</span>
+    </div>
+
+    <h2 class="section">Interactive MUI Chip · applied / removable filters</h2>
+    <div class="row-demos">
+      <span class="ichip">
+        Owner: vadym.shcherbakov
+        <span class="x" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </span>
+      </span>
+      <span class="ichip">
+        Tag: finance
+        <span class="x" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </span>
+      </span>
+      <span class="ichip">
+        Source: PostgreSQL
+        <span class="x" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </span>
+      </span>
+    </div>
+
+    <p class="note">Static preview of what's documented in <code>chip.md</code>. Categorical / status labels use <code>&lt;LabelChip label="…" color="…"/&gt;</code> (12 semantic colours, no delete). Person chips use <code>&lt;ObjectChip name="…"/&gt;</code>. Interactive filter / removable chips use raw MUI <code>&lt;Chip size="small" onClick={…} onDelete={…}/&gt;</code>. Never paint a chip via appearance <code>sx</code>.</p>
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 32px 40px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-toggle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58;
+    background: #F1F4F6;
+    border: 1px solid #E8EDF1;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer[data-open="true"] .md-viewer-toggle .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #B7B7C1;
+    margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none;
+    margin: 12px 0 0 0;
+    padding: 20px 24px;
+    background: #FFFFFF;
+    border: 1px solid #E8EDF1;
+    border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #0D1322;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    max-height: 640px;
+    overflow-y: auto;
+  }
+  .md-viewer[data-open="true"] .md-viewer-pre { display: block; }
+</style>
+<div class="md-viewer" data-open="false" data-md-b64="LS0tCm5hbWU6IGNoaXAKdGl0bGU6IENoaXAKY2F0ZWdvcnk6IGJhc2UtY29tcG9uZW50Cmxhc3RfdXBkYXRlZDogMjAyNi0wNC0yMwoKZGVzY3JpcHRpb246ID4KICBBIGNvbXBhY3QgcGlsbCB0aGF0IGxhYmVscyBjb250ZW50IGluIHBsYWNlLiBQcm9kdWN0aW9uIHVzZXMgTVVJIGA8Q2hpcD5gCiAgd2l0aCB0aGUgQWxhdGlvbiB0aGVtZSAoYGZpbGxlZGAgLyBgZmlsbGVkTGlnaHRgIC8gYG91dGxpbmVkYCAvIGBncmFkaWVudGAKICB2YXJpYW50cykgYXQgYHhzbWFsbGAgLyBgc21hbGxgIC8gYG1lZGl1bWAuIEZvciBwZXJzb24gY2hpcHMgYmFja2VkIGJ5CiAgY2F0YWxvZyBvYmplY3RzLCB1c2UgdGhlIGA8T2JqZWN0Q2hpcHM+YCB3cmFwcGVyIGZyb20gYEBhbGF0aW9uL2FsYXRpb24tdWlgOwogIGZvciBhIGZpeGVkICJCZXRhIiBtYXJrZXIsIHVzZSBgPEJldGFDaGlwPmAuIE5ldmVyIGhhbmQtcGFpbnQgYSBjaGlwIHdpdGggYHN4YC4KdGFnczogW2xhYmVsLCB0YWcsIGNoaXAsIG9iamVjdC1jaGlwLCBiZXRhLWNoaXBdCgpmaWdtYV91cmw6ICJodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2NIa2FtZHZQejFJa21RU3dqcVdIZFgvTkVPLTIuMS0tLURlc2lnbi1TeXN0ZW0/bT1hdXRvJm5vZGUtaWQ9MS01NDU1JnQ9ZVM1UmVTRDRac0NNYTA4YS0xIgpjb2RlX3JlZmVyZW5jZTogIkBhbGF0aW9uL2ZhYnJpYy10aGVtZS1tb3JwaGV1cy9zcmMvbGliL011aUNoaXAub3ZlcnJpZGVzLnRzIMK3IEBhbGF0aW9uL2FsYXRpb24tdWkvc3JjL2xpYi9PYmplY3RDaGlwcy8gwrcgQGFsYXRpb24vYWxhdGlvbi11aS9zcmMvbGliL0JldGFDaGlwLyIKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogQ2hpcApkZXBlbmRzX29uX3Rva2VuczoKICAtIHBhbGV0dGUucHJpbWFyeQogIC0gcGFsZXR0ZS5zZWNvbmRhcnkKICAtIHBhbGV0dGUuZXJyb3IKICAtIHBhbGV0dGUud2FybmluZwogIC0gcGFsZXR0ZS5zdWNjZXNzCiAgLSBwYWxldHRlLmRlZmF1bHQKZGVwZW5kc19vbl9jb21wb25lbnRzOgogIC0gQ2hpcAotLS0KCiMgQ2hpcAoKIyMgMS4gQ2xhc3NpZmljYXRpb24KCi0gKipUeXBlOioqIEJhc2UgY29tcG9uZW50Ci0gKipNVUkgYmFzZToqKiBgQ2hpcGAKLSAqKkZpZ21hOioqIFtDaGlwIMK3IE5FTyAyLjFdKGh0dHBzOi8vd3d3LmZpZ21hLmNvbS9kZXNpZ24vY0hrYW1kdlB6MUlrbVFTd2pxV0hkWC9ORU8tMi4xLS0tRGVzaWduLVN5c3RlbT9tPWF1dG8mbm9kZS1pZD0xLTU0NTUmdD1lUzVSZVNENFpzQ01hMDhhLTEpCi0gKipDb2RlOioqIGBAYWxhdGlvbi9mYWJyaWMtdGhlbWUtbW9ycGhldXNgIOKAlCBgc3JjL2xpYi9NdWlDaGlwLm92ZXJyaWRlcy50c2AgKCsgYEBhbGF0aW9uL2FsYXRpb24tdWlgIHdyYXBwZXJzIHVuZGVyIGBzcmMvbGliL09iamVjdENoaXBzL2AsIGBzcmMvbGliL0JldGFDaGlwL2ApCgojIyAyLiBQdXJwb3NlCgpBICoqQ2hpcCoqIGlzIGEgY29tcGFjdCBwaWxsIHRoYXQgcmlkZXMgaW5saW5lIHdpdGggY29udGVudCBhbmQgbGFiZWxzIHdoYXQgaXQgc2l0cyBuZXh0IHRvIOKAlCBhIGNhdGVnb3J5LCBhIHN0YXR1cywgYSBwZXJzb24sIGFuIGFwcGxpZWQgZmlsdGVyLiBJdCBzYXlzICJ0aGlzIHRoaW5nICppcyogYSDigKYiIGluIG9uZSBnbGFuY2Ugd2l0aG91dCBzdXJyb3VuZGluZyB3b3Jkcy4KClByb2R1Y3Rpb24gdXNlcyBNVUkgYDxDaGlwPmAgZGlyZWN0bHkgd2l0aCB0aGUgQWxhdGlvbiB0aGVtZSBhcHBsaWVkLiBUd28gd3JhcHBlcnMgZXhpc3QgZm9yIHNwZWNpZmljIGNhc2VzOiBgPE9iamVjdENoaXBzPmAgZm9yIGEgbGlzdCBvZiBBbGF0aW9uIGNhdGFsb2cgb2JqZWN0cyAod2l0aCBvcHRpb25hbCBhdmF0YXJzKSwgYW5kIGA8QmV0YUNoaXA+YCBmb3IgdGhlIGZpeGVkICJCZXRhIiBtYXJrZXIuIEV2ZXJ5dGhpbmcgZWxzZSDigJQgc3RhdHVzIGxhYmVscywgYXBwbGllZCBmaWx0ZXJzLCByZW1vdmFibGUgdGFncyDigJQgaXMgcmF3IE1VSSBgPENoaXA+YCBhdCBgc2l6ZT0ic21hbGwiYCBvciBgeHNtYWxsYC4KCiMjIDMuIFdoZW4gdG8gdXNlIC8gV2hlbiBub3QgdG8gdXNlCgoqKlVzZSB3aGVuKioKLSBMYWJlbGxpbmcgYSByb3csIGNhcmQsIG9yIGhlYWRpbmcgd2l0aCBhIGNhdGVnb3J5IG9yIHN0YXR1cyAoZS5nLiBgdmFyaWFudD0iZmlsbGVkTGlnaHQiYCArIGBjb2xvcj0ic3VjY2VzcyJgKS4KLSBSZW5kZXJpbmcgYW4gYXBwbGllZCAvIHJlbW92YWJsZSBmaWx0ZXIsIG9yIGEgY2xpY2thYmxlIHRhZyBpbiBhIGZpbHRlciBiYXIgKGBvbkNsaWNrYCAvIGBvbkRlbGV0ZWApLgotIFNob3dpbmcgYSBsaXN0IG9mIEFsYXRpb24gY2F0YWxvZyBvYmplY3RzIGlubGluZSDihpIgKipgPE9iamVjdENoaXBzPmAqKi4KLSBNYXJraW5nIGEgc3VyZmFjZSBhcyBCZXRhIOKGkiAqKmA8QmV0YUNoaXA+YCoqLgoKKipEbyBub3QgdXNlIHdoZW4qKgotIFRoZSBsYWJlbCBuZWVkcyB0byB0cmlnZ2VyIGEgcGFnZS1sZXZlbCBhY3Rpb24g4oaSIHVzZSAqKkJ1dHRvbioqLgotIFRoZSB2YWx1ZSBpcyBhbiBpY29uIG9ubHkg4oaSIHVzZSAqKkljb25CdXR0b24qKi4KLSBUaGUgY29udGVudCBpcyBhIGZ1bGwgc2VudGVuY2Ugb3Igd3JhcHMgYWNyb3NzIGxpbmVzIOKGkiB1c2UgKipUeXBvZ3JhcGh5KiouCi0gWW91IHdvdWxkIG5lZWQgdG8gc2V0IGNvbG91ciAvIGhlaWdodCAvIGZvbnQtc2l6ZSB2aWEgYHN4YCDigJQgc3RvcDsgdGhhdCBtZWFucyB0aGUgdXNlIGNhc2UgZG9lc24ndCBmaXQgYSBDaGlwLgoKIyMgNC4gQ29udHJhY3QKCiMjIyBHdWFyYW50ZWVzCi0gVGhlbWUgYXBwbGllcyBzaXplIChgeHNtYWxsYCA9IDJyZW0sIGBzbWFsbGAsIGBtZWRpdW1gKSwgZm9udCwgcmFkaXVzLCBhbmQgY29sb3VyIHBlciBgdmFyaWFudGAgKyBgY29sb3JgLgotIGBmaWxsZWRMaWdodGAgYXV0b21hdGljYWxseSByZXNvbHZlcyB0byBgcGFsZXR0ZVtjb2xvcl1bMjAwXWAgYmFja2dyb3VuZCArIGBwYWxldHRlW2NvbG9yXVs4MDBdYCB0ZXh0IChhbmQgZGFyay1tb2RlIGVxdWl2YWxlbnRzKS4KLSBFdmVyeSBkb2N1bWVudGVkIGBjb2xvcmAgbWFwcyB0byBhbiBNVUkgUGFsZXR0ZSBrZXkg4oCUIG5vIGFkLWhvYyBiYWNrZ3JvdW5kcy4KLSBDbGlja2FibGUgY2hpcHMgKGBvbkNsaWNrYC9gb25EZWxldGVgKSBleHBvc2UgYSB2aXNpYmxlIGZvY3VzIHJpbmcgZnJvbSB0aGUgdGhlbWUuCgojIyMgUHJvaGliaXRpb25zCi0gTm8gYmFyZSBgPENoaXA+YCB3aXRoICoqYXBwZWFyYW5jZSoqIGBzeGAgKGBmb250U2l6ZWAsIGBoZWlnaHRgLCBgYmFja2dyb3VuZENvbG9yYCwgYGNvbG9yYCwgYGJvcmRlclJhZGl1c2ApIOKAlCB0aG9zZSBiZWxvbmcgaW4gdGhlIHRoZW1lIG92ZXJyaWRlLgotIE5vIGludmVudGVkIGNvbG91ciBvdXRzaWRlIHRoZSBQYWxldHRlIGtleXMgbGlzdGVkIGluIMKnNS4zLgotIE5vIGludmVudGVkIHZhcmlhbnQgb3V0c2lkZSDCpzUuMi4KLSBObyBgT2JqZWN0Q2hpcHNgIGZvciBzaW5nbGUtcGVyc29uIGZyZWUtdGV4dCBuYW1lcyDigJQgdGhlIHdyYXBwZXIgZXhwZWN0cyBjYXRhbG9nIGBpdGVtc2Agd2l0aCBgb3R5cGVgLCBub3QgYmFyZSBzdHJpbmdzLgotIE5vIGNoaXAgcm93IHdpdGggPiB+NSBjaGlwcyB2aXNpYmxlIGF0IG9uY2Ug4oCUIHVzZSBhIG11bHRpLXNlbGVjdCBvciAiK04gbW9yZSIgYWZmb3JkYW5jZS4KCiMjIyBDb25kaXRpb25zCi0gYHN4YCBvbiBhIGNoaXAgaXMgcGVybWl0dGVkIGZvciAqKmxheW91dCBvbmx5KiogKGBtYXhXaWR0aGAsIGBtYXJnaW5gLCBgZmxleGApLgotIENsaWNrYWJsZSAvIGRlbGV0YWJsZSBjaGlwcyBtdXN0IGV4cG9zZSBhbiBhY2Nlc3NpYmxlIG5hbWUgdmlhIHRoZSBgbGFiZWxgIHByb3Agb3IgYW4gYGFyaWEtbGFiZWxgLgotIFdoZW4gYSBsYWJlbCBtYXBzIHRvIGEgc2VtYW50aWMgc3RhdHVzIChzdWNjZXNzLCBlcnJvciwgd2FybmluZywgaW5mbyksIHBpY2sgdGhlIG1hdGNoaW5nIGBjb2xvcmAga2V5IOKAlCBkb24ndCB1c2UgYGRlZmF1bHRgIGZvciBzdGF0dXNlcy4KLSBEZWxldGFibGUgY2hpcHMgbXVzdCBiZSByZWFjaGFibGUgYnkga2V5Ym9hcmQgKFRhYiB0byBmb2N1cyArIEVudGVyIC8gQmFja3NwYWNlIHRvIGRlbGV0ZSkuCgojIyA1LiBWYXJpYW50cwoKIyMjIDUuMSBOYW1lZCBzdHlsZXMKCnwgTmFtZWQgc3R5bGUgfCBVc2UgZm9yIHwgTVVJIHByb3BzIHwKfC0tLXwtLS18LS0tfAp8ICoqU3RhdHVzIChzb2Z0KSoqIHwgQWN0aXZlIC8gaGVhbHRoeSAvIHdhcm5pbmcgLyBlcnJvciBsYWJlbHMgaW4gbGlzdHMgYW5kIGNhcmRzIHwgYHZhcmlhbnQ9ImZpbGxlZExpZ2h0ImAgKyBgY29sb3I9InN1Y2Nlc3MiIFx8ICJ3YXJuaW5nIiBcfCAiZXJyb3IiIFx8ICJpbmZvImAgfAp8ICoqU3RhdHVzIChzb2xpZCkqKiB8IEhpZ2gtZW1waGFzaXMgc3RhdHVzIHdoZXJlIHRoZSB3aG9sZSByb3cgaXMgZHJpdmVuIGJ5IHRoZSBjaGlwIHwgYHZhcmlhbnQ9ImZpbGxlZCJgICsgc2VtYW50aWMgYGNvbG9yYCB8CnwgKipGaWx0ZXIgKHVuc2VsZWN0ZWQpKiogfCBUb29sYmFyIGZpbHRlciB0aGF0IHRvZ2dsZXMgfCBgdmFyaWFudD0ib3V0bGluZWQiYCArIGBjb2xvcj0iZGVmYXVsdCJgICsgYG9uQ2xpY2tgIHwKfCAqKkZpbHRlciAoc2VsZWN0ZWQpKiogfCBTYW1lIGZpbHRlciwgYWN0aXZlIHwgYHZhcmlhbnQ9ImZpbGxlZCJgICsgYGNvbG9yPSJwcmltYXJ5ImAgKyBgb25DbGlja2AgfAp8ICoqQXBwbGllZCBmaWx0ZXIqKiB8IFZhbHVlIGNoaXAgd2l0aCBjbG9zZS1YIHwgYHZhcmlhbnQ9Im91dGxpbmVkImAgKyBgY29sb3I9ImRlZmF1bHQiYCArIGBvbkRlbGV0ZWAgfAp8ICoqR3JhZGllbnQqKiB8IE1hcmtldGluZyAvIGVtcGhhc2lzIHN1cmZhY2UgKHNwYXJpbmdseSkgfCBgdmFyaWFudD0iZmlsbGVkImAgKyBgY29sb3I9ImdyYWRpZW50ImAgfAoKIyMjIDUuMiBgdmFyaWFudGAgcHJvcAoKfCBWYXJpYW50IHwgUm9sZSB8CnwtLS18LS0tfAp8IGBmaWxsZWRgIHwgU29saWQgYmFja2dyb3VuZCBpbiB0aGUgc2VsZWN0ZWQgYGNvbG9yYC4gRGVmYXVsdCBNVUkgYmVoYXZpb3VyLiB8CnwgYGZpbGxlZExpZ2h0YCB8IFNvZnQgdGludCBiYWNrZ3JvdW5kIChgcGFsZXR0ZVtjb2xvcl1bMjAwXWApIHdpdGggZGFyayB0ZXh0IChgcGFsZXR0ZVtjb2xvcl1bODAwXWApLiBCZXN0IGZvciBzdGF0dXMgbGFiZWxzIG9uIGRlbnNlIHN1cmZhY2VzLiB8CnwgYG91dGxpbmVkYCB8IFRyYW5zcGFyZW50IGJhY2tncm91bmQsIGBjb2xvcmAtbWF0Y2hlZCBib3JkZXIuIERlZmF1bHQgZm9yIHVuc2VsZWN0ZWQgZmlsdGVyIGNoaXBzLiB8CnwgYGdyYWRpZW50YCB8IEJyYW5kZWQgZ3JhZGllbnQgZmlsbCB3aXRoIGFuaW1hdGVkIGhvdmVyLiBFbXBoYXNpcyB1c2Ugb25seS4gfAoKIyMjIDUuMyBgY29sb3JgIHByb3AKCnwgQ29sb3VyIHwgUm9sZSB8CnwtLS18LS0tfAp8IGBkZWZhdWx0YCB8IE5ldXRyYWwgbGFiZWwgd2l0aCBubyBzdGF0dXMgZW1waGFzaXMgfAp8IGBwcmltYXJ5YCB8IFNlbGVjdGVkIC8gYWN0aXZlIHN0YXRlIGZvciBmaWx0ZXIgY2hpcHMgfAp8IGBzZWNvbmRhcnlgIHwgU2Vjb25kYXJ5IGFjdGlvbiAvIGFsdCBlbXBoYXNpcyB8CnwgYGVycm9yYCB8IEVycm9yIC8gZGVwcmVjYXRlZCAvIGRlc3RydWN0aXZlIHN0YXRlIHwKfCBgd2FybmluZ2AgfCBXYXJuaW5nIC8gYXR0ZW50aW9uIHN0YXRlIHwKfCBgc3VjY2Vzc2AgfCBTdWNjZXNzIC8gaGVhbHRoeSAvIGFjdGl2ZSBzdGF0ZSB8CnwgYGluZm9gIHwgSW5mb3JtYXRpb25hbCBzdGF0ZSB8CnwgYGdyYWRpZW50YCB8IFBhaXJlZCB3aXRoIGB2YXJpYW50PSJncmFkaWVudCJgIG9ubHkgfAoKIyMjIDUuNCBgc2l6ZWAgcHJvcAoKfCBTaXplIHwgVXNlIHwKfC0tLXwtLS18CnwgYHhzbWFsbGAgfCBEZW5zZSBzdXJmYWNlcyDigJQgdGFibGUgcm93IHN0YXR1cywgY2FyZCBiYWRnZS4gSGVpZ2h0IDJyZW0uIHwKfCBgc21hbGxgIHwgTW9zdCBVSSDigJQgdG9vbGJhciBmaWx0ZXJzLCBhcHBsaWVkIGZpbHRlcnMsIGlubGluZSBsYWJlbHMuIHwKfCBgbWVkaXVtYCB8IFJhcmU7IGxhcmdlIGhlcm8gc3VyZmFjZXMgb25seS4gfAoKIyMgNi4gQW5hdG9teQoKLSAqKkNvbnRhaW5lcioqIOKAlCBwaWxsIHNoYXBlICh0aGVtZSBgYm9yZGVyUmFkaXVzYCk7IGJhY2tncm91bmQgcGVyIGB2YXJpYW50YCDDlyBgY29sb3JgLgotICoqTGFiZWwqKiDigJQgc2luZ2xlIGxpbmU7IHR5cG9ncmFwaHkgZnJvbSB0aGVtZSBgY2FwdGlvbmAgKGF0IGB4c21hbGxgKSBvciBgYm9keTJgIChhdCBgc21hbGxgKykuCi0gKipMZWFkaW5nIGljb24qKiAqKG9wdGlvbmFsLCB2aWEgYGljb25gIHByb3ApKiDigJQgYWxpZ25lZCB3aXRoIHRoZSBsYWJlbC4KLSAqKkRlbGV0ZSBpY29uKiogKih3aGVuIGBvbkRlbGV0ZWAgaXMgc2V0KSog4oCUIHRoZW1lIGNsb3NlIGljb24gYXQgdGhlIHRyYWlsaW5nIGVkZ2UuCgojIyA3LiBTdGF0ZXMKCnwgU3RhdGUgfCBUcmlnZ2VyIHwgVmlzdWFsIHwgTm90ZXMgfAp8LS0tfC0tLXwtLS18LS0tfAp8IERlZmF1bHQgfCBJZGxlIHwgUGlsbCBpbiB0aGUgc2VsZWN0ZWQgdmFyaWFudCArIGNvbG9yIHwg4oCUIHwKfCBIb3ZlciB8IFBvaW50ZXIgb3ZlciAoY2xpY2thYmxlIG9ubHkpIHwgU3VidGxlIGRhcmtlbiBvciB0aW50IHNoaWZ0IHwgT25seSB3aGVuIGBvbkNsaWNrYCAvIGBvbkRlbGV0ZWAgaXMgc2V0IHwKfCBGb2N1cy12aXNpYmxlIHwgS2V5Ym9hcmQgZm9jdXMgfCBUaGVtZSBmb2N1cyByaW5nIHwgSW50ZXJhY3RpdmUgY2hpcHMgb25seSB8CnwgU2VsZWN0ZWQgfCBgdmFyaWFudD0iZmlsbGVkImAgKyBgY29sb3I9InByaW1hcnkiYCB8IFByaW1hcnktZmlsbGVkIHBpbGwgfCBUeXBpY2FsIGZvciBmaWx0ZXIgY2hpcHMgfAp8IERpc2FibGVkIHwgYGRpc2FibGVkYCBwcm9wIHwgRmFkZWQgbGFiZWwgKyBjb250YWluZXIgfCBQb2ludGVyIGV2ZW50cyBibG9ja2VkIHwKCiMjIDExLiBFeGFtcGxlCgpgYGB0c3gKaW1wb3J0IHsgQ2hpcCB9IGZyb20gJ0BtdWkvbWF0ZXJpYWwnOwppbXBvcnQgeyBPYmplY3RDaGlwcywgQmV0YUNoaXAgfSBmcm9tICdAYWxhdGlvbi9hbGF0aW9uLXVpJzsKCi8vIFN0YXR1cyBsYWJlbHMgKHNvZnQpCjxDaGlwIGxhYmVsPSJBY3RpdmUiICAgICB2YXJpYW50PSJmaWxsZWRMaWdodCIgY29sb3I9InN1Y2Nlc3MiIHNpemU9InhzbWFsbCIgLz4KPENoaXAgbGFiZWw9IkRlcHJlY2F0ZWQiIHZhcmlhbnQ9ImZpbGxlZExpZ2h0IiBjb2xvcj0iZXJyb3IiICAgc2l6ZT0ieHNtYWxsIiAvPgo8Q2hpcCBsYWJlbD0iUGVuZGluZyIgICAgdmFyaWFudD0iZmlsbGVkTGlnaHQiIGNvbG9yPSJ3YXJuaW5nIiBzaXplPSJ4c21hbGwiIC8+CgovLyBGaWx0ZXIgY2hpcHMgKGNsaWNrYWJsZSB0b2dnbGUpCjxDaGlwCiAgbGFiZWw9IkRhdGFiYXNlcyIKICBzaXplPSJzbWFsbCIKICB2YXJpYW50PXtzZWxlY3RlZCA9PT0gJ2RhdGFiYXNlcycgPyAnZmlsbGVkJyAgOiAnb3V0bGluZWQnfQogIGNvbG9yPXtzZWxlY3RlZCAgPT09ICdkYXRhYmFzZXMnID8gJ3ByaW1hcnknIDogJ2RlZmF1bHQnfQogIG9uQ2xpY2s9eygpID0+IHNldFNlbGVjdGVkKCdkYXRhYmFzZXMnKX0KLz4KCi8vIEFwcGxpZWQgZmlsdGVyIChyZW1vdmFibGUpCjxDaGlwIGxhYmVsPSJPd25lcjogdmFkeW0uc2hjaGVyYmFrb3YiIHNpemU9InNtYWxsIiBvbkRlbGV0ZT17KCkgPT4gY2xlYXJGaWx0ZXIoJ293bmVyJyl9IC8+CgovLyBBbGF0aW9uIGNhdGFsb2cgb2JqZWN0IGxpc3QKPE9iamVjdENoaXBzIGl0ZW1zPXtbeyBvdHlwZTogJ3VzZXInLCBpZDogMTIzLCBuYW1lOiAnVmFkeW0nIH1dfSBjaGlwc0NsaWNrYWJsZSAvPgoKLy8gQmV0YSBtYXJrZXIg4oCUIGZpeGVkIHN0eWxpbmcKPEJldGFDaGlwIC8+CmBgYAoKU2VlIFtgRXhhbXBsZS50c3hgXSguL0V4YW1wbGUudHN4KSBmb3IgdGhlIGNhbm9uaWNhbCwgcnVubmFibGUgc291cmNlLgo=">
+  <button class="md-viewer-toggle" type="button" aria-expanded="false">
+    <span class="chev" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+    View source
+    <span class="md-viewer-filename">chip/usage.md</span>
+  </button>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+    var btn = host.querySelector('.md-viewer-toggle');
+    var pre = host.querySelector('.md-viewer-pre');
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      // UTF-8 safe base64 → string
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      pre.textContent = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      pre.textContent = '(failed to load source)';
+    }
+    btn.addEventListener('click', function () {
+      var open = host.getAttribute('data-open') === 'true';
+      host.setAttribute('data-open', open ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      pre.setAttribute('aria-hidden', open ? 'true' : 'false');
+    });
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>
