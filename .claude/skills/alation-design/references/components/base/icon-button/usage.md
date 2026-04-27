@@ -40,7 +40,7 @@ depends_on_components:
 - **Type:** Base component
 - **MUI base:** `IconButton`
 - **Figma:** [Icon Button · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?node-id=4-311&t=eS5ReSD4ZsCMa08a-4)
-- **Code:** `fabric-theme-morpheus` — `src/lib/MuiIconButton.overrides.ts`
+- **Code:** `@alation/fabric-theme-morpheus` — `src/lib/MuiIconButton.overrides.ts`
 
 ## 2. Purpose
 
@@ -65,11 +65,11 @@ An Icon Button is a clickable icon — an action you can trigger without a text 
 - Icon sizes are theme-baked per IconButton size: `xsmall` → `typography.iconXSmall` (1.2rem), `small` → `iconSmall` (1.6rem), `medium` → `iconMedium` (2rem), `large` → `iconLarge` (2.4rem). Do not pass an icon `size` prop — the container handles it.
 - Focus ring is visible on keyboard focus.
 - Disabled state is inert (no activation, not focusable).
-- Production uses `@alation/icons-neo` icons wrapped in MUI `SvgIcon`. Prototype / `vibe-design` code uses `lucide-react` per the project's UI-icon convention; both are rendered inside an `IconButton` the same way.
+- Production uses `@alation/icons-neo` icons wrapped in MUI `SvgIcon`. Prototype code (`@repo/ui` consumers) uses `lucide-react` per the project's UI-icon convention; both are rendered inside an `IconButton` the same way.
 
 ### Prohibitions
 - No icon-only IconButton without an `aria-label`.
-- No `@mui/icons-material` inside an IconButton in product UI — use `@alation/icons-neo` (production) or `lucide-react` (prototype) to match the surrounding app.
+- No `@mui/icons-material` inside an IconButton in product UI — use `@alation/icons-neo` (production) or `lucide-react` (prototypes consuming `@repo/ui`) to match the surrounding app.
 - No hard-coded hex / px / font values — consume via theme.
 - No `sx` colour, size, or radius overrides — use the `color` / `size` / `variant` props.
 - No custom icon `size` prop — the IconButton size governs the icon size.

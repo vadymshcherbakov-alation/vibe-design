@@ -36,7 +36,7 @@ depends_on_components:
 ## 1. Classification
 
 - **Type:** Composite component — **composition pattern, not a shared wrapper**
-- **MUI base:** `Paper` (via the [Card Wrapper](../base/card/usage.md) primitive)
+- **MUI base:** `Paper` (via the [Card Wrapper](../base/card-wrapper/usage.md) primitive)
 - **Figma:** Metric card — to be linked
 - **Code:** There is **no shared `<MetricCard>` component** in `@alation/alation-ui`. Production composes `<Paper variant="outlined">` + `<Typography variant="hero">` + `<LinearProgress>` directly at the call site. This reference defines the composition contract so metric tiles across dashboards read consistently.
 

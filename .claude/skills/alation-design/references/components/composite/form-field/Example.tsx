@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   Box,
-  Checkbox,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -57,13 +56,13 @@ function FieldRow({
 
 export default function FormFieldExample() {
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [dbType, setDbType] = useState('postgres');
   const [cadence, setCadence] = useState('daily');
-  const [enabled, setEnabled] = useState(true);
 
   return (
     <Stack spacing={3} sx={{ maxWidth: 520 }}>
-      {/* Text Input — the most common Form Field */}
+      {/* Basic Text Field — single-line, the most common Form Field */}
       <FieldRow
         label="Connection name"
         required
@@ -78,7 +77,19 @@ export default function FormFieldExample() {
         />
       </FieldRow>
 
-      {/* Select — single choice from fixed set */}
+      {/* Multiline Text Area — multi-line free text */}
+      <FieldRow label="Description" helperText="Short description of what this source contains">
+        <TextField
+          fullWidth
+          multiline
+          minRows={3}
+          maxRows={6}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </FieldRow>
+
+      {/* Select Input — single choice from fixed set */}
       <FieldRow label="Database type" helperText="Determines the connection driver">
         <TextField
           select
@@ -108,19 +119,6 @@ export default function FormFieldExample() {
         </FormControl>
       </FieldRow>
 
-      {/* Checkbox — single boolean */}
-      <FormControl>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={enabled}
-              onChange={(e) => setEnabled(e.target.checked)}
-            />
-          }
-          label="Enable scheduled sync"
-        />
-        <FormHelperText>Sync will run on the cadence selected above</FormHelperText>
-      </FormControl>
     </Stack>
   );
 }

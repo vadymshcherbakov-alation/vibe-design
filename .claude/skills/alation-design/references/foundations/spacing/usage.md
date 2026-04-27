@@ -2,15 +2,14 @@
 name: spacing
 title: Spacing
 category: foundation
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 
 description: >
-  The Alation spacing scale. Drives every padding, margin, and gap via
-  `theme.spacing(n)` — a rem-based 8 px rhythm with half-step support.
+  The Alation spacing scale. Drives every padding, margin, and gap via `theme.spacing(n)` — a rem-based 8 px rhythm with half-step support.
 tags: [foundation, spacing, layout]
 
 figma_url: "https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-6706&t=eS5ReSD4ZsCMa08a-1"
-code_reference: "fabric-theme-morpheus/src/index.ts (spacing fn, inline) + MuiCssBaseline html { fontSize: '62.5%' }"
+code_reference: "fabric-theme-morpheus/src/index.ts"
 example_path: ./Example.tsx
 
 mui_base: spacing
@@ -25,43 +24,49 @@ depends_on_components: []
 - **Type:** Foundation
 - **MUI base:** `spacing`
 - **Figma:** [Spacing scale · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-6706&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `fabric-theme-morpheus/src/index.ts` — `spacing: (factor) => \`${0.8 * factor}rem\`` + `MuiCssBaseline` sets `html { fontSize: '62.5%' }` (so `1rem = 10px`, `0.8rem = 8px`).
+- **Code:** `@alation/fabric-theme-morpheus` — `src/index.ts`
 
 ## 2. Purpose
 
-Spacing is the breathing room between elements — how close or how separated they read. Every gap, padding, and margin comes from one 8 px rhythm, so "tight", "standard", and "spacious" feel the same across the app. Reach for a specific step based on the relationship between elements: tight for a cluster, standard for a block, wider for a section break.
+<!-- What this foundation governs and why it matters. Two sentences max. No code, no values. Page-sub is auto-filled from here. -->
+
+The Alation spacing rhythm. Every gap, padding, and margin comes from one scale so "tight", "standard", and "spacious" feel consistent across the app.
 
 ## 3. How to use
 
-Consume via `theme.spacing(n)` or the `sx` numeric shorthand (`p: 2` → `theme.spacing(2)` → `1.6rem` → `16px`). Half-steps (`1.5`, `2.5`) are supported.
+<!-- Layering narrative for humans: scale-driven, which step to reach for when. No raw pixel values, no file paths. -->
 
-Under the hood, `theme.spacing(factor)` returns `${0.8 * factor}rem` and the baseline `html { font-size: 62.5% }` rule makes `1rem = 10px`. Consumers don't need to think about rem — use the numeric scale and the render value falls on the 8 px rhythm.
+Spacing is scale-driven. Pick a step based on the relationship between elements — tight for a cluster, standard for a block, wider for a section break — and the rhythm follows automatically.
 
-- **Page body padding** — `<Box sx={{ p: 4 }}>` (32 px) inside the main content area.
-- **Form stack spacing** — `<Stack spacing={3}>` (24 px) between fields.
-- **Card / Paper inner padding** — `sx={{ p: 2 }}` (16 px). Do not reach for `p: 3` unless the context is a large modal, empty state, or explicitly spacious layout.
-- **Icon-to-label leading margin** (e.g. label info icon) — `theme.spacing(0.5)` (4 px).
-- Standard MUI string shorthands (`m`, `mx`, `my`, `mt`, `mb`, `p`, `px`, `py`, `pt`, `pb`, `gap`) all accept the numeric scale.
+- **Tight** — icon-to-label leading, adjacent controls inside a compact cluster.
+- **Standard** — card and paper inner padding, the default block gap between paragraphs, the default gap inside an action row.
+- **Block** — vertical rhythm between form fields, section breaks inside a page.
+- **Page** — outer padding around the main content area, hero / splash surfaces.
+
+Half-steps exist for places where the standard rhythm lands wrong — use them sparingly. If no step fits, that is a signal to flag and propose a new scale value, not to hand-tune px.
 
 ## 4. Contract
 
+<!-- All code here: theme API paths, package paths, token keys. Phrase G/P/C against the real API. -->
+
 ### Guarantees
-- The 8 px base × multiplier rhythm is stable across components — picking a scale value guarantees alignment with neighbouring elements.
-- Every component's internal spacing is already scale-aligned — consumers never need to compensate with odd offsets.
+- `theme.spacing(factor)` returns `${0.8 * factor}rem` and the baseline `html { font-size: 62.5% }` rule makes `1rem = 10px` — every scale step lands on the 8 px rhythm.
+- Every MUI component's internal spacing is already scale-aligned — consumers never compensate with odd offsets.
+- Numeric `sx` shorthands (`m`, `mx`, `my`, `mt`, `mb`, `p`, `px`, `py`, `pt`, `pb`, `gap`) resolve through `theme.spacing(n)`.
 
 ### Prohibitions
-- No hard-coded px / rem values in spacing. Always `theme.spacing(n)` or the numeric `sx` shorthand.
-- No `sx` spacing overrides on MUI UI components — put layout spacing on a wrapper `<Box>` or `<Stack>` instead.
-- No negative margins to pull content back over another element's padding — fix the padding instead.
-- Nothing outside the Inventory (§5) is valid.
+- Never hard-code px or rem values for spacing. Always `theme.spacing(n)` or the numeric `sx` shorthand.
+- Never put `sx` spacing overrides on MUI UI components — put layout spacing on a wrapper `<Box>` or `<Stack>`.
+- Never use a negative margin to pull content back over another element's padding — fix the padding instead.
+- Nothing outside §5 Variants is valid.
 
 ### Conditions
 - If a required gap does not match any scale value, stop and flag. Do not freehand a px number — propose a new scale step instead.
-- Nested containers should not double-pad: if a `<Paper>` has `p: 2`, its inner `<Stack>` should not add another `p: 2`.
+- Nested containers must not double-pad: if a `<Paper>` has `p: 2`, its inner `<Stack>` must not add another `p: 2`.
 
-## 5. Inventory
+## 5. Variants
 
-Exhaustive. Nothing outside this list is valid.
+<!-- Exhaustive scale. Nothing outside this list is valid. -->
 
 | `sx` / `theme.spacing(n)` | Value | Typical use |
 |---|---|---|
@@ -82,7 +87,6 @@ Exhaustive. Nothing outside this list is valid.
 ```tsx
 import { Box, Paper, Stack, TextField, Button } from '@mui/material';
 
-// Page body
 <Box sx={{ p: 4 }}>
   <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
     <Stack spacing={3}>

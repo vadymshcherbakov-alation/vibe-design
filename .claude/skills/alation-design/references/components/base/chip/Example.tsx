@@ -1,56 +1,41 @@
-import { useState } from 'react';
 import { Chip, Stack, Typography } from '@mui/material';
+import { ObjectChips } from '@alation/alation-ui';
 
 export default function ChipExample() {
-  const [selected, setSelected] = useState<'databases' | 'dashboards' | null>('databases');
-
   return (
     <Stack spacing={4}>
       <Stack spacing={1}>
-        <Typography variant="overline" color="text.secondary">Status — soft (filledLight)</Typography>
+        <Typography variant="overline" color="text.secondary">Label Chip — status</Typography>
         <Stack direction="row" spacing={1}>
-          <Chip label="Active"     variant="filledLight" color="success" size="xsmall" />
-          <Chip label="Pending"    variant="filledLight" color="warning" size="xsmall" />
-          <Chip label="Deprecated" variant="filledLight" color="error"   size="xsmall" />
-          <Chip label="Info"       variant="filledLight" color="info"    size="xsmall" />
+          <Chip label="Active"     color="success" size="xsmall" />
+          <Chip label="Pending"    color="warning" size="xsmall" />
+          <Chip label="Deprecated" color="error"   size="xsmall" />
+          <Chip label="Info"       color="info"    size="xsmall" />
         </Stack>
       </Stack>
 
       <Stack spacing={1}>
-        <Typography variant="overline" color="text.secondary">Status — solid (filled)</Typography>
+        <Typography variant="overline" color="text.secondary">Label Chip — category</Typography>
         <Stack direction="row" spacing={1}>
-          <Chip label="Active"     variant="filled" color="success" size="small" />
-          <Chip label="Warning"    variant="filled" color="warning" size="small" />
-          <Chip label="Error"      variant="filled" color="error"   size="small" />
+          <Chip label="Native"  color="info"    size="xsmall" />
+          <Chip label="MCP"     color="default" size="xsmall" />
+          <Chip label="Catalog" color="primary" size="xsmall" />
+          <Chip label="Custom"  color="secondary" size="xsmall" />
         </Stack>
       </Stack>
 
       <Stack spacing={1}>
-        <Typography variant="overline" color="text.secondary">Filter — toggle</Typography>
-        <Stack direction="row" spacing={1}>
-          <Chip
-            label="Databases"
-            size="small"
-            variant={selected === 'databases' ? 'filled' : 'outlined'}
-            color={selected === 'databases' ? 'primary' : 'default'}
-            onClick={() => setSelected('databases')}
-          />
-          <Chip
-            label="Dashboards"
-            size="small"
-            variant={selected === 'dashboards' ? 'filled' : 'outlined'}
-            color={selected === 'dashboards' ? 'primary' : 'default'}
-            onClick={() => setSelected('dashboards')}
-          />
-        </Stack>
-      </Stack>
-
-      <Stack spacing={1}>
-        <Typography variant="overline" color="text.secondary">Applied filter (removable)</Typography>
-        <Stack direction="row" spacing={1}>
-          <Chip label="Owner: vadym.shcherbakov" size="small" onDelete={() => {}} />
-          <Chip label="Tag: PII"                 size="small" onDelete={() => {}} />
-        </Stack>
+        <Typography variant="overline" color="text.secondary">Object Chip — interactive catalog objects (click + remove)</Typography>
+        <ObjectChips
+          items={[
+            { otype: 'user',    id: 1, name: 'Vadym Shcherbakov' },
+            { otype: 'user',    id: 2, name: 'Chao Li' },
+            { otype: 'dataset', id: 3, name: 'finance_prod' },
+            { otype: 'agent',   id: 4, name: 'ingest_agent' },
+          ]}
+          chipsClickable
+          onDelete={(item) => console.log('remove', item)}
+        />
       </Stack>
     </Stack>
   );

@@ -12,7 +12,7 @@ import {
   Workflow,
 } from 'lucide-react';
 
-// Icons in the vibe-design prototype come from `lucide-react`; production uses
+// Icons in the `@repo/ui` prototype come from `lucide-react`; production uses
 // `@alation/icons-neo`. Both share the same API shape — the icon is rendered
 // inside an Alation container (IconButton, Button startIcon, Chip icon, etc.)
 // and the container drives the size via the theme (`iconXSmall`..`iconLarge`).

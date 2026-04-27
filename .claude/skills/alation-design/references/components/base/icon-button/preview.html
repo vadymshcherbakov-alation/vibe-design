@@ -14,11 +14,17 @@
       --neutral-300:    #F1F4F6;
       --neutral-400:    #E8EDF1;
       --neutral-500:    #D4DDE2;
+      --neutral-600:    #9AA5B1;
+      --divider:        #D4DDE2;
       --primary-main:   #0073DD;
+      --primary-dark:   #0056A6;
+      --primary-soft:   #D9EEFF;
       --error-main:     #CA334A;
-      --action-hover:   rgba(13, 19, 34, 0.06);
-
-      --radius-2: 12px;
+      --error-dark:     #A62839;
+      --shell-dark:     #0D1322;
+      --radius-btn:    6px;
+      --radius-input:  4px;
+      --radius-2:      12px;
       --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
@@ -32,22 +38,35 @@
       -webkit-font-smoothing: antialiased;
     }
     .shell { max-width: 960px; margin: 0 auto; }
-
     h1.page-title {
       font-size: 28px; font-weight: 600; line-height: 1.25;
       letter-spacing: -0.01em; margin: 0 0 8px 0;
     }
-    p.page-sub {
+    .page-sub {
       font-size: 14px; line-height: 1.6; color: var(--text-secondary);
       margin: 0 0 32px 0;
     }
+    .page-sub p { margin: 0 0 10px 0; }
+    .page-sub p:last-child { margin-bottom: 0; }
+    .page-sub strong { font-weight: 600; color: var(--text-primary); }
+    .page-sub em { font-style: italic; }
+    .page-sub a { color: var(--primary-main); text-decoration: underline; }
     h2.section {
       font-size: 14px; font-weight: 500; color: var(--text-secondary);
       letter-spacing: 0.06em; text-transform: uppercase;
       margin: 32px 0 12px 0;
     }
-
-    .grid {
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+    /* Element-specific styles */
+.grid {
       display: grid; gap: 16px;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
@@ -115,21 +134,19 @@
 <body>
   <div class="shell">
     <h1 class="page-title">Icon Button</h1>
-    <p class="page-sub">
-      An Icon Button is a clickable icon — an action you can trigger without a text label. It communicates a compact, low-ceremony affordance that fits inside dense layouts (row overflow menus, toolbars, inline edits). Reach for it when the icon alone is understood and a full Button would crowd the row; if the action needs words to be clear, use a Button instead.
-    </p>
+    <div class="page-sub"><p>An Icon Button is a clickable icon — an action you can trigger without a text label. It communicates a compact, low-ceremony affordance that fits inside dense layouts (row overflow menus, toolbars, inline edits). Reach for it when the icon alone is understood and a full Button would crowd the row; if the action needs words to be clear, use a Button instead.</p></div>
 
     <!-- classification-begin -->
     <h2 class="section">Classification</h2>
     <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
       <li><strong>Type:</strong> Base component</li>
       <li><strong>MUI base:</strong> <code>IconButton</code></li>
-      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?node-id=4-311&amp;t=eS5ReSD4ZsCMa08a-4" target="_blank" rel="noopener">Icon Button · NEO 2.1</a></li>
-      <li><strong>Code:</strong> <code>fabric-theme-morpheus</code> — <code>src/lib/MuiIconButton.overrides.ts</code></li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?node-id=4-311&t=eS5ReSD4ZsCMa08a-4" target="_blank" rel="noopener">Icon Button · NEO 2.1</a></li>
+      <li><strong>Code:</strong> <code>@alation/fabric-theme-morpheus</code> — <code>src/lib/MuiIconButton.overrides.ts</code></li>
     </ul>
     <!-- classification-end -->
 
-    <h2 class="section">Sizes</h2>
+<h2 class="section">Sizes</h2>
     <div class="grid">
       <div class="tile">
         <span class="label">small · size 28</span>
@@ -196,91 +213,469 @@
       </div>
     </div>
 
-    <p class="note">Static preview of what's documented in <code>icon-button.md</code>. Icons shown inline approximate <code>lucide-react</code> at <code>size={16}</code>.</p>
   </div>
 <!-- md-viewer-begin -->
 <style>
   .md-viewer {
     max-width: 960px;
     margin: 48px auto 0 auto;
-    padding: 0 32px 40px 32px;
+    padding: 0 0 40px 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
+  .md-viewer-actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 0; }
   .md-viewer-toggle {
-    all: unset;
-    box-sizing: border-box;
+    all: unset; box-sizing: border-box;
     display: inline-flex; align-items: center; gap: 8px;
     padding: 10px 14px;
     font-size: 13px; font-weight: 500;
-    color: #4E4E58;
-    background: #F1F4F6;
-    border: 1px solid #E8EDF1;
-    border-radius: 6px;
-    cursor: pointer;
-    user-select: none;
+    color: #4E4E58; background: #F1F4F6;
+    border: 1px solid #E8EDF1; border-radius: 6px;
+    cursor: pointer; user-select: none;
   }
   .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
   .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
   .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
-  .md-viewer[data-open="true"] .md-viewer-toggle .chev { transform: rotate(90deg); }
+  .md-viewer-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
   .md-viewer-filename {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 11px;
-    color: #B7B7C1;
-    margin-left: 4px;
+    font-size: 11px; color: #B7B7C1; margin-left: 4px;
   }
   .md-viewer-pre {
-    display: none;
-    margin: 12px 0 0 0;
-    padding: 20px 24px;
-    background: #FFFFFF;
-    border: 1px solid #E8EDF1;
-    border-radius: 8px;
+    display: none; margin: 12px 0 0 0; padding: 20px 24px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 12px;
-    line-height: 1.6;
-    color: #0D1322;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow-x: auto;
-    max-height: 640px;
-    overflow-y: auto;
+    font-size: 12px; line-height: 1.6; color: #0D1322;
+    white-space: pre-wrap; word-wrap: break-word;
+    overflow-x: auto; max-height: 640px; overflow-y: auto;
   }
-  .md-viewer[data-open="true"] .md-viewer-pre { display: block; }
+  .md-viewer[data-open="source"] .md-viewer-pre { display: block; }
+  .md-rendered {
+    display: none; margin: 16px 0 0 0; padding: 28px 32px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    color: #0D1322; font-size: 14px; line-height: 1.65;
+  }
+  .md-viewer[data-open="rendered"] .md-rendered { display: block; }
+  .md-rendered h2 {
+    font-size: 17px; font-weight: 600; color: #0D1322;
+    margin: 28px 0 10px 0; letter-spacing: -0.005em;
+  }
+  .md-rendered h2:first-child { margin-top: 0; }
+  .md-rendered h3 {
+    font-size: 14px; font-weight: 600; color: #0D1322;
+    margin: 18px 0 8px 0; text-transform: none; letter-spacing: 0;
+  }
+  .md-rendered p  { margin: 0 0 12px 0; }
+  .md-rendered ul, .md-rendered ol { margin: 0 0 14px 0; padding-left: 22px; }
+  .md-rendered li { margin-bottom: 4px; }
+  .md-rendered a  { color: #0073DD; text-decoration: underline; }
+  .md-rendered code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; background: #F1F4F6; color: #0D1322;
+    padding: 1px 6px; border-radius: 4px;
+  }
+  .md-rendered pre {
+    background: #FAFBFC; border: 1px solid #E8EDF1; border-radius: 8px;
+    padding: 14px 18px; overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.7; margin: 0 0 14px 0;
+  }
+  .md-rendered pre code { background: transparent; padding: 0; }
+  .md-rendered strong { font-weight: 600; }
+  .md-rendered em { font-style: italic; }
+  .md-rendered hr { border: 0; border-top: 1px solid #E8EDF1; margin: 24px 0; }
+  .md-rendered table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid #E8EDF1; border-radius: 8px; overflow: hidden;
+    margin: 0 0 16px 0;
+  }
+  .md-rendered th, .md-rendered td {
+    text-align: left; padding: 9px 12px;
+    font-size: 12.5px; border-bottom: 1px solid #E8EDF1; vertical-align: top;
+  }
+  .md-rendered th {
+    background: #F1F4F6; color: #4E4E58; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px;
+  }
+  .md-rendered tr:last-child td { border-bottom: none; }
+  /* Callouts — green for Use/Guarantees, red for Prohibitions/Don'ts */
+  .md-rendered .callout {
+    border-radius: 8px; padding: 14px 18px;
+    margin: 0 0 16px 0; border: 1px solid transparent;
+  }
+  .md-rendered .callout.green { background: #F0F8EB; border-color: #CDE5BA; }
+  .md-rendered .callout.red   { background: #FFF0F0; border-color: #F2C0C0; }
+  .md-rendered .callout > .callout-title {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; margin: 0 0 8px 0;
+  }
+  .md-rendered .callout.green > .callout-title { color: #2E5E18; }
+  .md-rendered .callout.red   > .callout-title { color: #8E1A27; }
+  .md-rendered .callout ul { margin: 0; padding-left: 18px; }
+  .md-rendered .callout li { margin-bottom: 3px; }
+  /* Contract block — 3-card grid */
+  .md-rendered .contract-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    align-items: stretch; margin: 0 0 16px 0;
+  }
+  .md-rendered .contract-card {
+    background: #FFFFFF; border: 1px solid #E8EDF1;
+    border-radius: 12px; padding: 20px; border-top: 3px solid;
+  }
+  .md-rendered .contract-card.guarantees   { border-top-color: #3E9A17; }
+  .md-rendered .contract-card.prohibitions { border-top-color: #CA334A; }
+  .md-rendered .contract-card.conditions   { border-top-color: #0073DD; }
+  .md-rendered .contract-card h3 {
+    font-size: 13px; font-weight: 600; margin: 0 0 10px 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .md-rendered .contract-card h3 .sym {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+  }
+  .md-rendered .contract-card.guarantees h3 .sym   { background: #F0F8EB; color: #2E5E18; }
+  .md-rendered .contract-card.prohibitions h3 .sym { background: #FFF0F0; color: #8E1A27; }
+  .md-rendered .contract-card.conditions h3 .sym   { background: #E6F2FC; color: #0056A6; }
+  .md-rendered .contract-card ul { margin: 0; padding-left: 16px; }
+  .md-rendered .contract-card li {
+    font-size: 12.5px; line-height: 1.55; margin-bottom: 6px; color: #0D1322;
+  }
+  .md-rendered .contract-card li:last-child { margin-bottom: 0; }
+  @media (max-width: 720px) {
+    .md-rendered .contract-grid { grid-template-columns: 1fr; }
+  }
 </style>
-<div class="md-viewer" data-open="false" data-md-b64="LS0tCm5hbWU6IGljb24tYnV0dG9uCnRpdGxlOiBJY29uIEJ1dHRvbgpjYXRlZ29yeTogYmFzZS1jb21wb25lbnQKbGFzdF91cGRhdGVkOiAyMDI2LTA0LTIzCgpkZXNjcmlwdGlvbjogPgogIEljb24tb25seSBhY3Rpb24gdHJpZ2dlci4gVXNlIGZvciByb3ctbGV2ZWwgb3ZlcmZsb3cgbWVudXMsIGRlbnNlIHRvb2xiYXJzLAogIGFuZCBpbmxpbmUgY29udHJvbHMgd2hlcmUgYSBmdWxsIEJ1dHRvbiB3b3VsZCBjcm93ZCB0aGUgbGF5b3V0LiBTdXBwb3J0cwogIGZvdXIgc2l6ZXMgKGB4c21hbGxgIC8gYHNtYWxsYCAvIGBtZWRpdW1gIC8gYGxhcmdlYCkgYW5kIHRocmVlIHN1cmZhY2UKICB2YXJpYW50cyAoYGNvbnRhaW5lZGAgLyBgb3V0bGluZWRgIC8gYHRleHRgKSBmcm9tIHRoZSBBbGF0aW9uIHRoZW1lLgp0YWdzOiBbYWN0aW9uLCBpbnRlcmFjdGl2ZSwgaWNvbl0KCmZpZ21hX3VybDogImh0dHBzOi8vd3d3LmZpZ21hLmNvbS9kZXNpZ24vY0hrYW1kdlB6MUlrbVFTd2pxV0hkWC9ORU8tMi4xLS0tRGVzaWduLVN5c3RlbT9ub2RlLWlkPTQtMzExJnQ9ZVM1UmVTRDRac0NNYTA4YS00Igpjb2RlX3JlZmVyZW5jZTogZmFicmljLXRoZW1lLW1vcnBoZXVzL3NyYy9saWIvTXVpSWNvbkJ1dHRvbi5vdmVycmlkZXMudHMKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogSWNvbkJ1dHRvbgpkZXBlbmRzX29uX3Rva2VuczoKICAtIHBhbGV0dGUucHJpbWFyeS5tYWluCiAgLSBwYWxldHRlLmVycm9yLm1haW4KICAtIHBhbGV0dGUud2FybmluZy5tYWluCiAgLSBwYWxldHRlLnN1Y2Nlc3MubWFpbgogIC0gcGFsZXR0ZS5pbmZvLm1haW4KICAtIHBhbGV0dGUudGV4dC5wcmltYXJ5CiAgLSBwYWxldHRlLnRleHQuZGlzYWJsZWQKICAtIHBhbGV0dGUuYWN0aW9uLmhvdmVyCiAgLSB0eXBvZ3JhcGh5Lmljb25YU21hbGwKICAtIHR5cG9ncmFwaHkuaWNvblNtYWxsCiAgLSB0eXBvZ3JhcGh5Lmljb25NZWRpdW0KICAtIHR5cG9ncmFwaHkuaWNvbkxhcmdlCmRlcGVuZHNfb25fY29tcG9uZW50czoKICAtIGx1Y2lkZS1yZWFjdAotLS0KCiMgSWNvbiBCdXR0b24KCiMjIDEuIENsYXNzaWZpY2F0aW9uCgotICoqVHlwZToqKiBCYXNlIGNvbXBvbmVudAotICoqTVVJIGJhc2U6KiogYEljb25CdXR0b25gCi0gKipGaWdtYToqKiBbSWNvbiBCdXR0b24gwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP25vZGUtaWQ9NC0zMTEmdD1lUzVSZVNENFpzQ01hMDhhLTQpCi0gKipDb2RlOioqIGBmYWJyaWMtdGhlbWUtbW9ycGhldXNgIOKAlCBgc3JjL2xpYi9NdWlJY29uQnV0dG9uLm92ZXJyaWRlcy50c2AKCiMjIDIuIFB1cnBvc2UKCkFuIEljb24gQnV0dG9uIGlzIGEgY2xpY2thYmxlIGljb24g4oCUIGFuIGFjdGlvbiB5b3UgY2FuIHRyaWdnZXIgd2l0aG91dCBhIHRleHQgbGFiZWwuIEl0IGNvbW11bmljYXRlcyBhIGNvbXBhY3QsIGxvdy1jZXJlbW9ueSBhZmZvcmRhbmNlIHRoYXQgZml0cyBpbnNpZGUgZGVuc2UgbGF5b3V0cyAocm93IG92ZXJmbG93IG1lbnVzLCB0b29sYmFycywgaW5saW5lIGVkaXRzKS4gUmVhY2ggZm9yIGl0IHdoZW4gdGhlIGljb24gYWxvbmUgaXMgdW5kZXJzdG9vZCBhbmQgYSBmdWxsIEJ1dHRvbiB3b3VsZCBjcm93ZCB0aGUgcm93OyBpZiB0aGUgYWN0aW9uIG5lZWRzIHdvcmRzIHRvIGJlIGNsZWFyLCB1c2UgYSBCdXR0b24gaW5zdGVhZC4KCiMjIDMuIFdoZW4gdG8gdXNlIC8gV2hlbiBub3QgdG8gdXNlCgoqKlVzZSB3aGVuKioKLSBBIHJvdy1sZXZlbCBvdmVyZmxvdyBtZW51ICjii64pIG9yIGlubGluZSBhY3Rpb24gKMOXLCBlZGl0LCBjb3B5KSBuZWVkcyB0byBmaXQgaW5zaWRlIGEgZGVuc2UgbGF5b3V0Ci0gQSB0b29sYmFyIGhhcyBzcGFjZSBjb25zdHJhaW50cyBhbmQgdGhlIGljb24gY2FycmllcyBhIHJlY29nbmlzZWQgbWVhbmluZwotIFRoZSBhY3Rpb24gaXMgcmV2ZXJzaWJsZSBvciBsb3ctc3Rha2VzIGFuZCBkb2VzIG5vdCBuZWVkIGEgdGV4dCBsYWJlbCBmb3IgY2xhcml0eQoKKipEbyBub3QgdXNlIHdoZW4qKgotIFRoZSBhY3Rpb24gbmVlZHMgYW4gZXhwbGFuYXRvcnkgbGFiZWwgdG8gYmUgdW5kZXJzdG9vZCDihpIgdXNlICoqQnV0dG9uKioKLSBUaGUgY29udHJvbCB0b2dnbGVzIGEgYmluYXJ5IHN0YXRlIOKGkiB1c2UgKipTd2l0Y2gqKiBvciAqKkNoZWNrYm94KioKLSBUaGUgdHJpZ2dlciBpcyBhIGxpbmsgLyBuYXZpZ2F0aW9uIHRoYXQgY29tbWl0cyB3b3JrIOKGkiB1c2UgKipMaW5rKiogb3IgKipCdXR0b24qKgoKIyMgNC4gQ29udHJhY3QKCiMjIyBHdWFyYW50ZWVzCi0gQWx3YXlzIHJlbmRlcnMgYW4gYWNjZXNzaWJsZSBuYW1lIHZpYSBgYXJpYS1sYWJlbGAgKGljb24gYWxvbmUgZG9lcyBub3QgYW5ub3VuY2UpLgotIEljb24gc2l6ZXMgYXJlIHRoZW1lLWJha2VkIHBlciBJY29uQnV0dG9uIHNpemU6IGB4c21hbGxgIOKGkiBgdHlwb2dyYXBoeS5pY29uWFNtYWxsYCAoMS4ycmVtKSwgYHNtYWxsYCDihpIgYGljb25TbWFsbGAgKDEuNnJlbSksIGBtZWRpdW1gIOKGkiBgaWNvbk1lZGl1bWAgKDJyZW0pLCBgbGFyZ2VgIOKGkiBgaWNvbkxhcmdlYCAoMi40cmVtKS4gRG8gbm90IHBhc3MgYW4gaWNvbiBgc2l6ZWAgcHJvcCDigJQgdGhlIGNvbnRhaW5lciBoYW5kbGVzIGl0LgotIEZvY3VzIHJpbmcgaXMgdmlzaWJsZSBvbiBrZXlib2FyZCBmb2N1cy4KLSBEaXNhYmxlZCBzdGF0ZSBpcyBpbmVydCAobm8gYWN0aXZhdGlvbiwgbm90IGZvY3VzYWJsZSkuCi0gUHJvZHVjdGlvbiB1c2VzIGBAYWxhdGlvbi9pY29ucy1uZW9gIGljb25zIHdyYXBwZWQgaW4gTVVJIGBTdmdJY29uYC4gUHJvdG90eXBlIC8gYHZpYmUtZGVzaWduYCBjb2RlIHVzZXMgYGx1Y2lkZS1yZWFjdGAgcGVyIHRoZSBwcm9qZWN0J3MgVUktaWNvbiBjb252ZW50aW9uOyBib3RoIGFyZSByZW5kZXJlZCBpbnNpZGUgYW4gYEljb25CdXR0b25gIHRoZSBzYW1lIHdheS4KCiMjIyBQcm9oaWJpdGlvbnMKLSBObyBpY29uLW9ubHkgSWNvbkJ1dHRvbiB3aXRob3V0IGFuIGBhcmlhLWxhYmVsYC4KLSBObyBgQG11aS9pY29ucy1tYXRlcmlhbGAgaW5zaWRlIGFuIEljb25CdXR0b24gaW4gcHJvZHVjdCBVSSDigJQgdXNlIGBAYWxhdGlvbi9pY29ucy1uZW9gIChwcm9kdWN0aW9uKSBvciBgbHVjaWRlLXJlYWN0YCAocHJvdG90eXBlKSB0byBtYXRjaCB0aGUgc3Vycm91bmRpbmcgYXBwLgotIE5vIGhhcmQtY29kZWQgaGV4IC8gcHggLyBmb250IHZhbHVlcyDigJQgY29uc3VtZSB2aWEgdGhlbWUuCi0gTm8gYHN4YCBjb2xvdXIsIHNpemUsIG9yIHJhZGl1cyBvdmVycmlkZXMg4oCUIHVzZSB0aGUgYGNvbG9yYCAvIGBzaXplYCAvIGB2YXJpYW50YCBwcm9wcy4KLSBObyBjdXN0b20gaWNvbiBgc2l6ZWAgcHJvcCDigJQgdGhlIEljb25CdXR0b24gc2l6ZSBnb3Zlcm5zIHRoZSBpY29uIHNpemUuCgojIyMgQ29uZGl0aW9ucwotIERlc3RydWN0aXZlIEljb25CdXR0b25zIChlLmcuIHJvdy1kZWxldGUpIG11c3QgcGFpciB3aXRoIGEgW0NvbmZpcm1EaWFsb2ddKC4uL2NvbXBvc2l0ZS9kaWFsb2cvdXNhZ2UubWQpIGJlZm9yZSBjb21taXR0aW5nLgotIElmIHRoZSBhY3Rpb24gaXMgYW1iaWd1b3VzIHdpdGhvdXQgYSBsYWJlbCwgcHJlZmVyIGEgZnVsbCBgPEJ1dHRvbj5gIOKAlCBkbyBub3QgcmVseSBvbiB0b29sdGlwIGFsb25lLgotIFRvb2x0aXAgaXMgc3Ryb25nbHkgZW5jb3VyYWdlZCBvbiBpY29uLW9ubHkgY29udHJvbHMgYnV0IGRvZXMgbm90IHJlcGxhY2UgYGFyaWEtbGFiZWxgLgotIFdoZW4gYW4gSWNvbkJ1dHRvbiBzaXRzIGluIGEgdG9vbGJhciBhbG9uZ3NpZGUgc3VyZmFjZWQgYWN0aW9ucywgcHJlZmVyIGB2YXJpYW50PSJ0ZXh0ImAgKGRlZmF1bHQpIOKAlCByZXNlcnZlIGBjb250YWluZWRgIC8gYG91dGxpbmVkYCBmb3Igc3RhbmRhbG9uZSwgZW1waGFzaXNlZCBjb250cm9scy4KCiMjIDUuIFZhcmlhbnRzCgojIyMgNS4xIGBzaXplYCBwcm9wCgp8IFNpemUgfCBJY29uIHNpemUgKGZyb20gdGhlbWUpIHwgVXNlIHwKfC0tLXwtLS18LS0tfAp8IGB4c21hbGxgIHwgYGljb25YU21hbGxgICgxLjJyZW0pIHwgVmVyeSBkZW5zZSB0YWJsZXMsIHJvdy1sZXZlbCBtaW5pIGFjdGlvbnMgfAp8IGBzbWFsbGAgfCBgaWNvblNtYWxsYCAoMS42cmVtKSB8IERlbnNlIHRhYmxlcywgcm93IGFjdGlvbnMsIGlubGluZSBjb250cm9scyB8CnwgYG1lZGl1bWAgKGRlZmF1bHQpIHwgYGljb25NZWRpdW1gICgycmVtKSB8IFN0YW5kYWxvbmUgaWNvbiBhY3Rpb25zIGluIHRvb2xiYXJzIHwKfCBgbGFyZ2VgIHwgYGljb25MYXJnZWAgKDIuNHJlbSkgfCBSYXJlIOKAlCBoZXJvIC8gZW1wdHktc3RhdGUgaWNvbiBhZmZvcmRhbmNlcyB8CgojIyMgNS4yIGB2YXJpYW50YCBwcm9wCgpUaGUgQWxhdGlvbiB0aGVtZSBleHBvc2VzIHRocmVlIEljb25CdXR0b24gc3VyZmFjZSB2YXJpYW50cyB2aWEgYGNsYXNzTmFtZWAgKGFwcGxpZWQgYXV0b21hdGljYWxseSBieSB0aGUgYHZhcmlhbnRgIHByb3AgaW4gdGhpcyBjb2RlYmFzZSkuCgp8IFZhcmlhbnQgfCBSb2xlIHwKfC0tLXwtLS18CnwgYHRleHRgIChkZWZhdWx0KSB8IE5vIHN1cmZhY2Ug4oCUIGljb24gc2l0cyBvbiB0aGUgcGFyZW50IGJhY2tncm91bmQuIFN0YW5kYXJkIGZvciB0b29sYmFycyAvIHJvdyBhY3Rpb25zLiB8CnwgYG91dGxpbmVkYCB8IEJvcmRlcmVkIHN1cmZhY2Ug4oCUIHN0YW5kYWxvbmUgaWNvbiBjb250cm9sIHRoYXQgbmVlZHMgYSB2aXNpYmxlIHRhcmdldCB8CnwgYGNvbnRhaW5lZGAgfCBGaWxsZWQgc3VyZmFjZSDigJQgZW1waGFzaXNlZCBpY29uIGFjdGlvbiAocmFyZSkgfAoKIyMjIDUuMyBgY29sb3JgIHByb3AKCnwgQ29sb3VyIHwgUm9sZSB8IE5vdGVzIHwKfC0tLXwtLS18LS0tfAp8IGBkZWZhdWx0YCAvIGBpbmhlcml0YCB8IEZvbGxvd3MgcGFyZW50IHRleHQgY29sb3VyIHwgTW9zdCBjb21tb24gfAp8IGBwcmltYXJ5YCB8IEhpZ2hsaWdodCBhIHByaW1hcnkgaWNvbiBhY3Rpb24gfCBSYXJlIGluIHByb2R1Y3QgVUkgfAp8IGBzZWNvbmRhcnlgIHwgQWx0IGVtcGhhc2lzIHwgUmFyZSB8CnwgYGVycm9yYCB8IERlc3RydWN0aXZlIGljb24gYWN0aW9uIChwYWlyIHdpdGggQ29uZmlybURpYWxvZykgfCDigJQgfAp8IGB3YXJuaW5nYCB8IEF0dGVudGlvbi1ncmFiYmluZyBpY29uIHN0YXRlIHwg4oCUIHwKfCBgc3VjY2Vzc2AgfCBQb3NpdGl2ZSAvIGhlYWx0aHkgaWNvbiBzdGF0ZSB8IOKAlCB8CnwgYGluZm9gIHwgSW5mb3JtYXRpb25hbCBpY29uIHN0YXRlIHwg4oCUIHwKCiMjIDYuIEFuYXRvbXkKCi0gKipDb250YWluZXIqKiDigJQgY2lyY3VsYXIgaGl0IHRhcmdldCBzaXplZCBieSB0aGUgYHNpemVgIHByb3A7IHN1cmZhY2UgcGVyIGB2YXJpYW50YC4KLSAqKkljb24qKiDigJQgY2hpbGQgYFN2Z0ljb25gIGZyb20gYEBhbGF0aW9uL2ljb25zLW5lb2AgKHByb2R1Y3Rpb24pIG9yIGBsdWNpZGUtcmVhY3RgIChwcm90b3R5cGUpOyBzaXplIGdvdmVybmVkIGJ5IHRoZSBJY29uQnV0dG9uIGBzaXplYC4KLSAqKkZvY3VzIHJpbmcqKiDigJQgdGhlbWUtYmFrZWQgb24ga2V5Ym9hcmQgZm9jdXMuCgojIyA3LiBTdGF0ZXMKCnwgU3RhdGUgfCBUcmlnZ2VyIHwgVmlzdWFsIHwgTm90ZXMgfAp8LS0tfC0tLXwtLS18LS0tfAp8IERlZmF1bHQgfCBJZGxlIHwgVHJhbnNwYXJlbnQgY29udGFpbmVyOyBpY29uIGluIGBjdXJyZW50Q29sb3JgIHwg4oCUIHwKfCBIb3ZlciB8IFBvaW50ZXIgb3ZlciB8IFN1YnRsZSBzdXJmYWNlIHRpbnQgKGBwYWxldHRlLmFjdGlvbi5ob3ZlcmApIHwg4oCUIHwKfCBGb2N1cy12aXNpYmxlIHwgS2V5Ym9hcmQgZm9jdXMgfCBWaXNpYmxlIHJpbmcgfCBSZXF1aXJlZCB8CnwgQWN0aXZlIC8gUHJlc3NlZCB8IFBvaW50ZXIgZG93biAvIFNwYWNlIC8gRW50ZXIgfCBTbGlnaHRseSBkZWVwZXIgc3VyZmFjZSB0aW50IHwg4oCUIHwKfCBEaXNhYmxlZCB8IGBkaXNhYmxlZGAgcHJvcCB8IEljb24gYXQgYHBhbGV0dGUudGV4dC5kaXNhYmxlZGA7IG5vIGhvdmVyIHwgTm90IGZvY3VzYWJsZSB8CgojIyAxMS4gRXhhbXBsZQoKYGBgdHN4CmltcG9ydCB7IEljb25CdXR0b24sIFRvb2x0aXAgfSBmcm9tICdAbXVpL21hdGVyaWFsJzsKaW1wb3J0IHsgTW9yZVZlcnRpY2FsLCBUcmFzaDIgfSBmcm9tICdsdWNpZGUtcmVhY3QnOyAvLyBvciBAYWxhdGlvbi9pY29ucy1uZW8gaW4gcHJvZHVjdGlvbgoKLy8gU3RhbmRhcmQgcm93LWxldmVsIG92ZXJmbG93IChzaXplIGRyaXZlcyB0aGUgaWNvbjsgbm8gc2l6ZSBvbiB0aGUgaWNvbiBpdHNlbGYpCjxUb29sdGlwIHRpdGxlPSJNb3JlIGFjdGlvbnMiPgogIDxJY29uQnV0dG9uIHNpemU9InNtYWxsIiBhcmlhLWxhYmVsPSJNb3JlIGFjdGlvbnMiPgogICAgPE1vcmVWZXJ0aWNhbCAvPgogIDwvSWNvbkJ1dHRvbj4KPC9Ub29sdGlwPgoKLy8gT3V0bGluZWQgc3RhbmRhbG9uZSBjb250cm9sCjxUb29sdGlwIHRpdGxlPSJGaWx0ZXIiPgogIDxJY29uQnV0dG9uIHNpemU9Im1lZGl1bSIgdmFyaWFudD0ib3V0bGluZWQiIGFyaWEtbGFiZWw9IkZpbHRlciI+CiAgICA8RmlsdGVySWNvbiAvPgogIDwvSWNvbkJ1dHRvbj4KPC9Ub29sdGlwPgoKLy8gRGVzdHJ1Y3RpdmUg4oCUIHBhaXJlZCB3aXRoIGEgQ29uZmlybURpYWxvZyAobm90IHNob3duKQo8VG9vbHRpcCB0aXRsZT0iRGVsZXRlIHJvdyI+CiAgPEljb25CdXR0b24gc2l6ZT0ic21hbGwiIGNvbG9yPSJlcnJvciIgYXJpYS1sYWJlbD0iRGVsZXRlIHJvdyIgb25DbGljaz17b3BlbkNvbmZpcm19PgogICAgPFRyYXNoMiAvPgogIDwvSWNvbkJ1dHRvbj4KPC9Ub29sdGlwPgpgYGAKClNlZSBbYEV4YW1wbGUudHN4YF0oLi9FeGFtcGxlLnRzeCkgZm9yIHRoZSBjYW5vbmljYWwsIHJ1bm5hYmxlIHNvdXJjZS4K">
-  <button class="md-viewer-toggle" type="button" aria-expanded="false">
-    <span class="chev" aria-hidden="true">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-    </span>
-    View source
-    <span class="md-viewer-filename">icon-button/usage.md</span>
-  </button>
+
+<div class="md-viewer" data-open="closed" data-exclude-h2="classification,colours,example,examples,in,in context,purpose,sizes,variants" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IGljb24tYnV0dG9uCnRpdGxlOiBJY29uIEJ1dHRvbgpjYXRlZ29yeTogYmFzZS1jb21wb25lbnQKbGFzdF91cGRhdGVkOiAyMDI2LTA0LTIzCgpkZXNjcmlwdGlvbjogPgogIEljb24tb25seSBhY3Rpb24gdHJpZ2dlci4gVXNlIGZvciByb3ctbGV2ZWwgb3ZlcmZsb3cgbWVudXMsIGRlbnNlIHRvb2xiYXJzLAogIGFuZCBpbmxpbmUgY29udHJvbHMgd2hlcmUgYSBmdWxsIEJ1dHRvbiB3b3VsZCBjcm93ZCB0aGUgbGF5b3V0LiBTdXBwb3J0cwogIGZvdXIgc2l6ZXMgKGB4c21hbGxgIC8gYHNtYWxsYCAvIGBtZWRpdW1gIC8gYGxhcmdlYCkgYW5kIHRocmVlIHN1cmZhY2UKICB2YXJpYW50cyAoYGNvbnRhaW5lZGAgLyBgb3V0bGluZWRgIC8gYHRleHRgKSBmcm9tIHRoZSBBbGF0aW9uIHRoZW1lLgp0YWdzOiBbYWN0aW9uLCBpbnRlcmFjdGl2ZSwgaWNvbl0KCmZpZ21hX3VybDogImh0dHBzOi8vd3d3LmZpZ21hLmNvbS9kZXNpZ24vY0hrYW1kdlB6MUlrbVFTd2pxV0hkWC9ORU8tMi4xLS0tRGVzaWduLVN5c3RlbT9ub2RlLWlkPTQtMzExJnQ9ZVM1UmVTRDRac0NNYTA4YS00Igpjb2RlX3JlZmVyZW5jZTogZmFicmljLXRoZW1lLW1vcnBoZXVzL3NyYy9saWIvTXVpSWNvbkJ1dHRvbi5vdmVycmlkZXMudHMKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogSWNvbkJ1dHRvbgpkZXBlbmRzX29uX3Rva2VuczoKICAtIHBhbGV0dGUucHJpbWFyeS5tYWluCiAgLSBwYWxldHRlLmVycm9yLm1haW4KICAtIHBhbGV0dGUud2FybmluZy5tYWluCiAgLSBwYWxldHRlLnN1Y2Nlc3MubWFpbgogIC0gcGFsZXR0ZS5pbmZvLm1haW4KICAtIHBhbGV0dGUudGV4dC5wcmltYXJ5CiAgLSBwYWxldHRlLnRleHQuZGlzYWJsZWQKICAtIHBhbGV0dGUuYWN0aW9uLmhvdmVyCiAgLSB0eXBvZ3JhcGh5Lmljb25YU21hbGwKICAtIHR5cG9ncmFwaHkuaWNvblNtYWxsCiAgLSB0eXBvZ3JhcGh5Lmljb25NZWRpdW0KICAtIHR5cG9ncmFwaHkuaWNvbkxhcmdlCmRlcGVuZHNfb25fY29tcG9uZW50czoKICAtIGx1Y2lkZS1yZWFjdAotLS0KCiMgSWNvbiBCdXR0b24KCiMjIDEuIENsYXNzaWZpY2F0aW9uCgotICoqVHlwZToqKiBCYXNlIGNvbXBvbmVudAotICoqTVVJIGJhc2U6KiogYEljb25CdXR0b25gCi0gKipGaWdtYToqKiBbSWNvbiBCdXR0b24gwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP25vZGUtaWQ9NC0zMTEmdD1lUzVSZVNENFpzQ01hMDhhLTQpCi0gKipDb2RlOioqIGBAYWxhdGlvbi9mYWJyaWMtdGhlbWUtbW9ycGhldXNgIOKAlCBgc3JjL2xpYi9NdWlJY29uQnV0dG9uLm92ZXJyaWRlcy50c2AKCiMjIDIuIFB1cnBvc2UKCkFuIEljb24gQnV0dG9uIGlzIGEgY2xpY2thYmxlIGljb24g4oCUIGFuIGFjdGlvbiB5b3UgY2FuIHRyaWdnZXIgd2l0aG91dCBhIHRleHQgbGFiZWwuIEl0IGNvbW11bmljYXRlcyBhIGNvbXBhY3QsIGxvdy1jZXJlbW9ueSBhZmZvcmRhbmNlIHRoYXQgZml0cyBpbnNpZGUgZGVuc2UgbGF5b3V0cyAocm93IG92ZXJmbG93IG1lbnVzLCB0b29sYmFycywgaW5saW5lIGVkaXRzKS4gUmVhY2ggZm9yIGl0IHdoZW4gdGhlIGljb24gYWxvbmUgaXMgdW5kZXJzdG9vZCBhbmQgYSBmdWxsIEJ1dHRvbiB3b3VsZCBjcm93ZCB0aGUgcm93OyBpZiB0aGUgYWN0aW9uIG5lZWRzIHdvcmRzIHRvIGJlIGNsZWFyLCB1c2UgYSBCdXR0b24gaW5zdGVhZC4KCiMjIDMuIFdoZW4gdG8gdXNlIC8gV2hlbiBub3QgdG8gdXNlCgoqKlVzZSB3aGVuKioKLSBBIHJvdy1sZXZlbCBvdmVyZmxvdyBtZW51ICjii64pIG9yIGlubGluZSBhY3Rpb24gKMOXLCBlZGl0LCBjb3B5KSBuZWVkcyB0byBmaXQgaW5zaWRlIGEgZGVuc2UgbGF5b3V0Ci0gQSB0b29sYmFyIGhhcyBzcGFjZSBjb25zdHJhaW50cyBhbmQgdGhlIGljb24gY2FycmllcyBhIHJlY29nbmlzZWQgbWVhbmluZwotIFRoZSBhY3Rpb24gaXMgcmV2ZXJzaWJsZSBvciBsb3ctc3Rha2VzIGFuZCBkb2VzIG5vdCBuZWVkIGEgdGV4dCBsYWJlbCBmb3IgY2xhcml0eQoKKipEbyBub3QgdXNlIHdoZW4qKgotIFRoZSBhY3Rpb24gbmVlZHMgYW4gZXhwbGFuYXRvcnkgbGFiZWwgdG8gYmUgdW5kZXJzdG9vZCDihpIgdXNlICoqQnV0dG9uKioKLSBUaGUgY29udHJvbCB0b2dnbGVzIGEgYmluYXJ5IHN0YXRlIOKGkiB1c2UgKipTd2l0Y2gqKiBvciAqKkNoZWNrYm94KioKLSBUaGUgdHJpZ2dlciBpcyBhIGxpbmsgLyBuYXZpZ2F0aW9uIHRoYXQgY29tbWl0cyB3b3JrIOKGkiB1c2UgKipMaW5rKiogb3IgKipCdXR0b24qKgoKIyMgNC4gQ29udHJhY3QKCiMjIyBHdWFyYW50ZWVzCi0gQWx3YXlzIHJlbmRlcnMgYW4gYWNjZXNzaWJsZSBuYW1lIHZpYSBgYXJpYS1sYWJlbGAgKGljb24gYWxvbmUgZG9lcyBub3QgYW5ub3VuY2UpLgotIEljb24gc2l6ZXMgYXJlIHRoZW1lLWJha2VkIHBlciBJY29uQnV0dG9uIHNpemU6IGB4c21hbGxgIOKGkiBgdHlwb2dyYXBoeS5pY29uWFNtYWxsYCAoMS4ycmVtKSwgYHNtYWxsYCDihpIgYGljb25TbWFsbGAgKDEuNnJlbSksIGBtZWRpdW1gIOKGkiBgaWNvbk1lZGl1bWAgKDJyZW0pLCBgbGFyZ2VgIOKGkiBgaWNvbkxhcmdlYCAoMi40cmVtKS4gRG8gbm90IHBhc3MgYW4gaWNvbiBgc2l6ZWAgcHJvcCDigJQgdGhlIGNvbnRhaW5lciBoYW5kbGVzIGl0LgotIEZvY3VzIHJpbmcgaXMgdmlzaWJsZSBvbiBrZXlib2FyZCBmb2N1cy4KLSBEaXNhYmxlZCBzdGF0ZSBpcyBpbmVydCAobm8gYWN0aXZhdGlvbiwgbm90IGZvY3VzYWJsZSkuCi0gUHJvZHVjdGlvbiB1c2VzIGBAYWxhdGlvbi9pY29ucy1uZW9gIGljb25zIHdyYXBwZWQgaW4gTVVJIGBTdmdJY29uYC4gUHJvdG90eXBlIGNvZGUgKGBAcmVwby91aWAgY29uc3VtZXJzKSB1c2VzIGBsdWNpZGUtcmVhY3RgIHBlciB0aGUgcHJvamVjdCdzIFVJLWljb24gY29udmVudGlvbjsgYm90aCBhcmUgcmVuZGVyZWQgaW5zaWRlIGFuIGBJY29uQnV0dG9uYCB0aGUgc2FtZSB3YXkuCgojIyMgUHJvaGliaXRpb25zCi0gTm8gaWNvbi1vbmx5IEljb25CdXR0b24gd2l0aG91dCBhbiBgYXJpYS1sYWJlbGAuCi0gTm8gYEBtdWkvaWNvbnMtbWF0ZXJpYWxgIGluc2lkZSBhbiBJY29uQnV0dG9uIGluIHByb2R1Y3QgVUkg4oCUIHVzZSBgQGFsYXRpb24vaWNvbnMtbmVvYCAocHJvZHVjdGlvbikgb3IgYGx1Y2lkZS1yZWFjdGAgKHByb3RvdHlwZXMgY29uc3VtaW5nIGBAcmVwby91aWApIHRvIG1hdGNoIHRoZSBzdXJyb3VuZGluZyBhcHAuCi0gTm8gaGFyZC1jb2RlZCBoZXggLyBweCAvIGZvbnQgdmFsdWVzIOKAlCBjb25zdW1lIHZpYSB0aGVtZS4KLSBObyBgc3hgIGNvbG91ciwgc2l6ZSwgb3IgcmFkaXVzIG92ZXJyaWRlcyDigJQgdXNlIHRoZSBgY29sb3JgIC8gYHNpemVgIC8gYHZhcmlhbnRgIHByb3BzLgotIE5vIGN1c3RvbSBpY29uIGBzaXplYCBwcm9wIOKAlCB0aGUgSWNvbkJ1dHRvbiBzaXplIGdvdmVybnMgdGhlIGljb24gc2l6ZS4KCiMjIyBDb25kaXRpb25zCi0gRGVzdHJ1Y3RpdmUgSWNvbkJ1dHRvbnMgKGUuZy4gcm93LWRlbGV0ZSkgbXVzdCBwYWlyIHdpdGggYSBbQ29uZmlybURpYWxvZ10oLi4vY29tcG9zaXRlL2RpYWxvZy91c2FnZS5tZCkgYmVmb3JlIGNvbW1pdHRpbmcuCi0gSWYgdGhlIGFjdGlvbiBpcyBhbWJpZ3VvdXMgd2l0aG91dCBhIGxhYmVsLCBwcmVmZXIgYSBmdWxsIGA8QnV0dG9uPmAg4oCUIGRvIG5vdCByZWx5IG9uIHRvb2x0aXAgYWxvbmUuCi0gVG9vbHRpcCBpcyBzdHJvbmdseSBlbmNvdXJhZ2VkIG9uIGljb24tb25seSBjb250cm9scyBidXQgZG9lcyBub3QgcmVwbGFjZSBgYXJpYS1sYWJlbGAuCi0gV2hlbiBhbiBJY29uQnV0dG9uIHNpdHMgaW4gYSB0b29sYmFyIGFsb25nc2lkZSBzdXJmYWNlZCBhY3Rpb25zLCBwcmVmZXIgYHZhcmlhbnQ9InRleHQiYCAoZGVmYXVsdCkg4oCUIHJlc2VydmUgYGNvbnRhaW5lZGAgLyBgb3V0bGluZWRgIGZvciBzdGFuZGFsb25lLCBlbXBoYXNpc2VkIGNvbnRyb2xzLgoKIyMgNS4gVmFyaWFudHMKCiMjIyA1LjEgYHNpemVgIHByb3AKCnwgU2l6ZSB8IEljb24gc2l6ZSAoZnJvbSB0aGVtZSkgfCBVc2UgfAp8LS0tfC0tLXwtLS18CnwgYHhzbWFsbGAgfCBgaWNvblhTbWFsbGAgKDEuMnJlbSkgfCBWZXJ5IGRlbnNlIHRhYmxlcywgcm93LWxldmVsIG1pbmkgYWN0aW9ucyB8CnwgYHNtYWxsYCB8IGBpY29uU21hbGxgICgxLjZyZW0pIHwgRGVuc2UgdGFibGVzLCByb3cgYWN0aW9ucywgaW5saW5lIGNvbnRyb2xzIHwKfCBgbWVkaXVtYCAoZGVmYXVsdCkgfCBgaWNvbk1lZGl1bWAgKDJyZW0pIHwgU3RhbmRhbG9uZSBpY29uIGFjdGlvbnMgaW4gdG9vbGJhcnMgfAp8IGBsYXJnZWAgfCBgaWNvbkxhcmdlYCAoMi40cmVtKSB8IFJhcmUg4oCUIGhlcm8gLyBlbXB0eS1zdGF0ZSBpY29uIGFmZm9yZGFuY2VzIHwKCiMjIyA1LjIgYHZhcmlhbnRgIHByb3AKClRoZSBBbGF0aW9uIHRoZW1lIGV4cG9zZXMgdGhyZWUgSWNvbkJ1dHRvbiBzdXJmYWNlIHZhcmlhbnRzIHZpYSBgY2xhc3NOYW1lYCAoYXBwbGllZCBhdXRvbWF0aWNhbGx5IGJ5IHRoZSBgdmFyaWFudGAgcHJvcCBpbiB0aGlzIGNvZGViYXNlKS4KCnwgVmFyaWFudCB8IFJvbGUgfAp8LS0tfC0tLXwKfCBgdGV4dGAgKGRlZmF1bHQpIHwgTm8gc3VyZmFjZSDigJQgaWNvbiBzaXRzIG9uIHRoZSBwYXJlbnQgYmFja2dyb3VuZC4gU3RhbmRhcmQgZm9yIHRvb2xiYXJzIC8gcm93IGFjdGlvbnMuIHwKfCBgb3V0bGluZWRgIHwgQm9yZGVyZWQgc3VyZmFjZSDigJQgc3RhbmRhbG9uZSBpY29uIGNvbnRyb2wgdGhhdCBuZWVkcyBhIHZpc2libGUgdGFyZ2V0IHwKfCBgY29udGFpbmVkYCB8IEZpbGxlZCBzdXJmYWNlIOKAlCBlbXBoYXNpc2VkIGljb24gYWN0aW9uIChyYXJlKSB8CgojIyMgNS4zIGBjb2xvcmAgcHJvcAoKfCBDb2xvdXIgfCBSb2xlIHwgTm90ZXMgfAp8LS0tfC0tLXwtLS18CnwgYGRlZmF1bHRgIC8gYGluaGVyaXRgIHwgRm9sbG93cyBwYXJlbnQgdGV4dCBjb2xvdXIgfCBNb3N0IGNvbW1vbiB8CnwgYHByaW1hcnlgIHwgSGlnaGxpZ2h0IGEgcHJpbWFyeSBpY29uIGFjdGlvbiB8IFJhcmUgaW4gcHJvZHVjdCBVSSB8CnwgYHNlY29uZGFyeWAgfCBBbHQgZW1waGFzaXMgfCBSYXJlIHwKfCBgZXJyb3JgIHwgRGVzdHJ1Y3RpdmUgaWNvbiBhY3Rpb24gKHBhaXIgd2l0aCBDb25maXJtRGlhbG9nKSB8IOKAlCB8CnwgYHdhcm5pbmdgIHwgQXR0ZW50aW9uLWdyYWJiaW5nIGljb24gc3RhdGUgfCDigJQgfAp8IGBzdWNjZXNzYCB8IFBvc2l0aXZlIC8gaGVhbHRoeSBpY29uIHN0YXRlIHwg4oCUIHwKfCBgaW5mb2AgfCBJbmZvcm1hdGlvbmFsIGljb24gc3RhdGUgfCDigJQgfAoKIyMgNi4gQW5hdG9teQoKLSAqKkNvbnRhaW5lcioqIOKAlCBjaXJjdWxhciBoaXQgdGFyZ2V0IHNpemVkIGJ5IHRoZSBgc2l6ZWAgcHJvcDsgc3VyZmFjZSBwZXIgYHZhcmlhbnRgLgotICoqSWNvbioqIOKAlCBjaGlsZCBgU3ZnSWNvbmAgZnJvbSBgQGFsYXRpb24vaWNvbnMtbmVvYCAocHJvZHVjdGlvbikgb3IgYGx1Y2lkZS1yZWFjdGAgKHByb3RvdHlwZSk7IHNpemUgZ292ZXJuZWQgYnkgdGhlIEljb25CdXR0b24gYHNpemVgLgotICoqRm9jdXMgcmluZyoqIOKAlCB0aGVtZS1iYWtlZCBvbiBrZXlib2FyZCBmb2N1cy4KCiMjIDcuIFN0YXRlcwoKfCBTdGF0ZSB8IFRyaWdnZXIgfCBWaXN1YWwgfCBOb3RlcyB8CnwtLS18LS0tfC0tLXwtLS18CnwgRGVmYXVsdCB8IElkbGUgfCBUcmFuc3BhcmVudCBjb250YWluZXI7IGljb24gaW4gYGN1cnJlbnRDb2xvcmAgfCDigJQgfAp8IEhvdmVyIHwgUG9pbnRlciBvdmVyIHwgU3VidGxlIHN1cmZhY2UgdGludCAoYHBhbGV0dGUuYWN0aW9uLmhvdmVyYCkgfCDigJQgfAp8IEZvY3VzLXZpc2libGUgfCBLZXlib2FyZCBmb2N1cyB8IFZpc2libGUgcmluZyB8IFJlcXVpcmVkIHwKfCBBY3RpdmUgLyBQcmVzc2VkIHwgUG9pbnRlciBkb3duIC8gU3BhY2UgLyBFbnRlciB8IFNsaWdodGx5IGRlZXBlciBzdXJmYWNlIHRpbnQgfCDigJQgfAp8IERpc2FibGVkIHwgYGRpc2FibGVkYCBwcm9wIHwgSWNvbiBhdCBgcGFsZXR0ZS50ZXh0LmRpc2FibGVkYDsgbm8gaG92ZXIgfCBOb3QgZm9jdXNhYmxlIHwKCiMjIDExLiBFeGFtcGxlCgpgYGB0c3gKaW1wb3J0IHsgSWNvbkJ1dHRvbiwgVG9vbHRpcCB9IGZyb20gJ0BtdWkvbWF0ZXJpYWwnOwppbXBvcnQgeyBNb3JlVmVydGljYWwsIFRyYXNoMiB9IGZyb20gJ2x1Y2lkZS1yZWFjdCc7IC8vIG9yIEBhbGF0aW9uL2ljb25zLW5lbyBpbiBwcm9kdWN0aW9uCgovLyBTdGFuZGFyZCByb3ctbGV2ZWwgb3ZlcmZsb3cgKHNpemUgZHJpdmVzIHRoZSBpY29uOyBubyBzaXplIG9uIHRoZSBpY29uIGl0c2VsZikKPFRvb2x0aXAgdGl0bGU9Ik1vcmUgYWN0aW9ucyI+CiAgPEljb25CdXR0b24gc2l6ZT0ic21hbGwiIGFyaWEtbGFiZWw9Ik1vcmUgYWN0aW9ucyI+CiAgICA8TW9yZVZlcnRpY2FsIC8+CiAgPC9JY29uQnV0dG9uPgo8L1Rvb2x0aXA+CgovLyBPdXRsaW5lZCBzdGFuZGFsb25lIGNvbnRyb2wKPFRvb2x0aXAgdGl0bGU9IkZpbHRlciI+CiAgPEljb25CdXR0b24gc2l6ZT0ibWVkaXVtIiB2YXJpYW50PSJvdXRsaW5lZCIgYXJpYS1sYWJlbD0iRmlsdGVyIj4KICAgIDxGaWx0ZXJJY29uIC8+CiAgPC9JY29uQnV0dG9uPgo8L1Rvb2x0aXA+CgovLyBEZXN0cnVjdGl2ZSDigJQgcGFpcmVkIHdpdGggYSBDb25maXJtRGlhbG9nIChub3Qgc2hvd24pCjxUb29sdGlwIHRpdGxlPSJEZWxldGUgcm93Ij4KICA8SWNvbkJ1dHRvbiBzaXplPSJzbWFsbCIgY29sb3I9ImVycm9yIiBhcmlhLWxhYmVsPSJEZWxldGUgcm93IiBvbkNsaWNrPXtvcGVuQ29uZmlybX0+CiAgICA8VHJhc2gyIC8+CiAgPC9JY29uQnV0dG9uPgo8L1Rvb2x0aXA+CmBgYAoKU2VlIFtgRXhhbXBsZS50c3hgXSguL0V4YW1wbGUudHN4KSBmb3IgdGhlIGNhbm9uaWNhbCwgcnVubmFibGUgc291cmNlLgo=">
+  <div class="md-viewer-actions">
+    <button class="md-viewer-toggle" type="button" data-action="rendered" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      How to use it
+    </button>
+    <button class="md-viewer-toggle" type="button" data-action="source" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      View source
+      <span class="md-viewer-filename">icon-button/usage.md</span>
+    </button>
+  </div>
+  <div class="md-rendered" aria-hidden="true"></div>
   <pre class="md-viewer-pre" aria-hidden="true"></pre>
 </div>
+
 <script>
   (function () {
     var host = document.currentScript.previousElementSibling;
     while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
     if (!host) return;
-    var btn = host.querySelector('.md-viewer-toggle');
-    var pre = host.querySelector('.md-viewer-pre');
+
+    var EXCLUDED_H2 = (host.getAttribute('data-exclude-h2') || '')
+      .split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+
+    var TRUNCATE_AFTER = (host.getAttribute('data-truncate-after-h2') || '')
+      .trim().toLowerCase();
+
+    var rawMd = '';
     try {
       var b64 = host.getAttribute('data-md-b64') || '';
-      // UTF-8 safe base64 → string
       var bin = atob(b64);
       var bytes = new Uint8Array(bin.length);
       for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-      pre.textContent = new TextDecoder('utf-8').decode(bytes);
+      rawMd = new TextDecoder('utf-8').decode(bytes);
     } catch (e) {
-      pre.textContent = '(failed to load source)';
+      rawMd = '(failed to load source)';
     }
-    btn.addEventListener('click', function () {
-      var open = host.getAttribute('data-open') === 'true';
-      host.setAttribute('data-open', open ? 'false' : 'true');
-      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
-      pre.setAttribute('aria-hidden', open ? 'true' : 'false');
+
+    var pre = host.querySelector('.md-viewer-pre');
+    var rendered = host.querySelector('.md-rendered');
+    pre.textContent = rawMd;
+    rendered.innerHTML = renderMarkdown(filterSections(stripFrontmatter(rawMd), EXCLUDED_H2, TRUNCATE_AFTER));
+
+    var btns = host.querySelectorAll('.md-viewer-toggle');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var mode = b.getAttribute('data-action');
+        var cur = host.getAttribute('data-open');
+        var next = (cur === mode) ? 'closed' : mode;
+        host.setAttribute('data-open', next);
+        btns.forEach(function (other) {
+          var on = other.getAttribute('data-action') === next;
+          other.setAttribute('aria-expanded', on ? 'true' : 'false');
+        });
+        pre.setAttribute('aria-hidden', next === 'source' ? 'false' : 'true');
+        rendered.setAttribute('aria-hidden', next === 'rendered' ? 'false' : 'true');
+      });
     });
+
+    function stripFrontmatter(src) {
+      var m = src.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
+      return m ? src.slice(m[0].length) : src;
+    }
+
+    function filterSections(src, exclude, truncateAfter) {
+      var lines = src.split(/\r?\n/);
+      var out = [];
+      var skipping = false;
+      var seenH1 = false;
+      var passedAnchor = false;
+      function matches(title, t) {
+        return title === t
+          || title.indexOf(t + ' ') === 0
+          || title.indexOf(t + '/') === 0;
+      }
+      for (var i = 0; i < lines.length; i++) {
+        var ln = lines[i];
+        if (/^#(?!#)\s+/.test(ln)) {
+          if (!seenH1) { seenH1 = true; continue; }
+        }
+        var h2 = ln.match(/^##\s+(.*)$/);
+        if (h2) {
+          var title = h2[1].replace(/^\d+\.\s+/, '').trim().toLowerCase();
+          if (truncateAfter) {
+            if (passedAnchor) { break; }
+            if (matches(title, truncateAfter)) { passedAnchor = true; }
+          }
+          skipping = exclude.some(function (t) { return matches(title, t); });
+        }
+        if (!skipping) out.push(ln);
+      }
+      return out.join('\n').replace(/^\s+/, '');
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function inline(text) {
+      var codes = [];
+      text = text.replace(/`([^`]+)`/g, function (_, c) {
+        codes.push(c); return '\x00' + (codes.length - 1) + '\x00';
+      });
+      var links = [];
+      text = text.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_, label, url) {
+        links.push({ label: label, url: url }); return '\x01' + (links.length - 1) + '\x01';
+      });
+      text = escapeHtml(text);
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+      text = text.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+      text = text.replace(/\x01(\d+)\x01/g, function (_, i) {
+        var l = links[+i];
+        return '<a href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(l.label) + '</a>';
+      });
+      text = text.replace(/\x00(\d+)\x00/g, function (_, i) {
+        return '<code>' + escapeHtml(codes[+i]) + '</code>';
+      });
+      return text;
+    }
+    function renderMarkdown(src) {
+      var lines = src.split(/\r?\n/);
+      var out = [], i = 0, n = lines.length;
+
+      function parseTable(startIdx) {
+        var sep = lines[startIdx + 1];
+        if (!/^\s*\|[\s:\-|]+\|\s*$/.test(sep)) return null;
+        var rows = [lines[startIdx]];
+        var k = startIdx + 2;
+        while (k < n && /^\s*\|.*\|\s*$/.test(lines[k])) { rows.push(lines[k]); k++; }
+        function cells(row) {
+          var s = row.trim().replace(/^\|/, '').replace(/\|$/, '');
+          return s.split('|').map(function (c) { return c.trim(); });
+        }
+        var head = cells(rows[0]), body = rows.slice(1).map(cells);
+        var html = '<table><thead><tr>';
+        head.forEach(function (h) { html += '<th>' + inline(h) + '</th>'; });
+        html += '</tr></thead><tbody>';
+        body.forEach(function (r) {
+          html += '<tr>';
+          r.forEach(function (c) { html += '<td>' + inline(c) + '</td>'; });
+          html += '</tr>';
+        });
+        html += '</tbody></table>';
+        return { html: html, consumed: k - startIdx };
+      }
+
+      function calloutKind(s) {
+        var t = s.trim().replace(/^\*\*|\*\*$/g, '').replace(/^###\s+/, '').toLowerCase();
+        if (/^use when\b/.test(t) || /^guarantees\b/.test(t)) return 'green';
+        if (/^do not use when\b/.test(t) || /^prohibitions\b/.test(t) || /^don'?ts\b/.test(t)) return 'red';
+        return null;
+      }
+
+      while (i < n) {
+        var ln = lines[i];
+        var s = ln.trim();
+        if (!s) { i++; continue; }
+
+        if (/^-{3,}\s*$/.test(s)) { out.push('<hr>'); i++; continue; }
+
+        var m = s.match(/^```(\w*)\s*$/);
+        if (m) {
+          i++;
+          var buf = [];
+          while (i < n && !/^```\s*$/.test(lines[i].trim())) { buf.push(lines[i]); i++; }
+          i++;
+          out.push('<pre><code>' + escapeHtml(buf.join('\n')) + '</code></pre>');
+          continue;
+        }
+
+        var h = s.match(/^(#{1,3})\s+(.*)$/);
+        if (h) {
+          var lvl = h[1].length;
+          var txt = h[2].replace(/^\d+\.\s+/, '');
+
+          if (lvl === 2 && txt.trim().toLowerCase() === 'contract') {
+            out.push('<h2>' + inline(txt) + '</h2>');
+            i++;
+            var cards = [];
+            while (i < n) {
+              var cS = lines[i].trim();
+              if (!cS) { i++; continue; }
+              if (/^##\s+/.test(cS)) break;
+              var h3m = cS.match(/^###\s+(.*)$/);
+              if (h3m) {
+                var h3title = h3m[1];
+                var slug = h3title.toLowerCase().trim();
+                var cls = slug === 'guarantees'   ? 'guarantees'
+                        : slug === 'prohibitions' ? 'prohibitions'
+                        : slug === 'conditions'   ? 'conditions'
+                        : '';
+                var sym = cls === 'guarantees'   ? '\u2713'
+                        : cls === 'prohibitions' ? '\u2717'
+                        : cls === 'conditions'   ? 'i'
+                        : '';
+                i++;
+                var citems = [];
+                while (i < n) {
+                  var ics = lines[i].trim();
+                  if (!ics) break;
+                  if (/^#{1,3}\s+/.test(ics)) break;
+                  var cbm = /^[-*+]\s+(.*)$/.exec(ics);
+                  if (cbm) { citems.push(cbm[1]); i++; continue; }
+                  if (/^ {2,}/.test(lines[i])) { citems[citems.length - 1] += ' ' + ics; i++; continue; }
+                  break;
+                }
+                cards.push({ cls: cls, sym: sym, title: h3title, items: citems });
+                continue;
+              }
+              i++;
+            }
+            var grid = '<div class="contract-grid">';
+            cards.forEach(function (c) {
+              grid += '<div class="contract-card ' + c.cls + '">';
+              grid += '<h3><span class="sym">' + escapeHtml(c.sym) + '</span> ' + escapeHtml(c.title) + '</h3>';
+              grid += '<ul>';
+              c.items.forEach(function (it) { grid += '<li>' + inline(it) + '</li>'; });
+              grid += '</ul></div>';
+            });
+            grid += '</div>';
+            out.push(grid);
+            continue;
+          }
+
+          if (lvl === 3) {
+            var kind3 = calloutKind(txt);
+            if (kind3 && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+              i++;
+              var items3 = [];
+              while (i < n) {
+                var ls3 = lines[i].trim();
+                if (!ls3) break;
+                var bm3 = /^[-*+]\s+(.*)$/.exec(ls3);
+                if (bm3) { items3.push(bm3[1]); i++; continue; }
+                if (/^ {2,}/.test(lines[i])) { items3[items3.length - 1] += ' ' + ls3; i++; continue; }
+                break;
+              }
+              var html3 = '<div class="callout ' + kind3 + '"><div class="callout-title">' + escapeHtml(txt) + '</div><ul>';
+              items3.forEach(function (it) { html3 += '<li>' + inline(it) + '</li>'; });
+              html3 += '</ul></div>';
+              out.push(html3);
+              continue;
+            }
+          }
+          out.push('<h' + lvl + '>' + inline(txt) + '</h' + lvl + '>');
+          i++; continue;
+        }
+
+        if (s.startsWith('|') && i + 1 < n && /^\s*\|[\s:\-|]+\|\s*$/.test(lines[i + 1])) {
+          var t = parseTable(i);
+          if (t) { out.push(t.html); i += t.consumed; continue; }
+        }
+
+        var labelMatch = /^\*\*([^*]+)\*\*\s*$/.exec(s);
+        if (labelMatch && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+          var kind = calloutKind(s);
+          if (kind) {
+            var title = labelMatch[1];
+            i++;
+            var items = [];
+            while (i < n) {
+              var ls = lines[i].trim();
+              if (!ls) break;
+              var bm = /^[-*+]\s+(.*)$/.exec(ls);
+              if (bm) { items.push(bm[1]); i++; continue; }
+              if (/^ {2,}/.test(lines[i])) { items[items.length - 1] += ' ' + ls; i++; continue; }
+              break;
+            }
+            var html = '<div class="callout ' + kind + '"><div class="callout-title">' + escapeHtml(title) + '</div><ul>';
+            items.forEach(function (it) { html += '<li>' + inline(it) + '</li>'; });
+            html += '</ul></div>';
+            out.push(html);
+            continue;
+          }
+        }
+
+        if (/^[-*+]\s+/.test(s)) {
+          var items2 = [];
+          while (i < n) {
+            var ls2 = lines[i].trim();
+            if (!ls2) break;
+            var bm2 = /^[-*+]\s+(.*)$/.exec(ls2);
+            if (bm2) { items2.push(bm2[1]); i++; continue; }
+            if (/^ {2,}/.test(lines[i])) { items2[items2.length - 1] += ' ' + ls2; i++; continue; }
+            break;
+          }
+          var ulHtml = '<ul>';
+          items2.forEach(function (it) { ulHtml += '<li>' + inline(it) + '</li>'; });
+          ulHtml += '</ul>';
+          out.push(ulHtml);
+          continue;
+        }
+
+        if (/^\d+\.\s+/.test(s)) {
+          var items4 = [];
+          while (i < n) {
+            var ls4 = lines[i].trim();
+            if (!ls4) break;
+            var bm4 = /^\d+\.\s+(.*)$/.exec(ls4);
+            if (bm4) { items4.push(bm4[1]); i++; continue; }
+            break;
+          }
+          var olHtml = '<ol>';
+          items4.forEach(function (it) { olHtml += '<li>' + inline(it) + '</li>'; });
+          olHtml += '</ol>';
+          out.push(olHtml);
+          continue;
+        }
+
+        var pBuf = [s]; i++;
+        while (i < n) {
+          var ns = lines[i].trim();
+          if (!ns) break;
+          if (/^(#{1,6})\s+/.test(ns)) break;
+          if (/^[-*+]\s+/.test(ns)) break;
+          if (/^\d+\.\s+/.test(ns)) break;
+          if (ns.startsWith('|')) break;
+          if (/^```/.test(ns)) break;
+          if (/^-{3,}\s*$/.test(ns)) break;
+          pBuf.push(ns); i++;
+        }
+        out.push('<p>' + inline(pBuf.join(' ')) + '</p>');
+      }
+      return out.join('\n');
+    }
   })();
 </script>
 <!-- md-viewer-end -->

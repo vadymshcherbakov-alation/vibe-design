@@ -27,7 +27,7 @@ depends_on_components:
 - **Type:** Base component
 - **MUI base:** `Divider`
 - **Figma:** [Divider · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=3423-347&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `fabric-theme-morpheus` — `src/lib/MuiDivider.overrides.ts`
+- **Code:** `@alation/fabric-theme-morpheus` — `src/lib/MuiDivider.overrides.ts`
 
 ## 2. Purpose
 

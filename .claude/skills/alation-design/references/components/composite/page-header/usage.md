@@ -117,13 +117,15 @@ Use when page content is split across two or more views. Title and tabs live in 
     <Typography variant="h1">MCP servers</Typography>
   </PageHeaderSection>
   <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
-    <Tabs value={tab} onChange={(_, v) => setTab(v)}>
+    <Tabs value={tab} onChange={(_, v) => setTab(v)} aria-label="MCP server views">
       <Tab label="Imported servers" value="imported" />
       <Tab label="Published servers" value="published" />
     </Tabs>
   </Box>
 </>
 ```
+
+**Visual contract** — Page Header owns only the header-section paddings (`pt: 3`, `px: 3`, `pb: 1`) and the tabs-row wrapping `<Box sx={{ borderBottom: 1, px: 3 }}>`. Everything *inside* the `<Tabs>` (typography, per-tab padding, hover background, selected-state colour switch, indicator) is owned by the [Tabs reference](./tabs/usage.md). Do not paint or restyle tabs from a page-header context — if something looks wrong, fix it in the Tabs reference and both demos benefit.
 
 ### Variant D — Breadcrumb + title + badge + action
 

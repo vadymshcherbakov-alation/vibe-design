@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stepper</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --neutral-600:    #9AA5B1;
+      --divider:        #D4DDE2;
+      --primary-main:   #0073DD;
+      --primary-dark:   #0056A6;
+      --primary-soft:   #D9EEFF;
+      --error-main:     #CA334A;
+      --error-dark:     #A62839;
+      --shell-dark:     #0D1322;
+      --radius-btn:    6px;
+      --radius-input:  4px;
+      --radius-2:      12px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 960px; margin: 0 auto; }
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    .page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    .page-sub p { margin: 0 0 10px 0; }
+    .page-sub p:last-child { margin-bottom: 0; }
+    .page-sub strong { font-weight: 600; color: var(--text-primary); }
+    .page-sub em { font-style: italic; }
+    .page-sub a { color: var(--primary-main); text-decoration: underline; }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 32px 0 12px 0;
+    }
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+    /* Element-specific styles */
+:root {
+      --step-icon-size:     24px;
+      --step-icon-inactive: var(--neutral-600);   /* grey filled circle for inactive (Figma) */
+      --step-icon-disabled: var(--text-disabled); /* paler grey for disabled */
+      --step-icon-active:   var(--primary-main);
+      --step-icon-done:     var(--primary-main);
+      --step-icon-error:    var(--error-main);
+      --step-line:          var(--divider);
+      --step-line-done:     var(--primary-main);
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      padding: 24px;
+    }
+    .sect-label {
+      font-size: 12px; color: var(--text-secondary);
+      letter-spacing: 0.04em; margin: 0 0 12px 0;
+    }
+    .row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+    /* Stepper — horizontal */
+    .stepper {
+      display: flex; align-items: flex-start;
+      list-style: none; padding: 0; margin: 0;
+      gap: 0;
+    }
+    .stepper.vertical { flex-direction: column; align-items: stretch; }
+
+    /* Single step (horizontal) */
+    .step {
+      display: flex; align-items: center;
+      flex: 0 0 auto;
+    }
+    .step .step-row {
+      display: inline-flex; align-items: flex-start; gap: 8px;
+      padding: 4px 0;
+    }
+    /* .label-block is the label + optional caption stack — used inside .step rows
+       AND inside Anatomy atom cards, so the rules are scoped to .label-block
+       (not .step .label-block) so they apply in both places. */
+    .label-block {
+      display: flex; flex-direction: column;
+      line-height: 1.4;
+    }
+    .label-block .label {
+      font-size: 14px; font-weight: 400;
+      color: var(--text-secondary);
+    }
+    .label-block .caption {
+      font-size: 12px; color: var(--text-secondary);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+    .step.active .label-block .label,
+    .step.completed .label-block .label,
+    .step.error .label-block .label {
+      color: var(--text-primary);
+    }
+    .step.active .label-block .label { font-weight: 500; }
+    .step.disabled .label-block .label { color: var(--text-disabled); }
+
+    /* Step icon — MUI default StepIcon shape: filled circle, white content inside.
+       Inactive = grey filled (matches Figma); active / completed = primary filled. */
+    .step-icon {
+      width: var(--step-icon-size); height: var(--step-icon-size);
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 500;
+      background: var(--step-icon-inactive);
+      color: var(--paper);
+      flex: 0 0 auto;
+      border: 0;
+    }
+    .step.active .step-icon    { background: var(--step-icon-active); }
+    .step.completed .step-icon { background: var(--step-icon-done); }
+    .step.error .step-icon     { background: var(--step-icon-error); }
+    .step.disabled .step-icon  { background: var(--step-icon-disabled); }
+    .step-icon svg { width: 14px; height: 14px; display: block; }
+
+    /* Connector — horizontal */
+    .connector {
+      flex: 1 1 auto;
+      height: 2px;
+      background: var(--step-line);
+      margin: 12px 8px 0 8px;
+      align-self: flex-start;
+      min-width: 24px;
+    }
+    .connector.done { background: var(--step-line-done); }
+
+    /* Alternative-label horizontal layout */
+    .stepper.alt-label .step {
+      flex: 1 1 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+    }
+    .stepper.alt-label .step .step-row { padding: 0; }
+    .stepper.alt-label .step .label-block {
+      align-items: center;
+      margin-top: 6px;
+    }
+    .stepper.alt-label .connector {
+      margin: 12px 0;
+      align-self: flex-start;
+      width: auto;
+    }
+    .stepper.alt-label .step-row { flex-direction: column; gap: 0; }
+
+    /* Alt-label needs a different connector position — span between icon centres */
+    .stepper.alt-label {
+      align-items: flex-start;
+      position: relative;
+    }
+    .stepper.alt-label .alt-row {
+      display: flex; align-items: center;
+      width: 100%;
+    }
+
+    /* Vertical orientation — each <li class="step"> stacks two children:
+       1. .step-row (icon + label, top-aligned)
+       2. .v-trail (vertical connector line + optional step-content)
+       The connector is the border-left on .v-trail; .step-content sits inside it,
+       indented to align with the label above. */
+    .stepper.vertical .step {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .stepper.vertical .step .step-row {
+      align-items: flex-start;
+      padding: 0;
+    }
+    .stepper.vertical .step .label-block {
+      padding-top: 2px;
+      flex: 1 1 auto;
+    }
+    /* The vertical trail — connector line + step-content space below each step.
+       margin-left=11px lines the border-left (1px) up with the icon centre
+       (icon is 24px wide, half = 12px; minus 1px for the border itself = 11px). */
+    .stepper.vertical .v-trail {
+      display: block;
+      margin-left: 11px;
+      padding: 4px 0 4px 21px; /* 21 = (24 icon - 11 border-left position) + ~8 gap */
+      min-height: 16px;
+      border-left: 2px solid var(--step-line);
+    }
+    .stepper.vertical .v-trail.done {
+      border-left-color: var(--step-line-done);
+    }
+    /* Active step's trail uses the same connector colour as inactive — it only
+       carries the content panel; the indicator that "this is current" is the
+       label/icon styling above. */
+    .stepper.vertical .step:last-child .v-trail { display: none; }
+    .stepper.vertical .step-content {
+      display: block;
+      margin: 0;
+      padding: 4px 0 8px 0;
+      font-size: 13px; line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    /* Tooltip on disabled step */
+    .with-tip { position: relative; display: inline-flex; }
+    .with-tip .tip {
+      position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%);
+      background: var(--shell-dark); color: var(--paper);
+      font-size: 12px; line-height: 1.4;
+      padding: 6px 8px; border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* Atom callouts */
+    .atoms-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .atom-card {
+      border: 1px dashed var(--neutral-500);
+      border-radius: 6px;
+      padding: 16px;
+      background: var(--neutral-300);
+    }
+    .atom-card .atom-name {
+      font-size: 12px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin: 0 0 8px 0;
+    }
+    .atom-card .atom-body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 56px;
+      background: var(--paper);
+      border-radius: 4px;
+      padding: 16px;
+    }
+    .atom-card .atom-help {
+      font-size: 12px; color: var(--text-secondary); margin: 8px 0 0 0;
+      line-height: 1.4;
+    }
+
+    /* Reusable check icon */
+    .ic-check svg { width: 14px; height: 14px; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Stepper</h1>
+    <div class="page-sub"><p>A <strong>Stepper</strong> shows the user where they are inside a multi-step flow and the path before and after the current step. Each step is a numbered node with a short label connected by a line; the active step is highlighted, completed steps carry a check, and future steps appear in grey.</p></div>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Composite component</li>
+      <li><strong>MUI base:</strong> <code>Stepper</code> (+ <code>Step</code>, <code>StepLabel</code>, <code>StepConnector</code>, optionally <code>StepContent</code> and <code>StepButton</code>)</li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2992-6720&t=eS5ReSD4ZsCMa08a-1" target="_blank" rel="noopener">Stepper · NEO 2.1</a></li>
+      <li><strong>Code:</strong> No theme override in <code>@alation/fabric-theme-morpheus</code>; no shared wrapper in <code>@alation/alation-ui</code> — production assembles MUI <code><Stepper></code> directly. This reference captures the composition contract.</li>
+    </ul>
+    <!-- classification-end -->
+
+<h2 class="section">Variants — orientation · horizontal (default)</h2>
+<div class="card">
+  <p class="sect-label">Default label placement — label sits to the right of the icon · 4-step source connection wizard</p>
+  <ul class="stepper" aria-label="Source connection flow">
+    <li class="step completed">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M3 7.2l2.8 2.8L11.2 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="label-block"><span class="label">Connect source</span></span>
+      </span>
+    </li>
+    <li class="connector done" aria-hidden="true"></li>
+    <li class="step active">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">2</span>
+        <span class="label-block"><span class="label">Map schema</span></span>
+      </span>
+    </li>
+    <li class="connector" aria-hidden="true"></li>
+    <li class="step">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">3</span>
+        <span class="label-block"><span class="label">Review</span></span>
+      </span>
+    </li>
+    <li class="connector" aria-hidden="true"></li>
+    <li class="step">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">4</span>
+        <span class="label-block"><span class="label">Publish</span></span>
+      </span>
+    </li>
+  </ul>
+</div>
+
+<h2 class="section">Variants — orientation · horizontal · alternativeLabel (banner-style)</h2>
+<div class="card">
+  <p class="sect-label">Label sits below the icon · equal-weight onboarding sequence</p>
+  <ul class="stepper alt-label" aria-label="Onboarding flow">
+    <li class="step active">
+      <span class="step-icon" aria-hidden="true">1</span>
+      <span class="label-block"><span class="label">Profile</span></span>
+    </li>
+    <li class="connector" aria-hidden="true"></li>
+    <li class="step">
+      <span class="step-icon" aria-hidden="true">2</span>
+      <span class="label-block"><span class="label">Workspace</span></span>
+    </li>
+    <li class="connector" aria-hidden="true"></li>
+    <li class="step">
+      <span class="step-icon" aria-hidden="true">3</span>
+      <span class="label-block"><span class="label">Invite team</span></span>
+    </li>
+  </ul>
+</div>
+
+<h2 class="section">Variants — orientation · vertical (inline StepContent)</h2>
+<div class="card">
+  <p class="sect-label">Each step's content panel sits inline beneath its label · only the active step's panel is visible · connector continues vertically alongside the content via a left border</p>
+  <ul class="stepper vertical" aria-label="Create monitor flow">
+    <li class="step completed">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M3 7.2l2.8 2.8L11.2 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="label-block"><span class="label">Pick target</span></span>
+      </span>
+      <span class="v-trail done" aria-hidden="true"></span>
+    </li>
+    <li class="step active">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">2</span>
+        <span class="label-block"><span class="label">Set conditions</span></span>
+      </span>
+      <span class="v-trail" aria-hidden="true"></span>
+    </li>
+    <li class="step">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">3</span>
+        <span class="label-block"><span class="label">Schedule</span></span>
+      </span>
+      <span class="v-trail" aria-hidden="true"></span>
+    </li>
+    <li class="step">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">4</span>
+        <span class="label-block">
+          <span class="label">Notify</span>
+          <span class="caption">Optional</span>
+        </span>
+      </span>
+    </li>
+  </ul>
+</div>
+
+<h2 class="section">Anatomy — atoms (StepLabel · Connector · StepIcon)</h2>
+<div class="card">
+  <p class="sect-label">The Stepper composite owns these MUI primitives — they are not separate base references, but they are the visible regions of the composite</p>
+
+  <div class="atoms-grid">
+    <div class="atom-card">
+      <p class="atom-name">Step icon · inactive</p>
+      <div class="atom-body">
+        <span class="step-icon" aria-hidden="true">3</span>
+      </div>
+      <p class="atom-help"><code>24×24</code> filled grey circle · step number in <code>paper</code> (white)</p>
+    </div>
+    <div class="atom-card">
+      <p class="atom-name">Step icon · active</p>
+      <div class="atom-body">
+        <span class="step-icon" style="background:var(--step-icon-active);" aria-hidden="true">2</span>
+      </div>
+      <p class="atom-help">Filled circle · <code>primary.main</code> · step number in <code>paper</code></p>
+    </div>
+    <div class="atom-card">
+      <p class="atom-name">Step icon · completed</p>
+      <div class="atom-body">
+        <span class="step-icon" style="background:var(--step-icon-done);" aria-hidden="true">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M3 7.2l2.8 2.8L11.2 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <p class="atom-help">Filled circle · <code>primary.main</code> · <code>Check</code> glyph in <code>paper</code></p>
+    </div>
+    <div class="atom-card">
+      <p class="atom-name">Step icon · error</p>
+      <div class="atom-body">
+        <span class="step-icon" style="background:var(--step-icon-error);" aria-hidden="true">2</span>
+      </div>
+      <p class="atom-help">Filled circle · <code>error.main</code> · step number in <code>paper</code> (no glyph swap — colour is the affordance)</p>
+    </div>
+    <div class="atom-card">
+      <p class="atom-name">Step label · with optional caption</p>
+      <div class="atom-body" style="justify-content: flex-start;">
+        <span class="label-block">
+          <span class="label" style="color: var(--text-primary);">Map schema</span>
+          <span class="caption">Recommended</span>
+        </span>
+      </div>
+      <p class="atom-help"><code>body2</code> primary · <code>caption</code> hint</p>
+    </div>
+    <div class="atom-card">
+      <p class="atom-name">Step connector (separator)</p>
+      <div class="atom-body" style="flex-direction: column; gap: 16px; min-height: 56px;">
+        <span style="display:inline-block; width: 80%; height: 2px; background: var(--step-line);"></span>
+        <span style="display:inline-block; width: 80%; height: 2px; background: var(--step-line-done);"></span>
+      </div>
+      <p class="atom-help">Top — between inactive steps · <code>divider</code><br>Bottom — between completed steps · <code>primary.main</code></p>
+    </div>
+  </div>
+</div>
+
+<h2 class="section">Anatomy</h2>
+<div class="card">
+  <ul class="stepper" aria-label="Anatomy demo">
+    <li class="step completed">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M3 7.2l2.8 2.8L11.2 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="label-block"><span class="label">Connect source</span></span>
+      </span>
+    </li>
+    <li class="connector done" aria-hidden="true"></li>
+    <li class="step active">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">2</span>
+        <span class="label-block"><span class="label">Map schema</span></span>
+      </span>
+    </li>
+    <li class="connector" aria-hidden="true"></li>
+    <li class="step">
+      <span class="step-row">
+        <span class="step-icon" aria-hidden="true">3</span>
+        <span class="label-block"><span class="label">Review</span></span>
+      </span>
+    </li>
+  </ul>
+  <p class="sect-label" style="margin-top:16px">
+    <strong style="color:var(--text-primary)">Stepper container</strong> — outer flex row (horizontal) or column (vertical); names the flow with <code>aria-label</code><br>
+    <strong style="color:var(--text-primary)">Step</strong> — one entry · combines a step icon, a step label, and (vertical only) an optional content panel<br>
+    <strong style="color:var(--text-primary)">Step icon</strong> — <code>24×24</code> glyph at the leading edge · number / check / alert / custom · filled or outlined per state<br>
+    <strong style="color:var(--text-primary)">Step label</strong> — short noun phrase · <code>body2</code> · sits to the right of (default / vertical) or below (<code>alternativeLabel</code>) the icon<br>
+    <strong style="color:var(--text-primary)">Optional caption</strong> — <em>optional</em> · <code>typography.caption</code> · "Optional" / "Recommended" / short hint<br>
+    <strong style="color:var(--text-primary)">Step connector</strong> — line between two steps · <code>divider</code> inactive, <code>primary.main</code> completed<br>
+    <strong style="color:var(--text-primary)">Step content panel</strong> — <em>vertical only</em> · inline content beneath the active step's label · collapses for non-active steps
+  </p>
+</div>
+
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 0 40px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 0; }
+  .md-viewer-toggle {
+    all: unset; box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58; background: #F1F4F6;
+    border: 1px solid #E8EDF1; border-radius: 6px;
+    cursor: pointer; user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px; color: #B7B7C1; margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none; margin: 12px 0 0 0; padding: 20px 24px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; line-height: 1.6; color: #0D1322;
+    white-space: pre-wrap; word-wrap: break-word;
+    overflow-x: auto; max-height: 640px; overflow-y: auto;
+  }
+  .md-viewer[data-open="source"] .md-viewer-pre { display: block; }
+  .md-rendered {
+    display: none; margin: 16px 0 0 0; padding: 28px 32px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    color: #0D1322; font-size: 14px; line-height: 1.65;
+  }
+  .md-viewer[data-open="rendered"] .md-rendered { display: block; }
+  .md-rendered h2 {
+    font-size: 17px; font-weight: 600; color: #0D1322;
+    margin: 28px 0 10px 0; letter-spacing: -0.005em;
+  }
+  .md-rendered h2:first-child { margin-top: 0; }
+  .md-rendered h3 {
+    font-size: 14px; font-weight: 600; color: #0D1322;
+    margin: 18px 0 8px 0; text-transform: none; letter-spacing: 0;
+  }
+  .md-rendered p  { margin: 0 0 12px 0; }
+  .md-rendered ul, .md-rendered ol { margin: 0 0 14px 0; padding-left: 22px; }
+  .md-rendered li { margin-bottom: 4px; }
+  .md-rendered a  { color: #0073DD; text-decoration: underline; }
+  .md-rendered code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; background: #F1F4F6; color: #0D1322;
+    padding: 1px 6px; border-radius: 4px;
+  }
+  .md-rendered pre {
+    background: #FAFBFC; border: 1px solid #E8EDF1; border-radius: 8px;
+    padding: 14px 18px; overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.7; margin: 0 0 14px 0;
+  }
+  .md-rendered pre code { background: transparent; padding: 0; }
+  .md-rendered strong { font-weight: 600; }
+  .md-rendered em { font-style: italic; }
+  .md-rendered hr { border: 0; border-top: 1px solid #E8EDF1; margin: 24px 0; }
+  .md-rendered table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid #E8EDF1; border-radius: 8px; overflow: hidden;
+    margin: 0 0 16px 0;
+  }
+  .md-rendered th, .md-rendered td {
+    text-align: left; padding: 9px 12px;
+    font-size: 12.5px; border-bottom: 1px solid #E8EDF1; vertical-align: top;
+  }
+  .md-rendered th {
+    background: #F1F4F6; color: #4E4E58; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px;
+  }
+  .md-rendered tr:last-child td { border-bottom: none; }
+  /* Callouts — green for Use/Guarantees, red for Prohibitions/Don'ts */
+  .md-rendered .callout {
+    border-radius: 8px; padding: 14px 18px;
+    margin: 0 0 16px 0; border: 1px solid transparent;
+  }
+  .md-rendered .callout.green { background: #F0F8EB; border-color: #CDE5BA; }
+  .md-rendered .callout.red   { background: #FFF0F0; border-color: #F2C0C0; }
+  .md-rendered .callout > .callout-title {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; margin: 0 0 8px 0;
+  }
+  .md-rendered .callout.green > .callout-title { color: #2E5E18; }
+  .md-rendered .callout.red   > .callout-title { color: #8E1A27; }
+  .md-rendered .callout ul { margin: 0; padding-left: 18px; }
+  .md-rendered .callout li { margin-bottom: 3px; }
+  /* Contract block — 3-card grid */
+  .md-rendered .contract-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    align-items: stretch; margin: 0 0 16px 0;
+  }
+  .md-rendered .contract-card {
+    background: #FFFFFF; border: 1px solid #E8EDF1;
+    border-radius: 12px; padding: 20px; border-top: 3px solid;
+  }
+  .md-rendered .contract-card.guarantees   { border-top-color: #3E9A17; }
+  .md-rendered .contract-card.prohibitions { border-top-color: #CA334A; }
+  .md-rendered .contract-card.conditions   { border-top-color: #0073DD; }
+  .md-rendered .contract-card h3 {
+    font-size: 13px; font-weight: 600; margin: 0 0 10px 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .md-rendered .contract-card h3 .sym {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+  }
+  .md-rendered .contract-card.guarantees h3 .sym   { background: #F0F8EB; color: #2E5E18; }
+  .md-rendered .contract-card.prohibitions h3 .sym { background: #FFF0F0; color: #8E1A27; }
+  .md-rendered .contract-card.conditions h3 .sym   { background: #E6F2FC; color: #0056A6; }
+  .md-rendered .contract-card ul { margin: 0; padding-left: 16px; }
+  .md-rendered .contract-card li {
+    font-size: 12.5px; line-height: 1.55; margin-bottom: 6px; color: #0D1322;
+  }
+  .md-rendered .contract-card li:last-child { margin-bottom: 0; }
+  @media (max-width: 720px) {
+    .md-rendered .contract-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="md-viewer" data-open="closed" data-exclude-h2="anatomy,anatomy — atoms (steplabel · connector · stepicon),classification,example,examples,purpose,variants,variants — orientation · horizontal (default),variants — orientation · horizontal · alternativelabel (banner-style),variants — orientation · vertical (inline stepcontent)" data-truncate-after-h2="contract" data-md-b64="LS0tCm5hbWU6IHN0ZXBwZXIKdGl0bGU6IFN0ZXBwZXIKY2F0ZWdvcnk6IGNvbXBvc2l0ZS1jb21wb25lbnQKbGFzdF91cGRhdGVkOiAyMDI2LTA0LTI3CgpkZXNjcmlwdGlvbjogPgogIFRoZSBwcm9ncmVzcy10cmFpbCBjb21wb3NpdGUgZm9yIG11bHRpLXN0ZXAgZmxvd3MuIEEgaG9yaXpvbnRhbCBvciB2ZXJ0aWNhbAogIHNlcmllcyBvZiBgPFN0ZXA+YCBpdGVtcyB3aXRoIG51bWJlcmVkIGljb25zLCBsYWJlbHMsIGFuZCBjb25uZWN0b3IgbGluZXMg4oCUCiAgcmVuZGVyZWQgdmlhIE1VSSBgPFN0ZXBwZXI+YCArIGA8U3RlcD5gICsgYDxTdGVwTGFiZWw+YCArIGA8U3RlcENvbm5lY3Rvcj5gLgogIFVzZSBmb3Igd2l6YXJkcywgb25ib2FyZGluZyBzZXF1ZW5jZXMsIGFuZCBhbnkgdGFzayB0aGF0IHNwbGl0cyBhY3Jvc3MKICBvcmRlcmVkIHN0ZXBzIHRoZSB1c2VyIG11c3QgY29tcGxldGUgaW4gdHVybi4gVmVydGljYWwgZm9yIGZvcm1zIHdpdGgKICBpbmxpbmUgY29udGVudCB1bmRlciBlYWNoIHN0ZXA7IGhvcml6b250YWwgZm9yIHRvcC1vZi1wYWdlIHByb2dyZXNzCiAgaW5kaWNhdG9ycy4KdGFnczogW3N0ZXBwZXIsIHdpemFyZCwgcHJvZ3Jlc3MsIG11bHRpLXN0ZXBdCgpmaWdtYV91cmw6ICJodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2NIa2FtZHZQejFJa21RU3dqcVdIZFgvTkVPLTIuMS0tLURlc2lnbi1TeXN0ZW0/bT1hdXRvJm5vZGUtaWQ9Mjk5Mi02NzIwJnQ9ZVM1UmVTRDRac0NNYTA4YS0xIgpjb2RlX3JlZmVyZW5jZTogIm5vIHRoZW1lIG92ZXJyaWRlIMK3IG5vIHNoYXJlZCBAYWxhdGlvbi9hbGF0aW9uLXVpIHdyYXBwZXIg4oCUIHByb2R1Y3Rpb24gYXNzZW1ibGVzIE1VSSBgPFN0ZXBwZXI+YCBkaXJlY3RseS4gVGhpcyBkb2MgY2FwdHVyZXMgdGhlIGNvbXBvc2l0aW9uIGNvbnRyYWN0LiIKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogU3RlcHBlcgpkZXBlbmRzX29uX3Rva2VuczoKICAtIHBhbGV0dGUucHJpbWFyeS5tYWluCiAgLSBwYWxldHRlLnByaW1hcnkuZGFyawogIC0gcGFsZXR0ZS50ZXh0LnByaW1hcnkKICAtIHBhbGV0dGUudGV4dC5zZWNvbmRhcnkKICAtIHBhbGV0dGUudGV4dC5kaXNhYmxlZAogIC0gcGFsZXR0ZS5lcnJvci5tYWluCiAgLSBwYWxldHRlLmRpdmlkZXIKICAtIHR5cG9ncmFwaHkuYm9keTIKICAtIHR5cG9ncmFwaHkuY2FwdGlvbgpkZXBlbmRzX29uX2NvbXBvbmVudHM6CiAgLSBTdGVwcGVyCiAgLSBTdGVwCiAgLSBTdGVwTGFiZWwKICAtIFN0ZXBDb25uZWN0b3IKICAtIFN0ZXBDb250ZW50CiAgLSBTdGVwQnV0dG9uCiAgLSBUeXBvZ3JhcGh5CiAgLSBUb29sdGlwCi0tLQoKIyBTdGVwcGVyCgojIyAxLiBDbGFzc2lmaWNhdGlvbgoKLSAqKlR5cGU6KiogQ29tcG9zaXRlIGNvbXBvbmVudAotICoqTVVJIGJhc2U6KiogYFN0ZXBwZXJgICgrIGBTdGVwYCwgYFN0ZXBMYWJlbGAsIGBTdGVwQ29ubmVjdG9yYCwgb3B0aW9uYWxseSBgU3RlcENvbnRlbnRgIGFuZCBgU3RlcEJ1dHRvbmApCi0gKipGaWdtYToqKiBbU3RlcHBlciDCtyBORU8gMi4xXShodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2NIa2FtZHZQejFJa21RU3dqcVdIZFgvTkVPLTIuMS0tLURlc2lnbi1TeXN0ZW0/bT1hdXRvJm5vZGUtaWQ9Mjk5Mi02NzIwJnQ9ZVM1UmVTRDRac0NNYTA4YS0xKQotICoqQ29kZToqKiBObyB0aGVtZSBvdmVycmlkZSBpbiBgQGFsYXRpb24vZmFicmljLXRoZW1lLW1vcnBoZXVzYDsgbm8gc2hhcmVkIHdyYXBwZXIgaW4gYEBhbGF0aW9uL2FsYXRpb24tdWlgIOKAlCBwcm9kdWN0aW9uIGFzc2VtYmxlcyBNVUkgYDxTdGVwcGVyPmAgZGlyZWN0bHkuIFRoaXMgcmVmZXJlbmNlIGNhcHR1cmVzIHRoZSBjb21wb3NpdGlvbiBjb250cmFjdC4KCiMjIDIuIFB1cnBvc2UKCkEgKipTdGVwcGVyKiogc2hvd3MgdGhlIHVzZXIgd2hlcmUgdGhleSBhcmUgaW5zaWRlIGEgbXVsdGktc3RlcCBmbG93IGFuZCB0aGUgcGF0aCBiZWZvcmUgYW5kIGFmdGVyIHRoZSBjdXJyZW50IHN0ZXAuIEVhY2ggc3RlcCBpcyBhIG51bWJlcmVkIG5vZGUgd2l0aCBhIHNob3J0IGxhYmVsIGNvbm5lY3RlZCBieSBhIGxpbmU7IHRoZSBhY3RpdmUgc3RlcCBpcyBoaWdobGlnaHRlZCwgY29tcGxldGVkIHN0ZXBzIGNhcnJ5IGEgY2hlY2ssIGFuZCBmdXR1cmUgc3RlcHMgYXBwZWFyIGluIGdyZXkuCgojIyAzLiBXaGVuIHRvIHVzZSAvIFdoZW4gbm90IHRvIHVzZQoKKipVc2Ugd2hlbioqCi0gVGhlIHRhc2sgc3BsaXRzIGludG8gMuKAk342IG9yZGVyZWQsIG5hbWVkIHN0ZXBzIHRoZSB1c2VyIHdvcmtzIHRocm91Z2ggaW4gdHVybiDigJQgIkNvbm5lY3Qgc291cmNlIiwgIk1hcCBzY2hlbWEiLCAiUmV2aWV3IiwgIlB1Ymxpc2giCi0gRWFjaCBzdGVwIGlzIGhlYXZ5IGVub3VnaCB0byBkZXNlcnZlIGl0cyBvd24gc3VyZmFjZSAoYSBmb3JtLCBhIHByZXZpZXcsIGEgY29uZmlybSkg4oCUIHRvbyBoZWF2eSB0byBzdGFjayBvbiBvbmUgc2Nyb2xsCi0gVGhlIHVzZXIgYmVuZWZpdHMgZnJvbSBzZWVpbmcgdGhlIGZ1bGwgdHJhaWwgYXQgYSBnbGFuY2UgKHdoYXQncyBkb25lLCB3aGF0J3MgY3VycmVudCwgd2hhdCdzIG5leHQpCi0gVGhlIGZsb3cgaGFzIGEgY2xlYXIgdGVybWluYWwgc3RhdGUg4oCUIHN1Ym1pdHRpbmcgYXQgdGhlIGxhc3Qgc3RlcCBjb21taXRzIHRoZSB3b3JrCgoqKkRvIG5vdCB1c2Ugd2hlbioqCi0gVGhlIHRhc2sgaXMgb25lLXNob3Qg4oCUIGEgc2luZ2xlIGZvcm0sIGEgc2luZ2xlIGNvbmZpcm0g4oaSIHVzZSAqKkZvcm0qKiBvciAqKkRpYWxvZyoqIGRpcmVjdGx5Ci0gVGhlIHRhc2sgaGFzIG1vcmUgdGhhbiB+NiBzdGVwcyDigJQgc3BsaXQgaW50byBhIHBhcmVudCBncm91cGluZyBvciBtb3ZlIHRvIGEgbGVmdC1zaWRlIHJhaWw7IGxvbmcgaG9yaXpvbnRhbCBzdGVwcGVycyBjb21wcmVzcyBiZXlvbmQgdXNlZnVsbmVzcwotIFRoZSB1c2VyIHBpY2tzIG9uZSBvZiBOIHBhcmFsbGVsIHZpZXdzLCBub3QgYSBzZXF1ZW5jZSDihpIgdXNlICoqVGFicyoqCi0gVGhlIHRyYWlsIGlzIGhpZXJhcmNoaWNhbCwgbm90IHNlcXVlbnRpYWwgKHBhcmVudCAvIGNoaWxkIC8gZ3JhbmRjaGlsZCkg4oaSIHVzZSAqKkJyZWFkY3J1bWIqKgotIFRoZSBjb21wb25lbnQgaXMgYSBwdXJlIHByb2dyZXNzIGJhciB3aXRoIG5vIHBlci1zdGVwIHNlbWFudGljcyDihpIgdXNlIGEgUHJvZ3Jlc3MgSW5kaWNhdG9yCi0gVGhlIHN0ZXAgbGFiZWxzIHdvdWxkIGJlIHNlbnRlbmNlcyBvciB3cmFwIGFjcm9zcyBsaW5lcyDigJQgcmV3b3JkIHRvIG5vdW4gcGhyYXNlcyBvciByZXRoaW5rIHRoZSBmbG93CgojIyA0LiBDb250cmFjdAoKIyMjIEd1YXJhbnRlZXMKLSBgU3RlcHBlcmAgYWx3YXlzIGNhcnJpZXMgYW4gYGFjdGl2ZVN0ZXBgICh6ZXJvLWluZGV4ZWQpIOKAlCB0aGUgaW5kZXggb2YgdGhlIGN1cnJlbnQgc3RlcC4gVGhlIHJlbmRlciBvcmRlciBvZiBgPFN0ZXA+YCBjaGlsZHJlbiBkZWZpbmVzIHRoZSB2aXN1YWwgb3JkZXIuCi0gYG9yaWVudGF0aW9uPSJob3Jpem9udGFsImAgKGRlZmF1bHQpIGxheXMgc3RlcHMgbGVmdC10by1yaWdodCB3aXRoIGxhYmVscyB0byB0aGUgcmlnaHQgb2YgKG9yIGJlbG93LCB3aXRoIGBhbHRlcm5hdGl2ZUxhYmVsYCkgZWFjaCBpY29uOyBgb3JpZW50YXRpb249InZlcnRpY2FsImAgc3RhY2tzIHN0ZXBzIHRvcC10by1ib3R0b20gd2l0aCBsYWJlbHMgdG8gdGhlIHJpZ2h0IG9mIGVhY2ggaWNvbiBhbmQgb3B0aW9uYWwgYDxTdGVwQ29udGVudD5gIHBhbmVscyBiZWxvdy4KLSBFYWNoIGA8U3RlcD5gIGRlcml2ZXMgaXRzIHZpc3VhbCBzdGF0ZSBmcm9tIHRoZSBwYXJlbnQg4oCUIHRoZSBzdGVwIGF0IGluZGV4IDwgYGFjdGl2ZVN0ZXBgIGlzICoqY29tcGxldGVkKiosIHRoZSBzdGVwIGF0IGluZGV4ID0gYGFjdGl2ZVN0ZXBgIGlzICoqYWN0aXZlKiosIHN0ZXBzIGF0IGluZGV4ID4gYGFjdGl2ZVN0ZXBgIGFyZSAqKmluYWN0aXZlKiogKGZ1dHVyZSkuIGA8U3RlcCBkaXNhYmxlZD5gIG92ZXJyaWRlcyB0aGlzIHRvIHJlbmRlciB0aGUgc3RlcCBpbmVydC4KLSBgPFN0ZXBMYWJlbD5gIHJlbmRlcnMgdGhlIHN0ZXAgaWNvbiAoZGVmYXVsdDogbnVtYmVyOyByZXBsYWNlZCBieSBjaGVjayBvbiBjb21wbGV0aW9uKSBhbmQgdGhlIGxhYmVsIHRleHQuIFRoZSBsYWJlbCBpcyBgdHlwb2dyYXBoeS5ib2R5MmA7IHRoZSBpY29uIGdseXBoIGlzIHJlbmRlcmVkIGluc2lkZSBhIGAyNMOXMjRgIGZpbGxlZCBjaXJjbGUgKGFjdGl2ZSAvIGNvbXBsZXRlZCkgb3Igb3V0bGluZWQgY2lyY2xlIChpbmFjdGl2ZSkuCi0gYDxTdGVwQ29ubmVjdG9yPmAgaXMgdGhlIGhvcml6b250YWwgLyB2ZXJ0aWNhbCBsaW5lIGJldHdlZW4gdHdvIHN0ZXBzOyB0aGVtZSBvd25zIGl0cyBjb2xvdXIgKGBkaXZpZGVyYCBpbmFjdGl2ZSwgYHByaW1hcnkubWFpbmAgY29tcGxldGVkKSBhbmQgc3Ryb2tlLgotIGA8U3RlcExhYmVsIG9wdGlvbmFsPmAgcmVuZGVycyBhIGBjYXB0aW9uYCBsaW5lIGJlbG93IHRoZSBsYWJlbCDigJQgdXNlZCB0byBtYXJrIGEgc3RlcCBhcyBza2lwcGFibGUgKCJPcHRpb25hbCIpIG9yIHRvIGFkZCBhIHNob3J0IGhpbnQuCi0gYDxTdGVwTGFiZWwgZXJyb3I+YCBmbGlwcyB0aGUgaWNvbiB0byBgZXJyb3IubWFpbmAgd2l0aCB0aGUgYWxlcnQgZ2x5cGg7IHRoZSBsYWJlbCBjb2xvdXIgc3RheXMgYXQgYHRleHQucHJpbWFyeWAgc28gaXQgcmVtYWlucyByZWFkYWJsZS4KLSBgPFN0ZXBCdXR0b24+YCAodXNlZCBpbnNpZGUgYSBub24tbGluZWFyIHN0ZXBwZXIsIGA8U3RlcHBlciBub25MaW5lYXI+YCkgbWFrZXMgdGhlIHdob2xlIHN0ZXAgYSBidXR0b24g4oCUIGtleWJvYXJkLWZvY3VzYWJsZSwgY2xpY2sgYWN0aXZhdGVzLCBmb2N1cy12aXNpYmxlIG91dGxpbmUgbGl2ZXMgb24gdGhlIGJ1dHRvbi4KLSBWZXJ0aWNhbCBsYXlvdXQncyBgPFN0ZXBDb250ZW50PmAgcGFuZWwgaXMgY29sbGFwc2libGUg4oCUIG9ubHkgdGhlIGFjdGl2ZSBzdGVwJ3MgY29udGVudCBpcyB2aXNpYmxlOyB0cmFuc2l0aW9ucyB2aWEgdGhlIE1VSSBgQ29sbGFwc2VgIHByaW1pdGl2ZS4KCiMjIyBQcm9oaWJpdGlvbnMKLSBObyByYXcgYDxvbD5gIC8gYDx1bD5gIHN0cmlwIHByZXRlbmRpbmcgdG8gYmUgYSBzdGVwcGVyLiBVc2UgTVVJIGA8U3RlcHBlcj5gIHNvIHRoZSBzdGVwIHJvbGVzLCBmb2N1cywgYW5kIHRoZW1lIGJpbmRpbmdzIGFyZSBjb3JyZWN0LgotIE5vIGA8U3RlcHBlcj5gIHdpdGhvdXQgYGFjdGl2ZVN0ZXBgIOKAlCB0aGUgcGFyZW50IG93bnMgdGhlIGluZGV4LCBjaGlsZHJlbiBtdXN0IG5vdCBwYWludCBzdGF0ZSBpbmRlcGVuZGVudGx5LgotIE5vIG1peGluZyBgbGluZWFyYCBhbmQgYG5vbkxpbmVhcmAgbW9kZXMgd2l0aGluIHRoZSBzYW1lIGZsb3cg4oCUIHBpY2sgb25lLiBMaW5lYXIgaXMgdGhlIGRlZmF1bHQ7IGZsaXAgdG8gYG5vbkxpbmVhcmAgb25seSBmb3IgcmV2aWV3LXN0eWxlIGZsb3dzIHdoZXJlIGV2ZXJ5IHN0ZXAgaXMgcmVhY2hhYmxlLgotIE5vIGhhcmQtY29kZWQgaGV4IC8gcHggLyBmb250IHZhbHVlcyBpbnNpZGUgdGhlIHN0ZXBwZXIgb3IgaXRzIGNoaWxkcmVuLgotIE5vIGBzeGAgb3ZlcnJpZGVzIG9uIGBTdGVwTGFiZWxgIG9yIGBTdGVwQ29ubmVjdG9yYCB0byBjaGFuZ2UgaWNvbiBjb2xvdXIsIGxhYmVsIHR5cG9ncmFwaHksIG9yIGNvbm5lY3RvciBzdHJva2Ug4oCUIHRoZSB0aGVtZSBhbmQgcGVyLXN0ZXAgc3RhdGUgb3duIHRoZXNlLgotIE5vIG1vcmUgdGhhbiB+NiBzdGVwcyBpbiBhIGhvcml6b250YWwgc3RlcHBlci4gSWYgeW91IG5lZWQgbW9yZSwgc3BsaXQgdGhlIGZsb3cgb3Igc3dpdGNoIHRvIHZlcnRpY2FsLgotIE5vIHN0ZXAgbGFiZWwgbG9uZ2VyIHRoYW4gfjMgd29yZHMuIFVzZSBhIG5vdW4gcGhyYXNlICgiTWFwIHNjaGVtYSIpLCBub3QgYSBzZW50ZW5jZSAoIk1hcCB0aGUgY29sdW1ucyB0byB0eXBlcyIpLgotIE5vIGNsaWNrYWJsZSBsYXN0IHN0ZXAgdGhhdCBmaXJlcyBhICpkaWZmZXJlbnQqIGFjdGlvbiB0aGFuIHRoZSBpbi1mbG93IFN1Ym1pdCDigJQgb25jZSB5b3UgcmVhY2ggdGhlIHRlcm1pbmFsIHN0ZXAsIHRoZSBmbG93J3MgU3VibWl0IGJ1dHRvbiBjb21taXRzOyB0aGUgc3RlcCBpdHNlbGYgaXMganVzdCBhIG1hcmtlci4KLSBObyBuZXN0ZWQgc3RlcHBlcnMuIElmIGEgc3RlcCdzIGNvbnRlbnQgbmVlZHMgc3ViLXN0ZXBzLCByZWRlc2lnbiBhcyBhIHBhcmVudCBmbG93IHdpdGggYSBzdWItZmxvdyBpbnNpZGUgaXRzIGBTdGVwQ29udGVudGAgcGFuZWwuCi0gTm8gU3RlcHBlciBhcyB0aGUgKnByaW1hcnkqIG5hdmlnYXRpb24gYmV0d2VlbiB0b3AtbGV2ZWwgcGFnZXMg4oCUIFN0ZXBwZXIgaXMgYSBwcm9ncmVzcyBpbmRpY2F0b3IgaW5zaWRlIGEgc2luZ2xlIHRhc2ssIG5vdCBhIHJvdXRlIHN3aXRjaGVyLgotIE5vdGhpbmcgb3V0c2lkZSB0aGUgVmFyaWFudHMgbGlzdCAowqc1KSBpcyB2YWxpZC4KCiMjIyBDb25kaXRpb25zCi0gRWFjaCBzdGVwJ3MgYDxTdGVwTGFiZWw+YCBtdXN0IGNhcnJ5IGEgcHJvZ3JhbW1hdGljIG5hbWUg4oCUIHRoZSBsYWJlbCB0ZXh0LiBTY3JlZW4gcmVhZGVycyBhbm5vdW5jZSAiU3RlcCAqTiogb2YgKk0qOiAqPGxhYmVsPioiOyBzY3JlZW4gcmVhZGVyIG91dHB1dCBpcyBicm9rZW4gd2l0aG91dCBhIGxhYmVsLgotIFRoZSBhY3RpdmUgc3RlcCBtdXN0IGNhcnJ5IGBhcmlhLWN1cnJlbnQ9InN0ZXAiYCAoTVVJJ3MgYDxTdGVwPmAgc2V0cyB0aGlzIGF1dG9tYXRpY2FsbHkgd2hlbiB0aGUgaW5kZXggbWF0Y2hlcyBgYWN0aXZlU3RlcGApLgotICoqTmF2aWdhdGlvbiBjb250cm9scyBkbyBub3QgYmVsb25nIHRvIHRoaXMgY29tcG9zaXRlLioqIEJhY2sgLyBOZXh0IC8gU3VibWl0IGJ1dHRvbnMgc2l0IG91dHNpZGUgdGhlIFN0ZXBwZXIgYW5kIGFyZSBvd25lZCBieSB0aGUgV2l6YXJkIHBhdHRlcm4gKHBsYW5uZWQgcmVmZXJlbmNlKS4gVGhlIFN0ZXBwZXIgcmVuZGVycyBwcm9ncmVzcyBvbmx5IOKAlCBpdCBuZXZlciB3aXJlcyBgb25DbGlja2AgaGFuZGxlcnMgdGhhdCBhZHZhbmNlIHRoZSBmbG93LgotIEZvciAqKm5vbi1saW5lYXIgZmxvd3MqKiAoYDxTdGVwcGVyIG5vbkxpbmVhcj5gICsgYDxTdGVwQnV0dG9uPmApLCBldmVyeSBzdGVwIGlzIHJlYWNoYWJsZSBieSBjbGlja2luZyB0aGUgc3RlcCBpdHNlbGYuIFRoaXMgaXMgc3RpbGwgcHJvZ3Jlc3Mgd2lyaW5nLCBub3QgbmF2aWdhdGlvbiBjaHJvbWUg4oCUIHRoZSBXaXphcmQgcGF0dGVybiBkZWNpZGVzIHdoZXRoZXIgbm9uLWxpbmVhciB0cmF2ZXJzYWwgaXMgdGhlIHJpZ2h0IGludGVyYWN0aW9uIG1vZGVsLgotIEZvciAqKmVycm9yIHN0YXRlcyoqLCBzZXQgYDxTdGVwTGFiZWwgZXJyb3I+YCBvbiB0aGUgZmFpbGluZyBzdGVwLiBLZWVwIHRoZSBlcnJvciB2aXNpYmxlIG9uIHN1YnNlcXVlbnQgbmF2aWdhdGlvbnMgdW50aWwgdGhlIHVuZGVybHlpbmcgaXNzdWUgaXMgZml4ZWQuCi0gRm9yICoqdmVydGljYWwgd2l0aCBpbmxpbmUgY29udGVudCoqLCBvbmx5IHRoZSBhY3RpdmUgc3RlcCdzIGA8U3RlcENvbnRlbnQ+YCBpcyB2aXNpYmxlIOKAlCBjb21wbGV0ZWQgc3RlcHMgY29sbGFwc2UgYmFjayB0byBsYWJlbC1vbmx5LgotIFBlcnNpc3RlbmNlIOKAlCB3aGVuIHRoZSBhY3RpdmUgc3RlcCBpcyBwYXJ0IG9mIHRoZSBwYWdlJ3MgaWRlbnRpdHkgKGRlZXAtbGlua2FibGUgd2l6YXJkcyksIHdpcmUgYGFjdGl2ZVN0ZXBgIHRvIGEgVVJMIHBhcmFtLiBPdGhlcndpc2UsIGluLW1lbW9yeSBzdGF0ZSBpcyBmaW5lOyBvbiB1bm1vdW50IHRoZSBmbG93IHJlc2V0cy4KLSBMYXp5IHN0ZXAgY29udGVudCDigJQgd2hlbiBhIHN0ZXAncyBjb250ZW50IGlzIGhlYXZ5IChhIGNoYXJ0LCBhIGZldGNoKSwgcmVuZGVyIHRoZSBjb250ZW50IG9ubHkgd2hlbiBpdHMgc3RlcCBpcyBhY3RpdmU7IGRvIG5vdCBwcmUtcmVuZGVyIGhpZGRlbiBzdGVwcy4KCiMjIDUuIFZhcmlhbnRzCgpTdGVwcGVyIGlzIGEgbXVsdGktYXhpcyBjb21wb3NpdGUuIFRoZSBwcmltYXJ5IGF4aXMgaXMgKipvcmllbnRhdGlvbioqOyBzZWNvbmRhcnkgYXhlcyBhcmUgKipsYWJlbCBwbGFjZW1lbnQqKiwgKippbnRlcmFjdGlvbiBtb2RlbCoqLCBhbmQgKipwZXItc3RlcCBzdGF0ZSoqLiBQaWNrIG9uZSB2YWx1ZSBwZXIgYXhpcy4KCiMjIyA1LjEgT3JpZW50YXRpb24KCnwgVmFyaWFudCB8IGBTdGVwcGVyYCBwcm9wcyB8IFVzZSB3aGVuIHwKfC0tLXwtLS18LS0tfAp8ICoqSG9yaXpvbnRhbCoqIChkZWZhdWx0KSB8IGBvcmllbnRhdGlvbj0iaG9yaXpvbnRhbCJgIChkZWZhdWx0KSB8IFRvcC1vZi1wYWdlIHByb2dyZXNzIGluZGljYXRvciBmb3IgYSB3aXphcmQ7IHN0ZXBzIGZpdCBvbmUgcm93OyBwZXItc3RlcCBjb250ZW50IGxpdmVzIGJlbG93IHRoZSBzdGVwcGVyLCBub3QgaW5zaWRlIGl0IHwKfCAqKlZlcnRpY2FsKiogfCBgb3JpZW50YXRpb249InZlcnRpY2FsImAgfCBNdWx0aS1zdGVwIGZvcm0gd2l0aCBpbmxpbmUgY29udGVudCBwZXIgc3RlcCAoYDxTdGVwQ29udGVudD5gKTsgYWxsb3dzIGxvbmdlciBsYWJlbHMgKH42IHdvcmRzKTsgZWFjaCBzdGVwJ3MgcGFuZWwgZXhwYW5kcyBpbmxpbmUgd2hlbiBhY3RpdmUgfAoKIyMjIDUuMiBMYWJlbCBwbGFjZW1lbnQgKGhvcml6b250YWwgb25seSkKCnwgVmFyaWFudCB8IGBTdGVwcGVyYCBwcm9wcyB8IFVzZSB3aGVuIHwKfC0tLXwtLS18LS0tfAp8ICoqRW5kKiogKGRlZmF1bHQpIHwgYDxTdGVwcGVyPmAgKG5vIGBhbHRlcm5hdGl2ZUxhYmVsYCkgfCBEZWZhdWx0IOKAlCBsYWJlbCBzaXRzIHRvIHRoZSByaWdodCBvZiBlYWNoIHN0ZXAgaWNvbjsgY29tcGFjdDsgd29ya3MgZm9yIHNob3J0IGxhYmVscyB8CnwgKipCb3R0b20qKiB8IGA8U3RlcHBlciBhbHRlcm5hdGl2ZUxhYmVsPmAgfCBFcXVhbC13ZWlnaHQgc3RlcHMgd2hlcmUgdGhlIHRyYWlsIHJlYWRzIGFzIGEgaG9yaXpvbnRhbCBiYW5uZXI7IGxhYmVsIHNpdHMgYmVsb3cgdGhlIGljb24sIGNlbnRyZWQ7IGdpdmVzIG1vcmUgYnJlYXRoaW5nIHJvb20gZm9yIHNsaWdodGx5IGxvbmdlciBsYWJlbHMgfAoKVmVydGljYWwgb3JpZW50YXRpb24gaGFzIG5vIHBsYWNlbWVudCBheGlzIOKAlCBsYWJlbHMgYWx3YXlzIHNpdCB0byB0aGUgcmlnaHQgb2YgdGhlIGljb24uCgojIyMgNS4zIEludGVyYWN0aW9uIG1vZGVsCgp8IFZhcmlhbnQgfCBTdGVwcGVyIC8gU3RlcCBtYXJrdXAgfCBVc2Ugd2hlbiB8CnwtLS18LS0tfC0tLXwKfCAqKkxpbmVhcioqIChkZWZhdWx0KSB8IGA8U3RlcHBlcj5gIHdpdGggcGxhaW4gYDxTdGVwPjxTdGVwTGFiZWw+4oCmPC9TdGVwTGFiZWw+PC9TdGVwPmAgY2hpbGRyZW4gfCBUaGUgdXNlciBtdXN0IGNvbXBsZXRlIHN0ZXBzIGluIG9yZGVyIOKAlCB3aXphcmRzLCBvbmJvYXJkaW5nLCBzaWdudXAgfAp8ICoqTm9uLWxpbmVhcioqIHwgYDxTdGVwcGVyIG5vbkxpbmVhcj5gIHdpdGggYDxTdGVwPjxTdGVwQnV0dG9uIG9uQ2xpY2s9e+KApn0+4oCmPC9TdGVwQnV0dG9uPjwvU3RlcD5gIHwgUmV2aWV3LXN0eWxlIGZsb3dzIHdoZXJlIGV2ZXJ5IHN0ZXAgaXMgcmVhY2hhYmxlIOKAlCB0aGUgdXNlciBjYW4gcmV2aXNpdCBwcmlvciBzdGVwcyB3aXRob3V0IGFuIGV4cGxpY2l0ICJCYWNrIiB8CgojIyMgNS40IFBlci1zdGVwIHN0YXRlIChuYW1lZCBzdHlsZXMgcGVyIFN0ZXApCgpTdGVwcyBhdXRvbWF0aWNhbGx5IGRlcml2ZSB0aGVpciBzdGF0ZSBmcm9tIGBhY3RpdmVTdGVwYCBpbmRleC4gVGhlIG5hbWVkLXN0eWxlIHRhYmxlIGJlbG93IGNvdmVycyB3aGF0IGVhY2ggc3RhdGUgcmVuZGVycy4KCnwgTmFtZWQgc3R5bGUgfCBUcmlnZ2VyIHwgVmlzdWFsIHwgTm90ZXMgfAp8LS0tfC0tLXwtLS18LS0tfAp8ICoqSW5hY3RpdmUqKiB8IFN0ZXAgaW5kZXggPiBgYWN0aXZlU3RlcGAgfCBPdXRsaW5lZCBjaXJjbGUsIG51bWJlciBpbiBgdGV4dC5kaXNhYmxlZGA7IGxhYmVsIGluIGB0ZXh0LnNlY29uZGFyeWAgfCBGdXR1cmUgc3RlcCDigJQgbm90IHlldCBzdGFydGVkIHwKfCAqKkFjdGl2ZSoqIHwgU3RlcCBpbmRleCA9IGBhY3RpdmVTdGVwYCB8IEZpbGxlZCBjaXJjbGUgaW4gYHByaW1hcnkubWFpbmAsIG51bWJlciBpbiB3aGl0ZTsgbGFiZWwgaW4gYHRleHQucHJpbWFyeWAgKGJvbGQpIHwgQ3VycmVudCBzdGVwIOKAlCBgYXJpYS1jdXJyZW50PSJzdGVwImAgfAp8ICoqQ29tcGxldGVkKiogfCBTdGVwIGluZGV4IDwgYGFjdGl2ZVN0ZXBgIHwgRmlsbGVkIGNpcmNsZSBpbiBgcHJpbWFyeS5tYWluYCwgY2hlY2sgaWNvbiBpbiB3aGl0ZTsgbGFiZWwgaW4gYHRleHQucHJpbWFyeWAgfCBQYXN0IHN0ZXAg4oCUIGRvbmUgfAp8ICoqRXJyb3IqKiB8IGA8U3RlcExhYmVsIGVycm9yPmAgfCBGaWxsZWQgY2lyY2xlIGluIGBlcnJvci5tYWluYCwgKipzdGVwIG51bWJlciBpbiB3aGl0ZSoqIChubyBnbHlwaCBzd2FwIOKAlCBjb2xvdXIgaXMgdGhlIGFmZm9yZGFuY2UpOyBsYWJlbCBpbiBgdGV4dC5wcmltYXJ5YCB8IFN0ZXAgZmFpbGVkIOKAlCBtdXN0IGJlIGZpeGVkIGJlZm9yZSBwcm9jZWVkaW5nIHwKfCAqKkRpc2FibGVkKiogfCBgPFN0ZXAgZGlzYWJsZWQ+YCB8IE91dGxpbmVkIGNpcmNsZSwgbnVtYmVyIGluIGB0ZXh0LmRpc2FibGVkYDsgbGFiZWwgaW4gYHRleHQuZGlzYWJsZWRgIHwgU3RlcCBpcyBnYXRlZDsgcGFpciB3aXRoIGEgdG9vbHRpcCBleHBsYWluaW5nIHdoeSB8CnwgKipPcHRpb25hbCoqIHwgYDxTdGVwTGFiZWwgb3B0aW9uYWw9ezxUeXBvZ3JhcGh5IHZhcmlhbnQ9ImNhcHRpb24iPk9wdGlvbmFsPC9UeXBvZ3JhcGh5Pn0+YCB8IFNhbWUgYXMgSW5hY3RpdmUgLyBBY3RpdmUgLyBDb21wbGV0ZWQ7IGFkZHMgYSBgY2FwdGlvbmAgbGluZSBiZWxvdyB0aGUgbGFiZWwgfCBTdGVwIG1heSBiZSBza2lwcGVkIOKAlCBjYXB0aW9uIGdpdmVzIHRoZSB1c2VyIHBlcm1pc3Npb24gfAoKIyMjIE1vZGlmaWVycyDigJQgbGF5ZXJlZCBvbiBhbnkgdmFyaWFudAoKfCBNb2RpZmllciB8IFBhdHRlcm4gfCBOb3RlcyB8CnwtLS18LS0tfC0tLXwKfCAqKkN1c3RvbSBzdGVwIGljb24qKiB8IGA8U3RlcExhYmVsIFN0ZXBJY29uQ29tcG9uZW50PXtNeUljb259PmAgfCBSZXBsYWNlIHRoZSBkZWZhdWx0IG51bWJlciB3aXRoIGEgZG9tYWluIGljb24uIEtlZXAgY29sb3VyIGJpbmRpbmdzIOKAlCBzZXQgZmlsbCB2aWEgYFN0ZXBJY29uUHJvcHM9e3sgc3g6IHsgY29sb3I6IOKApiB9IH19YCBvbmx5IG9uIGluYWN0aXZlIGRlZmF1bHQgc3RhdGUsIG5ldmVyIG9uIGFjdGl2ZSAvIGNvbXBsZXRlZCB8CnwgKipIaWRkZW4gY29ubmVjdG9yIHNlZ21lbnQqKiB8IGA8U3RlcHBlciBjb25uZWN0b3I9e251bGx9PmAgfCBEcm9wcyB0aGUgY29ubmVjdG9yIGxpbmUgZW50aXJlbHkg4oCUIHJhcmU7IG9ubHkgd2hlbiB0aGUgbGF5b3V0IGFscmVhZHkgaW1wbGllcyBzZXF1ZW5jZSAoZS5nLiBpbnNpZGUgYSBjYXJkIHdpdGggYnVpbHQtaW4gZGl2aWRlcnMpIHwKfCAqKlVSTC1ib3VuZCBhY3RpdmUgc3RlcCoqIHwgYGFjdGl2ZVN0ZXBgIHJlYWRzIGZyb20gYHNlYXJjaFBhcmFtcy5nZXQoJ3N0ZXAnKWA7ICJOZXh0IiAvICJCYWNrIiB3cml0ZSBiYWNrIHwgVXNlIHdoZW4gdGhlIHdpemFyZCBzaG91bGQgYmUgZGVlcC1saW5rYWJsZSB8CgojIyA2LiBBbmF0b215CgpUaGUgU3RlcHBlciBjb21wb3NpdGUgb3ducyB0aGUgZm9sbG93aW5nIHZpc2libGUgcmVnaW9ucy4gRWFjaCBpcyBhIGxhYmVsbGVkIGF0b20g4oCUIG5vbmUgYXJlIHNlcGFyYXRlIGJhc2UgcmVmZXJlbmNlczsgdGhleSBhcmUgTVVJIHByaW1pdGl2ZXMgb3duZWQgYnkgdGhpcyBjb21wb3NpdGUsIHRoZSBzYW1lIHdheSBgRGlhbG9nVGl0bGVgIC8gYERpYWxvZ0NvbnRlbnRgIC8gYERpYWxvZ0FjdGlvbnNgIGFyZSBvd25lZCBieSBgRGlhbG9nYC4KCi0gKipTdGVwcGVyIGNvbnRhaW5lcioqIOKAlCBgPG5hdj5gLWxpa2Ugd3JhcHBlcjsgZmxleCByb3cgKGhvcml6b250YWwpIG9yIGZsZXggY29sdW1uICh2ZXJ0aWNhbCk7IG93bnMgcGFkZGluZyBhbmQgZ2FwIGJldHdlZW4gc3RlcHMuCi0gKipTdGVwKiog4oCUIG9uZSBlbnRyeSBpbiB0aGUgdHJhaWw7IGNvbWJpbmVzIGEgc3RlcCBpY29uLCBhIHN0ZXAgbGFiZWwsIGFuZCAodmVydGljYWwgb25seSkgYW4gb3B0aW9uYWwgY29udGVudCBwYW5lbC4KLSAqKlN0ZXAgaWNvbioqIOKAlCB0aGUgYDI0w5cyNGAgZ2x5cGggYXQgdGhlIGxlYWRpbmcgZWRnZSBvZiBlYWNoIHN0ZXAuIERlZmF1bHQgaXMgdGhlIHN0ZXAgbnVtYmVyOyBmbGlwcyB0byBhIGBDaGVja2AgZ2x5cGggb24gY29tcGxldGlvbiwgYW4gYWxlcnQgZ2x5cGggb24gZXJyb3IsIG9yIGEgY3VzdG9tIGdseXBoIHZpYSBgU3RlcEljb25Db21wb25lbnRgLiBGaWxsZWQgY2lyY2xlIChhY3RpdmUgLyBjb21wbGV0ZWQgLyBlcnJvciksIG91dGxpbmVkIGNpcmNsZSAoaW5hY3RpdmUgLyBkaXNhYmxlZCkuCi0gKipTdGVwIGxhYmVsKiog4oCUIHNob3J0IG5vdW4gcGhyYXNlLCBgdHlwb2dyYXBoeS5ib2R5MmA7IHNpdHMgdG8gdGhlIHJpZ2h0IG9mIHRoZSBpY29uIChkZWZhdWx0IC8gdmVydGljYWwpIG9yIGJlbG93IGl0IChgYWx0ZXJuYXRpdmVMYWJlbGApLgotICoqT3B0aW9uYWwgY2FwdGlvbioqIOKAlCBgdHlwb2dyYXBoeS5jYXB0aW9uYCBsaW5lIGJlbG93IHRoZSBsYWJlbDsgdXNlZCBmb3IgIk9wdGlvbmFsIiBtYXJrZXJzIG9yIHNob3J0IGhpbnRzLgotICoqU3RlcCBjb25uZWN0b3IgKHNlcGFyYXRvcikqKiDigJQgdGhlIGxpbmUgYmV0d2VlbiB0d28gc3RlcHMuIEhvcml6b250YWwgc3Ryb2tlIChob3Jpem9udGFsIG9yaWVudGF0aW9uKSBvciB2ZXJ0aWNhbCBzdHJva2UgKHZlcnRpY2FsIG9yaWVudGF0aW9uKS4gVGhlbWUgb3ducyB0aGUgY29sb3VyOiBgZGl2aWRlcmAgYmV0d2VlbiBpbmFjdGl2ZSBzdGVwcywgYHByaW1hcnkubWFpbmAgYmV0d2VlbiBjb21wbGV0ZWQgc3RlcHMuCi0gKipTdGVwIGNvbnRlbnQgcGFuZWwqKiAqKHZlcnRpY2FsIG9ubHkpKiDigJQgdGhlIGlubGluZSBjb250ZW50IChmb3JtLCBwcmV2aWV3LCBpbnN0cnVjdGlvbnMpIGF0dGFjaGVkIHRvIGVhY2ggc3RlcDsgb25seSB0aGUgYWN0aXZlIHN0ZXAncyBwYW5lbCBpcyB2aXNpYmxlOyBjb2xsYXBzZXMgb24gdHJhbnNpdGlvbi4KCiMjIyBDb21wb3NlZCBvZgoKLSBgU3RlcHBlcmAsIGBTdGVwYCwgYFN0ZXBMYWJlbGAsIGBTdGVwQ29ubmVjdG9yYCDigJQgTVVJIHByaW1pdGl2ZXM7IGBTdGVwcGVyYCBvd25zIGxheW91dCwgYFN0ZXBgIG93bnMgcGVyLWl0ZW0gc3RhdGUsIGBTdGVwTGFiZWxgIHJlbmRlcnMgdGhlIGljb24gKyBsYWJlbCwgYFN0ZXBDb25uZWN0b3JgIGlzIHRoZSBsaW5lIGJldHdlZW4gc3RlcHMKLSBgU3RlcENvbnRlbnRgIOKAlCBNVUkgcHJpbWl0aXZlIGZvciB2ZXJ0aWNhbCBvcmllbnRhdGlvbiBvbmx5OyBjb2xsYXBzaWJsZSBjb250ZW50IHBhbmVsCi0gYFN0ZXBCdXR0b25gIOKAlCBNVUkgcHJpbWl0aXZlIHVzZWQgaW5zaWRlIGA8U3RlcHBlciBub25MaW5lYXI+YDsgdHVybnMgdGhlIHN0ZXAgaW50byBhIGNsaWNrYWJsZSBzdXJmYWNlCi0gW1R5cG9ncmFwaHldKC4uL2ZvdW5kYXRpb25zL3R5cG9ncmFwaHkvdXNhZ2UubWQpIOKAlCBgYm9keTJgIGZvciB0aGUgbGFiZWwsIGBjYXB0aW9uYCBmb3IgdGhlIG9wdGlvbmFsIGhpbnQKLSBbVG9vbHRpcF0oLi4vYmFzZS90b29sdGlwL3VzYWdlLm1kKSDigJQgcGFpcmVkIHdpdGggZGlzYWJsZWQgc3RlcHMgdG8gZXhwbGFpbiB3aHkKCk5hdmlnYXRpb24gY29udHJvbHMgKEJhY2sgLyBOZXh0IC8gU3VibWl0KSBhcmUgKipub3QqKiBwYXJ0IG9mIHRoaXMgY29tcG9zaXRlIOKAlCB0aGV5IGJlbG9uZyB0byB0aGUgV2l6YXJkIHBhdHRlcm4gKHBsYW5uZWQgcmVmZXJlbmNlKSB0aGF0IGNvbnN1bWVzIHRoZSBTdGVwcGVyIGFsb25nc2lkZSBzdGVwIGNvbnRlbnQuCgojIyA3LiBDdXN0b20KCiMjIyBMaW5lYXIgcHJvZ3Jlc3MgdHJhaWwgKGhvcml6b250YWwsIHRvcC1vZi1wYWdlKQoKVGhlIG1vc3QgY29tbW9uIHNoYXBlIOKAlCBhIGJhbm5lciBvZiBzdGVwcyBhYm92ZSBhIGNvbnRlbnQgcmVnaW9uLiBUaGUgU3RlcHBlciBpdHNlbGYgb25seSBwYWludHMgcHJvZ3Jlc3M7IHRoZSBzdXJyb3VuZGluZyBXaXphcmQgcGF0dGVybiBvd25zIHRoZSBhY3RpdmUtc3RlcCBjb250ZW50IHBhbmVsIGFuZCB0aGUgQmFjayAvIE5leHQgLyBTdWJtaXQgcm93IGJlbmVhdGggaXQuCgpgYGB0c3gKY29uc3Qgc3RlcHMgPSBbJ0Nvbm5lY3Qgc291cmNlJywgJ01hcCBzY2hlbWEnLCAnUmV2aWV3JywgJ1B1Ymxpc2gnXTsKCjxTdGVwcGVyIGFjdGl2ZVN0ZXA9e2FjdGl2ZVN0ZXB9IGFyaWEtbGFiZWw9IlNvdXJjZSBjb25uZWN0aW9uIGZsb3ciPgogIHtzdGVwcy5tYXAoKGxhYmVsKSA9PiAoCiAgICA8U3RlcCBrZXk9e2xhYmVsfT48U3RlcExhYmVsPntsYWJlbH08L1N0ZXBMYWJlbD48L1N0ZXA+CiAgKSl9CjwvU3RlcHBlcj4KYGBgCgojIyMgVmVydGljYWwgcHJvZ3Jlc3MgdHJhaWwgd2l0aCBpbmxpbmUgY29udGVudAoKVXNlIGA8U3RlcENvbnRlbnQ+YCBzbyBlYWNoIHN0ZXAncyBmb3JtIHNpdHMgaW5saW5lIGJlbmVhdGggaXRzIGxhYmVsLiBPbmx5IHRoZSBhY3RpdmUgc3RlcCdzIGNvbnRlbnQgaXMgdmlzaWJsZS4KCmBgYHRzeAo8U3RlcHBlciBhY3RpdmVTdGVwPXthY3RpdmVTdGVwfSBvcmllbnRhdGlvbj0idmVydGljYWwiIGFyaWEtbGFiZWw9IkNyZWF0ZSBtb25pdG9yIGZsb3ciPgogIDxTdGVwPgogICAgPFN0ZXBMYWJlbD5Db25uZWN0IHNvdXJjZTwvU3RlcExhYmVsPgogICAgPFN0ZXBDb250ZW50PgogICAgICA8VGV4dEZpZWxkIGxhYmVsPSJDb25uZWN0aW9uIG5hbWUiIC8+CiAgICA8L1N0ZXBDb250ZW50PgogIDwvU3RlcD4KICA8U3RlcD4KICAgIDxTdGVwTGFiZWw+TWFwIHNjaGVtYTwvU3RlcExhYmVsPgogICAgPFN0ZXBDb250ZW50PuKApjwvU3RlcENvbnRlbnQ+CiAgPC9TdGVwPgo8L1N0ZXBwZXI+CmBgYAoKIyMjIE5vbi1saW5lYXIgKHJldmlldy1zdHlsZSkgdHJhaWwKCk1ha2UgZXZlcnkgc3RlcCByZWFjaGFibGUuIFVzZSBgPFN0ZXBCdXR0b24+YCBzbyB0aGUgc3RlcCBpdHNlbGYgaXMgdGhlIGFmZm9yZGFuY2Ug4oCUIGNsaWNraW5nIGEgc3RlcCBzZXRzIGl0IGFzIGFjdGl2ZS4gVGhpcyBpcyAqcHJvZ3Jlc3Mgd2lyaW5nKiAod2hpY2ggc3RlcCBpcyBjdXJyZW50KSwgbm90ICpuYXZpZ2F0aW9uIGNocm9tZSogKHdoaWNoIHN0ZXAgdGhlIHVzZXIgaXMgKmNvbW1pdHRpbmcqIHRvKS4KCmBgYHRzeAo8U3RlcHBlciBhY3RpdmVTdGVwPXthY3RpdmVTdGVwfSBub25MaW5lYXIgYXJpYS1sYWJlbD0iSW52aXRlIHJldmlldyI+CiAge3N0ZXBzLm1hcCgobGFiZWwsIGluZGV4KSA9PiAoCiAgICA8U3RlcCBrZXk9e2xhYmVsfSBjb21wbGV0ZWQ9e2NvbXBsZXRlZFtpbmRleF19PgogICAgICA8U3RlcEJ1dHRvbiBvbkNsaWNrPXsoKSA9PiBzZXRBY3RpdmVTdGVwKGluZGV4KX0+e2xhYmVsfTwvU3RlcEJ1dHRvbj4KICAgIDwvU3RlcD4KICApKX0KPC9TdGVwcGVyPgpgYGAKCiMjIyBFcnJvciBhbmQgb3B0aW9uYWwgc3RlcHMKCk1hcmsgZXJyb3JzIHZpYSBgPFN0ZXBMYWJlbCBlcnJvcj5gOyBtYXJrIG9wdGlvbmFsIHN0ZXBzIHZpYSBgPFN0ZXBMYWJlbCBvcHRpb25hbD5gIHdpdGggYSBgY2FwdGlvbmAgVHlwb2dyYXBoeS4gS2VlcCBib3RoIHN0YXRlcyB2aXNpYmxlIHVudGlsIHRoZSB1bmRlcmx5aW5nIGNvbmRpdGlvbiBpcyByZXNvbHZlZC4KCmBgYHRzeAo8U3RlcD4KICA8U3RlcExhYmVsCiAgICBlcnJvcj17dmFsaWRhdGlvbkZhaWxlZH0KICAgIG9wdGlvbmFsPXtpc09wdGlvbmFsID8gPFR5cG9ncmFwaHkgdmFyaWFudD0iY2FwdGlvbiI+T3B0aW9uYWw8L1R5cG9ncmFwaHk+IDogdW5kZWZpbmVkfQogID4KICAgIE1hcCBzY2hlbWEKICA8L1N0ZXBMYWJlbD4KPC9TdGVwPgpgYGAKCiMjIyBBMTF5IHdpcmluZyBydWxlcwoKLSBgYXJpYS1sYWJlbGAgb24gdGhlIG91dGVyIGA8U3RlcHBlcj5gIOKAlCByZXF1aXJlZCB3aGVuIHRoZSBzdXJyb3VuZGluZyBoZWFkaW5nIGRvZXMgbm90IGRlc2NyaWJlIHRoZSBmbG93IChlLmcuICJDb25uZWN0IHNvdXJjZSBmbG93IikuCi0gRWFjaCBgPFN0ZXBMYWJlbD5gIGNhcnJpZXMgdGhlIHZpc2libGUgbGFiZWwgYXMgaXRzIGFjY2Vzc2libGUgbmFtZSDigJQgcmVxdWlyZWQuCi0gVGhlIGFjdGl2ZSBzdGVwIGF1dG9tYXRpY2FsbHkgcmVjZWl2ZXMgYGFyaWEtY3VycmVudD0ic3RlcCJgIGZyb20gTVVJLgotIGA8U3RlcEJ1dHRvbj5gIChub24tbGluZWFyIG1vZGUpIGlzIGtleWJvYXJkLWZvY3VzYWJsZTsgYXJyb3cga2V5cyBkbyAqbm90KiBtb3ZlIGJldHdlZW4gc3RlcHMg4oCUIFRhYiBkb2VzLiBUaGlzIG1hdGNoZXMgdGhlIFdBSS1BUklBICJzdGVwcGVyIGFzIGEgc2VyaWVzIG9mIGJ1dHRvbnMiIHBhdHRlcm4uCi0gRGlzYWJsZWQgc3RlcHMgbXVzdCBwYWlyIHdpdGggYSBUb29sdGlwIGV4cGxhaW5pbmcgd2h5IOKAlCB0aGUgdmlzdWFsICJ0aGlzIGlzIGRpbW1lZCIgYWxvbmUgaXMgbm90IGVub3VnaC4KCiMjIyBQZXJzaXN0ZW5jZSDigJQgVVJMLWJvdW5kIGFjdGl2ZSBzdGVwCgpXaGVuIHRoZSB3aXphcmQgaXMgZGVlcC1saW5rYWJsZSwgd2lyZSBgYWN0aXZlU3RlcGAgdG8gYSBVUkwgcGFyYW0uIEtlZXAgdGhlIHBhcmFtIHZhbHVlIHNob3J0IGFuZCBzdGFibGUgKGUuZy4gYD9zdGVwPTJgKS4KCmBgYHRzeApjb25zdCBbcGFyYW1zLCBzZXRQYXJhbXNdID0gdXNlU2VhcmNoUGFyYW1zKCk7CmNvbnN0IGFjdGl2ZVN0ZXAgPSBOdW1iZXIocGFyYW1zLmdldCgnc3RlcCcpID8/IDApOwpjb25zdCBzZXRBY3RpdmVTdGVwID0gKG5leHQ6IG51bWJlcikgPT4gc2V0UGFyYW1zKHsgc3RlcDogU3RyaW5nKG5leHQpIH0pOwpgYGAKCiMjIyBTdGVwIGljb24gdmlzdWFsCgpUaGUgc3RlcCBpY29uIGlzIGEgYDI0w5cyNGAgZmlsbGVkIGNpcmNsZSAoTVVJIGRlZmF1bHQgYDxTdGVwSWNvbj5gKToKCnwgU3RhdGUgfCBCYWNrZ3JvdW5kIHwgQ29udGVudCB8CnwtLS18LS0tfC0tLXwKfCBJbmFjdGl2ZSAoZnV0dXJlIHN0ZXApIHwgYHBhbGV0dGUuZ3JleVs0MDBdYCAoTkVPIDIuMTogbWVkaXVtIGdyZXkpIHwgU3RlcCBudW1iZXIsIHdoaXRlIHwKfCBBY3RpdmUgKGN1cnJlbnQgc3RlcCkgfCBgcGFsZXR0ZS5wcmltYXJ5Lm1haW5gIHwgU3RlcCBudW1iZXIsIHdoaXRlIHwKfCBDb21wbGV0ZWQgKHBhc3Qgc3RlcCkgfCBgcGFsZXR0ZS5wcmltYXJ5Lm1haW5gIHwgYENoZWNrYCBnbHlwaCwgd2hpdGUgfAp8IEVycm9yIHwgYHBhbGV0dGUuZXJyb3IubWFpbmAgfCBTdGVwIG51bWJlciwgd2hpdGUg4oCUIGNvbG91ciBjaGFuZ2UgaXMgdGhlIGFmZm9yZGFuY2UsIG5vIGdseXBoIHN3YXAgfAp8IERpc2FibGVkIHwgYHBhbGV0dGUudGV4dC5kaXNhYmxlZGAgKHBhbGVyIGdyZXkpIHwgU3RlcCBudW1iZXIsIHdoaXRlIHwKCioqTVVJIGRlZmF1bHQgdnMgTkVPIDIuMSDigJQgZXJyb3Igc3RhdGUuKiogTVVJJ3Mgc3RvY2sgYDxTdGVwSWNvbj5gIHN3YXBzIHRoZSBzdGVwIG51bWJlciBmb3IgYSB3YXJuaW5nIGdseXBoIHdoZW4gYGVycm9yYCBpcyBzZXQuIE5FTyAyLjEga2VlcHMgdGhlIHN0ZXAgbnVtYmVyIGFuZCBvbmx5IGNoYW5nZXMgdGhlIGNpcmNsZSBjb2xvdXIgdG8gYGVycm9yLm1haW5gLiBUbyBtYXRjaCBGaWdtYSBpbiBjb2RlLCBvdmVycmlkZSBgU3RlcEljb25Db21wb25lbnRgIGF0IHRoZSBjYWxsIHNpdGUgc28gdGhlIG51bWJlciBhbHdheXMgcmVuZGVyczoKCmBgYHRzeAppbXBvcnQgeyBTdGVwSWNvblByb3BzIH0gZnJvbSAnQG11aS9tYXRlcmlhbCc7CgpmdW5jdGlvbiBTdGVwTnVtYmVySWNvbih7IGFjdGl2ZSwgY29tcGxldGVkLCBlcnJvciwgaWNvbiB9OiBTdGVwSWNvblByb3BzKSB7CiAgLy8g4oCmIHJlbmRlciBhIDI0w5cyNCBmaWxsZWQgY2lyY2xlIHdob3NlIGJhY2tncm91bmQgZmxpcHMgYnkgc3RhdGUsIHdpdGggdGhlCiAgLy8gcmF3IGBpY29uYCAodGhlIHN0ZXAgbnVtYmVyKSBpbnNpZGUgZXZlbiB3aGVuIGBlcnJvcmAgaXMgdHJ1ZS4KfQoKPFN0ZXBMYWJlbCBTdGVwSWNvbkNvbXBvbmVudD17U3RlcE51bWJlckljb259IGVycm9yPXvigKZ9PntsYWJlbH08L1N0ZXBMYWJlbD4KYGBgCgpQcm9kdWN0aW9uIGNvZGUgZG9lcyBub3QgdGhlbWUgYE11aVN0ZXBwZXJgIGdsb2JhbGx5IOKAlCBjYWxsIHNpdGVzIGJ1bXAgdGhlIGljb24gc2l6ZSB3aXRoIGlubGluZSBgc3hgOgoKYGBgdHN4CjxTdGVwcGVyIHN4PXt7ICcmIC5NdWlTdGVwSWNvbi1yb290JzogeyBmb250U2l6ZTogJzIuNHJlbScgfSB9fT7igKY8L1N0ZXBwZXI+Ci8vIG9yIHBlci1TdGVwTGFiZWw6CjxTdGVwTGFiZWwgc2xvdFByb3BzPXt7IHN0ZXBJY29uOiB7IHN4OiB7IHdpZHRoOiAyNCwgaGVpZ2h0OiAyNCB9IH0gfX0+4oCmPC9TdGVwTGFiZWw+CmBgYAoKVGhpcyBwYXR0ZXJuIGlzIHVzZWQgaW4gYFdpemFyZFN0ZXBwZXJgIChgQGFsYXRpb24vZGF0YS1wcm9kdWN0cy9wcm9kdWN0LXVpYCkgYW5kIGBTdGVwc1NpZGViYXJgIChgQGFsYXRpb24vY2RlL3VpYCkuIE1pcnJvciBpdDsgZG8gbm90IGludmVudCBjdXN0b20gc3RlcCBpY29ucy4KCiMjIDguIE1vY2sgZGF0YSBjb250ZW50CgpQbGFjZWhvbGRlciDigJQgZmlsbCB3aXRoIEFsYXRpb24tZG9tYWluIHZhbHVlcyB3aGVuIHRoaXMgY29tcG9zaXRlIGlzIHVzZWQgaW4gYSBwaWxvdC4KCi0gKipDb25uZWN0IGEgZGF0YSBzb3VyY2UqKiAoNCBzdGVwcywgaG9yaXpvbnRhbCkg4oCUIGBDaG9vc2UgY29ubmVjdG9yYCDCtyBgQXV0aGVudGljYXRlYCDCtyBgTWFwIHNjaGVtYWAgwrcgYFJldmlld2AKLSAqKlB1Ymxpc2ggYSBkYXRhIHByb2R1Y3QqKiAoNSBzdGVwcywgaG9yaXpvbnRhbCkg4oCUIGBEZWZpbmUgcHJvZHVjdGAgwrcgYEFkZCBkYXRhc2V0c2AgwrcgYFN0YW5kYXJkcyBjaGVja2AgwrcgYFJldmlld2AgwrcgYFB1Ymxpc2hgCi0gKipPbmJvYXJkaW5nKiogKDMgc3RlcHMsIGhvcml6b250YWwgYGFsdGVybmF0aXZlTGFiZWxgKSDigJQgYFByb2ZpbGVgIMK3IGBXb3Jrc3BhY2VgIMK3IGBJbnZpdGUgdGVhbWAKLSAqKkNyZWF0ZSBtb25pdG9yKiogKDQgc3RlcHMsIHZlcnRpY2FsIHdpdGggaW5saW5lIGNvbnRlbnQpIOKAlCBgUGljayB0YXJnZXRgIMK3IGBTZXQgY29uZGl0aW9uc2AgwrcgYFNjaGVkdWxlYCDCtyBgTm90aWZ5YAoKIyMgMTAuIFVYIENvcHkKCnwgRWxlbWVudCB8IFJ1bGUgfCBFeGFtcGxlIHwKfC0tLXwtLS18LS0tfAp8IFN0ZXAgbGFiZWwgfCBTZW50ZW5jZSBjYXNlIG5vdW4gcGhyYXNlOyDiiaQgfjMgd29yZHMgfCAiTWFwIHNjaGVtYSIgwrcgIlJldmlldyIgfAp8IE9wdGlvbmFsIGNhcHRpb24gfCBTZW50ZW5jZSBjYXNlOyBvbmUgc2hvcnQgd29yZC9waHJhc2UgfCAiT3B0aW9uYWwiIMK3ICJSZWNvbW1lbmRlZCIgfAp8IE91dGVyIGBhcmlhLWxhYmVsYCB8IFNlbnRlbmNlIGNhc2Ugbm91biBwaHJhc2UgdGhhdCBuYW1lcyB0aGUgZmxvdyB8ICJTb3VyY2UgY29ubmVjdGlvbiBmbG93IiB8CnwgRGlzYWJsZWQtc3RlcCB0b29sdGlwIHwgT25lIHNob3J0IHNlbnRlbmNlIOKAlCBzYXkgKndoeSosIG5vdCAqd2hhdCogfCAiQ29ubmVjdCBhIHNvdXJjZSBmaXJzdCIgfAoKIyMgMTEuIEV4YW1wbGUKCmBgYHRzeAppbXBvcnQgeyBTdGVwLCBTdGVwTGFiZWwsIFN0ZXBwZXIgfSBmcm9tICdAbXVpL21hdGVyaWFsJzsKCmNvbnN0IHN0ZXBzID0gWydDb25uZWN0IHNvdXJjZScsICdNYXAgc2NoZW1hJywgJ1JldmlldycsICdQdWJsaXNoJ107CgovLyBTdGVwcGVyIHJlbmRlcnMgcHJvZ3Jlc3Mgb25seS4gV2lyaW5nIGBhY3RpdmVTdGVwYCwgdGhlIGFjdGl2ZSBzdGVwJ3MKLy8gY29udGVudCBwYW5lbCwgYW5kIHRoZSBCYWNrIC8gTmV4dCAvIFN1Ym1pdCBidXR0b25zIGFsbCBsaXZlIGluIHRoZQovLyBzdXJyb3VuZGluZyBXaXphcmQgcGF0dGVybiAocGxhbm5lZCByZWZlcmVuY2UpLgo8U3RlcHBlciBhY3RpdmVTdGVwPXthY3RpdmVTdGVwfSBhcmlhLWxhYmVsPSJTb3VyY2UgY29ubmVjdGlvbiBmbG93Ij4KICB7c3RlcHMubWFwKChsYWJlbCkgPT4gKAogICAgPFN0ZXAga2V5PXtsYWJlbH0+PFN0ZXBMYWJlbD57bGFiZWx9PC9TdGVwTGFiZWw+PC9TdGVwPgogICkpfQo8L1N0ZXBwZXI+CmBgYAoKU2VlIFtgRXhhbXBsZS50c3hgXSguL0V4YW1wbGUudHN4KSBmb3IgdGhlIGNhbm9uaWNhbCwgcnVubmFibGUgc291cmNlIOKAlCBob3Jpem9udGFsIGRlZmF1bHQsIGFsdGVybmF0aXZlLWxhYmVsLCB2ZXJ0aWNhbCB3aXRoIGlubGluZSBjb250ZW50LCBub24tbGluZWFyLCBhbmQgcGVyLXN0ZXAgc3RhdGUgdmFyaWFudHMuIE5vbmUgb2YgdGhlIGV4YW1wbGVzIHJlbmRlciBCYWNrIC8gTmV4dCAvIFN1Ym1pdCBidXR0b25zIOKAlCB0aG9zZSBiZWxvbmcgdG8gdGhlIFdpemFyZCBwYXR0ZXJuLgo=">
+  <div class="md-viewer-actions">
+    <button class="md-viewer-toggle" type="button" data-action="rendered" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      How to use it
+    </button>
+    <button class="md-viewer-toggle" type="button" data-action="source" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      View source
+      <span class="md-viewer-filename">stepper/usage.md</span>
+    </button>
+  </div>
+  <div class="md-rendered" aria-hidden="true"></div>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+
+    var EXCLUDED_H2 = (host.getAttribute('data-exclude-h2') || '')
+      .split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+
+    var TRUNCATE_AFTER = (host.getAttribute('data-truncate-after-h2') || '')
+      .trim().toLowerCase();
+
+    var rawMd = '';
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      rawMd = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      rawMd = '(failed to load source)';
+    }
+
+    var pre = host.querySelector('.md-viewer-pre');
+    var rendered = host.querySelector('.md-rendered');
+    pre.textContent = rawMd;
+    rendered.innerHTML = renderMarkdown(filterSections(stripFrontmatter(rawMd), EXCLUDED_H2, TRUNCATE_AFTER));
+
+    var btns = host.querySelectorAll('.md-viewer-toggle');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var mode = b.getAttribute('data-action');
+        var cur = host.getAttribute('data-open');
+        var next = (cur === mode) ? 'closed' : mode;
+        host.setAttribute('data-open', next);
+        btns.forEach(function (other) {
+          var on = other.getAttribute('data-action') === next;
+          other.setAttribute('aria-expanded', on ? 'true' : 'false');
+        });
+        pre.setAttribute('aria-hidden', next === 'source' ? 'false' : 'true');
+        rendered.setAttribute('aria-hidden', next === 'rendered' ? 'false' : 'true');
+      });
+    });
+
+    function stripFrontmatter(src) {
+      var m = src.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
+      return m ? src.slice(m[0].length) : src;
+    }
+
+    function filterSections(src, exclude, truncateAfter) {
+      var lines = src.split(/\r?\n/);
+      var out = [];
+      var skipping = false;
+      var seenH1 = false;
+      var passedAnchor = false;
+      function matches(title, t) {
+        return title === t
+          || title.indexOf(t + ' ') === 0
+          || title.indexOf(t + '/') === 0;
+      }
+      for (var i = 0; i < lines.length; i++) {
+        var ln = lines[i];
+        if (/^#(?!#)\s+/.test(ln)) {
+          if (!seenH1) { seenH1 = true; continue; }
+        }
+        var h2 = ln.match(/^##\s+(.*)$/);
+        if (h2) {
+          var title = h2[1].replace(/^\d+\.\s+/, '').trim().toLowerCase();
+          if (truncateAfter) {
+            if (passedAnchor) { break; }
+            if (matches(title, truncateAfter)) { passedAnchor = true; }
+          }
+          skipping = exclude.some(function (t) { return matches(title, t); });
+        }
+        if (!skipping) out.push(ln);
+      }
+      return out.join('\n').replace(/^\s+/, '');
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function inline(text) {
+      var codes = [];
+      text = text.replace(/`([^`]+)`/g, function (_, c) {
+        codes.push(c); return '\x00' + (codes.length - 1) + '\x00';
+      });
+      var links = [];
+      text = text.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_, label, url) {
+        links.push({ label: label, url: url }); return '\x01' + (links.length - 1) + '\x01';
+      });
+      text = escapeHtml(text);
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+      text = text.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+      text = text.replace(/\x01(\d+)\x01/g, function (_, i) {
+        var l = links[+i];
+        return '<a href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(l.label) + '</a>';
+      });
+      text = text.replace(/\x00(\d+)\x00/g, function (_, i) {
+        return '<code>' + escapeHtml(codes[+i]) + '</code>';
+      });
+      return text;
+    }
+    function renderMarkdown(src) {
+      var lines = src.split(/\r?\n/);
+      var out = [], i = 0, n = lines.length;
+
+      function parseTable(startIdx) {
+        var sep = lines[startIdx + 1];
+        if (!/^\s*\|[\s:\-|]+\|\s*$/.test(sep)) return null;
+        var rows = [lines[startIdx]];
+        var k = startIdx + 2;
+        while (k < n && /^\s*\|.*\|\s*$/.test(lines[k])) { rows.push(lines[k]); k++; }
+        function cells(row) {
+          var s = row.trim().replace(/^\|/, '').replace(/\|$/, '');
+          return s.split('|').map(function (c) { return c.trim(); });
+        }
+        var head = cells(rows[0]), body = rows.slice(1).map(cells);
+        var html = '<table><thead><tr>';
+        head.forEach(function (h) { html += '<th>' + inline(h) + '</th>'; });
+        html += '</tr></thead><tbody>';
+        body.forEach(function (r) {
+          html += '<tr>';
+          r.forEach(function (c) { html += '<td>' + inline(c) + '</td>'; });
+          html += '</tr>';
+        });
+        html += '</tbody></table>';
+        return { html: html, consumed: k - startIdx };
+      }
+
+      function calloutKind(s) {
+        var t = s.trim().replace(/^\*\*|\*\*$/g, '').replace(/^###\s+/, '').toLowerCase();
+        if (/^use when\b/.test(t) || /^guarantees\b/.test(t)) return 'green';
+        if (/^do not use when\b/.test(t) || /^prohibitions\b/.test(t) || /^don'?ts\b/.test(t)) return 'red';
+        return null;
+      }
+
+      while (i < n) {
+        var ln = lines[i];
+        var s = ln.trim();
+        if (!s) { i++; continue; }
+
+        if (/^-{3,}\s*$/.test(s)) { out.push('<hr>'); i++; continue; }
+
+        var m = s.match(/^```(\w*)\s*$/);
+        if (m) {
+          i++;
+          var buf = [];
+          while (i < n && !/^```\s*$/.test(lines[i].trim())) { buf.push(lines[i]); i++; }
+          i++;
+          out.push('<pre><code>' + escapeHtml(buf.join('\n')) + '</code></pre>');
+          continue;
+        }
+
+        var h = s.match(/^(#{1,3})\s+(.*)$/);
+        if (h) {
+          var lvl = h[1].length;
+          var txt = h[2].replace(/^\d+\.\s+/, '');
+
+          if (lvl === 2 && txt.trim().toLowerCase() === 'contract') {
+            out.push('<h2>' + inline(txt) + '</h2>');
+            i++;
+            var cards = [];
+            while (i < n) {
+              var cS = lines[i].trim();
+              if (!cS) { i++; continue; }
+              if (/^##\s+/.test(cS)) break;
+              var h3m = cS.match(/^###\s+(.*)$/);
+              if (h3m) {
+                var h3title = h3m[1];
+                var slug = h3title.toLowerCase().trim();
+                var cls = slug === 'guarantees'   ? 'guarantees'
+                        : slug === 'prohibitions' ? 'prohibitions'
+                        : slug === 'conditions'   ? 'conditions'
+                        : '';
+                var sym = cls === 'guarantees'   ? '\u2713'
+                        : cls === 'prohibitions' ? '\u2717'
+                        : cls === 'conditions'   ? 'i'
+                        : '';
+                i++;
+                var citems = [];
+                while (i < n) {
+                  var ics = lines[i].trim();
+                  if (!ics) break;
+                  if (/^#{1,3}\s+/.test(ics)) break;
+                  var cbm = /^[-*+]\s+(.*)$/.exec(ics);
+                  if (cbm) { citems.push(cbm[1]); i++; continue; }
+                  if (/^ {2,}/.test(lines[i])) { citems[citems.length - 1] += ' ' + ics; i++; continue; }
+                  break;
+                }
+                cards.push({ cls: cls, sym: sym, title: h3title, items: citems });
+                continue;
+              }
+              i++;
+            }
+            var grid = '<div class="contract-grid">';
+            cards.forEach(function (c) {
+              grid += '<div class="contract-card ' + c.cls + '">';
+              grid += '<h3><span class="sym">' + escapeHtml(c.sym) + '</span> ' + escapeHtml(c.title) + '</h3>';
+              grid += '<ul>';
+              c.items.forEach(function (it) { grid += '<li>' + inline(it) + '</li>'; });
+              grid += '</ul></div>';
+            });
+            grid += '</div>';
+            out.push(grid);
+            continue;
+          }
+
+          if (lvl === 3) {
+            var kind3 = calloutKind(txt);
+            if (kind3 && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+              i++;
+              var items3 = [];
+              while (i < n) {
+                var ls3 = lines[i].trim();
+                if (!ls3) break;
+                var bm3 = /^[-*+]\s+(.*)$/.exec(ls3);
+                if (bm3) { items3.push(bm3[1]); i++; continue; }
+                if (/^ {2,}/.test(lines[i])) { items3[items3.length - 1] += ' ' + ls3; i++; continue; }
+                break;
+              }
+              var html3 = '<div class="callout ' + kind3 + '"><div class="callout-title">' + escapeHtml(txt) + '</div><ul>';
+              items3.forEach(function (it) { html3 += '<li>' + inline(it) + '</li>'; });
+              html3 += '</ul></div>';
+              out.push(html3);
+              continue;
+            }
+          }
+          out.push('<h' + lvl + '>' + inline(txt) + '</h' + lvl + '>');
+          i++; continue;
+        }
+
+        if (s.startsWith('|') && i + 1 < n && /^\s*\|[\s:\-|]+\|\s*$/.test(lines[i + 1])) {
+          var t = parseTable(i);
+          if (t) { out.push(t.html); i += t.consumed; continue; }
+        }
+
+        var labelMatch = /^\*\*([^*]+)\*\*\s*$/.exec(s);
+        if (labelMatch && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+          var kind = calloutKind(s);
+          if (kind) {
+            var title = labelMatch[1];
+            i++;
+            var items = [];
+            while (i < n) {
+              var ls = lines[i].trim();
+              if (!ls) break;
+              var bm = /^[-*+]\s+(.*)$/.exec(ls);
+              if (bm) { items.push(bm[1]); i++; continue; }
+              if (/^ {2,}/.test(lines[i])) { items[items.length - 1] += ' ' + ls; i++; continue; }
+              break;
+            }
+            var html = '<div class="callout ' + kind + '"><div class="callout-title">' + escapeHtml(title) + '</div><ul>';
+            items.forEach(function (it) { html += '<li>' + inline(it) + '</li>'; });
+            html += '</ul></div>';
+            out.push(html);
+            continue;
+          }
+        }
+
+        if (/^[-*+]\s+/.test(s)) {
+          var items2 = [];
+          while (i < n) {
+            var ls2 = lines[i].trim();
+            if (!ls2) break;
+            var bm2 = /^[-*+]\s+(.*)$/.exec(ls2);
+            if (bm2) { items2.push(bm2[1]); i++; continue; }
+            if (/^ {2,}/.test(lines[i])) { items2[items2.length - 1] += ' ' + ls2; i++; continue; }
+            break;
+          }
+          var ulHtml = '<ul>';
+          items2.forEach(function (it) { ulHtml += '<li>' + inline(it) + '</li>'; });
+          ulHtml += '</ul>';
+          out.push(ulHtml);
+          continue;
+        }
+
+        if (/^\d+\.\s+/.test(s)) {
+          var items4 = [];
+          while (i < n) {
+            var ls4 = lines[i].trim();
+            if (!ls4) break;
+            var bm4 = /^\d+\.\s+(.*)$/.exec(ls4);
+            if (bm4) { items4.push(bm4[1]); i++; continue; }
+            break;
+          }
+          var olHtml = '<ol>';
+          items4.forEach(function (it) { olHtml += '<li>' + inline(it) + '</li>'; });
+          olHtml += '</ol>';
+          out.push(olHtml);
+          continue;
+        }
+
+        var pBuf = [s]; i++;
+        while (i < n) {
+          var ns = lines[i].trim();
+          if (!ns) break;
+          if (/^(#{1,6})\s+/.test(ns)) break;
+          if (/^[-*+]\s+/.test(ns)) break;
+          if (/^\d+\.\s+/.test(ns)) break;
+          if (ns.startsWith('|')) break;
+          if (/^```/.test(ns)) break;
+          if (/^-{3,}\s*$/.test(ns)) break;
+          pBuf.push(ns); i++;
+        }
+        out.push('<p>' + inline(pBuf.join(' ')) + '</p>');
+      }
+      return out.join('\n');
+    }
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

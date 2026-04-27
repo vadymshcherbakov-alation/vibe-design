@@ -36,7 +36,7 @@ depends_on_components:
 - **Type:** Base component
 - **MUI base:** `Card` (plus `Paper` as the lower-level surface primitive)
 - **Figma:** Card Wrapper · NEO 2.1 — *not yet linked*
-- **Code:** `fabric-theme-morpheus` — `src/lib/` (`MuiCard`, `MuiCardContent`, `MuiPaper` overrides)
+- **Code:** `@alation/fabric-theme-morpheus` — `src/lib/MuiCard.overrides.ts` · `src/lib/MuiCardContent.overrides.ts` · `src/lib/MuiPaper.overrides.ts`
 
 ## 2. Purpose
 

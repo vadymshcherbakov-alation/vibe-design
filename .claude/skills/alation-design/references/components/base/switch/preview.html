@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Switch</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --neutral-600:    #9AA5B1;
+      --divider:        #D4DDE2;
+      --primary-main:   #0073DD;
+      --primary-dark:   #0056A6;
+      --primary-soft:   #D9EEFF;
+      --error-main:     #CA334A;
+      --error-dark:     #A62839;
+      --shell-dark:     #0D1322;
+      --radius-btn:    6px;
+      --radius-input:  4px;
+      --radius-2:      12px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 960px; margin: 0 auto; }
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    .page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 32px 0;
+    }
+    .page-sub p { margin: 0 0 10px 0; }
+    .page-sub p:last-child { margin-bottom: 0; }
+    .page-sub strong { font-weight: 600; color: var(--text-primary); }
+    .page-sub em { font-style: italic; }
+    .page-sub a { color: var(--primary-main); text-decoration: underline; }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 32px 0 12px 0;
+    }
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+    /* Element-specific styles */
+:root {
+      --sw-blue-600: #0073DD;
+      --sw-blue-900: #003B73;
+      --sw-blue-200: #B6DBFF;
+      --sw-grey-400: #C9D1D9;
+      --sw-grey-700: #6E7681;
+      --sw-grey-800: #2E3340;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      padding: 24px;
+    }
+    .sect-label {
+      font-size: 12px; color: var(--text-secondary);
+      letter-spacing: 0.04em; margin: 0 0 12px 0;
+    }
+
+    /* FormControlLabel — switch + label row */
+    .fcl {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 4px 0;
+      font-size: 14px; line-height: 1.5;
+      color: var(--text-primary);
+    }
+    .fcl-stack > * { display: flex; }
+    .fcl.start { width: 100%; justify-content: space-between; gap: 16px; }
+
+    /* Switch */
+    .sw {
+      position: relative;
+      width: 36px; height: 20px;
+      flex: 0 0 auto;
+      border-radius: 10px;
+      background: var(--sw-grey-700);
+      transition: background-color .15s;
+    }
+    .sw .thumb {
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--paper);
+      color: var(--sw-grey-700);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: left .15s, color .15s;
+    }
+    .sw .thumb svg { width: 10px; height: 10px; display: block; }
+
+    .sw.on { background: var(--sw-blue-600); }
+    .sw.on .thumb { left: 18px; color: var(--sw-blue-600); }
+
+    .sw.hover { background: var(--sw-grey-800); }
+    .sw.hover .thumb { color: var(--sw-grey-800); }
+    .sw.on.hover { background: var(--sw-blue-900); }
+    .sw.on.hover .thumb { color: var(--sw-blue-900); }
+
+    .sw.disabled { background: var(--sw-grey-400); }
+    .sw.disabled .thumb { color: var(--sw-grey-400); }
+    .sw.on.disabled { background: var(--sw-blue-200); }
+    .sw.on.disabled .thumb { color: var(--sw-blue-200); }
+
+    /* Settings panel — divided rows */
+    .panel {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-input);
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .panel .row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+    }
+    .panel .row + .row { border-top: 1px solid var(--neutral-400); }
+    .panel .row .row-label { font-size: 14px; color: var(--text-primary); }
+
+    .row-line { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Switch</h1>
+    <div class="page-sub"><p>A <strong>Switch</strong> is the digital version of a physical toggle — a light switch. It captures a <strong>binary opposite</strong>: On / Off, Enable / Disable, Active / Inactive. The metaphor is mechanical — flip it one way or the other and the system reflects that state.</p>
+      <p>Switches and Checkboxes are not interchangeable. Reach for a Switch when the affordance is <em>flipping a single setting between two opposite states</em>. Reach for a Checkbox when the user is <em>filling in a form</em> — picking one or more items from a list, opting in, or acknowledging a statement.</p></div>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Base component</li>
+      <li><strong>MUI base:</strong> <code>Switch</code></li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2742-644&t=eS5ReSD4ZsCMa08a-1" target="_blank" rel="noopener">Switch · NEO 2.1</a></li>
+      <li><strong>Code:</strong> <code>@alation/fabric-theme-morpheus</code> — <code>src/lib/MuiSwitch.overrides.tsx</code> · <code>src/lib/MuiFormControlLabel.overrides.ts</code></li>
+    </ul>
+    <!-- classification-end -->
+
+<h2 class="section">Named styles · on/off state</h2>
+<div class="card">
+  <div class="fcl-stack">
+    <label class="fcl">
+      <span class="sw" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </span>
+      Off — setting is disabled
+    </label>
+    <label class="fcl">
+      <span class="sw on" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+      On — setting is enabled
+    </label>
+  </div>
+</div>
+
+<h2 class="section">Label placement</h2>
+<div class="card">
+  <div class="fcl-stack">
+    <label class="fcl">
+      <span class="sw on" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+      End placement (default) — standard settings row
+    </label>
+    <label class="fcl start">
+      <span>Start placement — right-aligned in two-column layouts</span>
+      <span class="sw on" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+    </label>
+  </div>
+</div>
+
+<h2 class="section">States</h2>
+<div class="card">
+  <div class="fcl-stack">
+    <label class="fcl">
+      <span class="sw" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </span>
+      Default · off — track <code>grey.700</code>
+    </label>
+    <label class="fcl">
+      <span class="sw on" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+      Default · on — track <code>blue.600</code>
+    </label>
+    <label class="fcl">
+      <span class="sw hover" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </span>
+      Hover / Focus · off — track <code>grey.800</code>
+    </label>
+    <label class="fcl">
+      <span class="sw on hover" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+      Hover / Focus · on — track <code>blue.900</code>
+    </label>
+    <label class="fcl">
+      <span class="sw disabled" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </span>
+      Disabled · off — label stays readable
+    </label>
+    <label class="fcl">
+      <span class="sw on disabled" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+      Disabled · on
+    </label>
+  </div>
+</div>
+
+<h2 class="section">Anatomy</h2>
+<div class="card">
+  <div class="row-line">
+    <label class="fcl">
+      <span class="sw on" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+      Send weekly digest
+    </label>
+  </div>
+  <p class="sect-label" style="margin-top:16px">
+    <strong style="color:var(--text-primary)">Track</strong> — <code>2rem × 3.6rem</code> pill · grey ramp off, blue ramp on<br>
+    <strong style="color:var(--text-primary)">Thumb</strong> — <code>1.6rem</code> circle · slides <code>1.6rem</code> on toggle · carries <code>×</code> off / <code>✓</code> on glyph<br>
+    <strong style="color:var(--text-primary)">Label</strong> — text adjacent to the switch · <code>body0</code> · <code>text.primary</code><br>
+    <strong style="color:var(--text-primary)">Helper text</strong> — <em>optional</em>, owned by the wrapping Form Field
+  </p>
+</div>
+
+<h2 class="section">Settings panel — instant toggles</h2>
+<div class="card">
+  <div class="panel">
+    <div class="row">
+      <span class="row-label">Send weekly digest</span>
+      <span class="sw on" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+    </div>
+    <div class="row">
+      <span class="row-label">Auto-sync sources</span>
+      <span class="sw on" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+    </div>
+    <div class="row">
+      <span class="row-label">Share usage metrics</span>
+      <span class="sw" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </span>
+    </div>
+    <div class="row">
+      <span class="row-label">Maintenance mode (locked by admin)</span>
+      <span class="sw on disabled" aria-hidden="true">
+        <span class="thumb">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.4 2.4L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 0 40px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 0; }
+  .md-viewer-toggle {
+    all: unset; box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58; background: #F1F4F6;
+    border: 1px solid #E8EDF1; border-radius: 6px;
+    cursor: pointer; user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px; color: #B7B7C1; margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none; margin: 12px 0 0 0; padding: 20px 24px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; line-height: 1.6; color: #0D1322;
+    white-space: pre-wrap; word-wrap: break-word;
+    overflow-x: auto; max-height: 640px; overflow-y: auto;
+  }
+  .md-viewer[data-open="source"] .md-viewer-pre { display: block; }
+  .md-rendered {
+    display: none; margin: 16px 0 0 0; padding: 28px 32px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    color: #0D1322; font-size: 14px; line-height: 1.65;
+  }
+  .md-viewer[data-open="rendered"] .md-rendered { display: block; }
+  .md-rendered h2 {
+    font-size: 17px; font-weight: 600; color: #0D1322;
+    margin: 28px 0 10px 0; letter-spacing: -0.005em;
+  }
+  .md-rendered h2:first-child { margin-top: 0; }
+  .md-rendered h3 {
+    font-size: 14px; font-weight: 600; color: #0D1322;
+    margin: 18px 0 8px 0; text-transform: none; letter-spacing: 0;
+  }
+  .md-rendered p  { margin: 0 0 12px 0; }
+  .md-rendered ul, .md-rendered ol { margin: 0 0 14px 0; padding-left: 22px; }
+  .md-rendered li { margin-bottom: 4px; }
+  .md-rendered a  { color: #0073DD; text-decoration: underline; }
+  .md-rendered code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; background: #F1F4F6; color: #0D1322;
+    padding: 1px 6px; border-radius: 4px;
+  }
+  .md-rendered pre {
+    background: #FAFBFC; border: 1px solid #E8EDF1; border-radius: 8px;
+    padding: 14px 18px; overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.7; margin: 0 0 14px 0;
+  }
+  .md-rendered pre code { background: transparent; padding: 0; }
+  .md-rendered strong { font-weight: 600; }
+  .md-rendered em { font-style: italic; }
+  .md-rendered hr { border: 0; border-top: 1px solid #E8EDF1; margin: 24px 0; }
+  .md-rendered table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid #E8EDF1; border-radius: 8px; overflow: hidden;
+    margin: 0 0 16px 0;
+  }
+  .md-rendered th, .md-rendered td {
+    text-align: left; padding: 9px 12px;
+    font-size: 12.5px; border-bottom: 1px solid #E8EDF1; vertical-align: top;
+  }
+  .md-rendered th {
+    background: #F1F4F6; color: #4E4E58; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px;
+  }
+  .md-rendered tr:last-child td { border-bottom: none; }
+  /* Callouts — green for Use/Guarantees, red for Prohibitions/Don'ts */
+  .md-rendered .callout {
+    border-radius: 8px; padding: 14px 18px;
+    margin: 0 0 16px 0; border: 1px solid transparent;
+  }
+  .md-rendered .callout.green { background: #F0F8EB; border-color: #CDE5BA; }
+  .md-rendered .callout.red   { background: #FFF0F0; border-color: #F2C0C0; }
+  .md-rendered .callout > .callout-title {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; margin: 0 0 8px 0;
+  }
+  .md-rendered .callout.green > .callout-title { color: #2E5E18; }
+  .md-rendered .callout.red   > .callout-title { color: #8E1A27; }
+  .md-rendered .callout ul { margin: 0; padding-left: 18px; }
+  .md-rendered .callout li { margin-bottom: 3px; }
+  /* Contract block — 3-card grid */
+  .md-rendered .contract-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    align-items: stretch; margin: 0 0 16px 0;
+  }
+  .md-rendered .contract-card {
+    background: #FFFFFF; border: 1px solid #E8EDF1;
+    border-radius: 12px; padding: 20px; border-top: 3px solid;
+  }
+  .md-rendered .contract-card.guarantees   { border-top-color: #3E9A17; }
+  .md-rendered .contract-card.prohibitions { border-top-color: #CA334A; }
+  .md-rendered .contract-card.conditions   { border-top-color: #0073DD; }
+  .md-rendered .contract-card h3 {
+    font-size: 13px; font-weight: 600; margin: 0 0 10px 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .md-rendered .contract-card h3 .sym {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+  }
+  .md-rendered .contract-card.guarantees h3 .sym   { background: #F0F8EB; color: #2E5E18; }
+  .md-rendered .contract-card.prohibitions h3 .sym { background: #FFF0F0; color: #8E1A27; }
+  .md-rendered .contract-card.conditions h3 .sym   { background: #E6F2FC; color: #0056A6; }
+  .md-rendered .contract-card ul { margin: 0; padding-left: 16px; }
+  .md-rendered .contract-card li {
+    font-size: 12.5px; line-height: 1.55; margin-bottom: 6px; color: #0D1322;
+  }
+  .md-rendered .contract-card li:last-child { margin-bottom: 0; }
+  @media (max-width: 720px) {
+    .md-rendered .contract-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="md-viewer" data-open="closed" data-exclude-h2="anatomy,classification,example,examples,label,label placement,named,named styles · on/off state,purpose,settings,settings panel — instant toggles,states,variants" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IHN3aXRjaAp0aXRsZTogU3dpdGNoCmNhdGVnb3J5OiBiYXNlLWNvbXBvbmVudApsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjcKCmRlc2NyaXB0aW9uOiA+CiAgVGhlIE9uL09mZiB0b2dnbGUgcHJpbWl0aXZlIOKAlCB0aGUgZGlnaXRhbCB2ZXJzaW9uIG9mIGEgcGh5c2ljYWwgbGlnaHQKICBzd2l0Y2guIFJlbmRlcmVkIGFzIE1VSSBgPFN3aXRjaD5gIHdpdGggdGhlIG1vcnBoZXVzIHRyYWNrICsgdGh1bWIgb3ZlcnJpZGUKICAod2l0aCDDlyAvIOKckyBnbHlwaHMgaW5zaWRlIHRoZSB0aHVtYikuIFVzZSBmb3IgYmluYXJ5IG9wcG9zaXRlcyDigJQgZmVhdHVyZQogIGZsYWcgT24vT2ZmLCBzb3VyY2UgQWN0aXZlL1BhdXNlZCwgbm90aWZpY2F0aW9ucyBFbmFibGVkL0Rpc2FibGVkLiBGb3IgYQogIGZvcm0tc3R5bGUgc2VsZWN0aW9uIG9yIGFja25vd2xlZGdlbWVudCB1c2UgQ2hlY2tib3guIEFsd2F5cyBwYWlyIGEgU3dpdGNoCiAgd2l0aCBhIGxhYmVsIHZpYSBgPEZvcm1Db250cm9sTGFiZWw+YC4KdGFnczogW2Zvcm0sIGlucHV0LCBib29sZWFuLCB0b2dnbGUsIG9uLW9mZl0KCmZpZ21hX3VybDogImh0dHBzOi8vd3d3LmZpZ21hLmNvbS9kZXNpZ24vY0hrYW1kdlB6MUlrbVFTd2pxV0hkWC9ORU8tMi4xLS0tRGVzaWduLVN5c3RlbT9tPWF1dG8mbm9kZS1pZD0yNzQyLTY0NCZ0PWVTNVJlU0Q0WnNDTWEwOGEtMSIKY29kZV9yZWZlcmVuY2U6IGZhYnJpYy10aGVtZS1tb3JwaGV1cy9zcmMvbGliIChNdWlTd2l0Y2gsIE11aUZvcm1Db250cm9sTGFiZWwgb3ZlcnJpZGVzKQpleGFtcGxlX3BhdGg6IC4vRXhhbXBsZS50c3gKCm11aV9iYXNlOiBTd2l0Y2gKZGVwZW5kc19vbl90b2tlbnM6CiAgLSBwYWxldHRlLmJsdWUuNjAwCiAgLSBwYWxldHRlLmJsdWUuOTAwCiAgLSBwYWxldHRlLmJsdWUuMjAwCiAgLSBwYWxldHRlLmdyZXkuNzAwCiAgLSBwYWxldHRlLmdyZXkuODAwCiAgLSBwYWxldHRlLmdyZXkuNDAwCiAgLSBwYWxldHRlLmJhY2tncm91bmQuZGVmYXVsdAogIC0gcGFsZXR0ZS50ZXh0LnByaW1hcnkKZGVwZW5kc19vbl9jb21wb25lbnRzOgogIC0gU3dpdGNoCiAgLSBGb3JtQ29udHJvbExhYmVsCi0tLQoKIyBTd2l0Y2gKCiMjIDEuIENsYXNzaWZpY2F0aW9uCgotICoqVHlwZToqKiBCYXNlIGNvbXBvbmVudAotICoqTVVJIGJhc2U6KiogYFN3aXRjaGAKLSAqKkZpZ21hOioqIFtTd2l0Y2ggwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP209YXV0byZub2RlLWlkPTI3NDItNjQ0JnQ9ZVM1UmVTRDRac0NNYTA4YS0xKQotICoqQ29kZToqKiBgQGFsYXRpb24vZmFicmljLXRoZW1lLW1vcnBoZXVzYCDigJQgYHNyYy9saWIvTXVpU3dpdGNoLm92ZXJyaWRlcy50c3hgIMK3IGBzcmMvbGliL011aUZvcm1Db250cm9sTGFiZWwub3ZlcnJpZGVzLnRzYAoKIyMgMi4gUHVycG9zZQoKQSAqKlN3aXRjaCoqIGlzIHRoZSBkaWdpdGFsIHZlcnNpb24gb2YgYSBwaHlzaWNhbCB0b2dnbGUg4oCUIGEgbGlnaHQgc3dpdGNoLiBJdCBjYXB0dXJlcyBhICoqYmluYXJ5IG9wcG9zaXRlKio6IE9uIC8gT2ZmLCBFbmFibGUgLyBEaXNhYmxlLCBBY3RpdmUgLyBJbmFjdGl2ZS4gVGhlIG1ldGFwaG9yIGlzIG1lY2hhbmljYWwg4oCUIGZsaXAgaXQgb25lIHdheSBvciB0aGUgb3RoZXIgYW5kIHRoZSBzeXN0ZW0gcmVmbGVjdHMgdGhhdCBzdGF0ZS4KClN3aXRjaGVzIGFuZCBDaGVja2JveGVzIGFyZSBub3QgaW50ZXJjaGFuZ2VhYmxlLiBSZWFjaCBmb3IgYSBTd2l0Y2ggd2hlbiB0aGUgYWZmb3JkYW5jZSBpcyAqZmxpcHBpbmcgYSBzaW5nbGUgc2V0dGluZyBiZXR3ZWVuIHR3byBvcHBvc2l0ZSBzdGF0ZXMqLiBSZWFjaCBmb3IgYSBDaGVja2JveCB3aGVuIHRoZSB1c2VyIGlzICpmaWxsaW5nIGluIGEgZm9ybSog4oCUIHBpY2tpbmcgb25lIG9yIG1vcmUgaXRlbXMgZnJvbSBhIGxpc3QsIG9wdGluZyBpbiwgb3IgYWNrbm93bGVkZ2luZyBhIHN0YXRlbWVudC4KCiMjIDMuIFdoZW4gdG8gdXNlIC8gV2hlbiBub3QgdG8gdXNlCgoqKlVzZSB3aGVuKioKLSBGbGlwcGluZyBhIHNldHRpbmcgYmV0d2VlbiB0d28gb3Bwb3NpdGUgc3RhdGVzIOKAlCBmZWF0dXJlIGZsYWcgT24vT2ZmLCBzb3VyY2UgQWN0aXZlL1BhdXNlZCwgbm90aWZpY2F0aW9ucyBFbmFibGVkL0Rpc2FibGVkLCBhdXRvLXN5bmMgT24vT2ZmCi0gVGhlIGxhYmVsIHJlYWRzIGFzIGEgc3RhdGUgbmFtZSwgbm90IGEgcXVlc3Rpb24g4oCUICJBY3RpdmUiLCAiQXV0by1zeW5jIiwgIlNlbmQgd2Vla2x5IGRpZ2VzdCIKLSBUaGUgY29udHJvbCBpcyBhIHN0YW5kYWxvbmUgc2V0dGluZyBpbiBhIHBhbmVsLCBub3Qgb25lIHJvdyBvZiBhIGZvcm0tc3R5bGUgbXVsdGktc2VsZWN0CgoqKkRvIG5vdCB1c2Ugd2hlbioqCi0gVGhlIHVzZXIgaXMgY2hvb3Npbmcgb25lIG9yIG1vcmUgaXRlbXMgZnJvbSBhIGxpc3Qg4oaSIHVzZSAqKkNoZWNrYm94KiogKG11bHRpLXNlbGVjdCByb3dzKQotIFRoZSB1c2VyIGlzIGFja25vd2xlZGdpbmcgYSBzdGF0ZW1lbnQgKCJJIGFncmVlIHRvIHRoZSB0ZXJtcyIpIOKGkiB1c2UgKipDaGVja2JveCoqCi0gVGhlIHVzZXIgcGlja3MgZXhhY3RseSBvbmUgb3B0aW9uIGZyb20gMuKAkzUgbXV0dWFsbHktZXhjbHVzaXZlIGNob2ljZXMg4oaSIHVzZSAqKlJhZGlvKioKLSBUaGUgY29udHJvbCBpcyBhIHNpbmdsZSBjaG9pY2UgZnJvbSBhIGZpeGVkIHNob3J0IGxpc3Qg4oaSIHVzZSAqKlNlbGVjdCBJbnB1dCoqIChpbnNpZGUgYSBGb3JtIEZpZWxkKQotIFRoZSBjb250cm9sIGZpcmVzIGFuIGFjdGlvbiAocnVuLCBkZWxldGUsIG9wZW4pIOKGkiB1c2UgYSAqKkJ1dHRvbioqOyBzd2l0Y2hlcyByZWNvcmQgc3RhdGUsIHRoZXkgZG8gbm90IHRyaWdnZXIgb25lLXNob3Qgc2lkZS1lZmZlY3RzCi0gVGhlIHNldHRpbmcgaXMgZGVzdHJ1Y3RpdmUgb3IgZXhwZW5zaXZlIGVub3VnaCB0aGF0IHRoZSB1c2VyIHNob3VsZCBleHBsaWNpdGx5IGNvbmZpcm0g4oaSIHVzZSBhICoqQnV0dG9uKiogKyBDb25maXJtRGlhbG9nIGluc3RlYWQKLSBUaGUgbGFiZWwgaXMgYSBxdWVzdGlvbiBvciBhIHNlbnRlbmNlIHRoYXQgaW1wbGllcyBhbiBhY3Rpb24gKCJBcmUgeW91IHN1cmU/Iikg4oaSIHJld29yZCB0byBhIHN0YXRlICgiQWN0aXZlIikgb3IgbW92ZSB0byBhIEJ1dHRvbgoKIyMgNC4gQ29udHJhY3QKCiMjIyBHdWFyYW50ZWVzCi0gQWx3YXlzIHBhaXJlZCB3aXRoIGEgcHJvZ3JhbW1hdGljIGxhYmVsIOKAlCBgPEZvcm1Db250cm9sTGFiZWw+YCBmb3IgaW5saW5lIHJvd3MsIGEgd3JhcHBpbmcgRm9ybSBGaWVsZCB3aGVuIGhlbHBlciB0ZXh0IG9yIHZhbGlkYXRpb24gaXMgbmVlZGVkLgotIFRyYWNrICsgdGh1bWIgY29sb3VyIGFyZSBib3VuZCB0byBtb3JwaGV1cyBibHVlIC8gZ3JleSByYW1wcyB2aWEgdGhlIG92ZXJyaWRlIOKAlCBgYmx1ZS42MDBgIGNoZWNrZWQgZGVmYXVsdCwgYGJsdWUuOTAwYCBjaGVja2VkIGhvdmVyLCBgZ3JleS43MDBgIHVuY2hlY2tlZCBkZWZhdWx0LCBgZ3JleS44MDBgIHVuY2hlY2tlZCBob3ZlciwgYGdyZXkuNDAwYCBhbmQgYGJsdWUuMjAwYCBmb3IgZGlzYWJsZWQuCi0gVGh1bWIgY2FycmllcyBhbiBpbmxpbmUgZ2x5cGggZnJvbSB0aGUgTkVPIGljb24gc2V0IOKAlCBgVGltZXNJY29uYCAow5cpIHdoZW4gb2ZmLCBgQ2hlY2tUaGlja0ljb25gICjinJMpIHdoZW4gb24g4oCUIHRvIHJlaW5mb3JjZSBzdGF0ZSBhdCBhIGdsYW5jZS4KLSBUcmFjayBpcyBhIGAycmVtYCDDlyBgMy42cmVtYCBwaWxsIHdpdGggYSBgMS42cmVtYCB0aHVtYiBzbGlkaW5nIGAxLjZyZW1gIG9uIHRvZ2dsZS4KLSBIb3ZlciBzdGF0ZSBpcyByZWFjaGFibGUgYm90aCBvbiB0aGUgc3dpdGNoIGl0c2VsZiBhbmQgdmlhIHRoZSB3cmFwcGluZyBgPEZvcm1Db250cm9sTGFiZWw+YCAodGhlIG92ZXJyaWRlIHByb3BhZ2F0ZXMgaG92ZXIgdXAgdGhlIHJvdykuCi0gRGlzYWJsZWQgc3dpdGNoZXMgYXJlIGluZXJ0IChub3QgZm9jdXNhYmxlKS4gVGhlIGxhYmVsIGNvbG91ciBzdGF5cyBhdCBgdGV4dC5wcmltYXJ5YCBzbyB0aGUgcm93IHJlbWFpbnMgcmVhZGFibGUuCi0gVG9nZ2xpbmcgdGhlIHN3aXRjaCBtdXN0IGNvbW1pdCBpbW1lZGlhdGVseSB0byBpdHMgc2V0dGluZyDigJQgdGhlcmUgaXMgbm8gInBlbmRpbmciIHN0YXRlLgoKIyMjIFByb2hpYml0aW9ucwotIE5vIHJhdyBgPGlucHV0IHR5cGU9ImNoZWNrYm94IiByb2xlPSJzd2l0Y2giPmAgSFRNTCBlbGVtZW50LgotIE5vIGJhcmUgYDxTd2l0Y2g+YCB3aXRob3V0IGEgYDxGb3JtQ29udHJvbExhYmVsPmAgKG9yIGEgRm9ybSBGaWVsZCB3cmFwcGVyKS4KLSBObyBoYXJkLWNvZGVkIGhleCAvIHB4IC8gZm9udCB2YWx1ZXMuCi0gTm8gYHN4YCBvdmVycmlkZXMgb2YgdHJhY2ssIHRodW1iLCBnbHlwaCwgb3IgaG92ZXIgYmVoYXZpb3VyIOKAlCB0aGUgbW9ycGhldXMgb3ZlcnJpZGUgb3ducyB0aGUgdmlzdWFscy4KLSBObyBjdXN0b20gYGljb25gIC8gYGNoZWNrZWRJY29uYCBwcm9wcyDigJQgdGhlIHRoZW1lIGFscmVhZHkgYmluZHMgdGhlIMOXIC8g4pyTIGdseXBocy4KLSBObyBgY29sb3I9InNlY29uZGFyeSJgIG9yIG90aGVyIGZvcmJpZGRlbiBwYWxldHRlIHZhbHVlcyDigJQgb25seSBgcHJpbWFyeWAgKGRlZmF1bHQpIGlzIHRoZW1lZC4KLSBObyBTd2l0Y2ggYXMgYSByb3cgaW5zaWRlIGEgZm9ybS1zdHlsZSBtdWx0aS1zZWxlY3QuIElmIHRoZSB1c2VyIGlzICpwaWNraW5nIGZyb20gYSBsaXN0KiwgdXNlIENoZWNrYm94LgotIE5vICJsb2FkaW5nIiBzcGlubmVyIG9uIHRoZSB0cmFjay4gSWYgYSB0b2dnbGUgdHJpZ2dlcnMgYW4gYXN5bmMgY29tbWl0IGFuZCB5b3UgbmVlZCB0byBzdXJmYWNlIHByb2dyZXNzLCBwbGFjZSBhIHNtYWxsIGFkamFjZW50IGluZGljYXRvciBhbmQgZGlzYWJsZSB0aGUgcm93IOKAlCBuZXZlciByZXBhaW50IHRoZSBzd2l0Y2ggaXRzZWxmLgotIE5vdGhpbmcgb3V0c2lkZSB0aGUgVmFyaWFudHMgbGlzdCAowqc1KSBpcyB2YWxpZC4KCiMjIyBDb25kaXRpb25zCi0gRGVzdHJ1Y3RpdmUgb3IgZXhwZW5zaXZlIHRvZ2dsZXMgKGUuZy4gIkRpc2FibGUgcHJvZHVjdGlvbiBzb3VyY2UiKSBtdXN0IHN1cmZhY2UgYSBgQ29uZmlybURpYWxvZ2AgYmVmb3JlIHRoZSBjaGFuZ2UgbGFuZHMuIFRoZSBTd2l0Y2ggaXRzZWxmIGlzIGNvcnJlY3Q7IHRoZSBkaWFsb2cgaXMgdGhlIGd1YXJkcmFpbC4KLSBBIFN3aXRjaCBtYXkgY29tbWl0IGltbWVkaWF0ZWx5IG9yIGJlIGJhdGNoZWQgaW50byBhIFNhdmUgYWN0aW9uIOKAlCBib3RoIGFyZSB2YWxpZC4gVGhlIGRlY2lkaW5nIGZhY3RvciBpcyB0aGUgKm1lbnRhbCBtb2RlbCogKGJpbmFyeSBvcHBvc2l0ZSB2cyBmb3JtIHNlbGVjdGlvbiksIG5vdCB3aGVuIHRoZSB2YWx1ZSBsYW5kcy4gSWYgdGhlIGFmZm9yZGFuY2UgcmVhZHMgYXMgYSBiaW5hcnkgT24vT2ZmLCBTd2l0Y2ggaXMgcmlnaHQgZXZlbiB3aGVuIHRoZSBjaGFuZ2UgaXMgcXVldWVkIGZvciBTYXZlLgotIEEgU3dpdGNoIHJvdyB0aGF0IHRyaWdnZXJzIGFzeW5jIHdvcmsgc2hvdWxkIGJyaWVmbHkgZGlzYWJsZSBvbiB0b2dnbGUgdW50aWwgdGhlIGNvbW1pdCBsYW5kcyAob3B0aW1pc3RpYyBsb2NhbCB1cGRhdGUgaXMgZmluZSB3aGVuIHRoZSBvcGVyYXRpb24gaXMgcmVsaWFibGUpLgotIFJlYWQtb25seSBkaXNwbGF5IG9mIGEgY2FwdHVyZWQgYm9vbGVhbiBpcyAqKm5vdCoqIGEgU3dpdGNoIOKAlCByZW5kZXIgYW4gaWNvbiArIFR5cG9ncmFwaHkgcGFpciAob3IgYSBMYWJlbCBDaGlwIGluIHRoZSByaWdodCBjb2xvdXIpIGluc3RlYWQuCi0gUm93cyBvZiByZWxhdGVkIHN3aXRjaGVzIGluIGEgc2V0dGluZ3MgcGFuZWwgbWF5IHNoYXJlIGEgc2VjdGlvbiBoZWFkaW5nIGFuZCBhIGRpdmlkZXIsIGJ1dCBlYWNoIHN3aXRjaCBrZWVwcyBpdHMgb3duIGxhYmVsIOKAlCBubyAic2VsZWN0IGFsbCIgcGFyZW50IG9uIGEgU3dpdGNoIGdyb3VwLgotIElmIHRoZSBzYW1lIHNjcmVlbiBtaXhlcyBDaGVja2JveGVzIGFuZCBTd2l0Y2hlcywgZ3JvdXAgdGhlbSBieSBtZW50YWwgbW9kZWw6IENoZWNrYm94ZXMgaW4gdGhlIGZvcm0tc3R5bGUgc2VjdGlvbiAobXVsdGktc2VsZWN0LCBvcHQtaW5zLCBhY2tub3dsZWRnZW1lbnRzKSwgU3dpdGNoZXMgaW4gdGhlIHNldHRpbmdzIC8gcHJlZmVyZW5jZXMgc2VjdGlvbiAoYmluYXJ5IE9uL09mZiByb3dzKS4KCiMjIDUuIFZhcmlhbnRzCgpTd2l0Y2ggaXMgYSBzaW5nbGUtYXhpcyBjb21wb25lbnQuIFRoZSBuYW1lZC1zdHlsZSBheGlzIGlzIHRoZSAqKm9uL29mZiBzdGF0ZSoqLgoKIyMjIDUuMSBOYW1lZCBzdHlsZXMg4oCUIG9uL29mZiBzdGF0ZQoKfCBOYW1lZCBzdHlsZSB8IFVzZSBmb3IgfCBNVUkgcHJvcHMgfCBFeGFtcGxlIHwKfC0tLXwtLS18LS0tfC0tLXwKfCAqKk9mZioqIChkZWZhdWx0KSB8IFNldHRpbmcgaXMgZGlzYWJsZWQgfCBgY2hlY2tlZD17ZmFsc2V9YCB8ICJTZW5kIHdlZWtseSBkaWdlc3QiIOKAlCBvZmYgfAp8ICoqT24qKiB8IFNldHRpbmcgaXMgZW5hYmxlZCB8IGBjaGVja2VkYCB8ICJTZW5kIHdlZWtseSBkaWdlc3QiIOKAlCBvbiB8CgojIyMgNS4yIGBjb2xvcmAgcHJvcAoKfCBDb2xvdXIgfCBSb2xlIHwgTm90ZXMgfAp8LS0tfC0tLXwtLS18CnwgYHByaW1hcnlgIChkZWZhdWx0KSB8IFN0YW5kYXJkIGNoZWNrZWQgdGludCDigJQgYGJsdWUuNjAwYCB0cmFjayB8IFVzZSBldmVyeXdoZXJlIHwKfCB+fmBzZWNvbmRhcnlgfn4gfCDinYwgRG8gbm90IHVzZS4gTm8gbW9ycGhldXMgc3R5bGUuIHwg4oCUIHwKfCB+fmBzdWNjZXNzYCAvIGB3YXJuaW5nYCAvIGBlcnJvcmAgLyBgaW5mb2B+fiB8IOKdjCBEbyBub3QgdXNlLiBTdGF0ZSBzZW1hbnRpY3MgbGl2ZSBpbiB0aGUgcm93IGxhYmVsLCBub3QgdGhlIHN3aXRjaCB0aW50LiB8IOKAlCB8CgojIyMgNS4zIExhYmVsIHBsYWNlbWVudAoKSW5oZXJpdGVkIGZyb20gYDxGb3JtQ29udHJvbExhYmVsPmAgYGxhYmVsUGxhY2VtZW50YC4gUGljayBvbmUgcGVyIHJvdyBmYW1pbHkuCgp8IFBsYWNlbWVudCB8IFVzZSB3aGVuIHwKfC0tLXwtLS18CnwgKipFbmQqKiAoZGVmYXVsdCkgfCBTdGFuZGFyZCBzZXR0aW5ncyByb3dzIOKAlCBzd2l0Y2ggb24gdGhlIGxlZnQsIGxhYmVsIGFmdGVyIHwKfCAqKlN0YXJ0KiogfCBSaWdodC1hbGlnbmVkIHNldHRpbmdzIHJvd3MgaW4gdHdvLWNvbHVtbiBsYXlvdXRzIOKAlCBsYWJlbCBmaXJzdCwgc3dpdGNoIHRyYWlsaW5nIHwKfCB+flRvcCAvIEJvdHRvbX5+IHwg4p2MIEF2b2lkLiBWZXJ0aWNhbCBwbGFjZW1lbnQgYnJlYWtzIHRoZSAicm93IG9mIHNldHRpbmdzIiByZWFkaW5nIG1vZGVsLiB8CgojIyA2LiBBbmF0b215CgotICoqVHJhY2sqKiDigJQgYDJyZW1gIMOXIGAzLjZyZW1gIHBpbGw7IGJhY2tncm91bmQgY29sb3VyIGJvdW5kIHRvIHN0YXRlIChncmV5IHJhbXAgb2ZmLCBibHVlIHJhbXAgb24pLgotICoqVGh1bWIqKiDigJQgYDEuNnJlbWAgY2lyY2xlIG9uIGBiYWNrZ3JvdW5kLmRlZmF1bHRgOyBjYXJyaWVzIGFuIGlubGluZSBnbHlwaCAow5cgb2ZmLCDinJMgb24pIGFuZCBzbGlkZXMgYDEuNnJlbWAgYmV0d2VlbiB0cmFjayBlbmRzIG9uIHRvZ2dsZS4KLSAqKkxhYmVsKiogKih2aWEgYDxGb3JtQ29udHJvbExhYmVsPmApKiDigJQgdGV4dCBhZGphY2VudCB0byB0aGUgc3dpdGNoIChkZWZhdWx0IGVuZCBwbGFjZW1lbnQpOyBgYm9keTBgOyBgdGV4dC5wcmltYXJ5YC4gU2VudGVuY2UgY2FzZSBzdGF0ZSBwaHJhc2UuCi0gKipIZWxwZXIgdGV4dCoqICoob3B0aW9uYWwpKiDigJQgb3duZWQgYnkgdGhlIHdyYXBwaW5nICoqRm9ybSBGaWVsZCoqIHdoZW4gcHJlc2VudDsgbmV2ZXIgaW5saW5lIHVuZGVyIGEgYmFyZSBzd2l0Y2guCgojIyA3LiBTdGF0ZXMKCnwgU3RhdGUgfCBUcmlnZ2VyIHwgVmlzdWFsIHwgTm90ZXMgfAp8LS0tfC0tLXwtLS18LS0tfAp8IERlZmF1bHQg4oCUIG9mZiB8IElkbGUsIG9mZiB8IFRyYWNrIGBncmV5LjcwMGAsIHRodW1iIGF0IGxlZnQsIGdseXBoIMOXIHwg4oCUIHwKfCBEZWZhdWx0IOKAlCBvbiB8IElkbGUsIG9uIHwgVHJhY2sgYGJsdWUuNjAwYCwgdGh1bWIgYXQgcmlnaHQsIGdseXBoIOKckyB8IOKAlCB8CnwgSG92ZXIg4oCUIG9mZiB8IFBvaW50ZXIgb3ZlciAoc3dpdGNoICpvciogcm93KSB8IFRyYWNrIGBncmV5LjgwMGAsIHRodW1iIHRvbmUgbWF0Y2hlcyB8IEhvdmVyIHByb3BhZ2F0ZXMgZnJvbSBgPEZvcm1Db250cm9sTGFiZWw+YCB8CnwgSG92ZXIg4oCUIG9uIHwgUG9pbnRlciBvdmVyIChzd2l0Y2ggKm9yKiByb3cpIHwgVHJhY2sgYGJsdWUuOTAwYCwgdGh1bWIgdG9uZSBtYXRjaGVzIHwgSG92ZXIgcHJvcGFnYXRlcyBmcm9tIGA8Rm9ybUNvbnRyb2xMYWJlbD5gIHwKfCBGb2N1cy12aXNpYmxlIOKAlCBvZmYgfCBLZXlib2FyZCBmb2N1cyB8IFNhbWUgYXMgSG92ZXIgb2ZmIHwgSW5oZXJpdGVkIGZyb20gYE11aS1mb2N1c1Zpc2libGVgIG1hcHBpbmcgfAp8IEZvY3VzLXZpc2libGUg4oCUIG9uIHwgS2V5Ym9hcmQgZm9jdXMgfCBTYW1lIGFzIEhvdmVyIG9uIHwgSW5oZXJpdGVkIGZyb20gYE11aS1mb2N1c1Zpc2libGVgIG1hcHBpbmcgfAp8IERpc2FibGVkIOKAlCBvZmYgfCBgZGlzYWJsZWRgIHByb3AgfCBUcmFjayBgZ3JleS40MDBgLCB0aHVtYiBkaW1tZWQgfCBOb3QgZm9jdXNhYmxlOyBsYWJlbCBzdGF5cyByZWFkYWJsZSB8CnwgRGlzYWJsZWQg4oCUIG9uIHwgYGRpc2FibGVkYCBwcm9wIHwgVHJhY2sgYGJsdWUuMjAwYCwgdGh1bWIgZGltbWVkIHwgTm90IGZvY3VzYWJsZTsgbGFiZWwgc3RheXMgcmVhZGFibGUgfAoKIyMgMTAuIFVYIENvcHkKCnwgRWxlbWVudCB8IFJ1bGUgfCBFeGFtcGxlIHwKfC0tLXwtLS18LS0tfAp8IExhYmVsIHwgU2VudGVuY2UgY2FzZTsgZGVzY3JpYmUgdGhlICpzdGF0ZSB3aGVuIG9uKiwgbm90IHRoZSBhY3Rpb24gfCAiU2VuZCB3ZWVrbHkgZGlnZXN0IiB8CnwgU2VjdGlvbiBoZWFkaW5nIHwgU2VudGVuY2UgY2FzZSBub3VuIHBocmFzZSB8ICJOb3RpZmljYXRpb25zIiB8CnwgQ29uZmlybS1vbi1kZXN0cnVjdGl2ZSB0aXRsZSB8IFF1ZXN0aW9uIGZvcm0gfCAiRGlzYWJsZSBwcm9kdWN0aW9uIHNvdXJjZT8iIHwKfCBBc3luYyBjb21taXQgaW5kaWNhdG9yIHwgU2hvcnQgY2FwdGlvbiBuZXh0IHRvIHRoZSByb3cgd2hlbiBuZWVkZWQgfCAiU2F2aW5n4oCmIiB8CgojIyAxMS4gRXhhbXBsZQoKYGBgdHN4CmltcG9ydCB7IEZvcm1Db250cm9sTGFiZWwsIFN3aXRjaCwgU3RhY2sgfSBmcm9tICdAbXVpL21hdGVyaWFsJzsKCi8vIElubGluZSBzZXR0aW5ncyByb3cKPEZvcm1Db250cm9sTGFiZWwKICBjb250cm9sPXsKICAgIDxTd2l0Y2gKICAgICAgY2hlY2tlZD17bm90aWZ5fQogICAgICBvbkNoYW5nZT17KGUpID0+IHNldE5vdGlmeShlLnRhcmdldC5jaGVja2VkKX0KICAgIC8+CiAgfQogIGxhYmVsPSJTZW5kIHdlZWtseSBkaWdlc3QiCi8+CgovLyBTZXR0aW5ncyBwYW5lbCDigJQgbXVsdGlwbGUgcm93cwo8U3RhY2sgc3BhY2luZz17MX0+CiAgPEZvcm1Db250cm9sTGFiZWwgY29udHJvbD17PFN3aXRjaCBjaGVja2VkPXthdXRvU3luY30gb25DaGFuZ2U9eyhlKSA9PiBzZXRBdXRvU3luYyhlLnRhcmdldC5jaGVja2VkKX0gLz59IGxhYmVsPSJBdXRvLXN5bmMgc291cmNlcyIgLz4KICA8Rm9ybUNvbnRyb2xMYWJlbCBjb250cm9sPXs8U3dpdGNoIGNoZWNrZWQ9e21ldHJpY3N9ICBvbkNoYW5nZT17KGUpID0+IHNldE1ldHJpY3MoZS50YXJnZXQuY2hlY2tlZCl9ICAvPn0gbGFiZWw9IlNoYXJlIHVzYWdlIG1ldHJpY3MiIC8+CiAgPEZvcm1Db250cm9sTGFiZWwgY29udHJvbD17PFN3aXRjaCBkaXNhYmxlZCBjaGVja2VkIC8+fSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9Ik1haW50ZW5hbmNlIG1vZGUgKGxvY2tlZCBieSBhZG1pbikiIC8+CjwvU3RhY2s+CmBgYAoKU2VlIFtgRXhhbXBsZS50c3hgXSguL0V4YW1wbGUudHN4KSBmb3IgdGhlIGNhbm9uaWNhbCwgcnVubmFibGUgc291cmNlLgo=">
+  <div class="md-viewer-actions">
+    <button class="md-viewer-toggle" type="button" data-action="rendered" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      How to use it
+    </button>
+    <button class="md-viewer-toggle" type="button" data-action="source" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      View source
+      <span class="md-viewer-filename">switch/usage.md</span>
+    </button>
+  </div>
+  <div class="md-rendered" aria-hidden="true"></div>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+
+    var EXCLUDED_H2 = (host.getAttribute('data-exclude-h2') || '')
+      .split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+
+    var TRUNCATE_AFTER = (host.getAttribute('data-truncate-after-h2') || '')
+      .trim().toLowerCase();
+
+    var rawMd = '';
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      rawMd = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      rawMd = '(failed to load source)';
+    }
+
+    var pre = host.querySelector('.md-viewer-pre');
+    var rendered = host.querySelector('.md-rendered');
+    pre.textContent = rawMd;
+    rendered.innerHTML = renderMarkdown(filterSections(stripFrontmatter(rawMd), EXCLUDED_H2, TRUNCATE_AFTER));
+
+    var btns = host.querySelectorAll('.md-viewer-toggle');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var mode = b.getAttribute('data-action');
+        var cur = host.getAttribute('data-open');
+        var next = (cur === mode) ? 'closed' : mode;
+        host.setAttribute('data-open', next);
+        btns.forEach(function (other) {
+          var on = other.getAttribute('data-action') === next;
+          other.setAttribute('aria-expanded', on ? 'true' : 'false');
+        });
+        pre.setAttribute('aria-hidden', next === 'source' ? 'false' : 'true');
+        rendered.setAttribute('aria-hidden', next === 'rendered' ? 'false' : 'true');
+      });
+    });
+
+    function stripFrontmatter(src) {
+      var m = src.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
+      return m ? src.slice(m[0].length) : src;
+    }
+
+    function filterSections(src, exclude, truncateAfter) {
+      var lines = src.split(/\r?\n/);
+      var out = [];
+      var skipping = false;
+      var seenH1 = false;
+      var passedAnchor = false;
+      function matches(title, t) {
+        return title === t
+          || title.indexOf(t + ' ') === 0
+          || title.indexOf(t + '/') === 0;
+      }
+      for (var i = 0; i < lines.length; i++) {
+        var ln = lines[i];
+        if (/^#(?!#)\s+/.test(ln)) {
+          if (!seenH1) { seenH1 = true; continue; }
+        }
+        var h2 = ln.match(/^##\s+(.*)$/);
+        if (h2) {
+          var title = h2[1].replace(/^\d+\.\s+/, '').trim().toLowerCase();
+          if (truncateAfter) {
+            if (passedAnchor) { break; }
+            if (matches(title, truncateAfter)) { passedAnchor = true; }
+          }
+          skipping = exclude.some(function (t) { return matches(title, t); });
+        }
+        if (!skipping) out.push(ln);
+      }
+      return out.join('\n').replace(/^\s+/, '');
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function inline(text) {
+      var codes = [];
+      text = text.replace(/`([^`]+)`/g, function (_, c) {
+        codes.push(c); return '\x00' + (codes.length - 1) + '\x00';
+      });
+      var links = [];
+      text = text.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_, label, url) {
+        links.push({ label: label, url: url }); return '\x01' + (links.length - 1) + '\x01';
+      });
+      text = escapeHtml(text);
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+      text = text.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+      text = text.replace(/\x01(\d+)\x01/g, function (_, i) {
+        var l = links[+i];
+        return '<a href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(l.label) + '</a>';
+      });
+      text = text.replace(/\x00(\d+)\x00/g, function (_, i) {
+        return '<code>' + escapeHtml(codes[+i]) + '</code>';
+      });
+      return text;
+    }
+    function renderMarkdown(src) {
+      var lines = src.split(/\r?\n/);
+      var out = [], i = 0, n = lines.length;
+
+      function parseTable(startIdx) {
+        var sep = lines[startIdx + 1];
+        if (!/^\s*\|[\s:\-|]+\|\s*$/.test(sep)) return null;
+        var rows = [lines[startIdx]];
+        var k = startIdx + 2;
+        while (k < n && /^\s*\|.*\|\s*$/.test(lines[k])) { rows.push(lines[k]); k++; }
+        function cells(row) {
+          var s = row.trim().replace(/^\|/, '').replace(/\|$/, '');
+          return s.split('|').map(function (c) { return c.trim(); });
+        }
+        var head = cells(rows[0]), body = rows.slice(1).map(cells);
+        var html = '<table><thead><tr>';
+        head.forEach(function (h) { html += '<th>' + inline(h) + '</th>'; });
+        html += '</tr></thead><tbody>';
+        body.forEach(function (r) {
+          html += '<tr>';
+          r.forEach(function (c) { html += '<td>' + inline(c) + '</td>'; });
+          html += '</tr>';
+        });
+        html += '</tbody></table>';
+        return { html: html, consumed: k - startIdx };
+      }
+
+      function calloutKind(s) {
+        var t = s.trim().replace(/^\*\*|\*\*$/g, '').replace(/^###\s+/, '').toLowerCase();
+        if (/^use when\b/.test(t) || /^guarantees\b/.test(t)) return 'green';
+        if (/^do not use when\b/.test(t) || /^prohibitions\b/.test(t) || /^don'?ts\b/.test(t)) return 'red';
+        return null;
+      }
+
+      while (i < n) {
+        var ln = lines[i];
+        var s = ln.trim();
+        if (!s) { i++; continue; }
+
+        if (/^-{3,}\s*$/.test(s)) { out.push('<hr>'); i++; continue; }
+
+        var m = s.match(/^```(\w*)\s*$/);
+        if (m) {
+          i++;
+          var buf = [];
+          while (i < n && !/^```\s*$/.test(lines[i].trim())) { buf.push(lines[i]); i++; }
+          i++;
+          out.push('<pre><code>' + escapeHtml(buf.join('\n')) + '</code></pre>');
+          continue;
+        }
+
+        var h = s.match(/^(#{1,3})\s+(.*)$/);
+        if (h) {
+          var lvl = h[1].length;
+          var txt = h[2].replace(/^\d+\.\s+/, '');
+
+          if (lvl === 2 && txt.trim().toLowerCase() === 'contract') {
+            out.push('<h2>' + inline(txt) + '</h2>');
+            i++;
+            var cards = [];
+            while (i < n) {
+              var cS = lines[i].trim();
+              if (!cS) { i++; continue; }
+              if (/^##\s+/.test(cS)) break;
+              var h3m = cS.match(/^###\s+(.*)$/);
+              if (h3m) {
+                var h3title = h3m[1];
+                var slug = h3title.toLowerCase().trim();
+                var cls = slug === 'guarantees'   ? 'guarantees'
+                        : slug === 'prohibitions' ? 'prohibitions'
+                        : slug === 'conditions'   ? 'conditions'
+                        : '';
+                var sym = cls === 'guarantees'   ? '\u2713'
+                        : cls === 'prohibitions' ? '\u2717'
+                        : cls === 'conditions'   ? 'i'
+                        : '';
+                i++;
+                var citems = [];
+                while (i < n) {
+                  var ics = lines[i].trim();
+                  if (!ics) break;
+                  if (/^#{1,3}\s+/.test(ics)) break;
+                  var cbm = /^[-*+]\s+(.*)$/.exec(ics);
+                  if (cbm) { citems.push(cbm[1]); i++; continue; }
+                  if (/^ {2,}/.test(lines[i])) { citems[citems.length - 1] += ' ' + ics; i++; continue; }
+                  break;
+                }
+                cards.push({ cls: cls, sym: sym, title: h3title, items: citems });
+                continue;
+              }
+              i++;
+            }
+            var grid = '<div class="contract-grid">';
+            cards.forEach(function (c) {
+              grid += '<div class="contract-card ' + c.cls + '">';
+              grid += '<h3><span class="sym">' + escapeHtml(c.sym) + '</span> ' + escapeHtml(c.title) + '</h3>';
+              grid += '<ul>';
+              c.items.forEach(function (it) { grid += '<li>' + inline(it) + '</li>'; });
+              grid += '</ul></div>';
+            });
+            grid += '</div>';
+            out.push(grid);
+            continue;
+          }
+
+          if (lvl === 3) {
+            var kind3 = calloutKind(txt);
+            if (kind3 && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+              i++;
+              var items3 = [];
+              while (i < n) {
+                var ls3 = lines[i].trim();
+                if (!ls3) break;
+                var bm3 = /^[-*+]\s+(.*)$/.exec(ls3);
+                if (bm3) { items3.push(bm3[1]); i++; continue; }
+                if (/^ {2,}/.test(lines[i])) { items3[items3.length - 1] += ' ' + ls3; i++; continue; }
+                break;
+              }
+              var html3 = '<div class="callout ' + kind3 + '"><div class="callout-title">' + escapeHtml(txt) + '</div><ul>';
+              items3.forEach(function (it) { html3 += '<li>' + inline(it) + '</li>'; });
+              html3 += '</ul></div>';
+              out.push(html3);
+              continue;
+            }
+          }
+          out.push('<h' + lvl + '>' + inline(txt) + '</h' + lvl + '>');
+          i++; continue;
+        }
+
+        if (s.startsWith('|') && i + 1 < n && /^\s*\|[\s:\-|]+\|\s*$/.test(lines[i + 1])) {
+          var t = parseTable(i);
+          if (t) { out.push(t.html); i += t.consumed; continue; }
+        }
+
+        var labelMatch = /^\*\*([^*]+)\*\*\s*$/.exec(s);
+        if (labelMatch && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+          var kind = calloutKind(s);
+          if (kind) {
+            var title = labelMatch[1];
+            i++;
+            var items = [];
+            while (i < n) {
+              var ls = lines[i].trim();
+              if (!ls) break;
+              var bm = /^[-*+]\s+(.*)$/.exec(ls);
+              if (bm) { items.push(bm[1]); i++; continue; }
+              if (/^ {2,}/.test(lines[i])) { items[items.length - 1] += ' ' + ls; i++; continue; }
+              break;
+            }
+            var html = '<div class="callout ' + kind + '"><div class="callout-title">' + escapeHtml(title) + '</div><ul>';
+            items.forEach(function (it) { html += '<li>' + inline(it) + '</li>'; });
+            html += '</ul></div>';
+            out.push(html);
+            continue;
+          }
+        }
+
+        if (/^[-*+]\s+/.test(s)) {
+          var items2 = [];
+          while (i < n) {
+            var ls2 = lines[i].trim();
+            if (!ls2) break;
+            var bm2 = /^[-*+]\s+(.*)$/.exec(ls2);
+            if (bm2) { items2.push(bm2[1]); i++; continue; }
+            if (/^ {2,}/.test(lines[i])) { items2[items2.length - 1] += ' ' + ls2; i++; continue; }
+            break;
+          }
+          var ulHtml = '<ul>';
+          items2.forEach(function (it) { ulHtml += '<li>' + inline(it) + '</li>'; });
+          ulHtml += '</ul>';
+          out.push(ulHtml);
+          continue;
+        }
+
+        if (/^\d+\.\s+/.test(s)) {
+          var items4 = [];
+          while (i < n) {
+            var ls4 = lines[i].trim();
+            if (!ls4) break;
+            var bm4 = /^\d+\.\s+(.*)$/.exec(ls4);
+            if (bm4) { items4.push(bm4[1]); i++; continue; }
+            break;
+          }
+          var olHtml = '<ol>';
+          items4.forEach(function (it) { olHtml += '<li>' + inline(it) + '</li>'; });
+          olHtml += '</ol>';
+          out.push(olHtml);
+          continue;
+        }
+
+        var pBuf = [s]; i++;
+        while (i < n) {
+          var ns = lines[i].trim();
+          if (!ns) break;
+          if (/^(#{1,6})\s+/.test(ns)) break;
+          if (/^[-*+]\s+/.test(ns)) break;
+          if (/^\d+\.\s+/.test(ns)) break;
+          if (ns.startsWith('|')) break;
+          if (/^```/.test(ns)) break;
+          if (/^-{3,}\s*$/.test(ns)) break;
+          pBuf.push(ns); i++;
+        }
+        out.push('<p>' + inline(pBuf.join(' ')) + '</p>');
+      }
+      return out.join('\n');
+    }
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

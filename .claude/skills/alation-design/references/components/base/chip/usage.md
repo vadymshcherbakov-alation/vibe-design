@@ -2,30 +2,26 @@
 name: chip
 title: Chip
 category: base-component
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 
 description: >
-  A compact pill that labels content in place. Production uses MUI `<Chip>`
-  with the Alation theme (`filled` / `filledLight` / `outlined` / `gradient`
-  variants) at `xsmall` / `small` / `medium`. For person chips backed by
-  catalog objects, use the `<ObjectChips>` wrapper from `@alation/alation-ui`;
-  for a fixed "Beta" marker, use `<BetaChip>`. Never hand-paint a chip with `sx`.
-tags: [label, tag, chip, object-chip, beta-chip]
+  A compact pill that labels content in place. Two named styles only — **Label Chip** (non-interactive status / category / tag) and **Object Chip** (interactive pill representing an Alation catalog object). Never use a Chip as a filter pill; that job belongs to Content Switcher.
+tags: [label, tag, chip, object-chip]
 
 figma_url: "https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=1-5455&t=eS5ReSD4ZsCMa08a-1"
-code_reference: "@alation/fabric-theme-morpheus/src/lib/MuiChip.overrides.ts · @alation/alation-ui/src/lib/ObjectChips/ · @alation/alation-ui/src/lib/BetaChip/"
+code_reference: "@alation/fabric-theme-morpheus/src/lib/MuiChip.overrides.ts · @alation/alation-ui/src/lib/ObjectChips/"
 example_path: ./Example.tsx
 
 mui_base: Chip
 depends_on_tokens:
   - palette.primary
-  - palette.secondary
-  - palette.error
-  - palette.warning
   - palette.success
-  - palette.default
+  - palette.warning
+  - palette.error
+  - palette.info
 depends_on_components:
   - Chip
+  - ObjectChips
 ---
 
 # Chip
@@ -35,23 +31,22 @@ depends_on_components:
 - **Type:** Base component
 - **MUI base:** `Chip`
 - **Figma:** [Chip · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=1-5455&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `@alation/fabric-theme-morpheus` — `src/lib/MuiChip.overrides.ts` (+ `@alation/alation-ui` wrappers under `src/lib/ObjectChips/`, `src/lib/BetaChip/`)
+- **Code:** `@alation/fabric-theme-morpheus` — `src/lib/MuiChip.overrides.ts` · `@alation/alation-ui` — `src/lib/ObjectChips/`
 
 ## 2. Purpose
 
-A **Chip** is a compact pill that rides inline with content and labels what it sits next to — a category, a status, a person, an applied filter. It says "this thing *is* a …" in one glance without surrounding words.
+A **Chip** is a compact pill that rides inline with content and labels what it sits next to — a status, a category, a tag, or an Alation catalog object. It says "this thing *is* a …" in one glance, without surrounding words.
 
-Production uses MUI `<Chip>` directly with the Alation theme applied. Two wrappers exist for specific cases: `<ObjectChips>` for a list of Alation catalog objects (with optional avatars), and `<BetaChip>` for the fixed "Beta" marker. Everything else — status labels, applied filters, removable tags — is raw MUI `<Chip>` at `size="small"` or `xsmall`.
+Only two named styles exist: **Label Chip** (non-interactive, drawn from a fixed 12-colour palette) and **Object Chip** (an interactive version of a Label Chip that represents a catalog object — clickable to open its overlay and removable via a close affordance).
 
 ## 3. When to use / When not to use
 
 **Use when**
-- Labelling a row, card, or heading with a category or status (e.g. `variant="filledLight"` + `color="success"`).
-- Rendering an applied / removable filter, or a clickable tag in a filter bar (`onClick` / `onDelete`).
-- Showing a list of Alation catalog objects inline → **`<ObjectChips>`**.
-- Marking a surface as Beta → **`<BetaChip>`**.
+- Marking a row, card, or heading with a **status, category, or tag** that a reader only needs to glance at — use **Label Chip**. Label Chips are read-only; the full label (and any tooltip) sits on hover.
+- Representing an **Alation catalog object** (person, dataset, agent, term, dashboard) inline so a user can add it, click through to its overlay, or remove it — use **Object Chip**. Think of it as an interactive Label Chip: the user *does something* with it.
 
 **Do not use when**
+- You need a filter pill or segmented toggle ("Databases / Dashboards / Agents") — use **Content Switcher**. Chips are not filters.
 - The label needs to trigger a page-level action → use **Button**.
 - The value is an icon only → use **IconButton**.
 - The content is a full sentence or wraps across lines → use **Typography**.
@@ -60,112 +55,116 @@ Production uses MUI `<Chip>` directly with the Alation theme applied. Two wrappe
 ## 4. Contract
 
 ### Guarantees
-- Theme applies size (`xsmall` = 2rem, `small`, `medium`), font, radius, and colour per `variant` + `color`.
-- `filledLight` automatically resolves to `palette[color][200]` background + `palette[color][800]` text (and dark-mode equivalents).
-- Every documented `color` maps to an MUI Palette key — no ad-hoc backgrounds.
-- Clickable chips (`onClick`/`onDelete`) expose a visible focus ring from the theme.
+- Theme applies size, font, radius, and colour per named style. Consumers never paint a chip.
+- **Label Chip** is non-interactive. No `onClick`, no `onDelete`, no hover affordance beyond an optional tooltip.
+- **Object Chip** (via `<ObjectChips>`) is interactive — it supports both *clicking* (opens the object's overlay / detail drawer for that `otype`) and *removing* (close-X affordance fires `onDelete`). Both behaviours live on the same chip.
+- Every Label Chip colour maps to one of the 12 documented palette keys (§5.1). No ad-hoc backgrounds.
+- When a Label Chip maps to a semantic status (success, warning, error, info), the palette already encodes the correct tone.
 
 ### Prohibitions
-- No bare `<Chip>` with **appearance** `sx` (`fontSize`, `height`, `backgroundColor`, `color`, `borderRadius`) — those belong in the theme override.
-- No invented colour outside the Palette keys listed in §5.3.
-- No invented variant outside §5.2.
-- No `ObjectChips` for single-person free-text names — the wrapper expects catalog `items` with `otype`, not bare strings.
-- No chip row with > ~5 chips visible at once — use a multi-select or "+N more" affordance.
+- **Never use a Chip as a filter pill or segmented toggle.** Filter-style selection is owned by **Content Switcher** (net-new — flag if missing).
+- **Never pass `onClick` / `onDelete` on a raw `<Chip>`.** Interactive behaviour belongs to Object Chip only, through `<ObjectChips>`.
+- No `sx` that changes appearance (`fontSize`, `height`, `backgroundColor`, `color`, `borderRadius`). Those belong in the theme override.
+- No invented colour outside the 12 palette keys in §5.1.
+- No `<ObjectChips>` for free-text names — the wrapper expects catalog `items` with `otype`, not bare strings.
+- No chip row with more than ~5 chips visible at once — use a truncated list with "+N more".
+- Nothing outside §5 Variants is valid.
 
 ### Conditions
 - `sx` on a chip is permitted for **layout only** (`maxWidth`, `margin`, `flex`).
-- Clickable / deletable chips must expose an accessible name via the `label` prop or an `aria-label`.
-- When a label maps to a semantic status (success, error, warning, info), pick the matching `color` key — don't use `default` for statuses.
-- Deletable chips must be reachable by keyboard (Tab to focus + Enter / Backspace to delete).
+- Object Chips must be reachable by keyboard — Tab to focus, Enter to open the overlay, Backspace/Delete to remove. `<ObjectChips>` handles this.
+- When a Label Chip encodes a status, pick the matching palette colour (e.g. `green` for Active, `red` for Deprecated) — don't use `neutral` for statuses.
+- Tooltip is allowed on a Label Chip when the full text is truncated or the label needs context.
 
 ## 5. Variants
 
 ### 5.1 Named styles
 
-| Named style | Use for | MUI props |
-|---|---|---|
-| **Status (soft)** | Active / healthy / warning / error labels in lists and cards | `variant="filledLight"` + `color="success" \| "warning" \| "error" \| "info"` |
-| **Status (solid)** | High-emphasis status where the whole row is driven by the chip | `variant="filled"` + semantic `color` |
-| **Filter (unselected)** | Toolbar filter that toggles | `variant="outlined"` + `color="default"` + `onClick` |
-| **Filter (selected)** | Same filter, active | `variant="filled"` + `color="primary"` + `onClick` |
-| **Applied filter** | Value chip with close-X | `variant="outlined"` + `color="default"` + `onDelete` |
-| **Gradient** | Marketing / emphasis surface (sparingly) | `variant="filled"` + `color="gradient"` |
+Only these two are valid. Anything else — filters, removable tokens, Beta markers, marketing gradients — is outside Chip's scope.
 
-### 5.2 `variant` prop
+| Named style | Role | Interactive | Backed by |
+|---|---|---|---|
+| **Label Chip** | Status / category / tag / metadata badge, drawn from the 12-colour palette. Read-only; tooltip on hover is the only affordance. | No | MUI `<Chip>` + theme |
+| **Object Chip** | Inline pill for an Alation catalog object (person, dataset, agent, term, dashboard). Same shape as Label Chip but **clickable** (opens the object overlay) and **removable** (close-X fires `onDelete`). | Yes — click + remove | `<ObjectChips>` from `@alation/alation-ui` |
 
-| Variant | Role |
+### 5.2 Label Chip · colour palette
+
+Twelve colours, each a semantic label role. Pick by meaning, not by matching brand accents.
+
+| Colour | Typical use |
 |---|---|
-| `filled` | Solid background in the selected `color`. Default MUI behaviour. |
-| `filledLight` | Soft tint background (`palette[color][200]`) with dark text (`palette[color][800]`). Best for status labels on dense surfaces. |
-| `outlined` | Transparent background, `color`-matched border. Default for unselected filter chips. |
-| `gradient` | Branded gradient fill with animated hover. Emphasis use only. |
+| `neutral` | Generic label, no status emphasis (e.g. MCP, source type) |
+| `blue` | Native / primary attribute |
+| `green` | Active / success status |
+| `red` | Deprecated / error state |
+| `purple` | Catalog-level grouping |
+| `orange` | Beta / experimental |
+| `teal` | Lineage / data-flow label |
+| `emerald` | Healthy |
+| `cyan` | Info |
+| `amber` | Warning |
+| `pink` | Preview |
+| `violet` | Custom / user-defined |
 
-### 5.3 `color` prop
-
-| Colour | Role |
-|---|---|
-| `default` | Neutral label with no status emphasis |
-| `primary` | Selected / active state for filter chips |
-| `secondary` | Secondary action / alt emphasis |
-| `error` | Error / deprecated / destructive state |
-| `warning` | Warning / attention state |
-| `success` | Success / healthy / active state |
-| `info` | Informational state |
-| `gradient` | Paired with `variant="gradient"` only |
-
-### 5.4 `size` prop
+### 5.3 Size
 
 | Size | Use |
 |---|---|
-| `xsmall` | Dense surfaces — table row status, card badge. Height 2rem. |
-| `small` | Most UI — toolbar filters, applied filters, inline labels. |
-| `medium` | Rare; large hero surfaces only. |
+| `xsmall` | Dense surfaces — table row status, card badge. Default for Label Chip in lists. |
+| `small` | Most UI — inline labels next to headings, chip rows on cards. |
+| `medium` | Rare; reserved for hero surfaces. |
+
+Object Chips default to `small` — the overlay affordance needs the extra reach.
 
 ## 6. Anatomy
 
-- **Container** — pill shape (theme `borderRadius`); background per `variant` × `color`.
-- **Label** — single line; typography from theme `caption` (at `xsmall`) or `body2` (at `small`+).
-- **Leading icon** *(optional, via `icon` prop)* — aligned with the label.
-- **Delete icon** *(when `onDelete` is set)* — theme close icon at the trailing edge.
+- **Container** — pill shape (theme `borderRadius`); background per palette colour (Label Chip) or neutral chip surface with avatar slot (Object Chip).
+- **Label** — single line; theme typography (`caption` at `xsmall`, `body2` at `small`+).
+- **Leading icon / avatar** *(Object Chip only)* — `otype`-specific glyph or user avatar at the leading edge.
 
 ## 7. States
 
-| State | Trigger | Visual | Notes |
+Label Chip is non-interactive — its only state is Default (with an optional tooltip on hover). Object Chip is fully interactive — both the chip surface and the close-X carry states.
+
+| State | Applies to | Trigger | Visual |
 |---|---|---|---|
-| Default | Idle | Pill in the selected variant + color | — |
-| Hover | Pointer over (clickable only) | Subtle darken or tint shift | Only when `onClick` / `onDelete` is set |
-| Focus-visible | Keyboard focus | Theme focus ring | Interactive chips only |
-| Selected | `variant="filled"` + `color="primary"` | Primary-filled pill | Typical for filter chips |
-| Disabled | `disabled` prop | Faded label + container | Pointer events blocked |
+| Default | Label + Object | Idle | Pill in its palette colour (Label) or neutral surface (Object) |
+| Hover (surface) | Object only | Pointer over the chip body | Subtle darken on the chip surface |
+| Hover (close-X) | Object only | Pointer over the close affordance | Close icon circle darkens; chip body stays in hover state |
+| Focus-visible | Object only | Keyboard focus (Tab) | Theme focus ring on the chip; close-X focus ring on Shift-Tab |
+| Disabled | Object only | `disabled` prop on `<ObjectChips>` item | Faded label + container; click and close-X blocked |
+
+## 10. UX Copy
+
+- Label Chip text is a single noun or short noun phrase — "Active", "Deprecated", "Beta", "Native". Sentence case.
+- Object Chip text is the object's canonical name (person full name, dataset name, agent name). The wrapper handles casing.
+- Never put punctuation at the end of a chip label.
+- Never repeat the column header inside a chip ("Status: Active" → just "Active").
 
 ## 11. Example
 
 ```tsx
-import { Chip } from '@mui/material';
-import { ObjectChips, BetaChip } from '@alation/alation-ui';
+import { Chip, Stack, Typography } from '@mui/material';
+import { ObjectChips } from '@alation/alation-ui';
 
-// Status labels (soft)
-<Chip label="Active"     variant="filledLight" color="success" size="xsmall" />
-<Chip label="Deprecated" variant="filledLight" color="error"   size="xsmall" />
-<Chip label="Pending"    variant="filledLight" color="warning" size="xsmall" />
+// Label Chips — non-interactive status / category badges
+<Stack direction="row" spacing={1}>
+  <Chip label="Active"     color="success" size="xsmall" />
+  <Chip label="Deprecated" color="error"   size="xsmall" />
+  <Chip label="Beta"       color="warning" size="xsmall" />
+  <Chip label="Native"     color="info"    size="xsmall" />
+</Stack>
 
-// Filter chips (clickable toggle)
-<Chip
-  label="Databases"
-  size="small"
-  variant={selected === 'databases' ? 'filled'  : 'outlined'}
-  color={selected  === 'databases' ? 'primary' : 'default'}
-  onClick={() => setSelected('databases')}
+// Object Chips — interactive catalog objects (clickable + removable)
+<ObjectChips
+  items={[
+    { otype: 'user',    id: 123, name: 'Vadym Shcherbakov' },
+    { otype: 'dataset', id: 456, name: 'finance_prod' },
+    { otype: 'agent',   id: 789, name: 'ingest_agent' },
+  ]}
+  chipsClickable
+  onDelete={(item) => removeFromSelection(item)}
 />
-
-// Applied filter (removable)
-<Chip label="Owner: vadym.shcherbakov" size="small" onDelete={() => clearFilter('owner')} />
-
-// Alation catalog object list
-<ObjectChips items={[{ otype: 'user', id: 123, name: 'Vadym' }]} chipsClickable />
-
-// Beta marker — fixed styling
-<BetaChip />
 ```
 
 See [`Example.tsx`](./Example.tsx) for the canonical, runnable source.

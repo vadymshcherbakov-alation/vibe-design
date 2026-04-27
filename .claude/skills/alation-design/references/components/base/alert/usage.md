@@ -43,7 +43,7 @@ depends_on_components:
 - **Type:** Base component
 - **MUI base:** `Alert` (+ `AlertTitle`)
 - **Figma:** [Alert · NEO 2.1](https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=58-417&t=eS5ReSD4ZsCMa08a-1)
-- **Code:** `fabric-theme-morpheus` — `src/lib/MuiAlert.overrides.tsx` (the template mirrors the same override at `src/theme/overrides/MuiAlert.overrides.tsx`)
+- **Code:** `@alation/fabric-theme-morpheus` — `src/lib/MuiAlert.overrides.tsx`
 
 ## 2. Purpose
 

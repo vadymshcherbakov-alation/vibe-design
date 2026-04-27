@@ -34,7 +34,7 @@ depends_on_components:
 ## 1. Classification
 
 - **Type:** Composite component — **composition pattern, not a shared wrapper**
-- **MUI base:** `Card` (via the [Card Wrapper](../base/card/usage.md) primitive)
+- **MUI base:** `Card` (via the [Card Wrapper](../base/card-wrapper/usage.md) primitive)
 - **Figma:** Nav card — to be linked
 - **Code:** There is **no shared `<NavCard>` component** in `@alation/alation-ui`. Production composes `<Card variant="outlined">` + a tinted icon `<Box>` + `<Typography>` directly at the call site. This reference documents that composition contract so every tile looks the same across pages.
 
@@ -51,7 +51,7 @@ A Nav card is a clickable tile that represents one navigable entity — a data s
 
 **Do not use when**
 - The list is longer than ~8 entries → use a [Table](./table/usage.md).
-- The tile has no action on click → use the base [Card](../base/card/usage.md) primitive; a non-clickable tile should not look clickable.
+- The tile has no action on click → use the base [Card](../base/card-wrapper/usage.md) primitive; a non-clickable tile should not look clickable.
 - The content is a metric / stat → use [Metric Card](./metric-card/usage.md).
 - The target is a labelled form control → use [Form Field](./form-field/usage.md).
 
