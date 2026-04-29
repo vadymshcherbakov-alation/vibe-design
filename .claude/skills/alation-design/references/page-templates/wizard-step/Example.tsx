@@ -16,13 +16,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { X } from 'lucide-react';
+import { ChevronLeft, X } from 'lucide-react';
 
 // In a real Alation workspace, the page mounts inside <AlationLayout> from
 // @repo/ui (or the workspace's equivalent). The chrome — App Top Header,
-// App Side Bar, optional Sub Navigation — is provided by that layout. This
-// Example.tsx returns just the wizard contents that go inside the white
-// main area; the surrounding chrome is rendered by the workspace.
+// App Side Bar — is provided by that layout. Wizard Step never uses
+// App Sub Navigation. This Example.tsx returns just the wizard contents that
+// go inside the white main area; the surrounding chrome is rendered by the
+// workspace.
 
 const STEPS = ['Choose connector', 'Authenticate', 'Map schema', 'Review'] as const;
 const FLOW_NAME = 'Connect a source';
@@ -38,11 +39,11 @@ type StepData = {
 
 const EMPTY_DATA: StepData = { connector: '', username: '', password: '', schema: '' };
 
-interface WizardPageExampleProps {
+interface WizardStepExampleProps {
   onClose?: () => void;
 }
 
-export default function WizardPageExample({ onClose }: WizardPageExampleProps = {}) {
+export default function WizardStepExample({ onClose }: WizardStepExampleProps = {}) {
   const [activeStep, setActiveStep] = useState(0);
   const [data, setData] = useState<StepData>(EMPTY_DATA);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,8 +51,31 @@ export default function WizardPageExample({ onClose }: WizardPageExampleProps = 
 
   const isLastStep = activeStep === STEPS.length - 1;
   const isFirstStep = activeStep === 0;
+
+  // Conditional footer-render predicates ------------------------------------
+  // Complete Later is hidden until a meaningful draft exists — never rendered
+  // as disabled-and-visible. Once the user enters something draftable, it
+  // stays rendered for every subsequent step.
   const hasDraftableData = data.connector !== '' || data.username !== '';
   const hasUnsavedChanges = hasDraftableData;
+
+  // Confirm & Continue is the only legitimately disabled-but-visible footer
+  // button. It is disabled until the active step's mandatory information is
+  // provided, then enables.
+  const isStepValid = (() => {
+    switch (activeStep) {
+      case 0:
+        return data.connector !== '';
+      case 1:
+        return data.username !== '' && data.password !== '';
+      case 2:
+        return data.schema !== '';
+      case 3:
+        return true;
+      default:
+        return false;
+    }
+  })();
 
   const onBack = () => setActiveStep((s) => Math.max(0, s - 1));
   const onConfirmContinue = () => {
@@ -81,27 +105,32 @@ export default function WizardPageExample({ onClose }: WizardPageExampleProps = 
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 600, bgcolor: 'background.paper' }}>
-      {/* Wizard header — inline anatomy: h2 title left, close cross right */}
+      {/* Wizard header — inline anatomy: h1 title left, close cross right.
+          Paddings mirror Page Header (`pt: 3, px: 3, pb: 2.5`) and the same
+          `h1` typography variant Page Header uses for page titles. */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          pt: 3,
           px: 3,
-          py: 2.5,
+          pb: 2.5,
           borderBottom: 1,
           borderColor: 'divider',
           flexShrink: 0,
         }}
       >
-        <Typography variant="h2">Connect a data source</Typography>
+        <Typography variant="h1">Connect a data source</Typography>
         <IconButton aria-label="Close wizard" onClick={onCloseClick}>
           <X size={20} />
         </IconButton>
       </Box>
 
-      {/* Stepper region — horizontal, linear */}
-      <Box sx={{ px: 3, pt: 3, pb: 4, flexShrink: 0 }}>
+      {/* Stepper region — horizontal, linear, CENTRED with FIXED gaps.
+          The wrapper flex-centres the Stepper so connectors stay short and
+          the trail does not stretch to fill the body's width. */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', px: 3, pt: 3, pb: 4, flexShrink: 0 }}>
         <Stepper activeStep={activeStep} aria-label="Source connection flow">
           {STEPS.map((label) => (
             <Step key={label}>
@@ -180,7 +209,10 @@ export default function WizardPageExample({ onClose }: WizardPageExampleProps = 
         </Box>
       </Box>
 
-      {/* Footer — sticky, three buttons in fixed positions */}
+      {/* Footer — sticky. Conditional buttons:
+          - Back: rendered only on steps ≥ 1 (hidden on step 0; never disabled-and-visible).
+          - Complete Later: rendered only once draftable data exists (hidden until then).
+          - Confirm & Continue: always rendered; disabled until the active step is valid. */}
       <Box
         component="footer"
         aria-label={`Wizard actions: ${FLOW_NAME}`}
@@ -198,19 +230,29 @@ export default function WizardPageExample({ onClose }: WizardPageExampleProps = 
           flexShrink: 0,
         }}
       >
-        <Button variant="outlined" color="inherit" disabled={isFirstStep} onClick={onBack}>
-          Back
-        </Button>
-        <Stack direction="row" spacing={2}>
+        {isFirstStep ? (
+          <Box />
+        ) : (
           <Button
             variant="outlined"
-            color="primary"
-            onClick={onCompleteLater}
-            disabled={!hasDraftableData}
+            color="inherit"
+            startIcon={<ChevronLeft size={16} />}
+            onClick={onBack}
           >
-            Complete Later
+            Back
           </Button>
-          <Button variant="contained" onClick={onConfirmContinue} disabled={isSubmitting}>
+        )}
+        <Stack direction="row" spacing={2}>
+          {hasDraftableData && (
+            <Button variant="outlined" color="primary" onClick={onCompleteLater}>
+              Complete Later
+            </Button>
+          )}
+          <Button
+            variant="contained"
+            onClick={onConfirmContinue}
+            disabled={!isStepValid || isSubmitting}
+          >
             {isLastStep ? COMMIT_VERB : 'Confirm & Continue'}
           </Button>
         </Stack>

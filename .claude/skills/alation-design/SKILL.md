@@ -15,7 +15,7 @@ These apply everywhere and are short enough to stay inline. Anything longer live
 - **No visual `sx` overrides** on MUI components — layout `sx` on `<Box>` only
 - **All text uses `<Typography variant="…">`** — no raw `<h1>` / `<p>` / `<span>`
 - **Sentence case for UI text** (exceptions: product / module proper names)
-- **Two icon libraries — Custom Library first, Lucide as backfill.** Always check `@alation/icons-neo` (Custom Library) before reaching for `lucide-react` (Lucide Library). Alation SVG assets are nav-rail only. See `references/foundations/iconography/usage.md`.
+- **Two icon libraries — Lucide first, Custom Library as backfill.** Always search `lucide-react` (Lucide Library) first; reach for `@alation/icons-neo` (Custom Library) only when Lucide does not have a suitable icon — typically Alation-specific concepts (Agent, Flow, Workflow, BI View, CDE, brand marks). See `references/foundations/iconography/usage.md`.
 
 ## Pre-flight
 
@@ -69,9 +69,9 @@ Each reference lives in a per-element folder that contains three files:
 | Any page header (title + actions row) | `references/components/composite/page-header/usage.md` |
 | Any view-switcher inside a single page (2–~7 mutually-exclusive views — Imported / Published, Overview / Schema / Lineage) | `references/components/composite/tabs/usage.md` |
 | Any parent-navigation above a Page Header — multi-step **Trail** (2+ levels: object detail, settings sub-page, folder path) or single-step **Back to parent** link (exactly one level deep) | `references/components/composite/breadcrumb/usage.md` |
-| Any multi-step ordered flow / wizard (2–~6 sequential steps with progress indicator — connect source, publish data product, onboarding) | `references/components/composite/stepper/usage.md` |
+| Any multi-step ordered flow / wizard (3–7 sequential steps with progress indicator — connect source, publish data product, onboarding) | `references/components/composite/stepper/usage.md` |
 | Any collapsible content section / disclosure surface (settings sections, FAQ, optional config, side-panel groups) | `references/components/composite/accordion/usage.md` |
-| Any full-page **wizard** for a multi-step task (2–~6 sequential steps; wizard-shaped header with close cross + Stepper + step body + sticky footer with Back / Complete Later / Confirm & Continue — connect a source, publish a data product, create monitor, build agent) | `references/page-templates/wizard-page/usage.md` |
+| Any full-page **wizard step** for a multi-step task (3–7 sequential steps; wizard-shaped header with close cross + centred fixed-gap Stepper + step body + sticky footer with conditional Back / Complete Later / Confirm & Continue — connect a source, publish a data product, create monitor, build agent) | `references/page-templates/wizard-step/usage.md` |
 | Any **App Top Header** — global top strip (logo + search + settings + avatar) | `references/components/composite/app-top-header/usage.md` |
 | Any **App Side Bar** — left vertical icon rail with primary destination switching | `references/components/composite/app-side-bar/usage.md` |
 | Any **App Sub Navigation** (Wayfinder) — contextual second-level nav panel between the Side Bar and the page (Settings / Compose / Agent Studio sub-pages) | `references/components/composite/app-sub-navigation/usage.md` |

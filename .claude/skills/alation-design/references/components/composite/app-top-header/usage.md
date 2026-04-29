@@ -82,7 +82,7 @@ It is global app chrome: it sits outside the page content and is the same on eve
 - Nothing outside the Variants list (§5) is valid.
 
 ### Conditions
-- The App Top Header is always paired with the [App Side Bar](../app-side-bar/usage.md) inside [App Layout](../../../page-templates/wizard-page/usage.md) compositions — they share the same dark navy ground and form a single visual unit.
+- The App Top Header is always paired with the [App Side Bar](../app-side-bar/usage.md) inside [App Layout](../../../page-templates/wizard-step/usage.md) compositions — they share the same dark navy ground and form a single visual unit.
 - When the search field is focused, its background flips to opaque white and its text colour to `text.primary`; this is the contract for legibility, not a state to override.
 - When a page is gated (Loading / unauthenticated), keep the header rendered as a chrome shell with `disabled` controls — never blank out the chrome.
 - Keyboard `Enter` inside the search field submits to `/app/search?q=…` (or the workspace's equivalent route). The search button is a click affordance only — submission is via Enter.

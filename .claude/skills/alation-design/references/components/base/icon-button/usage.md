@@ -52,6 +52,7 @@ An Icon Button is a clickable icon — an action you can trigger without a text 
 - A row-level overflow menu (⋮) or inline action (×, edit, copy) needs to fit inside a dense layout
 - A toolbar has space constraints and the icon carries a recognised meaning
 - The action is reversible or low-stakes and does not need a text label for clarity
+- **Match the surrounding Buttons.** When the IconButton is arranged in the same row as one or more `<Button>`s (page header actions, dialog footer, inline toolbar), pick the `size` whose container height equals the Button's height — `small` → 28px alongside `size="small"` Buttons, `medium` → 36px alongside default / `size="medium"` Buttons, `large` → 44px alongside `size="large"` Buttons. The IconButton must never look shorter or taller than the Buttons it sits with.
 
 **Do not use when**
 - The action needs an explanatory label to be understood → use **Button**
@@ -73,23 +74,25 @@ An Icon Button is a clickable icon — an action you can trigger without a text 
 - No hard-coded hex / px / font values — consume via theme.
 - No `sx` colour, size, or radius overrides — use the `color` / `size` / `variant` props.
 - No custom icon `size` prop — the IconButton size governs the icon size.
+- No height-mismatched IconButton next to a `<Button>` in the same row. The IconButton `size` must match the adjacent Button `size` (28 ↔ small, 36 ↔ medium, 44 ↔ large). The codebase-wide default of `size="small"` is wrong inside a Page Header actions group (Buttons are 36px) — use `size="medium"` there.
 
 ### Conditions
 - Destructive IconButtons (e.g. row-delete) must pair with a [ConfirmDialog](../composite/dialog/usage.md) before committing.
 - If the action is ambiguous without a label, prefer a full `<Button>` — do not rely on tooltip alone.
 - Tooltip is strongly encouraged on icon-only controls but does not replace `aria-label`.
 - When an IconButton sits in a toolbar alongside surfaced actions, prefer `variant="text"` (default) — reserve `contained` / `outlined` for standalone, emphasised controls.
+- **When an IconButton is arranged next to one or more `<Button>`s, match heights.** Pick the `size` whose container equals the Button's height: `small` → 28px alongside `size="small"` Buttons; `medium` → 36px alongside default / `size="medium"` Buttons (Page Header, dialog footer, primary action rows); `large` → 44px alongside `size="large"` Buttons. The codebase default of `size="small"` is fine for row actions and dialog close buttons, but **incorrect inside a Page Header** — production page headers (e.g. `FileSystemsHeader.tsx`) pair the Button and IconButton both at `size="medium"`.
 
 ## 5. Variants
 
 ### 5.1 `size` prop
 
-| Size | Icon size (from theme) | Use |
-|---|---|---|
-| `xsmall` | `iconXSmall` (1.2rem) | Very dense tables, row-level mini actions |
-| `small` | `iconSmall` (1.6rem) | Dense tables, row actions, inline controls |
-| `medium` (default) | `iconMedium` (2rem) | Standalone icon actions in toolbars |
-| `large` | `iconLarge` (2.4rem) | Rare — hero / empty-state icon affordances |
+| Size | Container | Icon size (from theme) | Pair with Button `size=` | Use |
+|---|---|---|---|---|
+| `xsmall` | 20px | `iconXSmall` (1.2rem) | — (Buttons have no `xsmall`) | Very dense tables, row-level mini actions where no Button sits adjacent |
+| `small` | 28px | `iconSmall` (1.6rem) | `small` (28px) | Dense tables, row actions, inline controls; codebase-wide default |
+| `medium` (default) | 36px | `iconMedium` (2rem) | default / `medium` (36px) | Page Header actions group, dialog footer, standalone toolbar actions |
+| `large` | 44px | `iconLarge` (2.4rem) | `large` (44px) | Rare — hero / empty-state icon affordances |
 
 ### 5.2 `variant` prop
 

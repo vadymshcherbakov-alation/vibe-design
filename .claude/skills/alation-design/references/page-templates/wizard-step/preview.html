@@ -1,0 +1,1620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wizard Step</title>
+  <style>
+    :root {
+      --text-primary:   #0D1322;
+      --text-secondary: #4E4E58;
+      --text-disabled:  #B7B7C1;
+      --bg:             #F9F9FB;
+      --paper:          #FFFFFF;
+      --neutral-300:    #F1F4F6;
+      --neutral-400:    #E8EDF1;
+      --neutral-500:    #D4DDE2;
+      --neutral-600:    #9AA5B1;
+      --divider:        #D4DDE2;
+      --primary-main:   #0073DD;
+      --primary-dark:   #0056A6;
+      --primary-soft:   #D9EEFF;
+      --error-main:     #CA334A;
+      --error-dark:     #A62839;
+      --shell-dark:     #0D1322;
+      --brand-orange:   #F16923;
+      --radius-btn:    6px;
+      --radius-input:  4px;
+      --radius-2:      12px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg);
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 1200px; margin: 0 auto; }
+    h1.page-title {
+      font-size: 28px; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em; margin: 0 0 8px 0;
+    }
+    .page-sub {
+      font-size: 14px; line-height: 1.6; color: var(--text-secondary);
+      margin: 0 0 40px 0;
+    }
+    .page-sub p { margin: 0 0 10px 0; }
+    .page-sub p:last-child { margin-bottom: 0; }
+    .page-sub strong { font-weight: 600; color: var(--text-primary); }
+    .page-sub em { font-style: italic; }
+    .page-sub a { color: var(--primary-main); text-decoration: underline; }
+    h2.section {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 56px 0 16px 0;
+    }
+    .note {
+      font-size: 12px; color: var(--text-disabled); margin: 48px 0 0 0;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono); font-size: 12px;
+      background: var(--neutral-300); padding: 2px 6px;
+      border-radius: 4px; color: var(--text-primary);
+    }
+
+    /* ── App chrome scaffold ────────────────────────────────────────────────
+       Page-template previews render the page INSIDE the full app shell:
+       App Top Header on top, then App Side Bar | (Sub Navigation) | <main>.
+       The page contents go inside `.app-main`. The chrome variables and
+       structure are inherited by every page-template preview. */
+    :root {
+      --chrome-navy: var(--shell-dark);
+      --chrome-bar-h: 56px;
+      --chrome-rail-w: 56px;
+      --chrome-subnav-w: 280px;
+      --chrome-radius: 12px;
+    }
+    .app-shell {
+      background: var(--chrome-navy);
+      border-radius: var(--chrome-radius);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      height: 760px;
+      margin-bottom: 24px;
+    }
+    .app-top-header {
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 12px 4px 12px;
+      flex-shrink: 0;
+    }
+    .app-top-header .brand {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0 8px;
+      color: #FFF; font-weight: 600; font-size: 16px; letter-spacing: -0.01em;
+    }
+    .app-top-header .brand-mark {
+      width: 24px; height: 24px;
+      background: var(--brand-orange);
+      border-radius: 6px; flex-shrink: 0;
+    }
+    .app-top-header .search {
+      flex: 1; max-width: 600px;
+    }
+    .app-top-header .search-input {
+      display: flex; align-items: center; gap: 8px;
+      height: 36px; padding: 0 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.30);
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 14px;
+    }
+    .app-top-header .search-input .label { flex: 1; }
+    .app-top-header .actions {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .app-top-header .icon-btn {
+      width: 32px; height: 32px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: rgba(255, 255, 255, 0.9);
+      background: transparent; border: 0; border-radius: 6px;
+      cursor: pointer;
+    }
+    .app-top-header .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #9AA5B1 0%, #4E4E58 100%);
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .app-row {
+      display: flex; flex: 1; min-height: 0;
+      gap: 0;
+    }
+    .app-side-bar {
+      width: var(--chrome-rail-w);
+      padding: 0 10px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .app-side-bar .group {
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 10px 0;
+    }
+    .app-side-bar .nav-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; border: 0; border-radius: 4px;
+      color: #FFF; cursor: pointer;
+    }
+    .app-side-bar .nav-btn.is-active { background: var(--brand-orange); }
+    .app-side-bar .nav-btn svg { width: 20px; height: 20px; display: block; }
+
+    .app-sub-nav {
+      width: var(--chrome-subnav-w);
+      background: rgba(255, 255, 255, 0.0625);
+      border-radius: 12px 12px 0 0;
+      display: flex; flex-direction: column;
+      flex-shrink: 0;
+      margin-right: 8px;
+      overflow: hidden;
+    }
+    .app-sub-nav .panel-title {
+      padding: 16px 12px 16px 24px;
+      color: #FFF;
+      font-size: 22px; font-weight: 600; line-height: 1.21;
+      flex-shrink: 0;
+    }
+    .app-sub-nav .panel-list {
+      padding: 0 12px 16px 24px;
+      display: flex; flex-direction: column; gap: 4px;
+      overflow-y: auto;
+    }
+    .app-sub-nav .row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px;
+      margin: 0 -12px;
+      border-radius: 6px;
+      color: #FFF;
+      cursor: pointer;
+    }
+    .app-sub-nav .row.is-active {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .app-sub-nav .row .label {
+      color: #FFF; font-size: 13px; line-height: 1.54;
+      font-weight: 400;
+    }
+    .app-sub-nav .row.is-active .label { font-weight: 500; }
+
+    .app-main {
+      flex: 1; min-width: 0;
+      background: var(--paper);
+      border-top-left-radius: 8px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    /* Element-specific styles */
+:root {
+      --step-icon-size: 24px;
+      --step-icon-inactive: var(--neutral-600);
+      --step-icon-active: var(--primary-main);
+      --step-line: var(--divider);
+      --step-line-done: var(--primary-main);
+      --chrome-rail-w: 56px;
+    }
+
+    /* App chrome — mirrors the App Sub Navigation in-context stage:
+       App Side Bar runs FULL vertical on the left; the right column stacks
+       App Top Header above the white main area. flex-direction: row. */
+    .app-shell {
+      background: var(--shell-dark);
+      border-radius: var(--radius-2);
+      overflow: hidden;
+      display: flex; flex-direction: row;
+      height: 760px;
+      margin-bottom: 24px;
+    }
+    .app-right {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
+      gap: 8px;
+    }
+    /* App Top Header — mirrors the App Sub Navigation preview chrome
+       (Wayfinder). Brand wordmark on the left, search field centred, fast
+       actions group on the right (Settings + Avatar). On a Wizard Step the
+       Search field is rendered in its DISABLED state per App Top Header
+       §4 ("If a page genuinely cannot search, leave the field present and
+       `disabled`. Layout stability across pages is the contract."). All
+       other regions render normally. */
+    .app-top-header {
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 16px;
+      flex-shrink: 0;
+    }
+    .app-top-header .brand {
+      flex-shrink: 0;
+      display: inline-flex; align-items: center;
+      color: #FFF;
+    }
+    .app-top-header .brand svg { display: block; height: 20px; width: auto; }
+    .app-top-header .search {
+      flex: 1; max-width: 600px;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.30);
+      color: rgba(255,255,255,0.72);
+      font-size: 14px;
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 10px;
+      margin: 0 auto;
+    }
+    .app-top-header .search.is-disabled {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.45);
+      cursor: not-allowed;
+    }
+    .app-top-header .search .label { flex: 1; }
+    .app-top-header .search .icon { color: inherit; display: inline-flex; }
+    .app-top-header .actions {
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0; margin-left: auto;
+    }
+    .app-top-header .actions button {
+      width: 32px; height: 32px;
+      border: 0; background: transparent;
+      color: rgba(255,255,255,0.9);
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 6px; cursor: pointer; padding: 0;
+    }
+    .app-top-header .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1F75D6 0%, #0056A6 100%);
+      color: #FFF; font-size: 12px; font-weight: 600;
+      text-align: center; line-height: 32px;
+      border: 1px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    /* App Side Bar — mirrors the canonical 56px solid-navy rail used in the
+       App Sub Navigation preview. Buttons are 36×36 with the canonical
+       product SVG icons (Menu, Catalog, Compose, Curate and Govern, Data
+       Products, Agent Studio, Add-Ons). */
+    .app-side-bar {
+      width: var(--chrome-rail-w); flex-shrink: 0;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 10px;
+      background: transparent;
+    }
+    .app-side-bar .group {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .app-side-bar .sb-btn {
+      width: 36px; height: 36px;
+      border: 0; background: transparent;
+      color: #FFF;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 4px; cursor: pointer; padding: 0;
+    }
+    .app-side-bar .sb-btn svg { width: 20px; height: 20px; display: block; fill: currentColor; }
+    .app-side-bar .sb-btn.is-active { background: var(--brand-orange); }
+
+    .app-main {
+      flex: 1; min-width: 0;
+      background: var(--paper);
+      border-top-left-radius: 8px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    /* Wizard */
+    .wp-stack { display: flex; flex-direction: column; height: 100%; }
+
+    /* Wizard header — follows Page Header paddings: pt: 3, px: 3, pb: 2.5
+       (24/24/20/24) plus the bottom border. The title is h1 (22 px) per
+       Typography — same variant Page Header uses for the page title. */
+    .wp-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 24px 20px 24px;
+      border-bottom: 1px solid var(--divider);
+      flex-shrink: 0;
+    }
+    .wp-title {
+      font-size: 22px; font-weight: 600; line-height: 1.3;
+      margin: 0; letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+    .wp-close {
+      width: 32px; height: 32px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent; border: 0; border-radius: 6px;
+      color: var(--text-secondary); cursor: pointer;
+    }
+    .wp-close:hover { background: var(--neutral-300); }
+
+    /* Stepper region — CENTRED, not full-width.
+       The wrap is a flex container with justify-content: center; so the
+       Stepper sits as a tight, centred unit regardless of body width.
+       Connectors below are FIXED-WIDTH gaps, never flex-grow lines. */
+    .wp-stepper-wrap {
+      display: flex; justify-content: center;
+      padding: 24px 24px 32px 24px;
+      flex-shrink: 0;
+    }
+
+    /* Stepper — inline-flex so the trail shrinks to content (no stretch). */
+    .stepper {
+      display: inline-flex; align-items: flex-start;
+      list-style: none; padding: 0; margin: 0;
+      gap: 0;
+    }
+    .step {
+      display: flex; align-items: center;
+      flex: 0 0 auto;
+    }
+    .step .step-row {
+      display: inline-flex; align-items: flex-start; gap: 8px;
+      padding: 4px 0;
+    }
+    .label-block { display: flex; flex-direction: column; line-height: 1.4; }
+    .label-block .label {
+      font-size: 14px; font-weight: 400;
+      color: var(--text-secondary);
+    }
+    .step.active .label-block .label,
+    .step.completed .label-block .label { color: var(--text-primary); }
+    .step.active .label-block .label { font-weight: 500; }
+    .step-icon {
+      width: var(--step-icon-size); height: var(--step-icon-size);
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 500;
+      background: var(--step-icon-inactive);
+      color: var(--paper);
+      flex: 0 0 auto;
+    }
+    .step.active .step-icon    { background: var(--step-icon-active); }
+    .step.completed .step-icon { background: var(--primary-main); }
+    .step.completed .step-icon::before {
+      content: ""; width: 10px; height: 6px;
+      border-left: 2px solid #FFF; border-bottom: 2px solid #FFF;
+      transform: rotate(-45deg) translate(1px, -1px);
+      display: block;
+    }
+    .step.completed .step-num { display: none; }
+    /* Connector — FIXED width gap between steps (not flex-grow). */
+    .connector {
+      width: 40px;
+      height: 2px;
+      background: var(--step-line);
+      margin: 12px 8px 0 8px;
+      align-self: flex-start;
+      flex: 0 0 auto;
+    }
+    .connector.done { background: var(--step-line-done); }
+
+    /* Body */
+    .wp-body {
+      flex: 1; overflow-y: auto;
+      padding: 0 24px;
+    }
+    .wp-body-inner {
+      margin: 0 auto; padding-bottom: 24px;
+    }
+    .wp-body-inner.small  { max-width: 480px; }
+    .wp-body-inner.standard { max-width: 720px; }
+    .wp-body-inner.full   { max-width: none; }
+
+    .wp-step-title {
+      font-size: 20px; font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 8px 0;
+    }
+    .wp-step-description {
+      font-size: 14px; line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0 0 24px 0;
+    }
+    .wp-field-row {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 16px;
+    }
+    .wp-field-row .label { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .wp-field-row .label .req { color: var(--error-main); margin-left: 2px; }
+    .wp-field-row .input {
+      background: var(--paper);
+      border: 1px solid var(--neutral-500);
+      border-radius: var(--radius-input);
+      padding: 8px 12px;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    .wp-field-row .input.placeholder { color: var(--text-disabled); }
+    .wp-field-row .helper {
+      font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+    }
+    /* Two-column form grid — what justifies the standard-form body shape
+       (720px). Single-column inputs that fit a 480px small-form column do
+       not. Uses a 2-col grid with 16px gap; full-width fields span both
+       columns via .wp-form-grid--full. */
+    .wp-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 20px;
+      margin-bottom: 16px;
+    }
+    .wp-form-grid .wp-field-row { margin-bottom: 0; }
+    .wp-form-grid .wp-field-row.full { grid-column: 1 / -1; }
+    .wp-form-section-title {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      letter-spacing: 0.02em;
+      margin: 16px 0 12px 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--neutral-400);
+    }
+    .wp-form-section-title:first-child {
+      margin-top: 0; padding-top: 0; border-top: 0;
+    }
+    /* Table — mirrors the Table composite reference (neutral header,
+       1px divider rows, checkbox + icon affordances per Iconography). */
+    .wp-grid {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      overflow: hidden;
+      font-size: 13px; line-height: 1.5;
+    }
+    .wp-grid th, .wp-grid td {
+      padding: 10px 14px; text-align: left;
+      border-bottom: 1px solid var(--neutral-400);
+      vertical-align: middle;
+    }
+    .wp-grid tbody tr:last-child td { border-bottom: none; }
+    .wp-grid th {
+      background: var(--neutral-300); color: var(--text-secondary);
+      font-weight: 500; font-size: 11.5px; letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .wp-grid td.muted { color: var(--text-secondary); }
+    .wp-grid .check {
+      width: 16px; height: 16px;
+      border: 1.5px solid var(--neutral-500);
+      border-radius: 3px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--paper);
+    }
+    .wp-grid .check.is-checked {
+      background: var(--primary-main); border-color: var(--primary-main);
+      color: #FFF;
+    }
+    .wp-grid .check svg { width: 10px; height: 10px; display: block; }
+    .wp-grid .row-icon {
+      width: 16px; height: 16px;
+      color: var(--text-secondary);
+      vertical-align: -2px; margin-right: 8px;
+    }
+    .wp-grid .schema-name {
+      display: inline-flex; align-items: center;
+      color: var(--text-primary); font-weight: 500;
+    }
+
+    /* Footer */
+    .wp-footer {
+      border-top: 1px solid var(--divider);
+      background: var(--paper);
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .wp-footer-right { display: flex; gap: 12px; }
+
+    /* Buttons (NEO 2.1 named styles) */
+    .wp-btn {
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      line-height: 1.4; padding: 7px 14px; border-radius: var(--radius-btn);
+      border: 1px solid transparent; cursor: pointer; background: none;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px;
+    }
+    .wp-btn .chev {
+      width: 14px; height: 14px; flex-shrink: 0;
+    }
+    .wp-btn-primary {
+      background: var(--primary-main); color: #FFF;
+      border-color: var(--primary-main);
+    }
+    .wp-btn-blue-secondary {
+      background: var(--paper); color: var(--primary-main);
+      border-color: var(--primary-main);
+    }
+    .wp-btn-grey {
+      background: var(--paper); color: var(--text-primary);
+      border-color: var(--neutral-500);
+    }
+    /* Disabled — matches the Button reference's grey-disabled state
+       (`.btn-disabled { background: var(--neutral-300); color:
+       var(--text-disabled); }`). NOT opacity-based dimming. */
+    .wp-btn[disabled],
+    .wp-btn.is-disabled {
+      background: var(--neutral-300);
+      color: var(--text-disabled);
+      border-color: transparent;
+      cursor: not-allowed;
+    }
+
+    /* Slot table */
+    .slot-table {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+      overflow: hidden;
+    }
+    .slot-table th, .slot-table td {
+      padding: 12px 14px; text-align: left; vertical-align: top;
+      border-bottom: 1px solid var(--neutral-400);
+    }
+    .slot-table tbody tr:last-child th,
+    .slot-table tbody tr:last-child td { border-bottom: none; }
+    .slot-table th {
+      background: var(--neutral-300); font-weight: 600;
+      color: var(--text-primary); width: 18%;
+    }
+    .slot-table td.role { width: 24%; color: var(--text-secondary); }
+    .slot-table td.accepts { color: var(--text-primary); }
+    .slot-table td.forbids { color: var(--text-secondary); font-style: italic; }
+
+    /* Footer states — each footer renders as its own tile (NOT stacked
+       inside one shared white container) so each example is read as a
+       separate state. The caption sits outside the tile. */
+    .wp-footer-states {
+      display: flex; flex-direction: column; gap: 24px;
+      margin-bottom: 24px;
+    }
+    .wp-footer-tile {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .wp-footer-tile .wp-footer {
+      background: var(--paper);
+      border: 1px solid var(--neutral-400);
+      border-top: 1px solid var(--neutral-400);
+      border-radius: var(--radius-2);
+    }
+    .wp-footer-tile .caption {
+      font-size: 13px; line-height: 1.6;
+      color: var(--text-secondary);
+      padding: 0;
+    }
+    .wp-footer-tile .caption strong { color: var(--text-primary); font-weight: 600; }
+
+    /* Mini-chrome — used by the three Body-shape variant demos.
+       Smaller than the full Anatomy chrome but renders the wizard inside
+       the same App Top Header + App Side Bar + white main area frame so
+       designers see each shape in real context. */
+    /* Body-shape variants — generous gap between mini chromes so each
+       variant reads as its own example, not a stacked wall. */
+    .app-shell.mini { height: 540px; margin-bottom: 48px; }
+    .app-shell.mini:last-of-type { margin-bottom: 0; }
+    .app-shell.mini .wp-stepper-wrap { padding: 16px 24px 24px 24px; }
+    /* Wizard title — h1 across every chrome instance, full and mini.
+       Hardcode to 22px (h1 = 22px in Typography) so the mini chromes don't
+       silently render a smaller heading. */
+    .wp-title         { font-size: 22px !important; font-weight: 600 !important; line-height: 1.3 !important; }
+    .wp-step-title    { font-size: 18px !important; font-weight: 600 !important; line-height: 1.3 !important; }
+    .app-shell.mini .wp-step-description { margin-bottom: 16px; }
+    .app-shell.mini .wp-footer { padding: 12px 24px; }
+    /* Full-width body shape uses spacing.4 (32px) horizontal padding,
+       per Layout §5.2 — the small/standard shapes use spacing.3 (24px). */
+    .app-shell.full-width .wp-body         { padding: 0 32px; }
+    .app-shell.full-width .wp-footer       { padding: 12px 32px; }
+    .app-shell.full-width .wp-stepper-wrap { padding-left: 32px; padding-right: 32px; }
+    .app-shell.full-width .wp-header       { padding-left: 32px; padding-right: 32px; }
+
+    .shape-caption {
+      display: flex; align-items: baseline; gap: 8px;
+      margin: 0 0 12px 0;
+      flex-wrap: wrap;
+    }
+    /* Pair each caption with its chrome — first caption sits flush under
+       the section heading; subsequent captions get extra top margin so
+       they're clearly the start of a new variant. */
+    .shape-caption + .app-shell.mini { margin-top: 0; }
+    .app-shell.mini + .shape-caption { margin-top: 8px; }
+    .shape-caption .shape-name {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+    }
+    .shape-caption .shape-meta {
+      font-size: 12px; color: var(--text-secondary);
+    }
+    .shape-caption code { font-size: 11.5px; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="page-title">Wizard Step</h1>
+    <div class="page-sub"><p>A <strong>Wizard Step</strong> is the canonical page shape for one step inside a multi-step ordered task. The user works through <strong>3–7 steps</strong> in sequence — each one heavy enough to deserve its own surface — with the trail of progress visible at the top and the same action row at the bottom on every step. <strong>Two steps</strong> is too few — collapse into a single Form. <strong>Eight or more</strong> is too many — group adjacent steps under fewer parent steps, split into two sequential wizards, or redesign as a sectioned long-form page with a left-side rail. (See §3 <em>When to use</em> and §4 <em>Conditions</em> for the full step-count rule.)</p>
+      <p>The shape is fixed: a wizard-shaped header carries an <code>h1</code> title on the left and a close cross on the right; a horizontal Stepper with <strong>fixed gaps</strong> between steps sits below it, <strong>centred</strong> in the body's available width; the active step's content fills the body in one of three width shapes; and a sticky footer pins Back, Complete Later, and Confirm &amp; Continue with <strong>conditional rendering</strong> (Back hidden on step 0, Complete Later hidden until draftable data exists, Confirm &amp; Continue disabled until the step is valid). The page renders inside the full Alation app chrome (<a href="../../components/composite/app-top-header/usage.md" target="_blank" rel="noopener">App Top Header</a> + <a href="../../components/composite/app-side-bar/usage.md" target="_blank" rel="noopener">App Side Bar</a>).</p></div>
+
+    <!-- classification-begin -->
+    <h2 class="section">Classification</h2>
+    <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
+      <li><strong>Type:</strong> Page template</li>
+      <li><strong>MUI base:</strong> none (composes design-system components into a fixed page shape inside the app chrome)</li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=3605-10922&t=POCjkdbyTv1HEcMH-1" target="_blank" rel="noopener">Wizard Step Page · NEO 2.1</a></li>
+      <li><strong>Code:</strong> No shared <code><WizardStep></code> wrapper. The canonical, runnable composition is <a href="./Example.tsx" target="_blank" rel="noopener"><code>./Example.tsx</code></a> (sibling of this file); production callers assemble the four regions (wizard header, stepper, body, footer) inside the App Top Header + App Side Bar chrome.</li>
+    </ul>
+    <!-- classification-end -->
+
+<h2 class="section">Anatomy — Wizard Step inside the full app chrome</h2>
+    <div class="app-shell">
+              <!-- App Side Bar — same canonical 56px navy rail used in the
+             App Sub Navigation preview. Buttons carry the product SVG
+             icons; the active product is highlighted. -->
+        <div class="app-side-bar">
+          <div class="group">
+            <button class="sb-btn" aria-label="Menu"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 7a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1z"/></svg></button>
+            <button class="sb-btn" aria-label="Catalog"><svg viewBox="0 0 42 20" xmlns="http://www.w3.org/2000/svg"><path d="M1.475 19.999c-.4 0-.793-.16-1.078-.46-.428-.448-.519-1.113-.228-1.657L8.979 1.427c.198-.371.55-.64.967-.736.416-.096.854-.01 1.2.234L21.59 8.302 40.296.237c.572-.247 1.24-.114 1.668.333.428.446.523 1.108.236 1.652L33.703 18.376c-.196.374-.55.645-.967.743-.418.098-.858.013-1.206-.233L21.234 11.614 2.068 19.877c-.19.083-.392.123-.593.123zM10.8 4.244L4.74 15.568l13.72-5.915L10.8 4.244zm13.566 6.019l7.5 5.298 5.804-11.034-13.304 5.736z"/></svg></button>
+            <button class="sb-btn" aria-label="Compose"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21.58 2.04a.27.27 0 0 1 .24.12.506.506 0 0 1 .12.239c.08.399.08.785 0 1.157-.08.373-.2.732-.36 1.077-.16.346-.333.692-.52 1.038-.185.346-.359.665-.518.957-1.333-.053-2.305.093-2.918.44l-.919.518c.293-.16.773-.253 1.439-.28a9.339 9.339 0 0 1 1.958.12c-.16.293-.333.586-.52.878l-.559.798c-.027.08-.08.173-.16.28l-.16.239c-1.651-.16-2.784-.067-3.396.28l-.92.558c.24-.133.733-.253 1.48-.36.745-.132 1.558-.08 2.437.16-.24.32-.493.652-.76.998l-.719.957c-1.145-.08-2.184.014-3.117.28l-1.358.399c.346-.08.879-.08 1.598 0 .72.08 1.425.186 2.118.319 0 .027-.013.053-.04.08l-.08.08-1.279 1.595c-.426.506-.865.998-1.318 1.477l-.8.878c-.266.266-.546.532-.839.798-.24.186-.48.385-.719.598-.24.186-.506.333-.8.439-.159.08-.332.133-.519.16-.16.053-.346.066-.56.04-.212 0-.439-.027-.678-.08a9.267 9.267 0 0 1-.68-.2c-.16-.053-.32-.12-.48-.2a2.467 2.467 0 0 1-.439-.279c-.08-.053-.146-.066-.2-.04a.465.465 0 0 0-.12.08l-.759.758-.16.16-.16.16a.626.626 0 0 1-.16.12.625.625 0 0 1-.12.159l-.159.16-.24.239a3 3 0 0 1-.32.28c-.08.106-.16.199-.24.279l-.838.837-.16.08a.355.355 0 0 1-.16.04h-.76c-.106 0-.186-.026-.239-.08-.027-.026-.04-.093-.04-.2v-.718c0-.08.013-.172.04-.279a.713.713 0 0 1 .2-.2l1.718-1.715 1.718-1.716c.427-.425.853-.837 1.279-1.236.426-.4.853-.812 1.279-1.237.4-.373.786-.758 1.159-1.158l1.198-1.197 1.439-1.476 1.479-1.476a60.672 60.672 0 0 0 2.637-2.633l.12-.12.16-.08-.04-.04c-.054 0-.094.027-.12.08a.465.465 0 0 1-.12.08c-.4.292-.8.611-1.199.957-.4.32-.8.652-1.199.998-.612.452-1.212.93-1.798 1.436-.586.479-1.172.971-1.758 1.476a82.646 82.646 0 0 0-2.238 1.836c-.72.612-1.465 1.21-2.238 1.795-.106.107-.24.226-.4.36a4.358 4.358 0 0 0-.359.319c-.08.08-.146.106-.2.08-.026-.027-.04-.08-.04-.16a3.147 3.147 0 0 1-.12-.479c-.026-.16-.04-.32-.04-.479a1.118 1.118 0 0 1 .04-.518c.054-.16.134-.32.24-.48.24-.451.52-.864.84-1.236a20.59 20.59 0 0 1 1.078-1.077A29.083 29.083 0 0 1 8.394 9.82c.559-.505 1.145-.984 1.758-1.436.453-.399.919-.771 1.398-1.117.507-.373 1-.718 1.479-1.038.8-.611 1.612-1.183 2.438-1.715a27.363 27.363 0 0 1 2.597-1.477c.346-.186.68-.345.999-.478.346-.16.706-.306 1.079-.44.133-.053.28-.08.44-.08.186-.026.36-.039.519-.039h.28c.053 0 .12.013.2.04Z"/></svg></button>
+            <button class="sb-btn" aria-label="Curate and Govern"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 11.572c0-.631.512-1.143 1.143-1.143H19a1.143 1.143 0 0 1 0 2.285H4.143A1.143 1.143 0 0 1 3 11.572ZM3 20.857c0-.631.512-1.143 1.143-1.143H19A1.143 1.143 0 0 1 19 22H4.143A1.143 1.143 0 0 1 3 20.857Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M4.429 20.572V12h2.285v8.572H4.43ZM16.428 20.572V12h2.286v8.572h-2.286ZM10.428 20.572V12h2.286v8.572h-2.286ZM12.16 2.163a1.143 1.143 0 0 0-1.177 0L3.841 6.448a1.143 1.143 0 0 0 .588 2.123h14.285a1.143 1.143 0 0 0 .588-2.123l-7.143-4.285Z" clip-rule="evenodd"/></svg></button>
+            <button class="sb-btn" aria-label="Data Products"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.779 2h-5.136a5.488 5.488 0 0 0-4.63 2.065L3.14 10.598C1.562 12.368 1.625 15.066 3.31 16.732l3.957 3.962a4.475 4.475 0 0 0 3.157 1.306c1.074 0 2.126-.38 2.989-1.138l6.524-5.901a5.503 5.503 0 0 0 2.063-4.636V5.203C21.978 3.433 20.547 2 18.779 2zm1.158 8.346a3.16 3.16 0 0 1-1.39 3.119l-6.525 5.879a2.054 2.054 0 0 1-2.825-.084L5.24 15.298c-.905-.906-.947-2.36-.084-3.33L11.029 5.435a3.197 3.197 0 0 1 2.615-1.391h5.135c.631 0 1.158.527 1.158 1.16v5.143z"/><path d="M17.727 8.344a2.085 2.085 0 1 1-4.168 0 2.084 2.084 0 0 1 4.168 0z"/></svg></button>
+            <button class="sb-btn is-active" aria-label="Agent Studio"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 .835c.437 0 .867.115 1.246.333l.001-.001 5.833 3.333.003.003.139.086c.318.213.584.496.776.828.23.398.094.908-.304 1.139-.398.23-.908.093-1.139-.305a1.243 1.243 0 0 0-.404-.307l-5.83-3.331-.003-.002a1.247 1.247 0 0 0-1.236 0l-.003.002-5.83 3.331h.001a1.243 1.243 0 0 0-.625.69V13.332l.007.11c.014.107.05.212.105.306.072.126.176.23.301.303l5.833 3.334.003.002c.127.073.27.111.417.111a.834.834 0 0 1 0 1.667 2.51 2.51 0 0 1-1.247-.333L2.92 15.499l-.003-.003c-.38-.219-.696-.534-.915-.914a2.49 2.49 0 0 1-.336-1.249V6.666l.005-.165c.026-.381.138-.752.33-1.083.219-.38.535-.695.914-.914l.003-.003L8.753 1.168c.379-.218.809-.333 1.247-.333z"/><path d="M16.834 5.111a.834.834 0 0 1 .831 1.445l-7.25 4.166a.834.834 0 0 1-.83 0l-7.25-4.166a.834.834 0 0 1 .83-1.445l6.835 3.928 6.834-3.928z"/><path d="M9.166 18.333V10a.834.834 0 0 1 1.667 0v8.333a.834.834 0 0 1-1.667 0z"/><path d="M12.644 15.6l1.347-.674c.405-.202.732-.53.934-.934l.674-1.348a.166.166 0 0 1 .234 0l.674 1.347c.202.405.53.732.934.934l1.347.674a.166.166 0 0 1 0 .234l-1.347.674c-.404.202-.733.53-.934.934l-.674 1.347a.165.165 0 0 1-.234 0l-.674-1.347a2.083 2.083 0 0 0-.934-.934l-1.347-.674a.166.166 0 0 1 0-.234z"/></svg></button>
+          </div>
+          <div class="group">
+            <button class="sb-btn" aria-label="Add-Ons"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.286 4.286h-4v4h4v-4zm-4-2.286A2.286 2.286 0 0 0 2 4.286v4a2.286 2.286 0 0 0 2.286 2.286h4a2.286 2.286 0 0 0 2.286-2.286v-4A2.286 2.286 0 0 0 8.286 2h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8.286 15.715h-4v4h4v-4zm-4-2.286A2.286 2.286 0 0 0 2 15.715v4A2.286 2.286 0 0 0 4.286 22h4a2.286 2.286 0 0 0 2.286-2.285v-4a2.286 2.286 0 0 0-2.286-2.286h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M19.714 15.715h-4v4h4v-4zm-4-2.286a2.286 2.286 0 0 0-2.286 2.286v4A2.286 2.286 0 0 0 15.714 22h4A2.286 2.286 0 0 0 22 19.715v-4a2.286 2.286 0 0 0-2.286-2.286h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.714 6.287a1.143 1.143 0 0 1 1.143-1.143h5.714a1.143 1.143 0 0 1 0 2.286h-5.714a1.143 1.143 0 0 1-1.143-1.143z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M17.714 10.285a1.143 1.143 0 0 1-1.143-1.143V3.428a1.143 1.143 0 0 1 2.286 0v5.714a1.143 1.143 0 0 1-1.143 1.143z"/></svg></button>
+          </div>
+        </div>
+        <div class="app-right">
+          <!-- App Top Header — same shape as Wayfinder previews: customer-customisable
+           logo on the left, avatar on the right. No search bar inside the wizard
+           (the wizard is the user's current task). -->
+      <!-- App Top Header — canonical chrome mirrored from the App Sub
+           Navigation preview. Brand wordmark left, search field centred
+           (rendered as DISABLED on a Wizard Step per app-top-header §4),
+           Settings + Avatar on the right. -->
+      <div class="app-top-header">
+        <div class="brand" aria-label="Customer logo">
+          <svg viewBox="0 0 131 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g clip-path="url(#wsclipA)"><path d="M1.47513 19.9996C1.07478 19.9996 0.681906 19.8399 0.396798 19.5406C-0.0309361 19.0917 -0.12233 18.4268 0.168871 17.8829L8.9787 1.42662C9.17719 1.05569 9.53014 0.787527 9.94619 0.691357C10.3621 0.595186 10.8002 0.680764 11.1468 0.925668L21.59 8.30237L40.2958 0.236687C40.8679 -0.00988314 41.5361 0.123434 41.964 0.569493C42.392 1.01555 42.4866 1.67749 42.2004 2.22173L33.7031 18.3764C33.5066 18.7503 33.1533 19.0216 32.7359 19.1196C32.3185 19.2176 31.8782 19.1325 31.5302 18.8866L21.2336 11.6137L2.06851 19.8772C1.87732 19.9596 1.67529 19.9996 1.47513 19.9996ZM10.8008 4.24424L4.73868 15.5682L18.4577 9.65283L10.8008 4.24424ZM24.3659 10.2631L31.8659 15.5609L37.67 4.52681L24.3659 10.2631Z" fill="url(#wsgradA)"/><path d="M116.45 19.6009L118.682 6.9785H122.505L122.299 8.13298L122.351 8.15863C123.531 7.18374 124.822 6.69629 126.225 6.69629C127.422 6.69629 128.371 7.05546 129.072 7.77381C129.774 8.49215 130.124 9.44139 130.124 10.6215C130.124 11.032 130.073 11.5451 129.97 12.1608L128.662 19.6009H124.762L126.019 12.4687C126.088 12.0924 126.122 11.7846 126.122 11.5451C126.122 11.1004 125.994 10.7413 125.737 10.4676C125.481 10.1939 125.087 10.0571 124.557 10.0571C123.616 10.0571 122.71 10.4077 121.838 11.109L120.35 19.6009H116.45Z" fill="white"/><path d="M101.451 14.0337C101.451 11.9813 102.152 10.2367 103.554 8.80001C104.923 7.39753 106.667 6.69629 108.788 6.69629C110.601 6.69629 112.097 7.2265 113.278 8.28691C114.475 9.34733 115.073 10.7669 115.073 12.5457C115.073 14.5981 114.372 16.3426 112.97 17.7793C111.601 19.1818 109.857 19.8831 107.736 19.8831C105.923 19.8831 104.418 19.3529 103.221 18.2924C102.041 17.232 101.451 15.8124 101.451 14.0337ZM105.35 13.7771C105.35 14.5981 105.572 15.2651 106.017 15.7782C106.479 16.2913 107.12 16.5479 107.941 16.5479C108.882 16.5479 109.635 16.2229 110.199 15.573C110.849 14.8204 111.174 13.8968 111.174 12.8022C111.174 11.9813 110.943 11.3142 110.481 10.8011C110.037 10.288 109.404 10.0315 108.583 10.0315C107.642 10.0315 106.889 10.3564 106.325 11.0064C105.675 11.7589 105.35 12.6825 105.35 13.7771Z" fill="white"/><path d="M96.6192 3.07876C96.6192 2.41173 96.8501 1.85587 97.3119 1.41117C97.7737 0.966485 98.3381 0.744141 99.0051 0.744141C99.6037 0.744141 100.108 0.957934 100.519 1.38552C100.929 1.796 101.134 2.292 101.134 2.87352C101.134 3.54056 100.904 4.09642 100.442 4.54111C99.98 4.9858 99.4156 5.20814 98.7486 5.20814C98.1499 5.20814 97.6454 5.0029 97.2349 4.59242C96.8244 4.16483 96.6192 3.66028 96.6192 3.07876ZM93.9767 19.6007L96.2087 6.97835H100.108L97.8763 19.6007H93.9767Z" fill="white"/><path d="M85.1235 16.0598C85.1235 15.6835 85.1833 15.1362 85.303 14.4178L86.047 10.2104H83.9946L84.559 6.97782H86.6115L87.2272 3.48871L91.1781 3.25781L90.511 6.97782H93.8206L93.2562 10.2104H89.9466L89.2283 14.3409C89.1599 14.7171 89.1257 15.0164 89.1257 15.2388C89.1257 16.1453 89.596 16.5985 90.5367 16.5985C91.1011 16.5985 91.657 16.4617 92.2043 16.188L91.6142 19.5489C90.9985 19.7712 90.2973 19.8824 89.5105 19.8824C88.279 19.8824 87.2357 19.566 86.3806 18.9331C85.5425 18.3003 85.1235 17.3425 85.1235 16.0598Z" fill="white"/><path d="M82.1299 8.18429L80.1288 19.6009H76.3062L76.4601 18.7542L76.4088 18.7286C75.5365 19.4982 74.5018 19.8831 73.3045 19.8831C71.885 19.8831 70.7134 19.3785 69.7898 18.3694C68.8833 17.3603 68.4301 16.0519 68.4301 14.4442C68.4301 13.4008 68.6267 12.3832 69.0201 11.3912C69.4306 10.3821 70.0121 9.50981 70.7647 8.77436C72.1843 7.38898 74.0058 6.69629 76.2292 6.69629C78.0764 6.69629 80.0433 7.19229 82.1299 8.18429ZM76.8963 15.8039L77.8455 10.365C77.2298 10.0742 76.5713 9.92884 75.8701 9.92884C74.8439 9.92884 73.9972 10.3222 73.3302 11.109C72.6803 11.8957 72.3553 12.8621 72.3553 14.008C72.3553 14.8461 72.5605 15.5131 72.971 16.0091C73.3986 16.488 73.9716 16.7275 74.6899 16.7275C75.4596 16.7275 76.195 16.4196 76.8963 15.8039Z" fill="white"/><path d="M60.9055 19.6006L64.369 0H68.2686L64.8051 19.6006H60.9055Z" fill="white"/><path d="M40.5 19.6007L51.0956 1.02637H55.0722L59.177 19.6007H54.9695L54.1742 15.7011H46.9651L44.7844 19.6007H40.5ZM49.9668 10.2879L48.7353 12.4942H53.5072L53.0454 10.2622C52.7888 9.01369 52.5323 7.6283 52.2757 6.1061H52.2244C51.7455 7.04679 50.993 8.44072 49.9668 10.2879Z" fill="white"/></g><defs><linearGradient id="wsgradA" x1="0" y1="20.03" x2="20.08" y2="-16.35" gradientUnits="userSpaceOnUse"><stop stop-color="#F47C20"/><stop offset="1" stop-color="#FDA600"/></linearGradient><clipPath id="wsclipA"><rect width="131" height="20" fill="white"/></clipPath></defs></svg>
+        </div>
+        <div class="search is-disabled" aria-disabled="true" title="Search is disabled inside a Wizard Step — the wizard is the user's task.">
+          <span class="label">Search Alation</span>
+          <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        </div>
+        <div class="actions">
+          <button aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+          <span class="avatar" aria-label="User avatar">VS</span>
+        </div>
+      </div>
+          <div class="app-main">
+          <div class="wp-stack">
+            <div class="wp-header">
+              <h1 class="wp-title">User flow (Wizard) name</h1>
+              <button class="wp-close" aria-label="Close wizard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <!-- Stepper region — flex-centred wrapper; Stepper itself is
+                 inline-flex with FIXED-width connectors. Per Figma: 5 steps,
+                 first completed, second + third active-blue, fourth + fifth
+                 inactive. -->
+            <div class="wp-stepper-wrap">
+              <ul class="stepper">
+                <li class="step completed"><div class="step-row"><span class="step-icon"><span class="step-num">1</span></span><div class="label-block"><span class="label">Step Label</span></div></div></li>
+                <li class="connector done"></li>
+                <li class="step active"><div class="step-row"><span class="step-icon"><span class="step-num">2</span></span><div class="label-block"><span class="label">Step Label</span></div></div></li>
+                <li class="connector done"></li>
+                <li class="step active"><div class="step-row"><span class="step-icon"><span class="step-num">3</span></span><div class="label-block"><span class="label">Step Label</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">4</span></span><div class="label-block"><span class="label">Step Label</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">5</span></span><div class="label-block"><span class="label">Step Label</span></div></div></li>
+              </ul>
+            </div>
+            <div class="wp-body">
+              <div class="wp-body-inner standard">
+                <h3 class="wp-step-title">Step title</h3>
+                <p class="wp-step-description">Find and upload the report with data consumption you want to create. The agent will extract metadata from the file to suggest critical data elements for this consumption. It will not extract any other data except metadata. If you are certain about consumption type select it from the list and the extraction will be faster.</p>
+                <div style="height: 180px; background: var(--neutral-300); border-radius: var(--radius-2);"></div>
+              </div>
+            </div>
+            <div class="wp-footer">
+              <button class="wp-btn wp-btn-grey">
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </button>
+              <div class="wp-footer-right">
+                <button class="wp-btn wp-btn-blue-secondary">Complete Later</button>
+                <button class="wp-btn wp-btn-primary">Confirm &amp; Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+    </div>
+
+    <h2 class="section">Slots</h2>
+    <table class="slot-table">
+      <thead>
+        <tr><th>Slot</th><th>Role</th><th>Accepts</th><th>Does NOT accept</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Wizard header</th>
+          <td class="role">Title + exit</td>
+          <td class="accepts"><code>h1</code> title (left) + close cross IconButton (right) — Custom Library <code>XIcon</code>, Lucide <code>X</code> as fallback</td>
+          <td class="forbids">Page Header; breadcrumb; Back-to-parent link; tabs; secondary actions</td>
+        </tr>
+        <tr>
+          <th>Stepper</th>
+          <td class="role">Progress indicator</td>
+          <td class="accepts">Horizontal linear Stepper with <strong>3–7 steps</strong>, <strong>centred</strong> with <strong>fixed gaps</strong> between steps</td>
+          <td class="forbids">Vertical Stepper; non-linear Stepper; <strong>full-width Stepper that stretches connectors</strong>; <code>StepContent</code></td>
+        </tr>
+        <tr>
+          <th>Body</th>
+          <td class="role">Active step's surface</td>
+          <td class="accepts">Active step only — within one of three body shapes (small / standard / full-width). Step content opens with <code>h3</code> + <code>body1</code></td>
+          <td class="forbids">Inactive steps' content; nested wizards; competing tabs</td>
+        </tr>
+        <tr>
+          <th>Footer</th>
+          <td class="role">Action row</td>
+          <td class="accepts">Up to three buttons: <strong>Back</strong> (Grey outlined, left — <em>hidden on step 0</em>) · <strong>Complete Later</strong> (Blue secondary, right — <em>hidden until draftable data exists</em>) · <strong>Confirm &amp; Continue</strong> (Primary, right — always rendered; disabled until step is valid)</td>
+          <td class="forbids">Cancel; Save; Reset; any 4th button; primary on the left; Text-variant Complete Later; <strong>disabled-but-visible Back</strong>; <strong>disabled-but-visible Complete Later</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="section">Body shape — three variants in real context</h2>
+    <p class="page-sub" style="margin-top: 0;">Each variant renders as a full Wizard Step inside the App chrome — designers can see how the body width sits relative to the App Side Bar and the Stepper, and how each shape changes the horizontal padding.</p>
+
+    <!-- ── Variant 1: Small form (max-width 480px) ───────────────────────── -->
+    <div class="shape-caption">
+      <span class="shape-name">Small form</span>
+      <span class="shape-meta"><code>max-width: 480px</code> · body padding <code>spacing.3</code> (24px) · single-column input · ≤ 6 fields</span>
+    </div>
+    <div class="app-shell mini">
+              <div class="app-side-bar">
+          <div class="group">
+            <button class="sb-btn" aria-label="Menu"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 7a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1z"/></svg></button>
+            <button class="sb-btn" aria-label="Catalog"><svg viewBox="0 0 42 20" xmlns="http://www.w3.org/2000/svg"><path d="M1.475 19.999c-.4 0-.793-.16-1.078-.46-.428-.448-.519-1.113-.228-1.657L8.979 1.427c.198-.371.55-.64.967-.736.416-.096.854-.01 1.2.234L21.59 8.302 40.296.237c.572-.247 1.24-.114 1.668.333.428.446.523 1.108.236 1.652L33.703 18.376c-.196.374-.55.645-.967.743-.418.098-.858.013-1.206-.233L21.234 11.614 2.068 19.877c-.19.083-.392.123-.593.123zM10.8 4.244L4.74 15.568l13.72-5.915L10.8 4.244zm13.566 6.019l7.5 5.298 5.804-11.034-13.304 5.736z"/></svg></button>
+            <button class="sb-btn" aria-label="Curate and Govern"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 11.572c0-.631.512-1.143 1.143-1.143H19a1.143 1.143 0 0 1 0 2.285H4.143A1.143 1.143 0 0 1 3 11.572ZM3 20.857c0-.631.512-1.143 1.143-1.143H19A1.143 1.143 0 0 1 19 22H4.143A1.143 1.143 0 0 1 3 20.857Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M4.429 20.572V12h2.285v8.572H4.43ZM16.428 20.572V12h2.286v8.572h-2.286ZM10.428 20.572V12h2.286v8.572h-2.286ZM12.16 2.163a1.143 1.143 0 0 0-1.177 0L3.841 6.448a1.143 1.143 0 0 0 .588 2.123h14.285a1.143 1.143 0 0 0 .588-2.123l-7.143-4.285Z" clip-rule="evenodd"/></svg></button>
+            <button class="sb-btn" aria-label="Data Products"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.779 2h-5.136a5.488 5.488 0 0 0-4.63 2.065L3.14 10.598C1.562 12.368 1.625 15.066 3.31 16.732l3.957 3.962a4.475 4.475 0 0 0 3.157 1.306c1.074 0 2.126-.38 2.989-1.138l6.524-5.901a5.503 5.503 0 0 0 2.063-4.636V5.203C21.978 3.433 20.547 2 18.779 2zm1.158 8.346a3.16 3.16 0 0 1-1.39 3.119l-6.525 5.879a2.054 2.054 0 0 1-2.825-.084L5.24 15.298c-.905-.906-.947-2.36-.084-3.33L11.029 5.435a3.197 3.197 0 0 1 2.615-1.391h5.135c.631 0 1.158.527 1.158 1.16v5.143z"/><path d="M17.727 8.344a2.085 2.085 0 1 1-4.168 0 2.084 2.084 0 0 1 4.168 0z"/></svg></button>
+            <button class="sb-btn is-active" aria-label="Agent Studio"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 .835c.437 0 .867.115 1.246.333l.001-.001 5.833 3.333.003.003.139.086c.318.213.584.496.776.828.23.398.094.908-.304 1.139-.398.23-.908.093-1.139-.305a1.243 1.243 0 0 0-.404-.307l-5.83-3.331-.003-.002a1.247 1.247 0 0 0-1.236 0l-.003.002-5.83 3.331h.001a1.243 1.243 0 0 0-.625.69V13.332l.007.11c.014.107.05.212.105.306.072.126.176.23.301.303l5.833 3.334.003.002c.127.073.27.111.417.111a.834.834 0 0 1 0 1.667 2.51 2.51 0 0 1-1.247-.333L2.92 15.499l-.003-.003c-.38-.219-.696-.534-.915-.914a2.49 2.49 0 0 1-.336-1.249V6.666l.005-.165c.026-.381.138-.752.33-1.083.219-.38.535-.695.914-.914l.003-.003L8.753 1.168c.379-.218.809-.333 1.247-.333z"/><path d="M16.834 5.111a.834.834 0 0 1 .831 1.445l-7.25 4.166a.834.834 0 0 1-.83 0l-7.25-4.166a.834.834 0 0 1 .83-1.445l6.835 3.928 6.834-3.928z"/><path d="M9.166 18.333V10a.834.834 0 0 1 1.667 0v8.333a.834.834 0 0 1-1.667 0z"/><path d="M12.644 15.6l1.347-.674c.405-.202.732-.53.934-.934l.674-1.348a.166.166 0 0 1 .234 0l.674 1.347c.202.405.53.732.934.934l1.347.674a.166.166 0 0 1 0 .234l-1.347.674c-.404.202-.733.53-.934.934l-.674 1.347a.165.165 0 0 1-.234 0l-.674-1.347a2.083 2.083 0 0 0-.934-.934l-1.347-.674a.166.166 0 0 1 0-.234z"/></svg></button>
+          </div>
+          <div class="group">
+            <button class="sb-btn" aria-label="Add-Ons"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.286 4.286h-4v4h4v-4zm-4-2.286A2.286 2.286 0 0 0 2 4.286v4a2.286 2.286 0 0 0 2.286 2.286h4a2.286 2.286 0 0 0 2.286-2.286v-4A2.286 2.286 0 0 0 8.286 2h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8.286 15.715h-4v4h4v-4zm-4-2.286A2.286 2.286 0 0 0 2 15.715v4A2.286 2.286 0 0 0 4.286 22h4a2.286 2.286 0 0 0 2.286-2.285v-4a2.286 2.286 0 0 0-2.286-2.286h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M19.714 15.715h-4v4h4v-4zm-4-2.286a2.286 2.286 0 0 0-2.286 2.286v4A2.286 2.286 0 0 0 15.714 22h4A2.286 2.286 0 0 0 22 19.715v-4a2.286 2.286 0 0 0-2.286-2.286h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.714 6.287a1.143 1.143 0 0 1 1.143-1.143h5.714a1.143 1.143 0 0 1 0 2.286h-5.714a1.143 1.143 0 0 1-1.143-1.143z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M17.714 10.285a1.143 1.143 0 0 1-1.143-1.143V3.428a1.143 1.143 0 0 1 2.286 0v5.714a1.143 1.143 0 0 1-1.143 1.143z"/></svg></button>
+          </div>
+        </div>
+        <div class="app-right">
+          <!-- Canonical App Top Header — same chrome as the App Sub Navigation
+           preview. Search is rendered DISABLED on a Wizard Step. -->
+      <div class="app-top-header">
+        <div class="brand" aria-label="Customer logo">
+          <svg viewBox="0 0 131 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g clip-path="url(#wsclipB)"><path d="M1.47513 19.9996C1.07478 19.9996 0.681906 19.8399 0.396798 19.5406C-0.0309361 19.0917 -0.12233 18.4268 0.168871 17.8829L8.9787 1.42662C9.17719 1.05569 9.53014 0.787527 9.94619 0.691357C10.3621 0.595186 10.8002 0.680764 11.1468 0.925668L21.59 8.30237L40.2958 0.236687C40.8679 -0.00988314 41.5361 0.123434 41.964 0.569493C42.392 1.01555 42.4866 1.67749 42.2004 2.22173L33.7031 18.3764C33.5066 18.7503 33.1533 19.0216 32.7359 19.1196C32.3185 19.2176 31.8782 19.1325 31.5302 18.8866L21.2336 11.6137L2.06851 19.8772C1.87732 19.9596 1.67529 19.9996 1.47513 19.9996ZM10.8008 4.24424L4.73868 15.5682L18.4577 9.65283L10.8008 4.24424ZM24.3659 10.2631L31.8659 15.5609L37.67 4.52681L24.3659 10.2631Z" fill="url(#wsgradB)"/><path d="M116.45 19.6009L118.682 6.9785H122.505L122.299 8.13298L122.351 8.15863C123.531 7.18374 124.822 6.69629 126.225 6.69629C127.422 6.69629 128.371 7.05546 129.072 7.77381C129.774 8.49215 130.124 9.44139 130.124 10.6215C130.124 11.032 130.073 11.5451 129.97 12.1608L128.662 19.6009H124.762L126.019 12.4687C126.088 12.0924 126.122 11.7846 126.122 11.5451C126.122 11.1004 125.994 10.7413 125.737 10.4676C125.481 10.1939 125.087 10.0571 124.557 10.0571C123.616 10.0571 122.71 10.4077 121.838 11.109L120.35 19.6009H116.45Z" fill="white"/><path d="M101.451 14.0337C101.451 11.9813 102.152 10.2367 103.554 8.80001C104.923 7.39753 106.667 6.69629 108.788 6.69629C110.601 6.69629 112.097 7.2265 113.278 8.28691C114.475 9.34733 115.073 10.7669 115.073 12.5457C115.073 14.5981 114.372 16.3426 112.97 17.7793C111.601 19.1818 109.857 19.8831 107.736 19.8831C105.923 19.8831 104.418 19.3529 103.221 18.2924C102.041 17.232 101.451 15.8124 101.451 14.0337ZM105.35 13.7771C105.35 14.5981 105.572 15.2651 106.017 15.7782C106.479 16.2913 107.12 16.5479 107.941 16.5479C108.882 16.5479 109.635 16.2229 110.199 15.573C110.849 14.8204 111.174 13.8968 111.174 12.8022C111.174 11.9813 110.943 11.3142 110.481 10.8011C110.037 10.288 109.404 10.0315 108.583 10.0315C107.642 10.0315 106.889 10.3564 106.325 11.0064C105.675 11.7589 105.35 12.6825 105.35 13.7771Z" fill="white"/><path d="M96.6192 3.07876C96.6192 2.41173 96.8501 1.85587 97.3119 1.41117C97.7737 0.966485 98.3381 0.744141 99.0051 0.744141C99.6037 0.744141 100.108 0.957934 100.519 1.38552C100.929 1.796 101.134 2.292 101.134 2.87352C101.134 3.54056 100.904 4.09642 100.442 4.54111C99.98 4.9858 99.4156 5.20814 98.7486 5.20814C98.1499 5.20814 97.6454 5.0029 97.2349 4.59242C96.8244 4.16483 96.6192 3.66028 96.6192 3.07876ZM93.9767 19.6007L96.2087 6.97835H100.108L97.8763 19.6007H93.9767Z" fill="white"/><path d="M85.1235 16.0598C85.1235 15.6835 85.1833 15.1362 85.303 14.4178L86.047 10.2104H83.9946L84.559 6.97782H86.6115L87.2272 3.48871L91.1781 3.25781L90.511 6.97782H93.8206L93.2562 10.2104H89.9466L89.2283 14.3409C89.1599 14.7171 89.1257 15.0164 89.1257 15.2388C89.1257 16.1453 89.596 16.5985 90.5367 16.5985C91.1011 16.5985 91.657 16.4617 92.2043 16.188L91.6142 19.5489C90.9985 19.7712 90.2973 19.8824 89.5105 19.8824C88.279 19.8824 87.2357 19.566 86.3806 18.9331C85.5425 18.3003 85.1235 17.3425 85.1235 16.0598Z" fill="white"/><path d="M82.1299 8.18429L80.1288 19.6009H76.3062L76.4601 18.7542L76.4088 18.7286C75.5365 19.4982 74.5018 19.8831 73.3045 19.8831C71.885 19.8831 70.7134 19.3785 69.7898 18.3694C68.8833 17.3603 68.4301 16.0519 68.4301 14.4442C68.4301 13.4008 68.6267 12.3832 69.0201 11.3912C69.4306 10.3821 70.0121 9.50981 70.7647 8.77436C72.1843 7.38898 74.0058 6.69629 76.2292 6.69629C78.0764 6.69629 80.0433 7.19229 82.1299 8.18429ZM76.8963 15.8039L77.8455 10.365C77.2298 10.0742 76.5713 9.92884 75.8701 9.92884C74.8439 9.92884 73.9972 10.3222 73.3302 11.109C72.6803 11.8957 72.3553 12.8621 72.3553 14.008C72.3553 14.8461 72.5605 15.5131 72.971 16.0091C73.3986 16.488 73.9716 16.7275 74.6899 16.7275C75.4596 16.7275 76.195 16.4196 76.8963 15.8039Z" fill="white"/><path d="M60.9055 19.6006L64.369 0H68.2686L64.8051 19.6006H60.9055Z" fill="white"/><path d="M40.5 19.6007L51.0956 1.02637H55.0722L59.177 19.6007H54.9695L54.1742 15.7011H46.9651L44.7844 19.6007H40.5ZM49.9668 10.2879L48.7353 12.4942H53.5072L53.0454 10.2622C52.7888 9.01369 52.5323 7.6283 52.2757 6.1061H52.2244C51.7455 7.04679 50.993 8.44072 49.9668 10.2879Z" fill="white"/></g><defs><linearGradient id="wsgradB" x1="0" y1="20.03" x2="20.08" y2="-16.35" gradientUnits="userSpaceOnUse"><stop stop-color="#F47C20"/><stop offset="1" stop-color="#FDA600"/></linearGradient><clipPath id="wsclipB"><rect width="131" height="20" fill="white"/></clipPath></defs></svg>
+        </div>
+        <div class="search is-disabled" aria-disabled="true">
+          <span class="label">Search Alation</span>
+          <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        </div>
+        <div class="actions">
+          <button aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+          <span class="avatar" aria-label="User avatar">VS</span>
+        </div>
+      </div>
+          <div class="app-main">
+          <div class="wp-stack">
+            <div class="wp-header">
+              <h1 class="wp-title">Build agent</h1>
+              <button class="wp-close" aria-label="Close wizard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="wp-stepper-wrap">
+              <ul class="stepper">
+                <li class="step active"><div class="step-row"><span class="step-icon"><span class="step-num">1</span></span><div class="label-block"><span class="label">Profile</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">2</span></span><div class="label-block"><span class="label">Tools</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">3</span></span><div class="label-block"><span class="label">Review</span></div></div></li>
+              </ul>
+            </div>
+            <div class="wp-body">
+              <div class="wp-body-inner small">
+                <h3 class="wp-step-title">Connect by API key</h3>
+                <p class="wp-step-description">Paste the API key for your agent provider. We'll verify it before continuing.</p>
+                <div class="wp-field-row"><span class="label">API key</span><span class="input">sk-•••••••••••••••</span></div>
+              </div>
+            </div>
+            <div class="wp-footer">
+              <!-- Step 0: Back is HIDDEN. Empty placeholder keeps geometry. -->
+              <span></span>
+              <div class="wp-footer-right">
+                <!-- Complete Later not yet rendered — no draftable data yet -->
+                <button class="wp-btn wp-btn-primary is-disabled" disabled>Confirm &amp; Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- ── Variant 2: Standard form (max-width 720px) ─────────────────────── -->
+    <div class="shape-caption">
+      <span class="shape-name">Standard form</span>
+      <span class="shape-meta"><code>max-width: 720px</code> · body padding <code>spacing.3</code> (24px) · multi-field forms, paired fields, helper text · the default for most wizards</span>
+    </div>
+    <div class="app-shell mini">
+              <div class="app-side-bar">
+          <div class="group">
+            <button class="sb-btn" aria-label="Menu"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 7a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1z"/></svg></button>
+            <button class="sb-btn" aria-label="Catalog"><svg viewBox="0 0 42 20" xmlns="http://www.w3.org/2000/svg"><path d="M1.475 19.999c-.4 0-.793-.16-1.078-.46-.428-.448-.519-1.113-.228-1.657L8.979 1.427c.198-.371.55-.64.967-.736.416-.096.854-.01 1.2.234L21.59 8.302 40.296.237c.572-.247 1.24-.114 1.668.333.428.446.523 1.108.236 1.652L33.703 18.376c-.196.374-.55.645-.967.743-.418.098-.858.013-1.206-.233L21.234 11.614 2.068 19.877c-.19.083-.392.123-.593.123zM10.8 4.244L4.74 15.568l13.72-5.915L10.8 4.244zm13.566 6.019l7.5 5.298 5.804-11.034-13.304 5.736z"/></svg></button>
+            <button class="sb-btn" aria-label="Curate and Govern"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 11.572c0-.631.512-1.143 1.143-1.143H19a1.143 1.143 0 0 1 0 2.285H4.143A1.143 1.143 0 0 1 3 11.572ZM3 20.857c0-.631.512-1.143 1.143-1.143H19A1.143 1.143 0 0 1 19 22H4.143A1.143 1.143 0 0 1 3 20.857Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M4.429 20.572V12h2.285v8.572H4.43ZM16.428 20.572V12h2.286v8.572h-2.286ZM10.428 20.572V12h2.286v8.572h-2.286ZM12.16 2.163a1.143 1.143 0 0 0-1.177 0L3.841 6.448a1.143 1.143 0 0 0 .588 2.123h14.285a1.143 1.143 0 0 0 .588-2.123l-7.143-4.285Z" clip-rule="evenodd"/></svg></button>
+            <button class="sb-btn" aria-label="Data Products"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.779 2h-5.136a5.488 5.488 0 0 0-4.63 2.065L3.14 10.598C1.562 12.368 1.625 15.066 3.31 16.732l3.957 3.962a4.475 4.475 0 0 0 3.157 1.306c1.074 0 2.126-.38 2.989-1.138l6.524-5.901a5.503 5.503 0 0 0 2.063-4.636V5.203C21.978 3.433 20.547 2 18.779 2zm1.158 8.346a3.16 3.16 0 0 1-1.39 3.119l-6.525 5.879a2.054 2.054 0 0 1-2.825-.084L5.24 15.298c-.905-.906-.947-2.36-.084-3.33L11.029 5.435a3.197 3.197 0 0 1 2.615-1.391h5.135c.631 0 1.158.527 1.158 1.16v5.143z"/><path d="M17.727 8.344a2.085 2.085 0 1 1-4.168 0 2.084 2.084 0 0 1 4.168 0z"/></svg></button>
+            <button class="sb-btn is-active" aria-label="Agent Studio"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 .835c.437 0 .867.115 1.246.333l.001-.001 5.833 3.333.003.003.139.086c.318.213.584.496.776.828.23.398.094.908-.304 1.139-.398.23-.908.093-1.139-.305a1.243 1.243 0 0 0-.404-.307l-5.83-3.331-.003-.002a1.247 1.247 0 0 0-1.236 0l-.003.002-5.83 3.331h.001a1.243 1.243 0 0 0-.625.69V13.332l.007.11c.014.107.05.212.105.306.072.126.176.23.301.303l5.833 3.334.003.002c.127.073.27.111.417.111a.834.834 0 0 1 0 1.667 2.51 2.51 0 0 1-1.247-.333L2.92 15.499l-.003-.003c-.38-.219-.696-.534-.915-.914a2.49 2.49 0 0 1-.336-1.249V6.666l.005-.165c.026-.381.138-.752.33-1.083.219-.38.535-.695.914-.914l.003-.003L8.753 1.168c.379-.218.809-.333 1.247-.333z"/><path d="M16.834 5.111a.834.834 0 0 1 .831 1.445l-7.25 4.166a.834.834 0 0 1-.83 0l-7.25-4.166a.834.834 0 0 1 .83-1.445l6.835 3.928 6.834-3.928z"/><path d="M9.166 18.333V10a.834.834 0 0 1 1.667 0v8.333a.834.834 0 0 1-1.667 0z"/><path d="M12.644 15.6l1.347-.674c.405-.202.732-.53.934-.934l.674-1.348a.166.166 0 0 1 .234 0l.674 1.347c.202.405.53.732.934.934l1.347.674a.166.166 0 0 1 0 .234l-1.347.674c-.404.202-.733.53-.934.934l-.674 1.347a.165.165 0 0 1-.234 0l-.674-1.347a2.083 2.083 0 0 0-.934-.934l-1.347-.674a.166.166 0 0 1 0-.234z"/></svg></button>
+          </div>
+          <div class="group">
+            <button class="sb-btn" aria-label="Add-Ons"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.286 4.286h-4v4h4v-4zm-4-2.286A2.286 2.286 0 0 0 2 4.286v4a2.286 2.286 0 0 0 2.286 2.286h4a2.286 2.286 0 0 0 2.286-2.286v-4A2.286 2.286 0 0 0 8.286 2h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8.286 15.715h-4v4h4v-4zm-4-2.286A2.286 2.286 0 0 0 2 15.715v4A2.286 2.286 0 0 0 4.286 22h4a2.286 2.286 0 0 0 2.286-2.285v-4a2.286 2.286 0 0 0-2.286-2.286h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M19.714 15.715h-4v4h4v-4zm-4-2.286a2.286 2.286 0 0 0-2.286 2.286v4A2.286 2.286 0 0 0 15.714 22h4A2.286 2.286 0 0 0 22 19.715v-4a2.286 2.286 0 0 0-2.286-2.286h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.714 6.287a1.143 1.143 0 0 1 1.143-1.143h5.714a1.143 1.143 0 0 1 0 2.286h-5.714a1.143 1.143 0 0 1-1.143-1.143z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M17.714 10.285a1.143 1.143 0 0 1-1.143-1.143V3.428a1.143 1.143 0 0 1 2.286 0v5.714a1.143 1.143 0 0 1-1.143 1.143z"/></svg></button>
+          </div>
+        </div>
+        <div class="app-right">
+          <!-- Canonical App Top Header — same chrome as the App Sub Navigation
+           preview. Search is rendered DISABLED on a Wizard Step. -->
+      <div class="app-top-header">
+        <div class="brand" aria-label="Customer logo">
+          <svg viewBox="0 0 131 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g clip-path="url(#wsclipC)"><path d="M1.47513 19.9996C1.07478 19.9996 0.681906 19.8399 0.396798 19.5406C-0.0309361 19.0917 -0.12233 18.4268 0.168871 17.8829L8.9787 1.42662C9.17719 1.05569 9.53014 0.787527 9.94619 0.691357C10.3621 0.595186 10.8002 0.680764 11.1468 0.925668L21.59 8.30237L40.2958 0.236687C40.8679 -0.00988314 41.5361 0.123434 41.964 0.569493C42.392 1.01555 42.4866 1.67749 42.2004 2.22173L33.7031 18.3764C33.5066 18.7503 33.1533 19.0216 32.7359 19.1196C32.3185 19.2176 31.8782 19.1325 31.5302 18.8866L21.2336 11.6137L2.06851 19.8772C1.87732 19.9596 1.67529 19.9996 1.47513 19.9996ZM10.8008 4.24424L4.73868 15.5682L18.4577 9.65283L10.8008 4.24424ZM24.3659 10.2631L31.8659 15.5609L37.67 4.52681L24.3659 10.2631Z" fill="url(#wsgradC)"/><path d="M116.45 19.6009L118.682 6.9785H122.505L122.299 8.13298L122.351 8.15863C123.531 7.18374 124.822 6.69629 126.225 6.69629C127.422 6.69629 128.371 7.05546 129.072 7.77381C129.774 8.49215 130.124 9.44139 130.124 10.6215C130.124 11.032 130.073 11.5451 129.97 12.1608L128.662 19.6009H124.762L126.019 12.4687C126.088 12.0924 126.122 11.7846 126.122 11.5451C126.122 11.1004 125.994 10.7413 125.737 10.4676C125.481 10.1939 125.087 10.0571 124.557 10.0571C123.616 10.0571 122.71 10.4077 121.838 11.109L120.35 19.6009H116.45Z" fill="white"/><path d="M101.451 14.0337C101.451 11.9813 102.152 10.2367 103.554 8.80001C104.923 7.39753 106.667 6.69629 108.788 6.69629C110.601 6.69629 112.097 7.2265 113.278 8.28691C114.475 9.34733 115.073 10.7669 115.073 12.5457C115.073 14.5981 114.372 16.3426 112.97 17.7793C111.601 19.1818 109.857 19.8831 107.736 19.8831C105.923 19.8831 104.418 19.3529 103.221 18.2924C102.041 17.232 101.451 15.8124 101.451 14.0337ZM105.35 13.7771C105.35 14.5981 105.572 15.2651 106.017 15.7782C106.479 16.2913 107.12 16.5479 107.941 16.5479C108.882 16.5479 109.635 16.2229 110.199 15.573C110.849 14.8204 111.174 13.8968 111.174 12.8022C111.174 11.9813 110.943 11.3142 110.481 10.8011C110.037 10.288 109.404 10.0315 108.583 10.0315C107.642 10.0315 106.889 10.3564 106.325 11.0064C105.675 11.7589 105.35 12.6825 105.35 13.7771Z" fill="white"/><path d="M96.6192 3.07876C96.6192 2.41173 96.8501 1.85587 97.3119 1.41117C97.7737 0.966485 98.3381 0.744141 99.0051 0.744141C99.6037 0.744141 100.108 0.957934 100.519 1.38552C100.929 1.796 101.134 2.292 101.134 2.87352C101.134 3.54056 100.904 4.09642 100.442 4.54111C99.98 4.9858 99.4156 5.20814 98.7486 5.20814C98.1499 5.20814 97.6454 5.0029 97.2349 4.59242C96.8244 4.16483 96.6192 3.66028 96.6192 3.07876ZM93.9767 19.6007L96.2087 6.97835H100.108L97.8763 19.6007H93.9767Z" fill="white"/><path d="M85.1235 16.0598C85.1235 15.6835 85.1833 15.1362 85.303 14.4178L86.047 10.2104H83.9946L84.559 6.97782H86.6115L87.2272 3.48871L91.1781 3.25781L90.511 6.97782H93.8206L93.2562 10.2104H89.9466L89.2283 14.3409C89.1599 14.7171 89.1257 15.0164 89.1257 15.2388C89.1257 16.1453 89.596 16.5985 90.5367 16.5985C91.1011 16.5985 91.657 16.4617 92.2043 16.188L91.6142 19.5489C90.9985 19.7712 90.2973 19.8824 89.5105 19.8824C88.279 19.8824 87.2357 19.566 86.3806 18.9331C85.5425 18.3003 85.1235 17.3425 85.1235 16.0598Z" fill="white"/><path d="M82.1299 8.18429L80.1288 19.6009H76.3062L76.4601 18.7542L76.4088 18.7286C75.5365 19.4982 74.5018 19.8831 73.3045 19.8831C71.885 19.8831 70.7134 19.3785 69.7898 18.3694C68.8833 17.3603 68.4301 16.0519 68.4301 14.4442C68.4301 13.4008 68.6267 12.3832 69.0201 11.3912C69.4306 10.3821 70.0121 9.50981 70.7647 8.77436C72.1843 7.38898 74.0058 6.69629 76.2292 6.69629C78.0764 6.69629 80.0433 7.19229 82.1299 8.18429ZM76.8963 15.8039L77.8455 10.365C77.2298 10.0742 76.5713 9.92884 75.8701 9.92884C74.8439 9.92884 73.9972 10.3222 73.3302 11.109C72.6803 11.8957 72.3553 12.8621 72.3553 14.008C72.3553 14.8461 72.5605 15.5131 72.971 16.0091C73.3986 16.488 73.9716 16.7275 74.6899 16.7275C75.4596 16.7275 76.195 16.4196 76.8963 15.8039Z" fill="white"/><path d="M60.9055 19.6006L64.369 0H68.2686L64.8051 19.6006H60.9055Z" fill="white"/><path d="M40.5 19.6007L51.0956 1.02637H55.0722L59.177 19.6007H54.9695L54.1742 15.7011H46.9651L44.7844 19.6007H40.5ZM49.9668 10.2879L48.7353 12.4942H53.5072L53.0454 10.2622C52.7888 9.01369 52.5323 7.6283 52.2757 6.1061H52.2244C51.7455 7.04679 50.993 8.44072 49.9668 10.2879Z" fill="white"/></g><defs><linearGradient id="wsgradC" x1="0" y1="20.03" x2="20.08" y2="-16.35" gradientUnits="userSpaceOnUse"><stop stop-color="#F47C20"/><stop offset="1" stop-color="#FDA600"/></linearGradient><clipPath id="wsclipC"><rect width="131" height="20" fill="white"/></clipPath></defs></svg>
+        </div>
+        <div class="search is-disabled" aria-disabled="true">
+          <span class="label">Search Alation</span>
+          <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        </div>
+        <div class="actions">
+          <button aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+          <span class="avatar" aria-label="User avatar">VS</span>
+        </div>
+      </div>
+          <div class="app-main">
+          <div class="wp-stack">
+            <div class="wp-header">
+              <h1 class="wp-title">Connect a data source</h1>
+              <button class="wp-close" aria-label="Close wizard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="wp-stepper-wrap">
+              <ul class="stepper">
+                <li class="step completed"><div class="step-row"><span class="step-icon"><span class="step-num">1</span></span><div class="label-block"><span class="label">Choose connector</span></div></div></li>
+                <li class="connector done"></li>
+                <li class="step active"><div class="step-row"><span class="step-icon"><span class="step-num">2</span></span><div class="label-block"><span class="label">Authenticate</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">3</span></span><div class="label-block"><span class="label">Map schema</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">4</span></span><div class="label-block"><span class="label">Review</span></div></div></li>
+              </ul>
+            </div>
+            <div class="wp-body">
+              <div class="wp-body-inner standard">
+                <h3 class="wp-step-title">Authenticate</h3>
+                <p class="wp-step-description">Enter the credentials Alation will use to connect to your data source. The connection is verified before the next step.</p>
+
+                <h4 class="wp-form-section-title">Connection</h4>
+                <div class="wp-form-grid">
+                  <div class="wp-field-row">
+                    <span class="label">Display name<span class="req">*</span></span>
+                    <span class="input">Snowflake — production</span>
+                  </div>
+                  <div class="wp-field-row">
+                    <span class="label">Environment<span class="req">*</span></span>
+                    <span class="input">Production</span>
+                  </div>
+                  <div class="wp-field-row full">
+                    <span class="label">Account URL<span class="req">*</span></span>
+                    <span class="input">https://my-org.snowflakecomputing.com</span>
+                    <span class="helper">The full account host, e.g. <code>my-org.snowflakecomputing.com</code>. Region is inferred.</span>
+                  </div>
+                </div>
+
+                <h4 class="wp-form-section-title">Service account</h4>
+                <div class="wp-form-grid">
+                  <div class="wp-field-row">
+                    <span class="label">Username<span class="req">*</span></span>
+                    <span class="input">data_admin</span>
+                  </div>
+                  <div class="wp-field-row">
+                    <span class="label">Password<span class="req">*</span></span>
+                    <span class="input">••••••••</span>
+                  </div>
+                  <div class="wp-field-row">
+                    <span class="label">Role</span>
+                    <span class="input">SYSADMIN</span>
+                    <span class="helper">Optional — defaults to the account's default role.</span>
+                  </div>
+                  <div class="wp-field-row">
+                    <span class="label">Warehouse</span>
+                    <span class="input placeholder">Pick a warehouse</span>
+                    <span class="helper">Used for sample-row reads only.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="wp-footer">
+              <button class="wp-btn wp-btn-grey">
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </button>
+              <div class="wp-footer-right">
+                <button class="wp-btn wp-btn-blue-secondary">Complete Later</button>
+                <button class="wp-btn wp-btn-primary">Confirm &amp; Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- ── Variant 3: Full-width (no max-width) ──────────────────────────── -->
+    <div class="shape-caption">
+      <span class="shape-name">Full-width</span>
+      <span class="shape-meta">no <code>max-width</code> · body padding <strong><code>spacing.4</code> (32 px) left and right</strong> per <a href="../../foundations/layout/usage.md" target="_blank" rel="noopener">Layout §5.2</a> · for steps that need a Table, data grid, or wide canvas</span>
+    </div>
+    <div class="app-shell mini full-width">
+              <div class="app-side-bar">
+          <div class="group">
+            <button class="sb-btn" aria-label="Menu"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 7a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h16a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1z"/></svg></button>
+            <button class="sb-btn" aria-label="Catalog"><svg viewBox="0 0 42 20" xmlns="http://www.w3.org/2000/svg"><path d="M1.475 19.999c-.4 0-.793-.16-1.078-.46-.428-.448-.519-1.113-.228-1.657L8.979 1.427c.198-.371.55-.64.967-.736.416-.096.854-.01 1.2.234L21.59 8.302 40.296.237c.572-.247 1.24-.114 1.668.333.428.446.523 1.108.236 1.652L33.703 18.376c-.196.374-.55.645-.967.743-.418.098-.858.013-1.206-.233L21.234 11.614 2.068 19.877c-.19.083-.392.123-.593.123zM10.8 4.244L4.74 15.568l13.72-5.915L10.8 4.244zm13.566 6.019l7.5 5.298 5.804-11.034-13.304 5.736z"/></svg></button>
+            <button class="sb-btn" aria-label="Curate and Govern"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 11.572c0-.631.512-1.143 1.143-1.143H19a1.143 1.143 0 0 1 0 2.285H4.143A1.143 1.143 0 0 1 3 11.572ZM3 20.857c0-.631.512-1.143 1.143-1.143H19A1.143 1.143 0 0 1 19 22H4.143A1.143 1.143 0 0 1 3 20.857Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M4.429 20.572V12h2.285v8.572H4.43ZM16.428 20.572V12h2.286v8.572h-2.286ZM10.428 20.572V12h2.286v8.572h-2.286ZM12.16 2.163a1.143 1.143 0 0 0-1.177 0L3.841 6.448a1.143 1.143 0 0 0 .588 2.123h14.285a1.143 1.143 0 0 0 .588-2.123l-7.143-4.285Z" clip-rule="evenodd"/></svg></button>
+            <button class="sb-btn is-active" aria-label="Data Products"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.779 2h-5.136a5.488 5.488 0 0 0-4.63 2.065L3.14 10.598C1.562 12.368 1.625 15.066 3.31 16.732l3.957 3.962a4.475 4.475 0 0 0 3.157 1.306c1.074 0 2.126-.38 2.989-1.138l6.524-5.901a5.503 5.503 0 0 0 2.063-4.636V5.203C21.978 3.433 20.547 2 18.779 2zm1.158 8.346a3.16 3.16 0 0 1-1.39 3.119l-6.525 5.879a2.054 2.054 0 0 1-2.825-.084L5.24 15.298c-.905-.906-.947-2.36-.084-3.33L11.029 5.435a3.197 3.197 0 0 1 2.615-1.391h5.135c.631 0 1.158.527 1.158 1.16v5.143z"/><path d="M17.727 8.344a2.085 2.085 0 1 1-4.168 0 2.084 2.084 0 0 1 4.168 0z"/></svg></button>
+            <button class="sb-btn" aria-label="Agent Studio"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 .835c.437 0 .867.115 1.246.333l.001-.001 5.833 3.333.003.003.139.086c.318.213.584.496.776.828.23.398.094.908-.304 1.139-.398.23-.908.093-1.139-.305a1.243 1.243 0 0 0-.404-.307l-5.83-3.331-.003-.002a1.247 1.247 0 0 0-1.236 0l-.003.002-5.83 3.331h.001a1.243 1.243 0 0 0-.625.69V13.332l.007.11c.014.107.05.212.105.306.072.126.176.23.301.303l5.833 3.334.003.002c.127.073.27.111.417.111a.834.834 0 0 1 0 1.667 2.51 2.51 0 0 1-1.247-.333L2.92 15.499l-.003-.003c-.38-.219-.696-.534-.915-.914a2.49 2.49 0 0 1-.336-1.249V6.666l.005-.165c.026-.381.138-.752.33-1.083.219-.38.535-.695.914-.914l.003-.003L8.753 1.168c.379-.218.809-.333 1.247-.333z"/><path d="M16.834 5.111a.834.834 0 0 1 .831 1.445l-7.25 4.166a.834.834 0 0 1-.83 0l-7.25-4.166a.834.834 0 0 1 .83-1.445l6.835 3.928 6.834-3.928z"/><path d="M9.166 18.333V10a.834.834 0 0 1 1.667 0v8.333a.834.834 0 0 1-1.667 0z"/><path d="M12.644 15.6l1.347-.674c.405-.202.732-.53.934-.934l.674-1.348a.166.166 0 0 1 .234 0l.674 1.347c.202.405.53.732.934.934l1.347.674a.166.166 0 0 1 0 .234l-1.347.674c-.404.202-.733.53-.934.934l-.674 1.347a.165.165 0 0 1-.234 0l-.674-1.347a2.083 2.083 0 0 0-.934-.934l-1.347-.674a.166.166 0 0 1 0-.234z"/></svg></button>
+          </div>
+          <div class="group">
+            <button class="sb-btn" aria-label="Add-Ons"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.286 4.286h-4v4h4v-4zm-4-2.286A2.286 2.286 0 0 0 2 4.286v4a2.286 2.286 0 0 0 2.286 2.286h4a2.286 2.286 0 0 0 2.286-2.286v-4A2.286 2.286 0 0 0 8.286 2h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8.286 15.715h-4v4h4v-4zm-4-2.286A2.286 2.286 0 0 0 2 15.715v4A2.286 2.286 0 0 0 4.286 22h4a2.286 2.286 0 0 0 2.286-2.285v-4a2.286 2.286 0 0 0-2.286-2.286h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M19.714 15.715h-4v4h4v-4zm-4-2.286a2.286 2.286 0 0 0-2.286 2.286v4A2.286 2.286 0 0 0 15.714 22h4A2.286 2.286 0 0 0 22 19.715v-4a2.286 2.286 0 0 0-2.286-2.286h-4z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.714 6.287a1.143 1.143 0 0 1 1.143-1.143h5.714a1.143 1.143 0 0 1 0 2.286h-5.714a1.143 1.143 0 0 1-1.143-1.143z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M17.714 10.285a1.143 1.143 0 0 1-1.143-1.143V3.428a1.143 1.143 0 0 1 2.286 0v5.714a1.143 1.143 0 0 1-1.143 1.143z"/></svg></button>
+          </div>
+        </div>
+        <div class="app-right">
+          <!-- Canonical App Top Header — same chrome as the App Sub Navigation
+           preview. Search is rendered DISABLED on a Wizard Step. -->
+      <div class="app-top-header">
+        <div class="brand" aria-label="Customer logo">
+          <svg viewBox="0 0 131 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g clip-path="url(#wsclipD)"><path d="M1.47513 19.9996C1.07478 19.9996 0.681906 19.8399 0.396798 19.5406C-0.0309361 19.0917 -0.12233 18.4268 0.168871 17.8829L8.9787 1.42662C9.17719 1.05569 9.53014 0.787527 9.94619 0.691357C10.3621 0.595186 10.8002 0.680764 11.1468 0.925668L21.59 8.30237L40.2958 0.236687C40.8679 -0.00988314 41.5361 0.123434 41.964 0.569493C42.392 1.01555 42.4866 1.67749 42.2004 2.22173L33.7031 18.3764C33.5066 18.7503 33.1533 19.0216 32.7359 19.1196C32.3185 19.2176 31.8782 19.1325 31.5302 18.8866L21.2336 11.6137L2.06851 19.8772C1.87732 19.9596 1.67529 19.9996 1.47513 19.9996ZM10.8008 4.24424L4.73868 15.5682L18.4577 9.65283L10.8008 4.24424ZM24.3659 10.2631L31.8659 15.5609L37.67 4.52681L24.3659 10.2631Z" fill="url(#wsgradD)"/><path d="M116.45 19.6009L118.682 6.9785H122.505L122.299 8.13298L122.351 8.15863C123.531 7.18374 124.822 6.69629 126.225 6.69629C127.422 6.69629 128.371 7.05546 129.072 7.77381C129.774 8.49215 130.124 9.44139 130.124 10.6215C130.124 11.032 130.073 11.5451 129.97 12.1608L128.662 19.6009H124.762L126.019 12.4687C126.088 12.0924 126.122 11.7846 126.122 11.5451C126.122 11.1004 125.994 10.7413 125.737 10.4676C125.481 10.1939 125.087 10.0571 124.557 10.0571C123.616 10.0571 122.71 10.4077 121.838 11.109L120.35 19.6009H116.45Z" fill="white"/><path d="M101.451 14.0337C101.451 11.9813 102.152 10.2367 103.554 8.80001C104.923 7.39753 106.667 6.69629 108.788 6.69629C110.601 6.69629 112.097 7.2265 113.278 8.28691C114.475 9.34733 115.073 10.7669 115.073 12.5457C115.073 14.5981 114.372 16.3426 112.97 17.7793C111.601 19.1818 109.857 19.8831 107.736 19.8831C105.923 19.8831 104.418 19.3529 103.221 18.2924C102.041 17.232 101.451 15.8124 101.451 14.0337ZM105.35 13.7771C105.35 14.5981 105.572 15.2651 106.017 15.7782C106.479 16.2913 107.12 16.5479 107.941 16.5479C108.882 16.5479 109.635 16.2229 110.199 15.573C110.849 14.8204 111.174 13.8968 111.174 12.8022C111.174 11.9813 110.943 11.3142 110.481 10.8011C110.037 10.288 109.404 10.0315 108.583 10.0315C107.642 10.0315 106.889 10.3564 106.325 11.0064C105.675 11.7589 105.35 12.6825 105.35 13.7771Z" fill="white"/><path d="M96.6192 3.07876C96.6192 2.41173 96.8501 1.85587 97.3119 1.41117C97.7737 0.966485 98.3381 0.744141 99.0051 0.744141C99.6037 0.744141 100.108 0.957934 100.519 1.38552C100.929 1.796 101.134 2.292 101.134 2.87352C101.134 3.54056 100.904 4.09642 100.442 4.54111C99.98 4.9858 99.4156 5.20814 98.7486 5.20814C98.1499 5.20814 97.6454 5.0029 97.2349 4.59242C96.8244 4.16483 96.6192 3.66028 96.6192 3.07876ZM93.9767 19.6007L96.2087 6.97835H100.108L97.8763 19.6007H93.9767Z" fill="white"/><path d="M85.1235 16.0598C85.1235 15.6835 85.1833 15.1362 85.303 14.4178L86.047 10.2104H83.9946L84.559 6.97782H86.6115L87.2272 3.48871L91.1781 3.25781L90.511 6.97782H93.8206L93.2562 10.2104H89.9466L89.2283 14.3409C89.1599 14.7171 89.1257 15.0164 89.1257 15.2388C89.1257 16.1453 89.596 16.5985 90.5367 16.5985C91.1011 16.5985 91.657 16.4617 92.2043 16.188L91.6142 19.5489C90.9985 19.7712 90.2973 19.8824 89.5105 19.8824C88.279 19.8824 87.2357 19.566 86.3806 18.9331C85.5425 18.3003 85.1235 17.3425 85.1235 16.0598Z" fill="white"/><path d="M82.1299 8.18429L80.1288 19.6009H76.3062L76.4601 18.7542L76.4088 18.7286C75.5365 19.4982 74.5018 19.8831 73.3045 19.8831C71.885 19.8831 70.7134 19.3785 69.7898 18.3694C68.8833 17.3603 68.4301 16.0519 68.4301 14.4442C68.4301 13.4008 68.6267 12.3832 69.0201 11.3912C69.4306 10.3821 70.0121 9.50981 70.7647 8.77436C72.1843 7.38898 74.0058 6.69629 76.2292 6.69629C78.0764 6.69629 80.0433 7.19229 82.1299 8.18429ZM76.8963 15.8039L77.8455 10.365C77.2298 10.0742 76.5713 9.92884 75.8701 9.92884C74.8439 9.92884 73.9972 10.3222 73.3302 11.109C72.6803 11.8957 72.3553 12.8621 72.3553 14.008C72.3553 14.8461 72.5605 15.5131 72.971 16.0091C73.3986 16.488 73.9716 16.7275 74.6899 16.7275C75.4596 16.7275 76.195 16.4196 76.8963 15.8039Z" fill="white"/><path d="M60.9055 19.6006L64.369 0H68.2686L64.8051 19.6006H60.9055Z" fill="white"/><path d="M40.5 19.6007L51.0956 1.02637H55.0722L59.177 19.6007H54.9695L54.1742 15.7011H46.9651L44.7844 19.6007H40.5ZM49.9668 10.2879L48.7353 12.4942H53.5072L53.0454 10.2622C52.7888 9.01369 52.5323 7.6283 52.2757 6.1061H52.2244C51.7455 7.04679 50.993 8.44072 49.9668 10.2879Z" fill="white"/></g><defs><linearGradient id="wsgradD" x1="0" y1="20.03" x2="20.08" y2="-16.35" gradientUnits="userSpaceOnUse"><stop stop-color="#F47C20"/><stop offset="1" stop-color="#FDA600"/></linearGradient><clipPath id="wsclipD"><rect width="131" height="20" fill="white"/></clipPath></defs></svg>
+        </div>
+        <div class="search is-disabled" aria-disabled="true">
+          <span class="label">Search Alation</span>
+          <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        </div>
+        <div class="actions">
+          <button aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+          <span class="avatar" aria-label="User avatar">VS</span>
+        </div>
+      </div>
+          <div class="app-main">
+          <div class="wp-stack">
+            <div class="wp-header">
+              <h1 class="wp-title">Publish a data product</h1>
+              <button class="wp-close" aria-label="Close wizard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="wp-stepper-wrap">
+              <ul class="stepper">
+                <li class="step completed"><div class="step-row"><span class="step-icon"><span class="step-num">1</span></span><div class="label-block"><span class="label">Define product</span></div></div></li>
+                <li class="connector done"></li>
+                <li class="step active"><div class="step-row"><span class="step-icon"><span class="step-num">2</span></span><div class="label-block"><span class="label">Add datasets</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">3</span></span><div class="label-block"><span class="label">Standards check</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">4</span></span><div class="label-block"><span class="label">Review</span></div></div></li>
+                <li class="connector"></li>
+                <li class="step"><div class="step-row"><span class="step-icon"><span class="step-num">5</span></span><div class="label-block"><span class="label">Publish</span></div></div></li>
+              </ul>
+            </div>
+            <div class="wp-body">
+              <div class="wp-body-inner full">
+                <h3 class="wp-step-title">Add datasets</h3>
+                <p class="wp-step-description">Pick the schemas to include in the data product. Use the search above the table to filter; the row count and last-refresh badge live with the table per the <a href="../../components/composite/table/usage.md" target="_blank" rel="noopener">Table</a> reference.</p>
+                <table class="wp-grid">
+                  <thead>
+                    <tr>
+                      <th style="width: 32px;"></th>
+                      <th>Schema</th>
+                      <th>Tables</th>
+                      <th>Last refresh</th>
+                      <th>Owner</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="check is-checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                      <td><span class="schema-name"><svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>public</span></td>
+                      <td>42</td>
+                      <td class="muted">2 hours ago</td>
+                      <td>data-platform</td>
+                    </tr>
+                    <tr>
+                      <td><span class="check is-checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                      <td><span class="schema-name"><svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>analytics</span></td>
+                      <td>18</td>
+                      <td class="muted">2 hours ago</td>
+                      <td>analytics-team</td>
+                    </tr>
+                    <tr>
+                      <td><span class="check"></span></td>
+                      <td><span class="schema-name"><svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>staging</span></td>
+                      <td>96</td>
+                      <td class="muted">15 minutes ago</td>
+                      <td>data-platform</td>
+                    </tr>
+                    <tr>
+                      <td><span class="check"></span></td>
+                      <td><span class="schema-name"><svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>raw</span></td>
+                      <td>231</td>
+                      <td class="muted">overnight</td>
+                      <td>data-platform</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="wp-footer">
+              <button class="wp-btn wp-btn-grey">
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </button>
+              <div class="wp-footer-right">
+                <button class="wp-btn wp-btn-blue-secondary">Complete Later</button>
+                <button class="wp-btn wp-btn-primary">Confirm &amp; Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+    </div>
+
+    <h2 class="section">Footer states across steps</h2>
+    <p class="page-sub" style="margin-top: 0;">The footer is <strong>conditional</strong>: buttons that don't apply to the current step are hidden, not disabled. The only legitimate visible-and-disabled footer button is <strong>Confirm &amp; Continue</strong> while the user has not yet provided the step's mandatory information. Each tile below is one footer state — the caption sits <strong>outside</strong> the white surface so the footer reads as the artefact, not the description.</p>
+    <div class="wp-footer-states">
+      <div class="wp-footer-tile">
+        <div class="wp-footer">
+          <span></span>
+          <div class="wp-footer-right">
+            <button class="wp-btn wp-btn-primary is-disabled" disabled>Confirm &amp; Continue</button>
+          </div>
+        </div>
+        <div class="caption"><strong>Step 1, no data yet.</strong> Back is <em>not rendered</em> (step 0 — nowhere to retreat to). Complete Later is <em>not rendered</em> (no draftable data exists). Confirm &amp; Continue is rendered <strong>disabled</strong> with the grey-disabled state from the <a href="../../components/base/button/usage.md" target="_blank" rel="noopener">Button</a> reference — the user has not yet filled in the mandatory information for the step.</div>
+      </div>
+
+      <div class="wp-footer-tile">
+        <div class="wp-footer">
+          <span></span>
+          <div class="wp-footer-right">
+            <button class="wp-btn wp-btn-blue-secondary">Complete Later</button>
+            <button class="wp-btn wp-btn-primary">Confirm &amp; Continue</button>
+          </div>
+        </div>
+        <div class="caption"><strong>Step 1, mandatory data provided.</strong> Back still hidden (still step 0). Complete Later <em>appears</em> now that draftable data exists; it stays rendered for the rest of the flow. Confirm &amp; Continue is enabled.</div>
+      </div>
+
+      <div class="wp-footer-tile">
+        <div class="wp-footer">
+          <button class="wp-btn wp-btn-grey">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <div class="wp-footer-right">
+            <button class="wp-btn wp-btn-blue-secondary">Complete Later</button>
+            <button class="wp-btn wp-btn-primary is-disabled" disabled>Confirm &amp; Continue</button>
+          </div>
+        </div>
+        <div class="caption"><strong>Mid-flow, mandatory field still empty.</strong> Back is rendered (step ≥ 1) with a leading <code>ChevronLeftIcon</code>. Complete Later remains. Confirm &amp; Continue is rendered <strong>disabled</strong> (grey-disabled state per <a href="../../components/base/button/usage.md" target="_blank" rel="noopener">Button</a>) while the user is still filling in mandatory information on this step.</div>
+      </div>
+
+      <div class="wp-footer-tile">
+        <div class="wp-footer">
+          <button class="wp-btn wp-btn-grey">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <div class="wp-footer-right">
+            <button class="wp-btn wp-btn-blue-secondary">Complete Later</button>
+            <button class="wp-btn wp-btn-primary">Confirm &amp; Continue</button>
+          </div>
+        </div>
+        <div class="caption"><strong>Mid-flow, valid.</strong> All three actions rendered and enabled.</div>
+      </div>
+
+      <div class="wp-footer-tile">
+        <div class="wp-footer">
+          <button class="wp-btn wp-btn-grey">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <div class="wp-footer-right">
+            <button class="wp-btn wp-btn-blue-secondary">Complete Later</button>
+            <button class="wp-btn wp-btn-primary">Connect</button>
+          </div>
+        </div>
+        <div class="caption"><strong>Last step.</strong> Primary label changes to the commit verb ("Connect" / "Publish" / "Create monitor").</div>
+      </div>
+    </div>
+
+    <h2 class="section">Button hierarchy</h2>
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 16px; background: var(--paper); border: 1px solid var(--neutral-400); border-radius: var(--radius-2);">
+      <button class="wp-btn wp-btn-grey">
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back — Grey outlined
+      </button>
+      <button class="wp-btn wp-btn-blue-secondary">Complete Later — Blue secondary</button>
+      <button class="wp-btn wp-btn-primary">Confirm &amp; Continue — Primary</button>
+    </div>
+
+  </div>
+<!-- md-viewer-begin -->
+<style>
+  .md-viewer {
+    max-width: 960px;
+    margin: 48px auto 0 auto;
+    padding: 0 0 40px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .md-viewer-actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 0; }
+  .md-viewer-toggle {
+    all: unset; box-sizing: border-box;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-weight: 500;
+    color: #4E4E58; background: #F1F4F6;
+    border: 1px solid #E8EDF1; border-radius: 6px;
+    cursor: pointer; user-select: none;
+  }
+  .md-viewer-toggle:hover { background: #E8EDF1; color: #0D1322; }
+  .md-viewer-toggle:focus-visible { outline: 2px solid #0073DD; outline-offset: 2px; }
+  .md-viewer-toggle .chev { display: inline-flex; transition: transform 0.15s ease; }
+  .md-viewer-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .md-viewer-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px; color: #B7B7C1; margin-left: 4px;
+  }
+  .md-viewer-pre {
+    display: none; margin: 12px 0 0 0; padding: 20px 24px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; line-height: 1.6; color: #0D1322;
+    white-space: pre-wrap; word-wrap: break-word;
+    overflow-x: auto; max-height: 640px; overflow-y: auto;
+  }
+  .md-viewer[data-open="source"] .md-viewer-pre { display: block; }
+  .md-rendered {
+    display: none; margin: 16px 0 0 0; padding: 28px 32px;
+    background: #FFFFFF; border: 1px solid #E8EDF1; border-radius: 8px;
+    color: #0D1322; font-size: 14px; line-height: 1.65;
+  }
+  .md-viewer[data-open="rendered"] .md-rendered { display: block; }
+  .md-rendered h2 {
+    font-size: 17px; font-weight: 600; color: #0D1322;
+    margin: 28px 0 10px 0; letter-spacing: -0.005em;
+  }
+  .md-rendered h2:first-child { margin-top: 0; }
+  .md-rendered h3 {
+    font-size: 14px; font-weight: 600; color: #0D1322;
+    margin: 18px 0 8px 0; text-transform: none; letter-spacing: 0;
+  }
+  .md-rendered p  { margin: 0 0 12px 0; }
+  .md-rendered ul, .md-rendered ol { margin: 0 0 14px 0; padding-left: 22px; }
+  .md-rendered li { margin-bottom: 4px; }
+  .md-rendered a  { color: #0073DD; text-decoration: underline; }
+  .md-rendered code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; background: #F1F4F6; color: #0D1322;
+    padding: 1px 6px; border-radius: 4px;
+  }
+  .md-rendered pre {
+    background: #FAFBFC; border: 1px solid #E8EDF1; border-radius: 8px;
+    padding: 14px 18px; overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.7; margin: 0 0 14px 0;
+  }
+  .md-rendered pre code { background: transparent; padding: 0; }
+  .md-rendered strong { font-weight: 600; }
+  .md-rendered em { font-style: italic; }
+  .md-rendered hr { border: 0; border-top: 1px solid #E8EDF1; margin: 24px 0; }
+  .md-rendered table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid #E8EDF1; border-radius: 8px; overflow: hidden;
+    margin: 0 0 16px 0;
+  }
+  .md-rendered th, .md-rendered td {
+    text-align: left; padding: 9px 12px;
+    font-size: 12.5px; border-bottom: 1px solid #E8EDF1; vertical-align: top;
+  }
+  .md-rendered th {
+    background: #F1F4F6; color: #4E4E58; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px;
+  }
+  .md-rendered tr:last-child td { border-bottom: none; }
+  /* Callouts — green for Use/Guarantees, red for Prohibitions/Don'ts */
+  .md-rendered .callout {
+    border-radius: 8px; padding: 14px 18px;
+    margin: 0 0 16px 0; border: 1px solid transparent;
+  }
+  .md-rendered .callout.green { background: #F0F8EB; border-color: #CDE5BA; }
+  .md-rendered .callout.red   { background: #FFF0F0; border-color: #F2C0C0; }
+  .md-rendered .callout > .callout-title {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; margin: 0 0 8px 0;
+  }
+  .md-rendered .callout.green > .callout-title { color: #2E5E18; }
+  .md-rendered .callout.red   > .callout-title { color: #8E1A27; }
+  .md-rendered .callout ul { margin: 0; padding-left: 18px; }
+  .md-rendered .callout li { margin-bottom: 3px; }
+  /* Contract block — 3-card grid */
+  .md-rendered .contract-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    align-items: stretch; margin: 0 0 16px 0;
+  }
+  .md-rendered .contract-card {
+    background: #FFFFFF; border: 1px solid #E8EDF1;
+    border-radius: 12px; padding: 20px; border-top: 3px solid;
+  }
+  .md-rendered .contract-card.guarantees   { border-top-color: #3E9A17; }
+  .md-rendered .contract-card.prohibitions { border-top-color: #CA334A; }
+  .md-rendered .contract-card.conditions   { border-top-color: #0073DD; }
+  .md-rendered .contract-card h3 {
+    font-size: 13px; font-weight: 600; margin: 0 0 10px 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .md-rendered .contract-card h3 .sym {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+  }
+  .md-rendered .contract-card.guarantees h3 .sym   { background: #F0F8EB; color: #2E5E18; }
+  .md-rendered .contract-card.prohibitions h3 .sym { background: #FFF0F0; color: #8E1A27; }
+  .md-rendered .contract-card.conditions h3 .sym   { background: #E6F2FC; color: #0056A6; }
+  .md-rendered .contract-card ul { margin: 0; padding-left: 16px; }
+  .md-rendered .contract-card li {
+    font-size: 12.5px; line-height: 1.55; margin-bottom: 6px; color: #0D1322;
+  }
+  .md-rendered .contract-card li:last-child { margin-bottom: 0; }
+  @media (max-width: 720px) {
+    .md-rendered .contract-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="md-viewer" data-open="closed" data-exclude-h2="anatomy,anatomy — wizard step inside the full app chrome,body,body shape — three variants in real context,button,button hierarchy,classification,example,examples,footer,footer states across steps,purpose,slots,variants" data-truncate-after-h2="contract" data-md-b64="LS0tCm5hbWU6IHdpemFyZC1zdGVwCnRpdGxlOiBXaXphcmQgU3RlcApjYXRlZ29yeTogcGFnZS10ZW1wbGF0ZQpsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjkKCmRlc2NyaXB0aW9uOiA+CiAgRnVsbC1wYWdlIHNoYXBlIGZvciBtdWx0aS1zdGVwIG9yZGVyZWQgdGFza3MgKDPigJM3IHN0ZXBzKS4gQSB3aXphcmQtc2hhcGVkCiAgaGVhZGVyIChoMSB0aXRsZSBvbiB0aGUgbGVmdCwgY2xvc2UgY3Jvc3Mgb24gdGhlIHJpZ2h0KSBzaXRzIG92ZXIgYSBjZW50cmVkCiAgU3RlcHBlciB3aXRoIGZpeGVkIGdhcHMgYmV0d2VlbiBzdGVwcywgdGhlIGFjdGl2ZSBzdGVwJ3MgY29udGVudCBmaWxscyB0aGUKICBib2R5IGluIG9uZSBvZiB0aHJlZSB3aWR0aCBzaGFwZXMgKHNtYWxsIGZvcm0gLyBzdGFuZGFyZCBmb3JtIC8gZnVsbC13aWR0aCksCiAgYW5kIGEgc3RpY2t5IGZvb3RlciBwaW5zIEJhY2sgb24gdGhlIGxlZnQgd2l0aCBDb21wbGV0ZSBMYXRlciBhbmQgQ29uZmlybSAmCiAgQ29udGludWUgb24gdGhlIHJpZ2h0LiBSZW5kZXJzIGluc2lkZSB0aGUgZnVsbCBBbGF0aW9uIGFwcCBjaHJvbWUuCnRhZ3M6IFtwYWdlLXRlbXBsYXRlLCB3aXphcmQsIG11bHRpLXN0ZXAsIGZsb3ddCgpmaWdtYV91cmw6ICJodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2NIa2FtZHZQejFJa21RU3dqcVdIZFgvTkVPLTIuMS0tLURlc2lnbi1TeXN0ZW0/bT1hdXRvJm5vZGUtaWQ9MzYwNS0xMDkyMiZ0PVBPQ2prZGJ5VHYxSEVjTUgtMSIKY29kZV9yZWZlcmVuY2U6ICIuL0V4YW1wbGUudHN4IOKAlCB0aGUgY2Fub25pY2FsLCBydW5uYWJsZSBXaXphcmQgU3RlcCBjb21wb3NpdGlvbi4gTm8gc2hhcmVkIHByb2R1Y3Rpb24gd3JhcHBlcjsgV2l6YXJkIFN0ZXAgaXMgYSBjb21wb3NpdGlvbiBjb250cmFjdCBhc3NlbWJsZWQgZnJvbSBBcHAgVG9wIEhlYWRlciArIEFwcCBTaWRlIEJhciBjaHJvbWUgcGx1cyB0aGUgaW5saW5lIHdpemFyZCBoZWFkZXIgKGgxIHRpdGxlICsgY2xvc2UgY3Jvc3MpLCBjZW50cmVkIGZpeGVkLWdhcCBTdGVwcGVyLCBzdGVwIGNvbnRlbnQgaW4gb25lIG9mIHRocmVlIGJvZHkgc2hhcGVzLCBhbmQgdGhlIGNvbmRpdGlvbmFsLXJlbmRlciBmb290ZXIgZGVzY3JpYmVkIGluIMKnNi/CpzcuIgpleGFtcGxlX3BhdGg6IC4vRXhhbXBsZS50c3gKCm11aV9iYXNlOiBub25lCmRlcGVuZHNfb25fdG9rZW5zOgogIC0gcGFsZXR0ZS5iYWNrZ3JvdW5kLnBhcGVyCiAgLSBwYWxldHRlLmJhY2tncm91bmQuZGVmYXVsdAogIC0gcGFsZXR0ZS5kaXZpZGVyCiAgLSBwYWxldHRlLnRleHQucHJpbWFyeQogIC0gcGFsZXR0ZS50ZXh0LnNlY29uZGFyeQogIC0gcGFsZXR0ZS5wcmltYXJ5Lm1haW4KICAtIHBhbGV0dGUubmV1dHJhbC44MDAKICAtIHNwYWNpbmcuMwogIC0gc3BhY2luZy40CiAgLSB0eXBvZ3JhcGh5LmgxCiAgLSB0eXBvZ3JhcGh5LmgyCiAgLSB0eXBvZ3JhcGh5LmJvZHkxCiAgLSB0eXBvZ3JhcGh5LmJvZHkyCiAgLSBzaGFwZS5ib3JkZXJSYWRpdXMKZGVwZW5kc19vbl9jb21wb25lbnRzOgogIC0gQXBwVG9wSGVhZGVyCiAgLSBBcHBTaWRlQmFyCiAgLSBTdGVwcGVyCiAgLSBCdXR0b24KICAtIEljb25CdXR0b24KICAtIEJveAogIC0gVHlwb2dyYXBoeQotLS0KCiMgV2l6YXJkIFN0ZXAKCiMjIDEuIENsYXNzaWZpY2F0aW9uCgotICoqVHlwZToqKiBQYWdlIHRlbXBsYXRlCi0gKipNVUkgYmFzZToqKiBub25lIChjb21wb3NlcyBkZXNpZ24tc3lzdGVtIGNvbXBvbmVudHMgaW50byBhIGZpeGVkIHBhZ2Ugc2hhcGUgaW5zaWRlIHRoZSBhcHAgY2hyb21lKQotICoqRmlnbWE6KiogW1dpemFyZCBTdGVwIFBhZ2UgwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP209YXV0byZub2RlLWlkPTM2MDUtMTA5MjImdD1QT0Nqa2RieVR2MUhFY01ILTEpCi0gKipDb2RlOioqIE5vIHNoYXJlZCBgPFdpemFyZFN0ZXA+YCB3cmFwcGVyLiBUaGUgY2Fub25pY2FsLCBydW5uYWJsZSBjb21wb3NpdGlvbiBpcyBbYC4vRXhhbXBsZS50c3hgXSguL0V4YW1wbGUudHN4KSAoc2libGluZyBvZiB0aGlzIGZpbGUpOyBwcm9kdWN0aW9uIGNhbGxlcnMgYXNzZW1ibGUgdGhlIGZvdXIgcmVnaW9ucyAod2l6YXJkIGhlYWRlciwgc3RlcHBlciwgYm9keSwgZm9vdGVyKSBpbnNpZGUgdGhlIEFwcCBUb3AgSGVhZGVyICsgQXBwIFNpZGUgQmFyIGNocm9tZS4KCiMjIDIuIFB1cnBvc2UKCkEgKipXaXphcmQgU3RlcCoqIGlzIHRoZSBjYW5vbmljYWwgcGFnZSBzaGFwZSBmb3Igb25lIHN0ZXAgaW5zaWRlIGEgbXVsdGktc3RlcCBvcmRlcmVkIHRhc2suIFRoZSB1c2VyIHdvcmtzIHRocm91Z2ggKioz4oCTNyBzdGVwcyoqIGluIHNlcXVlbmNlIOKAlCBlYWNoIG9uZSBoZWF2eSBlbm91Z2ggdG8gZGVzZXJ2ZSBpdHMgb3duIHN1cmZhY2Ug4oCUIHdpdGggdGhlIHRyYWlsIG9mIHByb2dyZXNzIHZpc2libGUgYXQgdGhlIHRvcCBhbmQgdGhlIHNhbWUgYWN0aW9uIHJvdyBhdCB0aGUgYm90dG9tIG9uIGV2ZXJ5IHN0ZXAuICoqVHdvIHN0ZXBzKiogaXMgdG9vIGZldyDigJQgY29sbGFwc2UgaW50byBhIHNpbmdsZSBGb3JtLiAqKkVpZ2h0IG9yIG1vcmUqKiBpcyB0b28gbWFueSDigJQgZ3JvdXAgYWRqYWNlbnQgc3RlcHMgdW5kZXIgZmV3ZXIgcGFyZW50IHN0ZXBzLCBzcGxpdCBpbnRvIHR3byBzZXF1ZW50aWFsIHdpemFyZHMsIG9yIHJlZGVzaWduIGFzIGEgc2VjdGlvbmVkIGxvbmctZm9ybSBwYWdlIHdpdGggYSBsZWZ0LXNpZGUgcmFpbC4gKFNlZSDCpzMgKldoZW4gdG8gdXNlKiBhbmQgwqc0ICpDb25kaXRpb25zKiBmb3IgdGhlIGZ1bGwgc3RlcC1jb3VudCBydWxlLikKClRoZSBzaGFwZSBpcyBmaXhlZDogYSB3aXphcmQtc2hhcGVkIGhlYWRlciBjYXJyaWVzIGFuIGBoMWAgdGl0bGUgb24gdGhlIGxlZnQgYW5kIGEgY2xvc2UgY3Jvc3Mgb24gdGhlIHJpZ2h0OyBhIGhvcml6b250YWwgU3RlcHBlciB3aXRoICoqZml4ZWQgZ2FwcyoqIGJldHdlZW4gc3RlcHMgc2l0cyBiZWxvdyBpdCwgKipjZW50cmVkKiogaW4gdGhlIGJvZHkncyBhdmFpbGFibGUgd2lkdGg7IHRoZSBhY3RpdmUgc3RlcCdzIGNvbnRlbnQgZmlsbHMgdGhlIGJvZHkgaW4gb25lIG9mIHRocmVlIHdpZHRoIHNoYXBlczsgYW5kIGEgc3RpY2t5IGZvb3RlciBwaW5zIEJhY2ssIENvbXBsZXRlIExhdGVyLCBhbmQgQ29uZmlybSAmIENvbnRpbnVlIHdpdGggKipjb25kaXRpb25hbCByZW5kZXJpbmcqKiAoQmFjayBoaWRkZW4gb24gc3RlcCAwLCBDb21wbGV0ZSBMYXRlciBoaWRkZW4gdW50aWwgZHJhZnRhYmxlIGRhdGEgZXhpc3RzLCBDb25maXJtICYgQ29udGludWUgZGlzYWJsZWQgdW50aWwgdGhlIHN0ZXAgaXMgdmFsaWQpLiBUaGUgcGFnZSByZW5kZXJzIGluc2lkZSB0aGUgZnVsbCBBbGF0aW9uIGFwcCBjaHJvbWUgKFtBcHAgVG9wIEhlYWRlcl0oLi4vLi4vY29tcG9uZW50cy9jb21wb3NpdGUvYXBwLXRvcC1oZWFkZXIvdXNhZ2UubWQpICsgW0FwcCBTaWRlIEJhcl0oLi4vLi4vY29tcG9uZW50cy9jb21wb3NpdGUvYXBwLXNpZGUtYmFyL3VzYWdlLm1kKSkuCgojIyAzLiBXaGVuIHRvIHVzZSAvIFdoZW4gbm90IHRvIHVzZQoKKipVc2Ugd2hlbioqCi0gVGhlIHRhc2sgc3BsaXRzIGludG8gM+KAkzcgb3JkZXJlZCwgbmFtZWQgc3RlcHMgdGhlIHVzZXIgbXVzdCB3b3JrIHRocm91Z2ggaW4gdHVybiAoIkNvbm5lY3Qgc291cmNlIiwgIk1hcCBzY2hlbWEiLCAiUmV2aWV3IiwgIlB1Ymxpc2giKQotIEVhY2ggc3RlcCBpcyBoZWF2eSBlbm91Z2ggdG8gZGVzZXJ2ZSBpdHMgb3duIHN1cmZhY2UgKGEgZm9ybSwgYSBwcmV2aWV3LCBhIGNvbmZpcm0pIOKAlCB0b28gaGVhdnkgdG8gc3RhY2sgb24gb25lIHNjcm9sbAotIFRoZSB1c2VyIG5lZWRzIHRvIHNlZSB0aGUgdHJhaWwgb2YgcHJvZ3Jlc3MgYW5kIGhhdmUgYSBzdGFibGUgcGxhY2UgdG8gY29tbWl0IC8gc3RlcCBiYWNrIC8gc2F2ZSBmb3IgbGF0ZXIgZnJvbQotIFRoZSBmbG93IGhhcyBhIGNsZWFyIHRlcm1pbmFsIHN0YXRlIOKAlCB0aGUgbGFzdCBzdGVwJ3MgcHJpbWFyeSBhY3Rpb24gY29tbWl0cyB0aGUgd29yawotIFRoZSB1c2VyIGJlbmVmaXRzIGZyb20gYSAiQ29tcGxldGUgTGF0ZXIiIGVzY2FwZSByb3V0ZSB0aGF0IHByZXNlcnZlcyBwcm9ncmVzcyB3aXRob3V0IGNvbW1pdHRpbmcKCioqRG8gbm90IHVzZSB3aGVuKioKLSBUaGUgdGFzayBpcyBvbmUtc2hvdCDigJQgYSBzaW5nbGUgZm9ybSwgYSBzaW5nbGUgY29uZmlybSDihpIgdXNlIGEgKipGb3JtKiogcGFnZSBvciAqKkRpYWxvZyoqIGRpcmVjdGx5Ci0gVGhlIHRhc2sgaXMgKipvbmx5IHR3byBzdGVwcyoqIOKAlCBjb2xsYXBzZSBpbnRvIGEgc2luZ2xlIEZvcm0gKHdpdGggYSBEaXZpZGVyIC8gc2VjdGlvbmVkIGhlYWRpbmdzKSBvciB1c2UgdHdvIG5vcm1hbCBwYWdlIHRyYW5zaXRpb25zOyB0aGUgd2l6YXJkIGNocm9tZSBpcyBvdmVya2lsbCBhdCB0aGF0IGRlcHRoCi0gVGhlIHRhc2sgaXMgYSBxdWljayBkZWNpc2lvbiB0aGUgdXNlciBtYWtlcyB3aXRob3V0IGxlYXZpbmcgdGhlaXIgY3VycmVudCBjb250ZXh0IOKGkiB1c2UgKipEaWFsb2cqKgotIFRoZSBmbG93IGhhcyAqKjggb3IgbW9yZSBzdGVwcyoqIOKAlCBncm91cCBhZGphY2VudCBzdGVwcyB1bmRlciBmZXdlciBwYXJlbnQgc3RlcHMsIHNwbGl0IGludG8gdHdvIHNlcXVlbnRpYWwgd2l6YXJkcywgb3IgcmVkZXNpZ24gYXMgYSBzZWN0aW9uZWQgbG9uZy1mb3JtIHBhZ2Ugd2l0aCBhIGxlZnQtc2lkZSByYWlsCi0gVGhlIHVzZXIgcGlja3Mgb25lIG9mIE4gcGFyYWxsZWwgdmlld3MsIG5vdCBhIHNlcXVlbmNlIOKGkiB1c2UgKipUYWJzKiogb24gYSBub3JtYWwgcGFnZQotIFRoZSB0cmFpbCBpcyBoaWVyYXJjaGljYWwsIG5vdCBzZXF1ZW50aWFsIOKGkiB1c2UgYSBub3JtYWwgcGFnZSB3aXRoICoqUGFnZSBIZWFkZXIqKiArICoqQnJlYWRjcnVtYioqIChUcmFpbCBzaGFwZSkKLSBUaGUgdGFzayBjYW4gYmUgY29tcGxldGVkIGlubGluZSB3aXRob3V0IGNvbW1pdHRpbmcg4oCUIGF1dG9zYXZlIC8gbGl2ZSBlZGl0IG1ha2VzIHRoZSB3aXphcmQgY2hyb21lIChCYWNrLCBDb250aW51ZSwgQ29tcGxldGUgTGF0ZXIpIG5vaXNlCgojIyA0LiBDb250cmFjdAoKIyMjIEd1YXJhbnRlZXMKLSBUaGUgcGFnZSBhbHdheXMgcmVuZGVycyBpbnNpZGUgdGhlIGZ1bGwgYXBwIGNocm9tZSDigJQgW0FwcCBUb3AgSGVhZGVyXSguLi8uLi9jb21wb25lbnRzL2NvbXBvc2l0ZS9hcHAtdG9wLWhlYWRlci91c2FnZS5tZCkgb24gdG9wLCBbQXBwIFNpZGUgQmFyXSguLi8uLi9jb21wb25lbnRzL2NvbXBvc2l0ZS9hcHAtc2lkZS1iYXIvdXNhZ2UubWQpIG9uIHRoZSBsZWZ0LiBUaGUgV2l6YXJkIFN0ZXAgZG9lcyAqKm5vdCoqIHVzZSBbQXBwIFN1YiBOYXZpZ2F0aW9uXSguLi8uLi9jb21wb25lbnRzL2NvbXBvc2l0ZS9hcHAtc3ViLW5hdmlnYXRpb24vdXNhZ2UubWQpIOKAlCB0aGUgd2l6YXJkICppcyogdGhlIHVzZXIncyBjdXJyZW50IGNvbnRleHQsIHNvIGEgY29udGV4dHVhbCBzdWItbmF2IHdvdWxkIGNvbXBldGUgd2l0aCB0aGUgU3RlcHBlci4KLSBJbnNpZGUgdGhlIHdoaXRlIG1haW4gYXJlYSwgZm91ciByZWdpb25zIHN0YWNrIHRvcC10by1ib3R0b20gaW4gZml4ZWQgb3JkZXI6ICoqV2l6YXJkIGhlYWRlcioqLCAqKlN0ZXBwZXIqKiwgKipTdGVwIGNvbnRlbnQqKiwgKipGb290ZXIqKi4KLSBUaGUgKipXaXphcmQgaGVhZGVyKiogaXMgaW5saW5lIGFuYXRvbXkgc3BlY2lmaWMgdG8gdGhpcyB0ZW1wbGF0ZSDigJQgaXQgaXMgbm90IGEgW1BhZ2UgSGVhZGVyXSguLi8uLi9jb21wb25lbnRzL2NvbXBvc2l0ZS9wYWdlLWhlYWRlci91c2FnZS5tZCkuIEl0IGNhcnJpZXMgYW4gYGgxYCB0aXRsZSAoYHR5cG9ncmFwaHkuaDFgKSBvbiB0aGUgbGVmdCBhbmQgYSBjbG9zZSBjcm9zcyAoQ3VzdG9tIExpYnJhcnkgYFhJY29uYCBmcm9tIGBAYWxhdGlvbi9pY29ucy1uZW9gLCBmYWxsaW5nIGJhY2sgdG8gbHVjaWRlLXJlYWN0IGBYIHNpemU9ezIwfWAgaW5zaWRlIGFuIFtJY29uIEJ1dHRvbl0oLi4vLi4vY29tcG9uZW50cy9iYXNlL2ljb24tYnV0dG9uL3VzYWdlLm1kKSkgb24gdGhlIHJpZ2h0LiBObyBicmVhZGNydW1iLCBubyBCYWNrLXRvLXBhcmVudCBsaW5rLCBubyB0YWJzLCBubyBzZWNvbmRhcnkgYWN0aW9ucy4KLSBUaGUgU3RlcHBlciBpcyAqKmhvcml6b250YWwqKiwgKipsaW5lYXIqKiwgYW5kIHVzZXMgKipmaXhlZCBnYXBzIGJldHdlZW4gc3RlcHMqKiAoaXQgaXMgKm5vdCogZnVsbC13aWR0aCkuIFRoZSB3aG9sZSBTdGVwcGVyIGlzIGNlbnRyZWQgaG9yaXpvbnRhbGx5IGluIHRoZSBib2R5J3MgYXZhaWxhYmxlIHdpZHRoLiBUaGUgcGVyLXN0ZXAgY29udHJhY3QgaXMgb3duZWQgYnkgW1N0ZXBwZXJdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL3N0ZXBwZXIvdXNhZ2UubWQpLiBUaGUgV2l6YXJkIFN0ZXAgd2lyZXMgYGFjdGl2ZVN0ZXBgIGFuZCByZW5kZXJzIG9ubHkgdGhlIGFjdGl2ZSBzdGVwJ3MgY29udGVudCBwYW5lbCBiZWxvdyB0aGUgU3RlcHBlci4KLSBUaGUgU3RlcCBjb250ZW50IHNpdHMgaW5zaWRlIHRoZSB3aGl0ZSBtYWluIGFyZWEgaW4gb25lIG9mIHRoZSB0aHJlZSAqKkJvZHkgc2hhcGUqKiB2YXJpYW50cyAowqc1IEJvZHkgc2hhcGUpIOKAlCBgc21hbGwtZm9ybWAgKOKJpCA0ODBweCksIGBzdGFuZGFyZC1mb3JtYCAo4omkIDcyMHB4KSwgb3IgYGZ1bGwtd2lkdGhgIChubyBtYXgpLiBXaWR0aCBpcyBjZW50cmVkIGluIHRoZSBtYWluIGFyZWE7IHZlcnRpY2FsIHNjcm9sbGluZyBpcyBvd25lZCBieSB0aGUgYm9keSwgbm90IGJ5IHRoZSBwYWdlLgotIFRoZSBGb290ZXIgaXMgKipzdGlja3kgdG8gdGhlIGJvdHRvbSBvZiB0aGUgd2hpdGUgbWFpbiBhcmVhKiogd2hlbiB0aGUgYm9keSBzY3JvbGxzOyBpdCBzaXRzIGluc2lkZSB0aGUgcGFnZSBtYWluIGFyZWEgYW5kIHJlc3BlY3RzIHRoZSBzYW1lIGhvcml6b250YWwgcGFkZGluZyBhcyB0aGUgYm9keSAoYHNwYWNpbmcuNGAgZm9yIGBmdWxsLXdpZHRoYDsgYHNwYWNpbmcuM2AgbWluaW11bSBvdGhlcndpc2UpLgotIFRoZSBGb290ZXIncyBidXR0b24gc2xvdHMgYXJlICoqY29uZGl0aW9uYWwqKiAoc2VlICJDb25kaXRpb25zIiBiZWxvdykuIEJ1dHRvbnMgdGhhdCBhcmUgbm90IGFwcGxpY2FibGUgZm9yIHRoZSBjdXJyZW50IHN0ZXAgYXJlICoqbm90IHJlbmRlcmVkKiog4oCUIG5ldmVyIGRpc2FibGVkLWJ1dC12aXNpYmxlLiBTcGVjaWZpY2FsbHk6IEJhY2sgaXMgaGlkZGVuIG9uIHN0ZXAgMDsgQ29tcGxldGUgTGF0ZXIgaXMgaGlkZGVuIHVudGlsIHRoZSB1c2VyIGhhcyBlbnRlcmVkIGVub3VnaCBkYXRhIHRvIG1ha2UgYSBtZWFuaW5nZnVsIGRyYWZ0OyB0aGUgb25seSBzdGF0ZSBpbiB3aGljaCBhIGZvb3RlciBidXR0b24gaXMgdmlzaWJsZS1hbmQtZGlzYWJsZWQgaXMgKipDb25maXJtICYgQ29udGludWUqKiwgd2hlbiB0aGUgdXNlciBoYXMgbm90IHlldCBwcm92aWRlZCB0aGUgc3RlcCdzIG1hbmRhdG9yeSBpbmZvcm1hdGlvbi4KLSBTdGVwIHByb2dyZXNzaW9uIGFuZCBleGl0IHNlbWFudGljcyBsaXZlIGluIHRoZSBzdXJyb3VuZGluZyBzdGF0ZSAoVVJMIG9yIGluLW1lbW9yeSkg4oCUIHRoZSBwYWdlIHRlbXBsYXRlIGRvZXMgbm90IGhpZGUgdGhlbSBpbnNpZGUgYW4gb3BhcXVlIGNvbXBvbmVudC4KCiMjIyBQcm9oaWJpdGlvbnMKLSBObyBbUGFnZSBIZWFkZXJdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL3BhZ2UtaGVhZGVyL3VzYWdlLm1kKSBpbnNpZGUgdGhlIFdpemFyZCBTdGVwIOKAlCB0aGUgd2l6YXJkIGhlYWRlciBpcyBpdHMgb3duIGlubGluZSBzaGFwZSB3aXRoIGEgZGlmZmVyZW50IG5hdmlnYXRpb24gcGF0dGVybiAoY2xvc2UgY3Jvc3MgaW5zdGVhZCBvZiBicmVhZGNydW1iIC8gYWN0aW9ucykuCi0gTm8gYnJlYWRjcnVtYiBvZiBhbnkga2luZCDigJQgVHJhaWwgb3IgQmFjay10by1wYXJlbnQuIFRoZSB1c2VyIGlzIGluIGEgdGFzaywgbm90IGEgaGllcmFyY2h5LiBUaGUgY2xvc2UgY3Jvc3MgaXMgdGhlIG9ubHkgZXhpdCBhZmZvcmRhbmNlIGZyb20gdGhlIGNocm9tZS4KLSBObyB2ZXJ0aWNhbCBTdGVwcGVyLiBWZXJ0aWNhbCBTdGVwcGVyIGV4aXN0cyBmb3IgaW5saW5lLWNvbnRlbnQgZm9ybXM7IFdpemFyZCBTdGVwIHByb21vdGVzIHRoZSBhY3RpdmUgc3RlcCdzIGNvbnRlbnQgaW50byB0aGUgcGFnZSBib2R5LCB3aGVyZSB0aGUgYm9keS1zaGFwZSB2YXJpYW50cyBvd24gd2lkdGguCi0gKipObyBmdWxsLXdpZHRoIFN0ZXBwZXIuKiogVGhlIFN0ZXBwZXIgaXMgY2VudHJlZCBhbmQgdXNlcyBmaXhlZCBnYXBzIGJldHdlZW4gc3RlcHMg4oCUIGNvbm5lY3RvcnMgbXVzdCBub3Qgc3RyZXRjaCB0byBmaWxsIHRoZSBhdmFpbGFibGUgd2lkdGguIFNlZSBbU3RlcHBlciDCpzYgQW5hdG9teV0oLi4vLi4vY29tcG9uZW50cy9jb21wb3NpdGUvc3RlcHBlci91c2FnZS5tZCkgYW5kIMKnNiBBbmF0b215IGJlbG93LgotIE5vICJDYW5jZWwiIGJ1dHRvbiBpbiB0aGUgZm9vdGVyLiBUaGUgY2xvc2UgY3Jvc3MgYXQgdGhlIHRvcCBpcyB0aGUgZXhpdCBhZmZvcmRhbmNlOyAiQ29tcGxldGUgTGF0ZXIiIGlzIHRoZSBkZWZlcnJlZC1zYXZlIGFmZm9yZGFuY2UuIEEgc2VwYXJhdGUgIkNhbmNlbCIgZHVwbGljYXRlcyBvbmUgb2YgdGhlc2UuCi0gTm8gIlNhdmUiIGJ1dHRvbiBpbiB0aGUgZm9vdGVyIHRoYXQgZG9lcyB0aGUgc2FtZSB0aGluZyBhcyAiQ29uZmlybSAmIENvbnRpbnVlIiDigJQgcGljayBvbmUgdmVyYiBwZXIgc2xvdC4KLSBObyBtb3JlIHRoYW4gdGhyZWUgYnV0dG9ucyBpbiB0aGUgZm9vdGVyLiBUaGUgc2xvdHMgYXJlOiAoQmFjaykgwrcgKENvbXBsZXRlIExhdGVyKSDCtyBDb25maXJtICYgQ29udGludWUg4oCUIEJhY2sgYW5kIENvbXBsZXRlIExhdGVyIGFyZSBjb25kaXRpb25hbDsgQ29uZmlybSAmIENvbnRpbnVlIGlzIGFsd2F5cyByZW5kZXJlZC4KLSBObyBwcmltYXJ5IGFjdGlvbiBvbiB0aGUgbGVmdCBvZiB0aGUgZm9vdGVyLiBQcmltYXJ5IGFsd2F5cyBzaXRzIG9uIHRoZSByaWdodDsgQmFjayBpcyB0aGUgb25seSBsZWZ0LXNpZGUgYWZmb3JkYW5jZS4KLSAqKk5vICJCYWNrIiBidXR0b24gb24gc3RlcCAwLioqIEhpZGUgaXQgZW50aXJlbHkg4oCUIGRvIG5vdCByZW5kZXIgYSBkaXNhYmxlZCBCYWNrLiBUaGUgdXNlciBoYXMgbm93aGVyZSB0byBzdGVwIGJhY2sgdG8sIGFuZCBhIGRpc2FibGVkIGFmZm9yZGFuY2UgaXMgbm9pc2UuCi0gKipObyAiQ29tcGxldGUgTGF0ZXIiIHJlbmRlcmVkIGFzIGRpc2FibGVkKiogd2hlbiB0aGUgdXNlciBoYXMgbm90IHlldCBtYWRlIGEgbWVhbmluZ2Z1bCBkcmFmdC4gSGlkZSBpdDsgYnJpbmcgaXQgaW4gd2hlbiB0aGUgZGF0YSBleGlzdHMuIFRoZSBvbmx5IGxlZ2l0aW1hdGUgdmlzaWJsZS1hbmQtZGlzYWJsZWQgZm9vdGVyIHN0YXRlIGlzICoqQ29uZmlybSAmIENvbnRpbnVlKiogd2hpbGUgbWFuZGF0b3J5IGluZm9ybWF0aW9uIGlzIG1pc3NpbmcuCi0gIkNvbXBsZXRlIExhdGVyIiBtdXN0IHVzZSB0aGUgKipCbHVlIHNlY29uZGFyeSoqIG5hbWVkIHN0eWxlIChvdXRsaW5lZCBibHVlOiBgdmFyaWFudD0ib3V0bGluZWQiIGNvbG9yPSJwcmltYXJ5ImApIOKAlCBuZXZlciB0aGUgVGV4dCB2YXJpYW50LiBUaGUgdmlzdWFsIGhpZXJhcmNoeSBpczogUHJpbWFyeSAoZmlsbGVkKSA+IEJsdWUgc2Vjb25kYXJ5IChvdXRsaW5lZCBibHVlKSA+IEdyZXkgb3V0bGluZWQgKEJhY2spLiBUZXh0LXZhcmlhbnQgQ29tcGxldGUgTGF0ZXIgZmxhdHRlbnMgdGhlIHNlY29uZGFyeSBhZmZvcmRhbmNlIGludG8gdGhlIHBhZ2UgY2hyb21lIGFuZCBicmVha3MgdGhlIGhpZXJhcmNoeS4KLSBObyBgc3hgIG92ZXJyaWRlcyBvbiB0aGUgZm9vdGVyJ3Mgc3VyZmFjZSB0b2tlbnMgKGJhY2tncm91bmQsIGJvcmRlciwgcGFkZGluZywgc3RpY2t5IG9mZnNldCkg4oCUIHRob3NlIGFyZSBwYWdlLXRlbXBsYXRlIGNvbnN0YW50cywgbm90IGNhbGwtc2l0ZSBkZWNpc2lvbnMuCi0gTm8gY29udGVudCByZW5kZXJlZCBmb3IgaW5hY3RpdmUgc3RlcHMg4oCUIHRoZSBib2R5IHNob3dzIHRoZSBhY3RpdmUgc3RlcCBvbmx5OyBpbmFjdGl2ZSBzdGVwcyBsaXZlIGluIGNvbXBvbmVudCBzdGF0ZSwgbm90IGluIHRoZSBET00sIHVudGlsIHZpc2l0ZWQuCi0gTm8gdGFicyBpbnNpZGUgYSBXaXphcmQgU3RlcC4gVGFicyBhbmQgYSBTdGVwcGVyIGNvbXBldGUgZm9yIHRoZSBzYW1lIGFmZm9yZGFuY2UuCi0gTm8gbmVzdGVkIFdpemFyZCBTdGVwcy4gSWYgYSBzdGVwIG5lZWRzIHN1Yi1zdGVwcywgcmVkZXNpZ24gYXMgYSBwYXJlbnQgV2l6YXJkIHdpdGggYSBzdWItZmxvdyBpbnNpZGUgaXRzIHN0ZXAgY29udGVudCAoZS5nLiBhIHNlY3Rpb25lZCBmb3JtKSwgbm90IGEgV2l6YXJkIGluc2lkZSBhIFdpemFyZC4KLSBObyBXaXphcmQgU3RlcCB1c2VkIGFzIGEgcHJpbWFyeSBuYXZpZ2F0aW9uIGJldHdlZW4gdG9wLWxldmVsIGRlc3RpbmF0aW9ucyDigJQgd2l6YXJkcyBhcmUgdGFza3MsIG5vdCByb3V0ZXMuCi0gTm8gZXhpdCB3aXRob3V0IGNvbmZpcm1hdGlvbiB3aGVuIHRoZSB1c2VyIGhhcyB1bnNhdmVkIGNoYW5nZXMg4oCUIHNlZSDCpzcgRXhpdCBjb25maXJtYXRpb24uCi0gTm8gaGFyZC1jb2RlZCBoZXggLyBweCAvIGZvbnQgdmFsdWVzIGluc2lkZSB0aGUgcGFnZSBjaHJvbWUuCi0gTm90aGluZyBvdXRzaWRlIHRoZSBTbG90cyAowqc1KSBhbmQgQW5hdG9teSAowqc2KSBpcyB2YWxpZC4KCiMjIyBDb25kaXRpb25zCi0gKipBcHAgY2hyb21lLioqIFRoZSBwYWdlIGlzIGFsd2F5cyByZW5kZXJlZCB3aXRoIHRoZSBhcHAgY2hyb21lIHdyYXBwaW5nIGl0LiBQYWdlLXRlbXBsYXRlIGRlbW9zIHJlbmRlciB0aGUgZnVsbCBjaHJvbWU7IHByb2R1Y3Rpb24gY2FsbGVycyBtb3VudCB0aGUgcGFnZSBpbnNpZGUgdGhlIHdvcmtzcGFjZSdzIGBBbGF0aW9uTGF5b3V0YC4KLSAqKlN0ZXAgY291bnQuKiogV2l6YXJkIFN0ZXAgaXMgcmlnaHQgZm9yICoqM+KAkzcgc3RlcHMqKi4gVHdvIHN0ZXBzIOKGkiBpdCdzIGEgRm9ybSwgbm90IGEgd2l6YXJkLiBFaWdodCBvciBtb3JlIOKGkiBncm91cCwgc3BsaXQgaW50byB0d28gc2VxdWVudGlhbCB3aXphcmRzLCBvciByZWRlc2lnbiBhcyBhIHNlY3Rpb25lZCBwYWdlIHdpdGggYSBsZWZ0LXNpZGUgcmFpbCAoc2VlIMKnMikuCi0gKipCb2R5IHNoYXBlIOKAlCBwaWNrIG9uZSBwZXIgd2l6YXJkLioqIFRoZSBzaGFwZSBpcyBzZXQgYXQgd2l6YXJkIHNjb3BlLCBub3QgcGVyIHN0ZXAuIElmIG1vc3Qgc3RlcHMgYXJlIGZvcm1zLCB1c2UgYHN0YW5kYXJkLWZvcm1gOyBpZiBhbnkgc3RlcCByZXF1aXJlcyBhIHdpZGUgc3VyZmFjZSAoZGF0YSBncmlkLCBzaWRlLWJ5LXNpZGUgcHJldmlldyksIHVzZSBgZnVsbC13aWR0aGAgZm9yIHRoZSB3aG9sZSB3aXphcmQgc28gd2lkdGggZG9lcyBub3QganVtcCBiZXR3ZWVuIHN0ZXBzLgotICoqV2l6YXJkIHRpdGxlLioqIGBUeXBvZ3JhcGh5IHZhcmlhbnQ9ImgxImAuIFNhbWUgdmFyaWFudCBQYWdlIEhlYWRlciB1c2VzIGZvciBwYWdlIHRpdGxlcyDigJQgc2VlIFtQYWdlIEhlYWRlciDCpzRdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL3BhZ2UtaGVhZGVyL3VzYWdlLm1kKS4gU2VudGVuY2UgY2FzZSwg4omkIDYgd29yZHMsIHZlcmIgcGhyYXNlIHRoYXQgbmFtZXMgdGhlIHRhc2sgKCJDb25uZWN0IGEgZGF0YSBzb3VyY2UiLCAiUHVibGlzaCBhIGRhdGEgcHJvZHVjdCIpLiBUaGUgdGl0bGUgc2l0cyBhdCB0aGUgd2l6YXJkIGxldmVsIOKAlCBuZXZlciBwZXItc3RlcC4gUGVyLXN0ZXAgdGl0bGVzLCBpZiBuZWVkZWQsIGxpdmUgaW5zaWRlIHRoZSBzdGVwJ3MgY29udGVudCBhcyBgaDNgLgotICoqQ2xvc2UgY3Jvc3MuKiogQ2xvc2VzIHRoZSB3aXphcmQuIFdpdGggdW5zYXZlZCBjaGFuZ2VzLCBzdXJmYWNlcyB0aGUgZXhpdC1jb25maXJtYXRpb24gRGlhbG9nICjCpzcpLiBXaXRob3V0IHVuc2F2ZWQgY2hhbmdlcywgcmV0dXJucyB0aGUgdXNlciB0byB0aGUgcGFyZW50IGNvbnRleHQgKGUuZy4gdGhlIGVudGl0eSdzIGluZGV4IHBhZ2UsIG9yIHdoZXJldmVyIHRoZXkgY2FtZSBmcm9tKS4KLSAqKkJhY2sgYnV0dG9uIOKAlCBjb25kaXRpb25hbCByZW5kZXJpbmcuKioKICAtICoqU3RlcCAwIChmaXJzdCBzdGVwKToqKiAqKk5vdCByZW5kZXJlZC4qKiBUaGUgdXNlciBoYXMgbm93aGVyZSB0byByZXRyZWF0IHRvLgogIC0gKipTdGVwcyDiiaUgMToqKiBBbHdheXMgcmVuZGVyZWQsIGFsd2F5cyBlbmFibGVkLiBWYWxpZGF0aW9uIGRvZXMgbm90IHJ1biBvbiBCYWNrIOKAlCB0aGUgdXNlciBjYW4gcmV0cmVhdCBmcm9tIGFueSBzdGF0ZS4KLSAqKlByaW1hcnkgbGFiZWwuKiogIkNvbmZpcm0gJiBDb250aW51ZSIgb24gZXZlcnkgc3RlcCAqZXhjZXB0KiB0aGUgbGFzdC4gT24gdGhlIGxhc3Qgc3RlcCB0aGUgbGFiZWwgY2hhbmdlcyB0byB0aGUgdmVyYiB0aGF0IGNvbW1pdHMgdGhlIHdvcmsgKGUuZy4gIlB1Ymxpc2giLCAiQ3JlYXRlIG1vbml0b3IiLCAiQ29ubmVjdCIpLiBTZW50ZW5jZSBjYXNlLCDiiaQgMyB3b3Jkcy4KLSAqKkNvbmZpcm0gJiBDb250aW51ZSDigJQgZGlzYWJsZWQgc3RhdGUuKiogUmVuZGVyZWQgYXMgKipkaXNhYmxlZCoqIHdoZW4gdGhlIGFjdGl2ZSBzdGVwIGhhcyBtYW5kYXRvcnkgaW5mb3JtYXRpb24gdGhhdCB0aGUgdXNlciBoYXMgbm90IHlldCBwcm92aWRlZC4gQXMgc29vbiBhcyB0aGUgcmVxdWlyZWQgZmllbGRzIGFyZSB2YWxpZCwgdGhlIGJ1dHRvbiBlbmFibGVzLiBEaXNhYmxlZCBpcyB0aGUgKm9ubHkqIHZpc2libGUtYW5kLWRpc2FibGVkIGZvb3RlciBzdGF0ZSDigJQgQmFjayBhbmQgQ29tcGxldGUgTGF0ZXIgYXJlIGhpZGRlbiB3aGVuIG5vdCBhcHBsaWNhYmxlLCBub3QgZGlzYWJsZWQuCi0gKipDb21wbGV0ZSBMYXRlciDigJQgY29uZGl0aW9uYWwgcmVuZGVyaW5nLioqCiAgLSAqKkhpZGRlbioqIHVudGlsIHRoZSB1c2VyIGhhcyBlbnRlcmVkIGVub3VnaCBkYXRhIG9uIHRoZSBhY3RpdmUgc3RlcCB0byBtYWtlIGEgbWVhbmluZ2Z1bCBkcmFmdC4KICAtICoqUmVuZGVyZWQgKGVuYWJsZWQpKiogb25jZSBhIGRyYWZ0YWJsZSBhbW91bnQgb2YgZGF0YSBleGlzdHMsIGFuZCBzdGF5cyByZW5kZXJlZCBhY3Jvc3MgYWxsIHN1YnNlcXVlbnQgc3RlcHMuCi0gKipWYWxpZGF0aW9uLioqICJDb25maXJtICYgQ29udGludWUiIGlzIHRoZSBnYXRlIOKAlCBpdCBzdGF5cyBkaXNhYmxlZCB1bnRpbCB0aGUgYWN0aXZlIHN0ZXAgaXMgdmFsaWQuIFByZXNzaW5nIGl0IGFkdmFuY2VzIChvciBjb21taXRzLCBvbiBsYXN0KS4gU2VydmVyLXNpZGUgdmFsaWRhdGlvbiB0aGF0IGZhaWxzIGFmdGVyIHRoZSBwcmVzcyBzdXJmYWNlcyBpbmxpbmUgZXJyb3JzIGluc2lkZSB0aGUgc3RlcCBjb250ZW50OyB0aGUgZm9vdGVyIGRvZXMgbm90IHN1cmZhY2UgZ2xvYmFsIGVycm9ycy4KLSAqKlBlcnNpc3RlbmNlLioqIFdoZW4gdGhlIHdpemFyZCBpcyBkZWVwLWxpbmthYmxlLCB3aXJlIGBhY3RpdmVTdGVwYCB0byBhIFVSTCBwYXJhbSAoYD9zdGVwPTJgKSDigJQgc2VlIFN0ZXBwZXIgwqc3ICpQZXJzaXN0ZW5jZSDigJQgVVJMLWJvdW5kIGFjdGl2ZSBzdGVwKi4gT3RoZXJ3aXNlLCBpbi1tZW1vcnkgc3RhdGUgaXMgZmluZTsgb24gdW5tb3VudCB0aGUgZmxvdyByZXNldHMuCi0gKipFeGl0IGNvbmZpcm1hdGlvbi4qKiBXaGVuIHRoZSB1c2VyIGNsaWNrcyB0aGUgY2xvc2UgY3Jvc3Mgd2l0aCB1bnNhdmVkIGNoYW5nZXMsIHN1cmZhY2UgYSBkZXN0cnVjdGl2ZS1jb25maXJtIFtEaWFsb2ddKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL2RpYWxvZy91c2FnZS5tZCk6IHRpdGxlIGAiRGlzY2FyZCB5b3VyIHByb2dyZXNzPyJgLCBib2R5IGV4cGxhaW5pbmcgdW5zYXZlZCBjaGFuZ2VzIHdpbGwgYmUgbG9zdCwgcHJpbWFyeSBgIkRpc2NhcmQiYCAoZGVzdHJ1Y3RpdmUgdmFyaWFudCksIHNlY29uZGFyeSBgIktlZXAgZWRpdGluZyJgLiAiQ29tcGxldGUgTGF0ZXIiIG5ldmVyIGFza3Mg4oCUIGl0IGlzIHRoZSBzYWZlIGFsdGVybmF0aXZlLgotICoqRm9jdXMgbWFuYWdlbWVudC4qKiBXaGVuIHRoZSBhY3RpdmUgc3RlcCBjaGFuZ2VzIChCYWNrIC8gQ29uZmlybSAmIENvbnRpbnVlKSwgbW92ZSBmb2N1cyB0byB0aGUgc3RlcCBjb250ZW50J3MgZmlyc3QgaW50ZXJhY3RpdmUgZWxlbWVudCBzbyBrZXlib2FyZCB1c2VycyBsYW5kIHdoZXJlIHRoZXkgbmVlZCB0byBiZS4KLSAqKkxvYWRpbmcgc3RhdGUuKiogV2hlbiB0aGUgcHJpbWFyeSBhY3Rpb24gaXMgYXN5bmMgKHNlcnZlciBjb21taXQgb24gdGhlIGxhc3Qgc3RlcCwgdmFsaWRhdGlvbiB0aGF0IGNhbGxzIGEgYmFja2VuZCksIHNldCB0aGUgcHJpbWFyeSBidXR0b24ncyBgbG9hZGluZ2AgcHJvcCBhbmQgZGlzYWJsZSBCYWNrICsgQ29tcGxldGUgTGF0ZXIgZm9yIHRoZSBkdXJhdGlvbi4gTmV2ZXIgaGlkZSB0aGUgY2xvc2UgY3Jvc3Mg4oCUIHRoZSB1c2VyIGFsd2F5cyBoYXMgYW4gZXhpdC4KLSAqKkVycm9yIHN0YXRlLioqIElmIGEgc2VydmVyIGNvbW1pdCBvbiB0aGUgbGFzdCBzdGVwIGZhaWxzLCByZXN0b3JlIHRoZSBmb290ZXIgdG8gaXRzIGlkbGUgc3RhdGUsIHN1cmZhY2UgdGhlIGVycm9yIGlubGluZSBhYm92ZSB0aGUgZm9vdGVyIChub3QgaW5zaWRlIHRoZSBmb290ZXIpLCBhbmQga2VlcCB0aGUgdXNlciBvbiB0aGUgbGFzdCBzdGVwIHVudGlsIHRoZXkgcmV0cnkuCgojIyA1LiBTbG90cwoKV2l6YXJkIFN0ZXAgaGFzIG5vIHZpc3VhbCB2YXJpYW50IGF4aXMgb24gdGhlIGNocm9tZSDigJQgZXZlcnkgd2l6YXJkIHJlbmRlcnMgdGhlIHNhbWUgaGVhZGVyIC8gc3RlcHBlciAvIGZvb3RlciBzaGFwZXMuIFRoZSBjb25maWd1cmFibGUgYXhlcyBhcmUgdGhlICoqQm9keSBzaGFwZSoqICgzIHZhcmlhbnRzKSBhbmQgdGhlIGZvdXIgY29udGVudCBzbG90cy4gKipOb3RoaW5nIG91dHNpZGUgdGhpcyBsaXN0IGlzIHZhbGlkLioqCgojIyMgNS4xIEJvZHkgc2hhcGUg4oCUIHRoZSBwcmltYXJ5IGF4aXMKClBpY2sgb25lIHNoYXBlIHBlciB3aXphcmQgYmFzZWQgb24gdGhlICp3aWRlc3QqIHN0ZXAncyBjb250ZW50LiBUaGUgc2hhcGUgc2V0cyB0aGUgYm9keSdzIGBtYXgtd2lkdGhgOyB0aGUgY29udGVudCBjZW50cmVzIGhvcml6b250YWxseSBpbnNpZGUgdGhlIHdoaXRlIG1haW4gYXJlYS4KCnwgU2hhcGUgfCBgbWF4LXdpZHRoYCB8IEhvcml6b250YWwgcGFkZGluZyB8IFVzZSB3aGVuIHwKfC0tLXwtLS18LS0tfC0tLXwKfCAqKlNtYWxsIGZvcm0qKiB8IGA0ODBweGAgfCBgc3BhY2luZy4zYCAoMjQgcHgpIG9uIHRoZSBib2R5IGNvbnRhaW5lcjsgdGhlIGZvcm0gY2VudHJlcyBpbnNpZGUgdGhlIGF2YWlsYWJsZSB3aWR0aCB8IFNpbmdsZS1jb2x1bW4gaW5wdXQgd2l0aCDiiaQgNiBmaWVsZHMgcGVyIHN0ZXAg4oCUIGNvbm5lY3QtYnkta2V5IGZsb3dzLCBzaW1wbGUgb25ib2FyZGluZywgbmFycm93IGNob29zZXJzIHwKfCAqKlN0YW5kYXJkIGZvcm0qKiB8IGA3MjBweGAgfCBgc3BhY2luZy4zYCAoMjQgcHgpIG9uIHRoZSBib2R5IGNvbnRhaW5lcjsgdGhlIGZvcm0gY2VudHJlcyBpbnNpZGUgdGhlIGF2YWlsYWJsZSB3aWR0aCB8IE11bHRpLWZpZWxkIGZvcm1zLCBwYWlyZWQgZmllbGRzLCBmaWVsZHMgd2l0aCBoZWxwZXIgdGV4dCwgc2VjdGlvbmVkIGZvcm1zIOKAlCB0aGUgZGVmYXVsdCBmb3IgbW9zdCB3aXphcmRzIHwKfCAqKkZ1bGwtd2lkdGgqKiB8IG5vbmUgKHVzZXMgdGhlIGZ1bGwgd2hpdGUgbWFpbiBhcmVhKSB8IGBzcGFjaW5nLjRgICgzMiBweCkgbGVmdCAqKmFuZCoqIHJpZ2h0IHBlciBbTGF5b3V0IMKnNS4yIFBhZ2UtYm9keSBwYWRkaW5nXSguLi8uLi9mb3VuZGF0aW9ucy9sYXlvdXQvdXNhZ2UubWQpIHwgU3RlcHMgdGhhdCBuZWVkIGEgZGF0YSBncmlkLCBhIFtUYWJsZV0oLi4vLi4vY29tcG9uZW50cy9jb21wb3NpdGUvdGFibGUvdXNhZ2UubWQpIHNlbGVjdGlvbiwgc2lkZS1ieS1zaWRlIHByZXZpZXdzLCBmaWxlIHVwbG9hZGVycyB3aXRoIGRyb3Agem9uZXMsIG9yIGFueSB2aXN1YWxpc2F0aW9uIHRoYXQgZGVtYW5kcyB3aWR0aCB8CgpUaGUgc2hhcGUgaXMgc2V0IGF0IHdpemFyZCBzY29wZSwgbm90IHBlciBzdGVwIOKAlCB3aWR0aCBkb2VzIG5vdCBjaGFuZ2UgYXMgdGhlIHVzZXIgbW92ZXMgYmV0d2VlbiBzdGVwcy4gSWYgbW9zdCBzdGVwcyBhcmUgYHN0YW5kYXJkLWZvcm1gIGFuZCBvbmUgc3RlcCBuZWVkcyBhIGdyaWQsIGNob29zZSBgZnVsbC13aWR0aGAgYW5kIGNlbnRyZSB0aGUgZm9ybS1zaGFwZWQgc3RlcHMgaW5zaWRlIHRoZWlyIG93biBgbWF4LXdpZHRoYCB3cmFwcGVyLgoKIyMjIDUuMiBTbG90IHRhYmxlCgp8IFNsb3QgfCBSb2xlIHwgQWNjZXB0cyB8IERvZXMgTk9UIGFjY2VwdCB8CnwtLS18LS0tfC0tLXwtLS18CnwgKipXaXphcmQgaGVhZGVyKiogKGlubGluZSkgfCBUaXRsZSArIGV4aXQgfCBBbiBgaDFgIHRpdGxlIChgVHlwb2dyYXBoeSB2YXJpYW50PSJoMSJgKSBvbiB0aGUgbGVmdCArIGEgY2xvc2UgY3Jvc3MgKGBJY29uQnV0dG9uYCB3aXRoIEN1c3RvbSBMaWJyYXJ5IGBYSWNvbmAg4oCUIEx1Y2lkZSBgWGAgYXMgZmFsbGJhY2spIG9uIHRoZSByaWdodCB8IFBhZ2UgSGVhZGVyOyBicmVhZGNydW1iOyBCYWNrLXRvLXBhcmVudCBsaW5rOyB0YWJzOyBzZWNvbmRhcnkgYWN0aW9uczsgc3RhdHVzIGJhZGdlcyB8CnwgKipTdGVwcGVyKiogfCBQcm9ncmVzcyBpbmRpY2F0b3IgfCBPbmUgaG9yaXpvbnRhbCBsaW5lYXIgW1N0ZXBwZXJdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL3N0ZXBwZXIvdXNhZ2UubWQpIHdpdGggKioz4oCTNyBzdGVwcyoqLCAqKmNlbnRyZWQqKiB3aXRoICoqZml4ZWQgZ2FwcyoqIGJldHdlZW4gc3RlcHM7IGRlZmF1bHQgcGxhY2VtZW50IG9yIGBhbHRlcm5hdGl2ZUxhYmVsYCB8IFZlcnRpY2FsIFN0ZXBwZXI7IG5vbi1saW5lYXIgU3RlcHBlcjsgZnVsbC13aWR0aCBTdGVwcGVyIHRoYXQgc3RyZXRjaGVzIGNvbm5lY3RvcnM7IGA8U3RlcENvbnRlbnQ+YCBwYW5lbHM7IHB1cmUgcHJvZ3Jlc3MgYmFycyB8CnwgKipCb2R5KiogfCBBY3RpdmUgc3RlcCdzIHN1cmZhY2UgfCBUaGUgYWN0aXZlIHN0ZXAgb25seSDigJQgd2l0aGluIHRoZSBib2R5IHNoYXBlICjCpzUuMSkuIEVhY2ggc3RlcCB0eXBpY2FsbHkgcGFpcnMgYW4gYGgzYCBzdGVwIHRpdGxlICsgYm9keSBkZXNjcmlwdGlvbiB3aXRoIGEgW0Zvcm1dKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL2Zvcm0vdXNhZ2UubWQpLCBwcmV2aWV3LCBbVGFibGVdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL3RhYmxlL3VzYWdlLm1kKSwgb3Igb3RoZXIgY29udGVudCB8IEluYWN0aXZlIHN0ZXBzJyBjb250ZW50IChkb24ndCBwcmUtcmVuZGVyKTsgYSBzZWNvbmQgbmVzdGVkIFdpemFyZDsgdGFicyB0aGF0IGNvbXBldGUgd2l0aCB0aGUgU3RlcHBlciB8CnwgKipGb290ZXIqKiB8IEFjdGlvbiByb3cgfCBVcCB0byB0aHJlZSBidXR0b25zIGluIGZpeGVkIHBvc2l0aW9uczogKipCYWNrKiogKGxlZnQsIEdyZXkgb3V0bGluZWQgbmFtZWQgc3R5bGUg4oCUICpoaWRkZW4gb24gc3RlcCAwKikgwrcgKipDb21wbGV0ZSBMYXRlcioqIChyaWdodCwgQmx1ZSBzZWNvbmRhcnkgbmFtZWQgc3R5bGUg4oCUICpoaWRkZW4gdW50aWwgZHJhZnRhYmxlIGRhdGEgZXhpc3RzKikgwrcgKipDb25maXJtICYgQ29udGludWUqKiAocmlnaHQsIGxhc3QsIFByaW1hcnkgbmFtZWQgc3R5bGUg4oCUIGFsd2F5cyByZW5kZXJlZDsgZGlzYWJsZWQgdW50aWwgc3RlcCBpcyB2YWxpZCkgfCBDYW5jZWw7IFNhdmUgKHVzZSBDb21wbGV0ZSBMYXRlcik7IFJlc2V0OyBIZWxwOyBhbnkgNHRoIGJ1dHRvbjsgcHJpbWFyeSBvbiB0aGUgbGVmdDsgbm9uLUJ1dHRvbiBhZmZvcmRhbmNlczsgVGV4dC12YXJpYW50IENvbXBsZXRlIExhdGVyOyAqKmEgZGlzYWJsZWQtYnV0LXZpc2libGUgQmFjazsgYSBkaXNhYmxlZC1idXQtdmlzaWJsZSBDb21wbGV0ZSBMYXRlcioqIHwKCiMjIyA1LjMgU3RlcCBjb250ZW50IHNoYXBlCgpFYWNoIHN0ZXAncyBib2R5IGNvbnRlbnRzIGZvbGxvdyBhIHNtYWxsLCBjb25zaXN0ZW50IHNoYXBlOgoKLSAqKlN0ZXAgdGl0bGUqKiDigJQgYFR5cG9ncmFwaHkgdmFyaWFudD0iaDMiYCwgc2VudGVuY2UgY2FzZSwg4omkIDQgd29yZHMsIG5hbWVzIHRoZSBzdGVwICgiQ2hvb3NlIGEgY29ubmVjdG9yIiwgIkF1dGhlbnRpY2F0ZSIsICJNYXAgc2NoZW1hIiwgIlJldmlldyIpCi0gKipTdGVwIGRlc2NyaXB0aW9uKiog4oCUIGBUeXBvZ3JhcGh5IHZhcmlhbnQ9ImJvZHkxImAsIG9uZSBvciB0d28gc2hvcnQgc2VudGVuY2VzIGV4cGxhaW5pbmcgd2hhdCB0aGUgc3RlcCBpcyBmb3IKLSAqKlN0ZXAgY29udGVudCoqIOKAlCB0aGUgZm9ybSwgdGFibGUsIHByZXZpZXcsIG9yIG90aGVyIHN1cmZhY2UgdGhhdCB0aGUgdXNlciBpbnRlcmFjdHMgd2l0aC4gSW5zaWRlIHRoZSBib2R5J3Mgd2lkdGguCgpUaGlzIHNoYXBlIGFwcGxpZXMgaW5zaWRlICphbGwgdGhyZWUqIGJvZHktc2hhcGUgdmFyaWFudHMg4oCUIHRoZSB0aXRsZSBhbmQgZGVzY3JpcHRpb24gYWx3YXlzIHNpdCBhdCB0aGUgdG9wIG9mIHRoZSBib2R5LCB0aGUgY29udGVudCBmaWxscyBiZWxvdy4KCiMjIDYuIEFuYXRvbXkKCmBgYArilIzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJAK4pSCICBbTG9nbzogQ3VzdG9tZXJdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW0F2YXRhcl0gICAgICAgIOKUgiDihpAgQXBwIFRvcCBIZWFkZXIgKG5hdnksIGN1c3RvbWVyLWN1c3RvbWlzYWJsZSBsb2dvIG9uIHRoZSBsZWZ0KQrilJzilIDilIDilKzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilKQK4pSC4piwIOKUgiAg4pWU4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWXIOKUggrilILilqIg4pSCICDilZEgIFVzZXIgZmxvdyAoV2l6YXJkKSBuYW1lICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKclSAgICDilZEg4pSCIOKGkCBXaXphcmQgaGVhZGVyIChpbmxpbmU6IGgxIHRpdGxlICsgY2xvc2UgY3Jvc3MpCuKUguKWoiDilIIgIOKVkSAg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAICAgIOKVkSDilIIK4pSC4paiIOKUgiAg4pWRICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKVkSDilIIK4pSC4paiIOKUgiAg4pWRICAgICAgICAgICAgICDil4/ilIDil4/ilIDil4/ilIDil4vilIDil4sgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKVkSDilIIg4oaQIFN0ZXBwZXIgKGhvcml6b250YWwsIGxpbmVhciwgZml4ZWQgZ2FwcywgY2VudHJlZCkK4pSC4paiIOKUgiAg4pWRICAgICAgICAgU3RlcCBTdGVwIFN0ZXAgU3RlcCBTdGVwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKVkSDilIIK4pSC4paiIOKUgiAg4pWRICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKVkSDilIIK4pSC4paiIOKUgiAg4pWRICDilIzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJAgICAgICAgICAgICAgICAgICAgICAg4pWRIOKUggrilIIgIOKUgiAg4pWRICDilIIgIFN0ZXAgdGl0bGUgKGgzKSAgICAgICAgICAgICAgICAgICAgICAgIOKUgiAg4oaQIEJvZHkgKHdpdGhpbiAgICAg4pWRIOKUggrilIIgIOKUgiAg4pWRICDilIIgIFN0ZXAgZGVzY3JpcHRpb24gKGJvZHkxKSAgICAgICAgICAgICAgIOKUgiAgICAgc2hhcGUgdmFyaWFudCkgICDilZEg4pSCCuKUgiAg4pSCICDilZEgIOKUgiAge3sgRm9ybSAvIHByZXZpZXcgLyBUYWJsZSBjb250ZW50IH19ICAg4pSCICAgICAgICAgICAgICAgICAgICAgIOKVkSDilIIK4pSC4paiIOKUgiAg4pWRICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJggICAgICAgICAgICAgICAgICAgICAg4pWRIOKUggrilIIgIOKUgiAg4pWRICDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAgIOKVkSDilIIK4pSCICDilIIgIOKVkSAg4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSQICAgICAgICAgICAgICAgICAg4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUkCAg4pWRIOKUggrilIIgIOKUgiAg4pWRICDilIIgQmFjayDilIIgICAgICAgICAgICAgICAgICDilIIgQ29tcGxldGUgTGF0ZXIg4pSCIOKUgiBDb25maXJtICYgQ29udC7ilIIgIOKVkSDilIIg4oaQIEZvb3RlciAoc3RpY2t5OyBjb25kaXRpb25hbCBidXR0b25zKQrilIIgIOKUgiAg4pWRICDilJTilIDilIDilIDilIDilIDilIDilJggICAgICAgICAgICAgICAgICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJgg4pSU4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSYICDilZEg4pSCCuKUgiAg4pSCICDilZrilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZ0g4pSCCuKUlOKUgOKUgOKUtOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUmAogICDihpEgQXBwIFNpZGUgQmFyCmBgYAoKLSAqKkFwcCBUb3AgSGVhZGVyKiogKGNocm9tZSkg4oCUIHRoZSBwZXJzaXN0ZW50IHRvcCBzdHJpcDsgc2FtZSBvbiBldmVyeSBwYWdlOyBjYXJyaWVzIHRoZSBjdXN0b21lci1jdXN0b21pc2FibGUgbG9nbyBvbiB0aGUgbGVmdCBhbmQgdGhlIGF2YXRhciBvbiB0aGUgcmlnaHQuIE93bmVkIGJ5IHRoZSBbQXBwIFRvcCBIZWFkZXJdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL2FwcC10b3AtaGVhZGVyL3VzYWdlLm1kKSByZWZlcmVuY2UuCi0gKipBcHAgU2lkZSBCYXIqKiAoY2hyb21lKSDigJQgdGhlIHBlcnNpc3RlbnQgbGVmdCByYWlsLiBTYW1lIG9uIGV2ZXJ5IHBhZ2UuIE93bmVkIGJ5IHRoZSBbQXBwIFNpZGUgQmFyXSguLi8uLi9jb21wb25lbnRzL2NvbXBvc2l0ZS9hcHAtc2lkZS1iYXIvdXNhZ2UubWQpIHJlZmVyZW5jZS4KLSAqKldoaXRlIG1haW4gYXJlYSoqIOKAlCB0aGUgcm91bmRlZCB3aGl0ZSBzdXJmYWNlIGluc2lkZSB0aGUgbmF2eSBjaHJvbWU7IHRoZSB3aXphcmQgZmlsbHMgaXQuCi0gKipXaXphcmQgaGVhZGVyIHJlZ2lvbioqIChpbmxpbmUgYW5hdG9teSkg4oCUIGZsZXggcm93IHdpdGggYGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbmAsIGBhbGlnbi1pdGVtczogY2VudGVyYDsgcGFkZGluZ3MgbWlycm9yIFtQYWdlIEhlYWRlcl0oLi4vLi4vY29tcG9uZW50cy9jb21wb3NpdGUvcGFnZS1oZWFkZXIvdXNhZ2UubWQpOiBgcHQ6IDNgICgyNCBweCksIGBweDogM2AgKDI0IHB4KSwgYHBiOiAyLjVgICgyMCBweCk7IGBib3JkZXJCb3R0b206IDFweCBzb2xpZCBkaXZpZGVyYC4gTGVmdDogYFR5cG9ncmFwaHkgdmFyaWFudD0iaDEiYCBjYXJyeWluZyB0aGUgd2l6YXJkIHRpdGxlLiBSaWdodDogYEljb25CdXR0b25gIHdpdGggQ3VzdG9tIExpYnJhcnkgYFhJY29uYCAoTHVjaWRlIGBYIHNpemU9ezIwfWAgYXMgZmFsbGJhY2spLgotICoqU3RlcHBlciByZWdpb24qKiDigJQgZmxleCByb3csIGBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcmAuIFBhZGRpbmcgYHNwYWNpbmcuMyBzcGFjaW5nLjMgc3BhY2luZy40IHNwYWNpbmcuM2AuIFRoZSBTdGVwcGVyIGl0c2VsZiB1c2VzICoqZml4ZWQgZ2FwcyoqIGJldHdlZW4gc3RlcHM7IGl0IGRvZXMgbm90IHN0cmV0Y2ggdG8gZmlsbCB0aGUgYXZhaWxhYmxlIHdpZHRoLiBOZXZlciBoYXMgaXRzIG93biBib3JkZXIuCi0gKipCb2R5IHJlZ2lvbioqIOKAlCB0aGUgYWN0aXZlIHN0ZXAncyBzdXJmYWNlLiBDb250YWluZXIgaGFzIGBmbGV4OiAxYCwgYG92ZXJmbG93LXk6IGF1dG9gLiBQYWRkaW5nIGZvbGxvd3MgdGhlIGJvZHkgc2hhcGU6IGBzcGFjaW5nLjNgIGZvciBgc21hbGwtZm9ybWAgLyBgc3RhbmRhcmQtZm9ybWAsIGBzcGFjaW5nLjRgIChsZWZ0IGFuZCByaWdodCkgZm9yIGBmdWxsLXdpZHRoYCBwZXIgW0xheW91dF0oLi4vLi4vZm91bmRhdGlvbnMvbGF5b3V0L3VzYWdlLm1kKS4gQ29udGVudCBpbnNpZGUgaXMgY2VudHJlZCBob3Jpem9udGFsbHkgd2l0aCB0aGUgYm9keS1zaGFwZSBgbWF4LXdpZHRoYC4gU3RlcCBjb250ZW50IGluc2lkZSB0aGUgYm9keSB1c2VzIGBoM2AgKyBgYm9keTFgICsgY29udGVudC4KLSAqKkZvb3RlciByZWdpb24qKiDigJQgc3RpY2t5IHRvIHRoZSBib3R0b20gb2YgdGhlIHdoaXRlIG1haW4gYXJlYTsgY2FycmllcyBhIHRvcCBib3JkZXIgKGBwYWxldHRlLmRpdmlkZXJgKTsgaG9yaXpvbnRhbCBwYWRkaW5nIG1hdGNoZXMgdGhlIGJvZHkgcmVnaW9uIChgc3BhY2luZy4zYCBvciBgc3BhY2luZy40YCk7IGZsZXggcm93IHdpdGggYGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbmAgKEJhY2sgbGVmdCB3aGVuIHJlbmRlcmVkLCB0aGUgcmlnaHQgZ3JvdXAgd2l0aCBgZ2FwOiBzcGFjaW5nLjJgKS4KCiMjIyBDb21wb3NlZCBvZgoKLSBbQXBwIFRvcCBIZWFkZXJdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL2FwcC10b3AtaGVhZGVyL3VzYWdlLm1kKSDigJQgY2hyb21lCi0gW0FwcCBTaWRlIEJhcl0oLi4vLi4vY29tcG9uZW50cy9jb21wb3NpdGUvYXBwLXNpZGUtYmFyL3VzYWdlLm1kKSDigJQgY2hyb21lCi0gW1N0ZXBwZXJdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL3N0ZXBwZXIvdXNhZ2UubWQpIOKAlCBob3Jpem9udGFsLCBsaW5lYXIsICoqY2VudHJlZCB3aXRoIGZpeGVkIGdhcHMqKiAodGhlIHBlci1zdGVwIGNvbnRyYWN0IGlzIG93bmVkIGJ5IFN0ZXBwZXIpCi0gW0J1dHRvbl0oLi4vLi4vY29tcG9uZW50cy9iYXNlL2J1dHRvbi91c2FnZS5tZCkg4oCUIEJhY2sgKEdyZXkgb3V0bGluZWQgbmFtZWQgc3R5bGUg4oCUIHdpdGggbGVhZGluZyBbSWNvbm9ncmFwaHldKC4uLy4uL2ZvdW5kYXRpb25zL2ljb25vZ3JhcGh5L3VzYWdlLm1kKSBgQ2hldnJvbkxlZnRJY29uYCksIENvbXBsZXRlIExhdGVyIChCbHVlIHNlY29uZGFyeSBuYW1lZCBzdHlsZSDigJQgYHZhcmlhbnQ9Im91dGxpbmVkIiBjb2xvcj0icHJpbWFyeSJgKSwgQ29uZmlybSAmIENvbnRpbnVlIC8gY29tbWl0IHZlcmIgKFByaW1hcnkgbmFtZWQgc3R5bGUpCi0gW0ljb24gQnV0dG9uXSguLi8uLi9jb21wb25lbnRzL2Jhc2UvaWNvbi1idXR0b24vdXNhZ2UubWQpIOKAlCBjbG9zZSBjcm9zcyBpbiB0aGUgd2l6YXJkIGhlYWRlciAoQ3VzdG9tIExpYnJhcnkgYFhJY29uYCBmcm9tIGBAYWxhdGlvbi9pY29ucy1uZW9gOyBMdWNpZGUgYFhgIGFzIGZhbGxiYWNrKQotIFtJY29ub2dyYXBoeV0oLi4vLi4vZm91bmRhdGlvbnMvaWNvbm9ncmFwaHkvdXNhZ2UubWQpIOKAlCBDdXN0b20gTGlicmFyeSBmaXJzdCAoYEBhbGF0aW9uL2ljb25zLW5lb2ApLCBMdWNpZGUgYXMgYmFja2ZpbGwg4oCUIGZvciB0aGUgY2xvc2UgY3Jvc3MsIHRoZSBCYWNrIGNoZXZyb24sIHRoZSBbVGFibGVdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL3RhYmxlL3VzYWdlLm1kKSByb3cgYWZmb3JkYW5jZXMgaW5zaWRlIGBmdWxsLXdpZHRoYCBzdGVwIGNvbnRlbnQKLSBbVGFibGVdKC4uLy4uL2NvbXBvbmVudHMvY29tcG9zaXRlL3RhYmxlL3VzYWdlLm1kKSDigJQgd2hlbiBhIHN0ZXAgbmVlZHMgYSB0YWJ1bGFyIHNlbGVjdGlvbiBpbnNpZGUgYGZ1bGwtd2lkdGhgCi0gW0RpYWxvZ10oLi4vLi4vY29tcG9uZW50cy9jb21wb3NpdGUvZGlhbG9nL3VzYWdlLm1kKSDigJQgc3VyZmFjZWQgZm9yIHRoZSB1bnNhdmVkLWNoYW5nZXMgZXhpdCBjb25maXJtYXRpb24KLSBbVHlwb2dyYXBoeV0oLi4vLi4vZm91bmRhdGlvbnMvdHlwb2dyYXBoeS91c2FnZS5tZCkg4oCUIHdpemFyZCB0aXRsZSAoYGgxYCksIHN0ZXAgdGl0bGUgKGBoM2ApLCBzdGVwIGRlc2NyaXB0aW9uIChgYm9keTFgKSwgc3RlcCBsYWJlbHMgKGBib2R5MmApCgpUaGUgd2l6YXJkIGhlYWRlciBhbmQgdGhlIGZvb3RlciBidXR0b24gcm93IGFyZSBib3RoICoqaW5saW5lIGFuYXRvbXkqKiDigJQgdGhleSBoYXZlIG5vIHN0YW5kYWxvbmUgY29tcG9zaXRlIHJlZmVyZW5jZSBiZWNhdXNlIG5vIG90aGVyIGVsZW1lbnQgaW4gdGhlIHN5c3RlbSBjb25zdW1lcyB0aGVtLiBUaGVpciBydWxlcyBsaXZlIGluIMKnNCBDb250cmFjdCwgwqc1IFNsb3RzLCBhbmQgwqc3IEZsb3cgcnVsZXMgYmVsb3cuCgojIyA3LiBGbG93IHJ1bGVzCgojIyMgU3RlcCBwcm9ncmVzc2lvbgoKVGhlIHBhZ2UgdGVtcGxhdGUgb3ducyB0aGUgYGFjdGl2ZVN0ZXBgIGluZGV4OyB0aGUgU3RlcHBlciBwYWludHMgZnJvbSBpdDsgdGhlIEZvb3RlciBkcml2ZXMgaXQuIE9ubHkgdGhyZWUgdHJhbnNpdGlvbnMgZXhpc3Q6CgotICoqRm9yd2FyZCoqIOKAlCBDb25maXJtICYgQ29udGludWUgaXMgcHJlc3NlZDsgaWYgdGhlIGFjdGl2ZSBzdGVwIGlzIHZhbGlkLCBgYWN0aXZlU3RlcGAgaW5jcmVtZW50cy4gVGhlIGJ1dHRvbiBpdHNlbGYgaXMgZGlzYWJsZWQgdW50aWwgdmFsaWRpdHkgaXMgcmVhY2hlZCwgc28gYSBwcmVzcyBhbHdheXMgc3VjY2VlZHMuIE9uIHRoZSBsYXN0IHN0ZXAgdGhlIHNhbWUgYnV0dG9uIGNvbW1pdHMgdGhlIHdvcmsuCi0gKipCYWNrd2FyZCoqIOKAlCBCYWNrIGlzIHByZXNzZWQ7IGBhY3RpdmVTdGVwYCBkZWNyZW1lbnRzLiBWYWxpZGF0aW9uIGRvZXMgbm90IHJ1biBvbiBCYWNrICh0aGUgdXNlciBjYW4gYWx3YXlzIHJldHJlYXQsIGV2ZW4gZnJvbSBhbiBpbnZhbGlkIHN0YXRlKS4KLSAqKlNhdmUgJiBleGl0Kiog4oCUIENvbXBsZXRlIExhdGVyIGlzIHByZXNzZWQ7IHRoZSBwYWdlIHBlcnNpc3RzIHRoZSBkcmFmdCAoc2VydmVyLXNpZGUgb3IgbG9jYWwpIGFuZCByb3V0ZXMgdGhlIHVzZXIgYmFjayB0byB0aGUgcGFyZW50IGNvbnRleHQuIE5vIHZhbGlkYXRpb24gZ2F0ZTsgbm8gU3RlcHBlciBjaGFuZ2UuCgpUaGUgU3RlcHBlciBpdHNlbGYgaXMgKipuZXZlciB0aGUgbmF2aWdhdGlvbioqIOKAlCBjbGlja2luZyBhIHN0ZXAgb24gYSBob3Jpem9udGFsIGxpbmVhciBTdGVwcGVyIGRvZXMgbm90IGFkdmFuY2UgdGhlIHdpemFyZC4gSWYgYSBub24tbGluZWFyIGludGVyYWN0aW9uIG1vZGVsIGlzIG5lZWRlZCwgdGhlIHdpemFyZCBpcyB0aGUgd3JvbmcgdGVtcGxhdGUg4oCUIHVzZSBhIHNlY3Rpb25lZCBwYWdlIHdpdGggYSBsZWZ0LXNpZGUgcmFpbC4KCiMjIyBXaXphcmQgaGVhZGVyIHJ1bGVzCgotICoqTGF5b3V0LioqIEZsZXggcm93LCBganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuYCwgYGFsaWduLWl0ZW1zOiBjZW50ZXJgLiBQYWRkaW5ncyBtaXJyb3IgW1BhZ2UgSGVhZGVyXSguLi8uLi9jb21wb25lbnRzL2NvbXBvc2l0ZS9wYWdlLWhlYWRlci91c2FnZS5tZCk6IGBwdDogM2AgKDI0IHB4KSB0b3AsIGBweDogM2AgKDI0IHB4KSBob3Jpem9udGFsLCBgcGI6IDIuNWAgKDIwIHB4KSBib3R0b20uIEJvdHRvbSBib3JkZXIgYDFweCBzb2xpZCBkaXZpZGVyYC4KLSAqKlRpdGxlLioqIGBUeXBvZ3JhcGh5IHZhcmlhbnQ9ImgxImAgKHNhbWUgdmFyaWFudCBQYWdlIEhlYWRlciB1c2VzKS4gU2VudGVuY2UgY2FzZSwg4omkIDYgd29yZHMsIHZlcmIgcGhyYXNlIHRoYXQgbmFtZXMgdGhlIHRhc2sgKCJDb25uZWN0IGEgZGF0YSBzb3VyY2UiLCAiUHVibGlzaCBhIGRhdGEgcHJvZHVjdCIpLgotICoqQ2xvc2UgY3Jvc3MuKiogW0ljb24gQnV0dG9uXSguLi8uLi9jb21wb25lbnRzL2Jhc2UvaWNvbi1idXR0b24vdXNhZ2UubWQpIHdpdGggYDxYSWNvbiAvPmAgZnJvbSBgQGFsYXRpb24vaWNvbnMtbmVvYCAoQ3VzdG9tIExpYnJhcnkpIG9yLCBhcyBhIGZhbGxiYWNrLCBgPFggc2l6ZT17MjB9IC8+YCBmcm9tIGBsdWNpZGUtcmVhY3RgLiBgYXJpYS1sYWJlbD0iQ2xvc2Ugd2l6YXJkImAuIEJlaGF2aW91cjogd2l0aCB1bnNhdmVkIGNoYW5nZXMg4oaSIGV4aXQtY29uZmlybWF0aW9uIERpYWxvZzsgd2l0aG91dCB1bnNhdmVkIGNoYW5nZXMg4oaSIHJvdXRlIGJhY2sgdG8gcGFyZW50IGNvbnRleHQuICoqTm8qKiBCYWNrLXRvLXBhcmVudCBicmVhZGNydW1iLCAqKm5vKiogY2hldnJvbi1sZWZ0IGFmZm9yZGFuY2Ug4oCUIHRoZSBjbG9zZSBjcm9zcyBpcyB0aGUgb25seSBleGl0LCBhbmQgaXQgYWx3YXlzIHNpdHMgb24gdGhlIHJpZ2h0IHNpZGUgb2YgdGhlIHdpemFyZCBoZWFkZXIuCgojIyMgU3RlcHBlciBydWxlcwoKLSAqKkNlbnRyZWQsIGZpeGVkLWdhcC4qKiBUaGUgU3RlcHBlciBpcyB3cmFwcGVkIGluIGEgZmxleCBjb250YWluZXIgd2l0aCBganVzdGlmeS1jb250ZW50OiBjZW50ZXJgIGFuZCBpcyAqKm5vdCoqIGFsbG93ZWQgdG8gc3RyZXRjaCB0byBmaWxsIHRoZSBib2R5J3Mgd2lkdGguIENvbm5lY3RvcnMgYmV0d2VlbiBzdGVwcyBhcmUgZml4ZWQtd2lkdGgg4oCUIHNlZSBbU3RlcHBlciDCpzYgQW5hdG9teV0oLi4vLi4vY29tcG9uZW50cy9jb21wb3NpdGUvc3RlcHBlci91c2FnZS5tZCkgYW5kIMKnNyAqTGluZWFyIHByb2dyZXNzIHRyYWlsKi4KLSAqKlN0ZXAgY291bnQuKiogM+KAkzcgc3RlcHMuIEZld2VyIOKGkiBub3QgYSB3aXphcmQ7IG1vcmUg4oaSIGdyb3VwIC8gc3BsaXQgKHNlZSDCpzIpLgotICoqTm8gYDxTdGVwQ29udGVudD5gLioqIEluYWN0aXZlIHN0ZXBzIGxpdmUgaW4gY29tcG9uZW50IHN0YXRlIHVudGlsIGFjdGl2YXRlZDsgdGhlIGJvZHkgcmVnaW9uIHJlbmRlcnMgb25seSB0aGUgYWN0aXZlIHN0ZXAuCgojIyMgRm9vdGVyIHJ1bGVzCgotICoqTGF5b3V0LioqIEZsZXggcm93LCBganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuYC4gQmFjayBzaXRzIGluIGEgbGVmdCBmbGV4IGl0ZW0gKndoZW4gcmVuZGVyZWQqOyBDb21wbGV0ZSBMYXRlciArIENvbmZpcm0gJiBDb250aW51ZSBzaXQgaW4gYSByaWdodCBmbGV4IGl0ZW0gd2l0aCBhIGBnYXBgIGJldHdlZW4gdGhlbSAoYHNwYWNpbmcuMmApLgotICoqU3RpY2t5IGJlaGF2aW91ci4qKiBUaGUgZm9vdGVyIGlzIGBwb3NpdGlvbjogc3RpY2t5OyBib3R0b206IDBgIGluc2lkZSB0aGUgd2hpdGUgbWFpbiBhcmVhOyBpdCBjYXJyaWVzIGEgdG9wIGJvcmRlciAoYHBhbGV0dGUuZGl2aWRlcmApIGFuZCB0aGUgYHBhbGV0dGUuYmFja2dyb3VuZC5wYXBlcmAgc28gdGhlIGJvZHkgc2Nyb2xscyAqYmVoaW5kKiBpdCB3aXRob3V0IGJsZWVkaW5nIHRocm91Z2guCi0gKipQYWRkaW5nLioqIFZlcnRpY2FsOiBgc3BhY2luZy4yYC4gSG9yaXpvbnRhbDogbWF0Y2hlcyB0aGUgYm9keSByZWdpb24gKGBzcGFjaW5nLjNgIGZvciBzbWFsbCAvIHN0YW5kYXJkOyBgc3BhY2luZy40YCBmb3IgZnVsbC13aWR0aCkuCi0gKipCYWNrIGJ1dHRvbi4qKgogIC0gKipIaWRkZW4gb24gc3RlcCAwKiog4oCUIGRvIG5vdCByZW5kZXIuIEhpZGluZyBpcyBpbnRlbnRpb25hbDogYSBkaXNhYmxlZCBCYWNrIG9uIHRoZSBmaXJzdCBzdGVwIGlzIG5vaXNlLCBub3QgYWZmb3JkYW5jZS4gVGhlIHJpZ2h0LXNpZGUgZ3JvdXAgcmVtYWlucyBwaW5uZWQgdG8gdGhlIHJpZ2h0IHZpYSBganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuYCBldmVuIHdoZW4gdGhlIGxlZnQgc2xvdCBpcyBlbXB0eSAodXNlIGEgcGxhY2Vob2xkZXIgYDxCb3ggLz5gIHdpdGggYGZsZXg6IDAgMCBhdXRvYCBpZiBuZWVkZWQgdG8gcHJlc2VydmUgZ2VvbWV0cnkpLgogIC0gKipSZW5kZXJlZCBvbiBzdGVwcyDiiaUgMSoqLCBhbHdheXMgZW5hYmxlZC4gVXNlcyBCdXR0b24gKipHcmV5IG91dGxpbmVkKiogbmFtZWQgc3R5bGUg4oCUIG5ldXRyYWwsIGxvdy1lbXBoYXNpcy4gQ2FycmllcyBhIGxlYWRpbmcgYENoZXZyb25MZWZ0SWNvbmAgcGVyIEljb25vZ3JhcGh5LgogIC0gTGFiZWwgaXMgdGhlIGxpdGVyYWwgd29yZCAqKiJCYWNrIioqIChzZW50ZW5jZSBjYXNlKS4gTmV2ZXIgIlByZXZpb3VzIiwgbmV2ZXIgYW4gaWNvbi1vbmx5IGNoZXZyb24uCi0gKipDb21wbGV0ZSBMYXRlci4qKgogIC0gKipIaWRkZW4gdW50aWwgdGhlIHVzZXIgaGFzIGVudGVyZWQgZW5vdWdoIGRhdGEgb24gdGhlIGFjdGl2ZSBzdGVwIHRvIG1ha2UgYSBtZWFuaW5nZnVsIGRyYWZ0LioqIE9uY2UgaXQgYXBwZWFycywgaXQgc3RheXMgcmVuZGVyZWQgYWNyb3NzIGFsbCBzdWJzZXF1ZW50IHN0ZXBzLiBOZXZlciByZW5kZXJlZCBhcyBkaXNhYmxlZC1hbmQtdmlzaWJsZSDigJQgdGhlIHNsb3QgaXMgZW1wdHkgdW50aWwgdGhlIGRhdGEgZXhpc3RzLgogIC0gVXNlcyBCdXR0b24gKipCbHVlIHNlY29uZGFyeSoqIG5hbWVkIHN0eWxlIOKAlCBgdmFyaWFudD0ib3V0bGluZWQiIGNvbG9yPSJwcmltYXJ5ImAuICoqTmV2ZXIgdGhlIFRleHQgdmFyaWFudC4qKiBUaGlzIGtlZXBzIHRoZSB2aXN1YWwgaGllcmFyY2h5IGV4cGxpY2l0OiBQcmltYXJ5IChmaWxsZWQpID4gQmx1ZSBzZWNvbmRhcnkgKG91dGxpbmVkIGJsdWUpID4gR3JleSBvdXRsaW5lZCAoQmFjaykuCiAgLSBMYWJlbCBpcyAqKiJDb21wbGV0ZSBMYXRlciIqKiAoc2VudGVuY2UgY2FzZSkuIFZlcmJhdGltIOKAlCBub3QgIlNhdmUgYW5kIGV4aXQiLCBub3QgIlNhdmUgZHJhZnQiLgotICoqQ29uZmlybSAmIENvbnRpbnVlLioqCiAgLSBBbHdheXMgcmVuZGVyZWQuCiAgLSBVc2VzIEJ1dHRvbiAqKlByaW1hcnkqKiBuYW1lZCBzdHlsZSAoYHZhcmlhbnQ9ImNvbnRhaW5lZCJgKS4KICAtIExhYmVsIGlzICoqIkNvbmZpcm0gJiBDb250aW51ZSIqKiBvbiBldmVyeSBzdGVwIGV4Y2VwdCB0aGUgbGFzdC4gT24gdGhlIGxhc3Qgc3RlcCwgdGhlIGxhYmVsIGNoYW5nZXMgdG8gdGhlIGNvbW1pdCB2ZXJiIChlLmcuICJQdWJsaXNoIiwgIkNyZWF0ZSBtb25pdG9yIiwgIkNvbm5lY3QiKS4gU2VudGVuY2UgY2FzZSwg4omkIDMgd29yZHMuCiAgLSAqKkRpc2FibGVkKiogdW50aWwgdGhlIGFjdGl2ZSBzdGVwJ3MgbWFuZGF0b3J5IGluZm9ybWF0aW9uIGlzIHByb3ZpZGVkLiBUaGUgYnV0dG9uIGVuYWJsZXMgYXMgc29vbiBhcyB0aGUgcmVxdWlyZWQgZmllbGRzIGFyZSB2YWxpZDsgcHJlc3NpbmcgaXQgdGhlbiBhZHZhbmNlcyAob3IgY29tbWl0cywgb24gbGFzdCkuIFNlcnZlci1zaWRlIHZhbGlkYXRpb24gdGhhdCBmYWlscyBhZnRlciBhIHByZXNzIHN1cmZhY2VzIGlubGluZSBlcnJvcnMgaW5zaWRlIHRoZSBzdGVwIGNvbnRlbnQ7IHRoZSBidXR0b24gcmV0dXJucyB0byBpdHMgaWRsZSBzdGF0ZS4KICAtIEZvciBhc3luYyBjb21taXRzLCBzZXQgYGxvYWRpbmdgIGFuZCBkaXNhYmxlIEJhY2sgKyBDb21wbGV0ZSBMYXRlciB1bnRpbCByZXNvbHZlZC4KCiMjIyBFeGl0IGNvbmZpcm1hdGlvbgoKVGhlIGNsb3NlIGNyb3NzIGluIHRoZSB3aXphcmQgaGVhZGVyIGlzIHRoZSBvbmx5ICJsZWF2ZSB0aGUgd2l6YXJkIHdpdGhvdXQgZmluaXNoaW5nIiBhZmZvcmRhbmNlLiBXaGVuIGNsaWNrZWQ6CgotICoqTm8gdW5zYXZlZCBjaGFuZ2VzKiog4oCUIHJvdXRlIGltbWVkaWF0ZWx5IHRvIHRoZSBwYXJlbnQgY29udGV4dC4KLSAqKlVuc2F2ZWQgY2hhbmdlcyoqIOKAlCBzdXJmYWNlIGEgZGVzdHJ1Y3RpdmUtY29uZmlybSBbRGlhbG9nXSguLi8uLi9jb21wb25lbnRzL2NvbXBvc2l0ZS9kaWFsb2cvdXNhZ2UubWQpOiB0aXRsZSBgIkRpc2NhcmQgeW91ciBwcm9ncmVzcz8iYCwgYm9keSBleHBsYWluaW5nIHRoYXQgdW5zYXZlZCBjaGFuZ2VzIHdpbGwgYmUgbG9zdCwgcHJpbWFyeSBhY3Rpb24gYCJEaXNjYXJkImAgKGRlc3RydWN0aXZlIHZhcmlhbnQpLCBzZWNvbmRhcnkgYWN0aW9uIGAiS2VlcCBlZGl0aW5nImAuIElmIHRoZSB1c2VyIGNvbmZpcm1zLCByb3V0ZSB0byBwYXJlbnQ7IG90aGVyd2lzZSBzdGF5LgoKIkNvbXBsZXRlIExhdGVyIiBuZXZlciBhc2tzIOKAlCBpdCBpcyB0aGUgc2FmZSBhbHRlcm5hdGl2ZSB0aGF0IHBlcnNpc3RzIHRoZSBkcmFmdC4KCiMjIyBGb2N1cyBtYW5hZ2VtZW50CgotICoqT24gc3RlcCBjaGFuZ2UqKiAoQmFjayBvciBDb25maXJtICYgQ29udGludWUpLCBtb3ZlIGZvY3VzIHRvIHRoZSBmaXJzdCBpbnRlcmFjdGl2ZSBlbGVtZW50IGluc2lkZSB0aGUgbmV3IHN0ZXAncyBjb250ZW50LiBUaGlzIGF2b2lkcyBhIGZvY3VzIGp1bXAgYmFjayB0byB0aGUgcGFnZSB0b3AgYW5kIGtlZXBzIGtleWJvYXJkIGZsb3cgc21vb3RoLgotICoqT24gZXhpdC1jb25maXJtYXRpb24gRGlhbG9nIG9wZW4qKiwgZm9jdXMgbW92ZXMgdG8gdGhlIERpYWxvZydzIHByaW1hcnkgYWN0aW9uIHBlciB0aGUgRGlhbG9nIGNvbnRyYWN0LgotICoqT24gZXJyb3IqKiwgZm9jdXMgbW92ZXMgdG8gdGhlIGZpcnN0IGludmFsaWQgZmllbGQg4oCUIG93bmVkIGJ5IHRoZSBGb3JtIC8gRmllbGQgY29udHJhY3QsIG5vdCBieSB0aGUgd2l6YXJkLgoKIyMjIFBlcnNpc3RlbmNlCgotICoqSW4tbWVtb3J5KiogKGRlZmF1bHQpIOKAlCBgYWN0aXZlU3RlcGAgYW5kIHN0ZXAgZGF0YSBsaXZlIGluIGNvbXBvbmVudCBzdGF0ZS4gT24gdW5tb3VudCB0aGUgZmxvdyByZXNldHMuIFJpZ2h0IGZvciBzaG9ydCB3aXphcmRzIGluc2lkZSBhIHNpbmdsZSBzZXNzaW9uLgotICoqVVJMLWJvdW5kKiog4oCUIGBhY3RpdmVTdGVwYCByZWFkcyBmcm9tIGBzZWFyY2hQYXJhbXMuZ2V0KCdzdGVwJylgOyB0cmFuc2l0aW9ucyB3cml0ZSBiYWNrLiBSaWdodCBmb3IgZGVlcC1saW5rYWJsZSB3aXphcmRzICh0aGUgdXNlciBjYW4gcmVmcmVzaCAvIHNoYXJlIC8gcmVvcGVuIGEgc3RlcCkuCi0gKipTZXJ2ZXItYm91bmQgKGRyYWZ0cykqKiDigJQgQ29tcGxldGUgTGF0ZXIgcGVyc2lzdHMgdGhlIHBhcnRpYWwgc3RhdGUgdG8gdGhlIGJhY2tlbmQ7IHJlb3BlbmluZyB0aGUgd2l6YXJkIGh5ZHJhdGVzIGZyb20gdGhlIGRyYWZ0IGFuZCBsYW5kcyB0aGUgdXNlciBvbiB0aGUgc3RlcCB0aGV5IGxlZnQuIFJpZ2h0IGZvciBsb25nLCBoaWdoLXN0YWtlcyBmbG93cyB3aGVyZSBzZXNzaW9uIGxvc3MgaXMgdW5hY2NlcHRhYmxlLgoKUGljayBvbmUgbW9kZSBwZXIgd2l6YXJkOyBkbyBub3QgbWl4LgoKIyMjIEExMXkgd2lyaW5nIHJ1bGVzCgotIFRoZSB3aXphcmQgdGl0bGUgKGBoMWApIGlzIHRoZSBwYWdlJ3MgYWNjZXNzaWJsZSBuYW1lIOKAlCByZXF1aXJlZC4KLSBUaGUgU3RlcHBlciBjYXJyaWVzIGFuIGBhcmlhLWxhYmVsYCBkZXNjcmliaW5nIHRoZSBmbG93IChzZWUgU3RlcHBlciDCpzcpIOKAlCByZXF1aXJlZC4KLSBUaGUgY2xvc2UgY3Jvc3MgSWNvbkJ1dHRvbiBjYXJyaWVzIGBhcmlhLWxhYmVsPSJDbG9zZSB3aXphcmQiYCDigJQgcmVxdWlyZWQuCi0gVGhlIEZvb3RlciBpcyBhIGA8Zm9vdGVyPmAgbGFuZG1hcmsgd2l0aCBgYXJpYS1sYWJlbGAgbWF0Y2hpbmcgdGhlIGZsb3cgKCJXaXphcmQgYWN0aW9uczogQ29ubmVjdCBhIHNvdXJjZSIpLiBPbmUgbGFuZG1hcmsgcGVyIHdpemFyZC4KLSBDb25maXJtICYgQ29udGludWUncyBgYXJpYS1sYWJlbGAgaW5jbHVkZXMgdGhlIGRlc3RpbmF0aW9uIHN0ZXAgb24gbm9uLXRlcm1pbmFsIHN0ZXBzIHdoZW4gdGhlIHZpc2libGUgbGFiZWwgaXMgZ2VuZXJpYyAoIkNvbmZpcm0gJiBDb250aW51ZSwgZ28gdG8gTWFwIHNjaGVtYSIpIOKAlCBvcHRpb25hbCwgdXNlZCB3aGVuIHNjcmVlbi1yZWFkZXIgY2xhcml0eSBiZWF0cyBicmV2aXR5LgotIFdoZW4gQmFjayBpcyByZW5kZXJlZCAoc3RlcHMg4omlIDEpLCBpdCBpcyBrZXlib2FyZC1mb2N1c2FibGUuIE9uIHN0ZXAgMCBpdCBpcyBub3QgaW4gdGhlIERPTSDigJQgdGhlcmUgaXMgbm90aGluZyB0byBmb2N1cywgc28gbm8gYW5ub3VuY2VtZW50IG9mICJiYWNrLCBkaXNhYmxlZCIgaXMgbWFkZTsgdGhpcyBpcyBpbnRlbnRpb25hbC4KLSBUaGUgZXhpdC1jb25maXJtYXRpb24gRGlhbG9nIGluaGVyaXRzIHRoZSBEaWFsb2cgY29udHJhY3QgZm9yIGZvY3VzIHRyYXAsIEVzY2FwZSBjbG9zZSwgYW5kIGZvY3VzIHJlc3RvcmF0aW9uLgoKIyMgOC4gTW9jayBkYXRhIGNvbnRlbnQKClBsYWNlaG9sZGVyIOKAlCBmaWxsIHdpdGggQWxhdGlvbi1kb21haW4gdmFsdWVzIHdoZW4gdGhpcyB0ZW1wbGF0ZSBpcyB1c2VkIGluIGEgcGlsb3QuIENhbmRpZGF0ZXM6CgotICoqQ29ubmVjdCBhIGRhdGEgc291cmNlKiogKDQgc3RlcHMsIGBzdGFuZGFyZC1mb3JtYCkg4oCUIGBDaG9vc2UgY29ubmVjdG9yYCDCtyBgQXV0aGVudGljYXRlYCDCtyBgTWFwIHNjaGVtYWAgwrcgYFJldmlld2AuIExhc3Qtc3RlcCBjb21taXQ6ICJDb25uZWN0Ii4KLSAqKlB1Ymxpc2ggYSBkYXRhIHByb2R1Y3QqKiAoNSBzdGVwcywgYGZ1bGwtd2lkdGhgIOKAlCBuZWVkcyBhIFRhYmxlIG9uIEFkZCBkYXRhc2V0cykg4oCUIGBEZWZpbmUgcHJvZHVjdGAgwrcgYEFkZCBkYXRhc2V0c2AgwrcgYFN0YW5kYXJkcyBjaGVja2AgwrcgYFJldmlld2AgwrcgYFB1Ymxpc2hgLiBMYXN0LXN0ZXAgY29tbWl0OiAiUHVibGlzaCIuCi0gKipDcmVhdGUgbW9uaXRvcioqICg0IHN0ZXBzLCBgc3RhbmRhcmQtZm9ybWApIOKAlCBgUGljayB0YXJnZXRgIMK3IGBTZXQgY29uZGl0aW9uc2AgwrcgYFNjaGVkdWxlYCDCtyBgTm90aWZ5YC4gTGFzdC1zdGVwIGNvbW1pdDogIkNyZWF0ZSBtb25pdG9yIi4KLSAqKkJ1aWxkIGFnZW50KiogKDMgc3RlcHMsIGBzbWFsbC1mb3JtYCkg4oCUIGBQcm9maWxlYCDCtyBgVG9vbHNgIMK3IGBSZXZpZXdgLiBMYXN0LXN0ZXAgY29tbWl0OiAiQnVpbGQgYWdlbnQiLgoKIyMgMTAuIFVYIENvcHkKCnwgRWxlbWVudCB8IFJ1bGUgfCBFeGFtcGxlIHwKfC0tLXwtLS18LS0tfAp8IFdpemFyZCB0aXRsZSAoYGgyYCkgfCBTZW50ZW5jZSBjYXNlOyDiiaQgNiB3b3JkczsgdmVyYiBwaHJhc2UgfCAiQ29ubmVjdCBhIGRhdGEgc291cmNlIiDCtyAiUHVibGlzaCBhIGRhdGEgcHJvZHVjdCIgfAp8IENsb3NlIGNyb3NzIGBhcmlhLWxhYmVsYCB8ICJDbG9zZSB3aXphcmQiIHwg4oCUIHwKfCBTdGVwcGVyIGxhYmVscyB8IFNlbnRlbmNlIGNhc2Ugbm91biBwaHJhc2U7IOKJpCAzIHdvcmRzIHwgIk1hcCBzY2hlbWEiIMK3ICJSZXZpZXciIHwKfCBTdGVwIHRpdGxlIChgaDNgKSB8IFNlbnRlbmNlIGNhc2U7IOKJpCA0IHdvcmRzOyBuYW1lcyB0aGUgc3RlcCB8ICJDaG9vc2UgYSBjb25uZWN0b3IiIHwKfCBTdGVwIGRlc2NyaXB0aW9uIChgYm9keTFgKSB8IE9uZSBvciB0d28gc2hvcnQgc2VudGVuY2VzIHwgIlBpY2sgdGhlIGRhdGEgc291cmNlIHlvdSdkIGxpa2UgdG8gcmVnaXN0ZXIuIiB8CnwgQmFjayBidXR0b24gfCBMaXRlcmFsIHdvcmQgfCAiQmFjayIgfAp8IENvbXBsZXRlIExhdGVyIGJ1dHRvbiB8IFZlcmJhdGltIHwgIkNvbXBsZXRlIExhdGVyIiB8CnwgQ29uZmlybSAmIENvbnRpbnVlIChub24tdGVybWluYWwpIHwgVmVyYmF0aW0gfCAiQ29uZmlybSAmIENvbnRpbnVlIiB8CnwgQ29uZmlybSAmIENvbnRpbnVlIChsYXN0IHN0ZXApIHwgU2VudGVuY2UgY2FzZSB2ZXJiIHBocmFzZTsg4omkIDMgd29yZHM7IGNvbW1pdHMgdGhlIHdvcmsgfCAiUHVibGlzaCIgwrcgIkNyZWF0ZSBtb25pdG9yIiDCtyAiQ29ubmVjdCIgfAp8IFN0ZXBwZXIgYGFyaWEtbGFiZWxgIHwgU2VudGVuY2UgY2FzZSBub3VuIHBocmFzZSB0aGF0IG5hbWVzIHRoZSBmbG93IHwgIlNvdXJjZSBjb25uZWN0aW9uIGZsb3ciIHwKfCBGb290ZXIgYGFyaWEtbGFiZWxgIHwgIldpemFyZCBhY3Rpb25zOiA8ZmxvdyBuYW1lPiIgfCAiV2l6YXJkIGFjdGlvbnM6IENvbm5lY3QgYSBzb3VyY2UiIHwKfCBEaXNjYXJkLWNoYW5nZXMgRGlhbG9nIHRpdGxlIHwgUXVlc3Rpb24gZm9ybTsgc2VudGVuY2UgY2FzZSB8ICJEaXNjYXJkIHlvdXIgcHJvZ3Jlc3M/IiB8CnwgRGlzY2FyZC1jaGFuZ2VzIERpYWxvZyBwcmltYXJ5IHwgRGVzdHJ1Y3RpdmUgdmVyYjsgc2VudGVuY2UgY2FzZSB8ICJEaXNjYXJkIiB8CnwgRGlzY2FyZC1jaGFuZ2VzIERpYWxvZyBzZWNvbmRhcnkgfCBTZW50ZW5jZSBjYXNlOyBzYWZlIGFsdGVybmF0aXZlIHwgIktlZXAgZWRpdGluZyIgfAoKIyMgMTEuIEV4YW1wbGUKCmBgYHRzeAo8QWxhdGlvbkxheW91dD4KICA8Qm94IHN4PXt7IGRpc3BsYXk6ICdmbGV4JywgZmxleERpcmVjdGlvbjogJ2NvbHVtbicsIGhlaWdodDogJzEwMCUnIH19PgogICAgPEJveCBzeD17eyBkaXNwbGF5OiAnZmxleCcsIGp1c3RpZnlDb250ZW50OiAnc3BhY2UtYmV0d2VlbicsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBwdDogMywgcHg6IDMsIHBiOiAyLjUsIGJvcmRlckJvdHRvbTogMSwgYm9yZGVyQ29sb3I6ICdkaXZpZGVyJyB9fT4KICAgICAgPFR5cG9ncmFwaHkgdmFyaWFudD0iaDEiPkNvbm5lY3QgYSBkYXRhIHNvdXJjZTwvVHlwb2dyYXBoeT4KICAgICAgPEljb25CdXR0b24gYXJpYS1sYWJlbD0iQ2xvc2Ugd2l6YXJkIiBvbkNsaWNrPXtvbkNsb3NlfT48WEljb24gLz48L0ljb25CdXR0b24+CiAgICA8L0JveD4KCiAgICA8Qm94IHN4PXt7IGRpc3BsYXk6ICdmbGV4JywganVzdGlmeUNvbnRlbnQ6ICdjZW50ZXInLCBweDogMywgcHk6IDMgfX0+CiAgICAgIDxTdGVwcGVyIGFjdGl2ZVN0ZXA9e2FjdGl2ZVN0ZXB9IGFyaWEtbGFiZWw9IlNvdXJjZSBjb25uZWN0aW9uIGZsb3ciPgogICAgICAgIHtTVEVQUy5tYXAoKGxhYmVsKSA9PiA8U3RlcCBrZXk9e2xhYmVsfT48U3RlcExhYmVsPntsYWJlbH08L1N0ZXBMYWJlbD48L1N0ZXA+KX0KICAgICAgPC9TdGVwcGVyPgogICAgPC9Cb3g+CgogICAgPEJveCBjb21wb25lbnQ9Im1haW4iIHN4PXt7IGZsZXg6IDEsIG92ZXJmbG93WTogJ2F1dG8nLCBweDogYm9keVNoYXBlID09PSAnZnVsbCcgPyA0IDogMywgcGI6IDMgfX0+CiAgICAgIDxCb3ggc3g9e3sgbWF4V2lkdGg6IGJvZHlTaGFwZSA9PT0gJ2Z1bGwnID8gJ25vbmUnIDogNzIwLCBteDogJ2F1dG8nIH19PgogICAgICAgIDxUeXBvZ3JhcGh5IHZhcmlhbnQ9ImgzIiBzeD17eyBtYjogMSB9fT5BdXRoZW50aWNhdGU8L1R5cG9ncmFwaHk+CiAgICAgICAgPFR5cG9ncmFwaHkgdmFyaWFudD0iYm9keTEiIGNvbG9yPSJ0ZXh0LnNlY29uZGFyeSIgc3g9e3sgbWI6IDMgfX0+CiAgICAgICAgICBFbnRlciB0aGUgY3JlZGVudGlhbHMgZm9yIHRoZSBjb25uZWN0b3IuCiAgICAgICAgPC9UeXBvZ3JhcGh5PgogICAgICAgIHtyZW5kZXJTdGVwQ29udGVudChhY3RpdmVTdGVwKX0KICAgICAgPC9Cb3g+CiAgICA8L0JveD4KCiAgICA8Qm94IGNvbXBvbmVudD0iZm9vdGVyIiBhcmlhLWxhYmVsPXtgV2l6YXJkIGFjdGlvbnM6ICR7Zmxvd05hbWV9YH0KICAgICAgc3g9e3sgcG9zaXRpb246ICdzdGlja3knLCBib3R0b206IDAsIGJnY29sb3I6ICdiYWNrZ3JvdW5kLnBhcGVyJywgYm9yZGVyVG9wOiAxLCBib3JkZXJDb2xvcjogJ2RpdmlkZXInLCBweDogYm9keVNoYXBlID09PSAnZnVsbCcgPyA0IDogMywgcHk6IDIsIGRpc3BsYXk6ICdmbGV4JywganVzdGlmeUNvbnRlbnQ6ICdzcGFjZS1iZXR3ZWVuJywgYWxpZ25JdGVtczogJ2NlbnRlcicgfX0+CiAgICAgIHthY3RpdmVTdGVwID4gMAogICAgICAgID8gPEJ1dHRvbiB2YXJpYW50PSJvdXRsaW5lZCIgY29sb3I9ImluaGVyaXQiIHN0YXJ0SWNvbj17PENoZXZyb25MZWZ0SWNvbiAvPn0gb25DbGljaz17b25CYWNrfT5CYWNrPC9CdXR0b24+CiAgICAgICAgOiA8Qm94IC8+CiAgICAgIH0KICAgICAgPFN0YWNrIGRpcmVjdGlvbj0icm93IiBzcGFjaW5nPXsyfT4KICAgICAgICB7aGFzRHJhZnRhYmxlRGF0YSAmJiAoCiAgICAgICAgICA8QnV0dG9uIHZhcmlhbnQ9Im91dGxpbmVkIiBjb2xvcj0icHJpbWFyeSIgb25DbGljaz17b25Db21wbGV0ZUxhdGVyfT4KICAgICAgICAgICAgQ29tcGxldGUgTGF0ZXIKICAgICAgICAgIDwvQnV0dG9uPgogICAgICAgICl9CiAgICAgICAgPEJ1dHRvbiB2YXJpYW50PSJjb250YWluZWQiIG9uQ2xpY2s9e29uQ29uZmlybUNvbnRpbnVlfSBkaXNhYmxlZD17IWlzU3RlcFZhbGlkfT4KICAgICAgICAgIHtpc0xhc3RTdGVwID8gY29tbWl0VmVyYiA6ICdDb25maXJtICYgQ29udGludWUnfQogICAgICAgIDwvQnV0dG9uPgogICAgICA8L1N0YWNrPgogICAgPC9Cb3g+CiAgPC9Cb3g+CjwvQWxhdGlvbkxheW91dD4KYGBgCgpTZWUgW2BFeGFtcGxlLnRzeGBdKC4vRXhhbXBsZS50c3gpIGZvciB0aGUgY2Fub25pY2FsLCBydW5uYWJsZSBzb3VyY2Ug4oCUIGZ1bGwgY2hyb21lIChBcHAgVG9wIEhlYWRlciArIEFwcCBTaWRlIEJhcikgd3JhcHBpbmcgdGhlIHdpemFyZCwgdGhyZWUgYm9keS1zaGFwZSB2YXJpYW50cyBzaG93Y2FzZWQgYWNyb3NzIHRoZSBzdGVwcywgY29uZGl0aW9uYWwgZm9vdGVyIGJ1dHRvbnMgKEJhY2sgaGlkZGVuIG9uIHN0ZXAgMCwgQ29tcGxldGUgTGF0ZXIgaGlkZGVuIHVudGlsIGRyYWZ0YWJsZSBkYXRhIGV4aXN0cywgQ29uZmlybSAmIENvbnRpbnVlIGRpc2FibGVkIHVudGlsIHRoZSBzdGVwIGlzIHZhbGlkKSwgYW5kIHVuc2F2ZWQtY2hhbmdlcyBleGl0IGNvbmZpcm1hdGlvbi4K">
+  <div class="md-viewer-actions">
+    <button class="md-viewer-toggle" type="button" data-action="rendered" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      How to use it
+    </button>
+    <button class="md-viewer-toggle" type="button" data-action="source" aria-expanded="false">
+      <span class="chev" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      View source
+      <span class="md-viewer-filename">wizard-step/usage.md</span>
+    </button>
+  </div>
+  <div class="md-rendered" aria-hidden="true"></div>
+  <pre class="md-viewer-pre" aria-hidden="true"></pre>
+</div>
+
+<script>
+  (function () {
+    var host = document.currentScript.previousElementSibling;
+    while (host && !host.classList.contains('md-viewer')) host = host.previousElementSibling;
+    if (!host) return;
+
+    var EXCLUDED_H2 = (host.getAttribute('data-exclude-h2') || '')
+      .split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+
+    var TRUNCATE_AFTER = (host.getAttribute('data-truncate-after-h2') || '')
+      .trim().toLowerCase();
+
+    var rawMd = '';
+    try {
+      var b64 = host.getAttribute('data-md-b64') || '';
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      rawMd = new TextDecoder('utf-8').decode(bytes);
+    } catch (e) {
+      rawMd = '(failed to load source)';
+    }
+
+    var pre = host.querySelector('.md-viewer-pre');
+    var rendered = host.querySelector('.md-rendered');
+    pre.textContent = rawMd;
+    rendered.innerHTML = renderMarkdown(filterSections(stripFrontmatter(rawMd), EXCLUDED_H2, TRUNCATE_AFTER));
+
+    var btns = host.querySelectorAll('.md-viewer-toggle');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var mode = b.getAttribute('data-action');
+        var cur = host.getAttribute('data-open');
+        var next = (cur === mode) ? 'closed' : mode;
+        host.setAttribute('data-open', next);
+        btns.forEach(function (other) {
+          var on = other.getAttribute('data-action') === next;
+          other.setAttribute('aria-expanded', on ? 'true' : 'false');
+        });
+        pre.setAttribute('aria-hidden', next === 'source' ? 'false' : 'true');
+        rendered.setAttribute('aria-hidden', next === 'rendered' ? 'false' : 'true');
+      });
+    });
+
+    function stripFrontmatter(src) {
+      var m = src.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
+      return m ? src.slice(m[0].length) : src;
+    }
+
+    function filterSections(src, exclude, truncateAfter) {
+      var lines = src.split(/\r?\n/);
+      var out = [];
+      var skipping = false;
+      var seenH1 = false;
+      var passedAnchor = false;
+      function matches(title, t) {
+        return title === t
+          || title.indexOf(t + ' ') === 0
+          || title.indexOf(t + '/') === 0;
+      }
+      for (var i = 0; i < lines.length; i++) {
+        var ln = lines[i];
+        if (/^#(?!#)\s+/.test(ln)) {
+          if (!seenH1) { seenH1 = true; continue; }
+        }
+        var h2 = ln.match(/^##\s+(.*)$/);
+        if (h2) {
+          var title = h2[1].replace(/^\d+\.\s+/, '').trim().toLowerCase();
+          if (truncateAfter) {
+            if (passedAnchor) { break; }
+            if (matches(title, truncateAfter)) { passedAnchor = true; }
+          }
+          skipping = exclude.some(function (t) { return matches(title, t); });
+        }
+        if (!skipping) out.push(ln);
+      }
+      return out.join('\n').replace(/^\s+/, '');
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function inline(text) {
+      var codes = [];
+      text = text.replace(/`([^`]+)`/g, function (_, c) {
+        codes.push(c); return '\x00' + (codes.length - 1) + '\x00';
+      });
+      var links = [];
+      text = text.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_, label, url) {
+        links.push({ label: label, url: url }); return '\x01' + (links.length - 1) + '\x01';
+      });
+      text = escapeHtml(text);
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+      text = text.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+      text = text.replace(/\x01(\d+)\x01/g, function (_, i) {
+        var l = links[+i];
+        return '<a href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener">' + escapeHtml(l.label) + '</a>';
+      });
+      text = text.replace(/\x00(\d+)\x00/g, function (_, i) {
+        return '<code>' + escapeHtml(codes[+i]) + '</code>';
+      });
+      return text;
+    }
+    function renderMarkdown(src) {
+      var lines = src.split(/\r?\n/);
+      var out = [], i = 0, n = lines.length;
+
+      function parseTable(startIdx) {
+        var sep = lines[startIdx + 1];
+        if (!/^\s*\|[\s:\-|]+\|\s*$/.test(sep)) return null;
+        var rows = [lines[startIdx]];
+        var k = startIdx + 2;
+        while (k < n && /^\s*\|.*\|\s*$/.test(lines[k])) { rows.push(lines[k]); k++; }
+        function cells(row) {
+          var s = row.trim().replace(/^\|/, '').replace(/\|$/, '');
+          return s.split('|').map(function (c) { return c.trim(); });
+        }
+        var head = cells(rows[0]), body = rows.slice(1).map(cells);
+        var html = '<table><thead><tr>';
+        head.forEach(function (h) { html += '<th>' + inline(h) + '</th>'; });
+        html += '</tr></thead><tbody>';
+        body.forEach(function (r) {
+          html += '<tr>';
+          r.forEach(function (c) { html += '<td>' + inline(c) + '</td>'; });
+          html += '</tr>';
+        });
+        html += '</tbody></table>';
+        return { html: html, consumed: k - startIdx };
+      }
+
+      function calloutKind(s) {
+        var t = s.trim().replace(/^\*\*|\*\*$/g, '').replace(/^###\s+/, '').toLowerCase();
+        if (/^use when\b/.test(t) || /^guarantees\b/.test(t)) return 'green';
+        if (/^do not use when\b/.test(t) || /^prohibitions\b/.test(t) || /^don'?ts\b/.test(t)) return 'red';
+        return null;
+      }
+
+      while (i < n) {
+        var ln = lines[i];
+        var s = ln.trim();
+        if (!s) { i++; continue; }
+
+        if (/^-{3,}\s*$/.test(s)) { out.push('<hr>'); i++; continue; }
+
+        var m = s.match(/^```(\w*)\s*$/);
+        if (m) {
+          i++;
+          var buf = [];
+          while (i < n && !/^```\s*$/.test(lines[i].trim())) { buf.push(lines[i]); i++; }
+          i++;
+          out.push('<pre><code>' + escapeHtml(buf.join('\n')) + '</code></pre>');
+          continue;
+        }
+
+        var h = s.match(/^(#{1,3})\s+(.*)$/);
+        if (h) {
+          var lvl = h[1].length;
+          var txt = h[2].replace(/^\d+\.\s+/, '');
+
+          if (lvl === 2 && txt.trim().toLowerCase() === 'contract') {
+            out.push('<h2>' + inline(txt) + '</h2>');
+            i++;
+            var cards = [];
+            while (i < n) {
+              var cS = lines[i].trim();
+              if (!cS) { i++; continue; }
+              if (/^##\s+/.test(cS)) break;
+              var h3m = cS.match(/^###\s+(.*)$/);
+              if (h3m) {
+                var h3title = h3m[1];
+                var slug = h3title.toLowerCase().trim();
+                var cls = slug === 'guarantees'   ? 'guarantees'
+                        : slug === 'prohibitions' ? 'prohibitions'
+                        : slug === 'conditions'   ? 'conditions'
+                        : '';
+                var sym = cls === 'guarantees'   ? '\u2713'
+                        : cls === 'prohibitions' ? '\u2717'
+                        : cls === 'conditions'   ? 'i'
+                        : '';
+                i++;
+                var citems = [];
+                while (i < n) {
+                  var ics = lines[i].trim();
+                  if (!ics) break;
+                  if (/^#{1,3}\s+/.test(ics)) break;
+                  var cbm = /^[-*+]\s+(.*)$/.exec(ics);
+                  if (cbm) { citems.push(cbm[1]); i++; continue; }
+                  if (/^ {2,}/.test(lines[i])) { citems[citems.length - 1] += ' ' + ics; i++; continue; }
+                  break;
+                }
+                cards.push({ cls: cls, sym: sym, title: h3title, items: citems });
+                continue;
+              }
+              i++;
+            }
+            var grid = '<div class="contract-grid">';
+            cards.forEach(function (c) {
+              grid += '<div class="contract-card ' + c.cls + '">';
+              grid += '<h3><span class="sym">' + escapeHtml(c.sym) + '</span> ' + escapeHtml(c.title) + '</h3>';
+              grid += '<ul>';
+              c.items.forEach(function (it) { grid += '<li>' + inline(it) + '</li>'; });
+              grid += '</ul></div>';
+            });
+            grid += '</div>';
+            out.push(grid);
+            continue;
+          }
+
+          if (lvl === 3) {
+            var kind3 = calloutKind(txt);
+            if (kind3 && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+              i++;
+              var items3 = [];
+              while (i < n) {
+                var ls3 = lines[i].trim();
+                if (!ls3) break;
+                var bm3 = /^[-*+]\s+(.*)$/.exec(ls3);
+                if (bm3) { items3.push(bm3[1]); i++; continue; }
+                if (/^ {2,}/.test(lines[i])) { items3[items3.length - 1] += ' ' + ls3; i++; continue; }
+                break;
+              }
+              var html3 = '<div class="callout ' + kind3 + '"><div class="callout-title">' + escapeHtml(txt) + '</div><ul>';
+              items3.forEach(function (it) { html3 += '<li>' + inline(it) + '</li>'; });
+              html3 += '</ul></div>';
+              out.push(html3);
+              continue;
+            }
+          }
+          out.push('<h' + lvl + '>' + inline(txt) + '</h' + lvl + '>');
+          i++; continue;
+        }
+
+        if (s.startsWith('|') && i + 1 < n && /^\s*\|[\s:\-|]+\|\s*$/.test(lines[i + 1])) {
+          var t = parseTable(i);
+          if (t) { out.push(t.html); i += t.consumed; continue; }
+        }
+
+        var labelMatch = /^\*\*([^*]+)\*\*\s*$/.exec(s);
+        if (labelMatch && i + 1 < n && /^[-*+]\s+/.test(lines[i + 1].trim())) {
+          var kind = calloutKind(s);
+          if (kind) {
+            var title = labelMatch[1];
+            i++;
+            var items = [];
+            while (i < n) {
+              var ls = lines[i].trim();
+              if (!ls) break;
+              var bm = /^[-*+]\s+(.*)$/.exec(ls);
+              if (bm) { items.push(bm[1]); i++; continue; }
+              if (/^ {2,}/.test(lines[i])) { items[items.length - 1] += ' ' + ls; i++; continue; }
+              break;
+            }
+            var html = '<div class="callout ' + kind + '"><div class="callout-title">' + escapeHtml(title) + '</div><ul>';
+            items.forEach(function (it) { html += '<li>' + inline(it) + '</li>'; });
+            html += '</ul></div>';
+            out.push(html);
+            continue;
+          }
+        }
+
+        if (/^[-*+]\s+/.test(s)) {
+          var items2 = [];
+          while (i < n) {
+            var ls2 = lines[i].trim();
+            if (!ls2) break;
+            var bm2 = /^[-*+]\s+(.*)$/.exec(ls2);
+            if (bm2) { items2.push(bm2[1]); i++; continue; }
+            if (/^ {2,}/.test(lines[i])) { items2[items2.length - 1] += ' ' + ls2; i++; continue; }
+            break;
+          }
+          var ulHtml = '<ul>';
+          items2.forEach(function (it) { ulHtml += '<li>' + inline(it) + '</li>'; });
+          ulHtml += '</ul>';
+          out.push(ulHtml);
+          continue;
+        }
+
+        if (/^\d+\.\s+/.test(s)) {
+          var items4 = [];
+          while (i < n) {
+            var ls4 = lines[i].trim();
+            if (!ls4) break;
+            var bm4 = /^\d+\.\s+(.*)$/.exec(ls4);
+            if (bm4) { items4.push(bm4[1]); i++; continue; }
+            break;
+          }
+          var olHtml = '<ol>';
+          items4.forEach(function (it) { olHtml += '<li>' + inline(it) + '</li>'; });
+          olHtml += '</ol>';
+          out.push(olHtml);
+          continue;
+        }
+
+        var pBuf = [s]; i++;
+        while (i < n) {
+          var ns = lines[i].trim();
+          if (!ns) break;
+          if (/^(#{1,6})\s+/.test(ns)) break;
+          if (/^[-*+]\s+/.test(ns)) break;
+          if (/^\d+\.\s+/.test(ns)) break;
+          if (ns.startsWith('|')) break;
+          if (/^```/.test(ns)) break;
+          if (/^-{3,}\s*$/.test(ns)) break;
+          pBuf.push(ns); i++;
+        }
+        out.push('<p>' + inline(pBuf.join(' ')) + '</p>');
+      }
+      return out.join('\n');
+    }
+  })();
+</script>
+<!-- md-viewer-end -->
+
+</body>
+</html>

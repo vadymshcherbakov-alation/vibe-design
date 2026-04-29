@@ -5,11 +5,11 @@ category: foundation
 last_updated: 2026-04-29
 
 description: >
-  Two icon libraries coexist in every project — the Alation Custom Library (`@alation/icons-neo`) is primary, the Lucide Library (`lucide-react`) is the fallback. Always check Custom first; only reach for Lucide when the icon isn't there. Size is theme-driven by the container.
+  Two icon libraries coexist in every project — the Lucide Library (`lucide-react`) is primary and is always checked first; the Alation Custom Library (`@alation/icons-neo`) is the backfill for cases where Lucide does not have a fitting icon. Size is theme-driven by the container.
 tags: [foundation, icons, iconography]
 
 figma_url: "https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2032-768&t=ReyfN2LWJiqbcriS-1"
-code_reference: "@alation/icons-neo · lucide-react"
+code_reference: "lucide-react · @alation/icons-neo"
 example_path: ./Example.tsx
 
 mui_base: none
@@ -24,48 +24,48 @@ depends_on_components: []
 - **Type:** Foundation
 - **MUI base:** `none`
 - **Figma:** [Custom Library — NEO UI Icons](https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2032-768&t=ReyfN2LWJiqbcriS-1) (canonical source for `@alation/icons-neo`)
-- **Code:** `@alation/icons-neo` (Custom Library, primary) · `lucide-react` (Lucide Library, fallback)
+- **Code:** `lucide-react` (Lucide Library, primary) · `@alation/icons-neo` (Custom Library, backfill)
 
 ## 2. Purpose
 
 <!-- What this foundation governs and why it matters. Two sentences max. No code, no values. Page-sub is auto-filled from here. -->
 
-The Alation icon system. Two libraries — the **Custom Library** (`@alation/icons-neo`) is the primary source of truth and is always checked first; the **Lucide Library** (`lucide-react`) is the backfill for icons that the Custom Library does not yet ship.
+The Alation icon system. Two libraries — the **Lucide Library** (`lucide-react`) is the primary source and is always checked first; the **Custom Library** (`@alation/icons-neo`) is the backfill, used when Lucide does not have a suitable icon for the intent.
 
 ## 3. How to use
 
-<!-- Layering narrative for humans: two libraries, custom-first, lucide fallback, container drives size. No import statements, no code. -->
+<!-- Layering narrative for humans: two libraries, lucide-first, custom fallback, container drives size. No import statements, no code. -->
 
-Iconography is organised around three rules: **Custom Library first**, **Lucide as backfill**, and **the container drives the size**.
+Iconography is organised around three rules: **Lucide Library first**, **Custom Library as backfill**, and **the container drives the size**.
 
-- **Custom Library is primary.** Every project — production (`alation-ui`) and the `@repo/ui` prototype alike — must check `@alation/icons-neo` *first*. If the icon exists there, use it. The Custom Library is the brand-aligned set, mirrored 1:1 with the Figma NEO icon library, and is the only library reviewed by the design system team.
-- **Lucide is the backfill.** When the Custom Library does not yet ship an icon you need, fall back to `lucide-react`. This is allowed but must be a deliberate "not in Custom" decision — not a default. Both libraries are stroke-based, both respect `currentColor`, and both render inside the same Alation containers, so visual cohesion holds across the boundary.
+- **Lucide is primary.** Every project — production (`alation-ui`) and the `@repo/ui` prototype alike — checks `lucide-react` *first*. Lucide is the broad, fast-moving open-source set; it covers most everyday intents and gives engineers the largest possible vocabulary to find what they need quickly.
+- **Custom Library is the backfill.** When Lucide does not have a suitable icon — typically Alation-specific concepts (Agent, Flow, Workflow, Catalog Set, BI View, CDE, Lexicon-style entities, brand marks) — fall back to `@alation/icons-neo`. The Custom Library is brand-aligned, mirrored 1:1 with the Figma NEO icon library, and is the only library reviewed by the design system team for those Alation-specific concepts.
 - **Two libraries, one visual contract.** Whichever library you draw from, the icon renders inside the same Alation containers (Button `startIcon`, IconButton, Chip `icon`, Alert severity), inherits colour from `currentColor`, and is sized by the container — not by a `size` prop on the icon.
 - **Container drives size.** Every icon-hosting component in the Alation theme sizes its icon from `typography.iconXSmall` / `iconSmall` / `iconMedium` / `iconLarge`. Pick the right container / size, and the icon follows. Do not pass a `size` prop on the icon itself inside an Alation container.
-- **Browse the catalogs.** Custom Library: the [Figma NEO icon library](https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2032-768&t=ReyfN2LWJiqbcriS-1), plus the export list in `@alation/icons-neo/src/index.ts`. Lucide Library: [lucide.dev/icons](https://lucide.dev/icons/).
+- **Browse the catalogs.** Lucide Library: [lucide.dev/icons](https://lucide.dev/icons/). Custom Library: the [Figma NEO icon library](https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2032-768&t=ReyfN2LWJiqbcriS-1), plus the export list in `@alation/icons-neo/src/index.ts`.
 
 If a needed icon is in **neither** library, stop and flag — do not reach for `@mui/icons-material`, emoji, or a hand-rolled SVG. Propose a new asset against the NEO icon library in Figma so the Custom Library grows over time.
 
 ### How to choose, in three steps
 
-1. Open the Custom Library export list (`@alation/icons-neo/src/index.ts`) or the [Figma NEO icon library](https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2032-768&t=ReyfN2LWJiqbcriS-1). Search by intent (e.g. "edit", "trash", "search").
-2. **Found in Custom?** Import from `@alation/icons-neo`. Done.
-3. **Not in Custom?** Search [lucide.dev/icons](https://lucide.dev/icons/), import from `lucide-react`, and note the gap so it can be added to the Custom Library later.
+1. Search [lucide.dev/icons](https://lucide.dev/icons/) by intent (e.g. "edit", "trash", "search").
+2. **Found in Lucide?** Import from `lucide-react`. Done.
+3. **Not in Lucide?** Open the Custom Library export list (`@alation/icons-neo/src/index.ts`) or the [Figma NEO icon library](https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2032-768&t=ReyfN2LWJiqbcriS-1). If the icon is there (typically Alation-specific concepts), import from `@alation/icons-neo`. If not, stop and flag.
 
 ## 4. Contract
 
 <!-- All code here: package names, import shape, size tokens, prop names. Phrase G/P/C against the real API. -->
 
 ### Guarantees
-- Every project ships icons from **two libraries**: the Custom Library (`@alation/icons-neo`, primary) and the Lucide Library (`lucide-react`, fallback). No third icon library is allowed.
-- The Custom Library is checked first; Lucide is used only when the Custom Library does not yet ship the icon. This rule is identical in production (`alation-ui`) and in the `@repo/ui` prototype (vibe-design).
-- Every icon in both libraries is exported by **PascalCase name**. Custom Library exports carry an `Icon` suffix (e.g. `PlusIcon`, `SearchIcon`, `TrashIcon`, `PencilIcon`, `EllipsisIcon`); Lucide exports do not (e.g. `Plus`, `Search`, `Trash2`, `SquarePen`, `EllipsisVertical`).
+- Every project ships icons from **two libraries**: the Lucide Library (`lucide-react`, primary) and the Custom Library (`@alation/icons-neo`, backfill). No third icon library is allowed.
+- Lucide is checked first; the Custom Library is used only when Lucide does not have a suitable icon (typically Alation-specific concepts). This rule is identical in production (`alation-ui`) and in the `@repo/ui` prototype (vibe-design).
+- Every icon in both libraries is exported by **PascalCase name**. Lucide exports do not carry a suffix (e.g. `Plus`, `Search`, `Trash2`, `SquarePen`, `EllipsisVertical`); Custom Library exports carry an `Icon` suffix (e.g. `AgentIcon`, `FlowIcon`, `WorkflowIcon`, `DatabaseIcon`).
 - Size is theme-driven: the container (IconButton, Button `startIcon`, Chip `icon`, Alert severity, sub-nav item) sets the icon size via `typography.iconXSmall` / `iconSmall` / `iconMedium` / `iconLarge`.
 - Every icon is an SVG — scales cleanly at 200 % browser zoom and respects `currentColor`.
 
 ### Prohibitions
 - Never import from `@mui/icons-material`.
-- Never reach for Lucide without first confirming the icon does not exist in the Custom Library.
+- Never reach for the Custom Library without first confirming Lucide does not have a suitable icon for the intent.
 - Never render a raw SVG literal or a custom icon component inside page components.
 - Never use emoji as an icon.
 - Never hard-code an icon size inside an Alation container — the container's `size` prop governs it.
@@ -86,12 +86,12 @@ If a needed icon is in **neither** library, stop and flag — do not reach for `
 
 | Order | Library | npm package | Scope | When to use |
 |---|---|---|---|---|
-| **1 (always check first)** | Custom Library | [`@alation/icons-neo`](https://www.npmjs.com/package/@alation/icons-neo) | All projects (production + prototype). Every export is a MUI `SvgIcon`. | Default. Use whenever the icon exists here. |
-| **2 (backfill)** | Lucide Library | [`lucide-react`](https://www.npmjs.com/package/lucide-react) | All projects. Browse names at [lucide.dev/icons](https://lucide.dev/icons/). | Only when the Custom Library does not yet ship the icon. |
+| **1 (always check first)** | Lucide Library | [`lucide-react`](https://www.npmjs.com/package/lucide-react) | All projects (production + prototype). Browse names at [lucide.dev/icons](https://lucide.dev/icons/). | Default. Use whenever Lucide has a fitting icon for the intent. |
+| **2 (backfill)** | Custom Library | [`@alation/icons-neo`](https://www.npmjs.com/package/@alation/icons-neo) | All projects. Every export is a MUI `SvgIcon`. | Only when Lucide does not have a suitable icon — typically for Alation-specific concepts (Agent, Flow, Workflow, BI View, CDE, brand marks). |
 
 ### 5.2 Size conventions
 
-Size is theme-driven by the container. Do not pass `size={…}` on icons inside Alation containers — applies equally to Custom Library and Lucide Library icons. Morpheus sets `html { font-size: 62.5% }`, so 1rem = 10px and the rem values below resolve to the px values shown.
+Size is theme-driven by the container. Do not pass `size={…}` on icons inside Alation containers — applies equally to Lucide Library and Custom Library icons. Morpheus sets `html { font-size: 62.5% }`, so 1rem = 10px and the rem values below resolve to the px values shown.
 
 | Context | Theme token | Rendered size |
 |---|---|---|
@@ -101,53 +101,55 @@ Size is theme-driven by the container. Do not pass `size={…}` on icons inside 
 | `<IconButton size="large">`, `<Button size="large">` `startIcon` / `endIcon`, Alert severity icon | `typography.iconLarge` | 2.4rem · 24px |
 | SubNav (Wayfinder) item | (theme-baked) | 1.6rem · 16px |
 
-### 5.3 Commonly used icons — Custom Library first
+### 5.3 Commonly used icons — Lucide first
 
-Not exhaustive. For Custom: see `@alation/icons-neo/src/index.ts` for the full export list (~229 icons). For Lucide: search [lucide.dev/icons](https://lucide.dev/icons/).
+Not exhaustive. For Lucide: search [lucide.dev/icons](https://lucide.dev/icons/). For Custom: see `@alation/icons-neo/src/index.ts` for the full export list (~229 icons).
 
-| Category | Custom Library (`@alation/icons-neo`) | Lucide Library (`lucide-react`) — when not in Custom |
+| Category | Lucide Library (`lucide-react`) — primary | Custom Library (`@alation/icons-neo`) — backfill (Alation-specific) |
 |---|---|---|
-| Action | `PlusIcon`, `CloseIcon`, `CheckIcon`, `TrashIcon`, `PencilIcon`, `CopyIcon`, `CloudUploadIcon`, `DownloadCircleIcon`, `UploadCircleIcon`, `ExternalLinkIcon`, `FilterIcon` | `SquarePen`, `RefreshCw`, `Play`, `Eye` |
-| Navigation | `ChevronDownIcon`, `ChevronUpIcon`, `ChevronLeftIcon`, `ChevronRightIcon`, `ArrowLeftIcon`, `ArrowRightIcon`, `ArrowUpIcon`, `ArrowDownIcon`, `CaretDownSmallIcon`, `CaretLeftIcon`, `CaretRightIcon`, `CaretUpSmallIcon` | `ArrowUpDown`, `CornerDownLeft`, `PanelLeftOpen`, `PanelLeftClose` |
-| Menu & overflow | `EllipsisDownIcon` (note: `EllipsisIcon` has a known stroke/fill rendering bug — avoid until fixed) | `EllipsisVertical`, `Ellipsis` |
-| Status & feedback | `InformationIcon`, `InformationFilledIcon`, `WarningOutlineIcon`, `WarningFilledIcon`, `HelpIcon`, `CheckCircleIcon`, `CheckCircleFilledIcon`, `CloseCircleIcon` | `CircleStop`, `ThumbsUp`, `ThumbsDown`, `OctagonAlert` |
-| Communication | `SearchIcon`, `EmailIcon`, `AlternateEmailIcon`, `NotificationIcon`, `CommentOIcon` | `MessageSquare`, `MessagesSquare` |
-| Content & objects | `DatabaseIcon`, `TableIcon`, `BookIcon`, `BookmarkIcon`, `ArticleIcon`, `CalendarIcon`, `InsertLinkIcon`, `ColumnsIcon`, `ColumnVerticalIcon` | `BookText`, `ClipboardList`, `ListChecks`, `ChartColumn`, `History`, `Link2`, `Link2Off` |
-| Agent & workflow | `AgentIcon`, `FlowIcon`, `ToolIcon`, `WorkflowIcon`, `SettingsIcon`, `SettingsCogIcon`, `UserIcon` | `Bot`, `Bolt`, `Variable`, `Globe`, `Monitor`, `Settings2`, `Users` |
+| Action | `Plus`, `X`, `Check`, `Trash2`, `SquarePen`, `Pencil`, `Copy`, `Download`, `Upload`, `ExternalLink`, `RefreshCw`, `Play`, `Eye`, `Filter` | — |
+| Navigation | `ChevronDown`, `ChevronUp`, `ChevronLeft`, `ChevronRight`, `ArrowLeft`, `ArrowRight`, `ArrowUp`, `ArrowDown`, `ArrowUpDown`, `CornerDownLeft`, `PanelLeftOpen`, `PanelLeftClose` | — |
+| Menu & overflow | `EllipsisVertical`, `Ellipsis` | — (note: `EllipsisIcon` in the Custom Library has a known stroke/fill rendering bug — avoid until fixed) |
+| Status & feedback | `Info`, `TriangleAlert`, `OctagonAlert`, `CircleHelp`, `CircleStop`, `ThumbsUp`, `ThumbsDown` | — |
+| Communication | `Search`, `MessageSquare`, `MessagesSquare`, `Mail`, `Bell` | — |
+| Content & objects | `Database`, `Table`, `BookOpen`, `BookText`, `Bookmark`, `ClipboardList`, `ListChecks`, `ChartColumn`, `FileText`, `Calendar`, `History`, `Link`, `Link2`, `Link2Off` | — |
+| Agent & workflow (Alation-specific) | `Bot`, `Bolt`, `Globe`, `Monitor`, `Settings`, `Settings2`, `Users`, `Variable`, `Sparkles` | `AgentIcon`, `FlowIcon`, `ToolIcon`, `WorkflowIcon`, `AiFlowIcon`, `AiToolIcon`, `BiFieldIcon`, `BiViewIcon`, `CdeIcon`, `CatalogSetIcon`, `AlationLogo`, `AlationMetricIcon`, `BedrockLogoIcon` |
 
-> The lists above are illustrative — the contract is the **precedence rule** in §5.1, not these tables. Always grep `@alation/icons-neo/src/index.ts` first; only fall back to Lucide for genuine gaps.
+> The lists above are illustrative — the contract is the **precedence rule** in §5.1, not these tables. Always search Lucide first; only fall back to the Custom Library for icons Lucide does not ship (typically Alation-specific concepts).
 
 ## 11. Example
 
 ```tsx
-// Primary — Custom Library (always check first).
-import { PlusIcon, SearchIcon, PencilIcon, TrashIcon } from '@alation/icons-neo';
-// Backfill — Lucide Library, only for icons not in the Custom Library.
-import { PanelLeftClose, EllipsisVertical, Sparkles } from 'lucide-react';
+// Primary — Lucide Library (always check first).
+import { Plus, Search, Pencil, Trash2, EllipsisVertical, Sparkles } from 'lucide-react';
+// Backfill — Custom Library, only for icons (typically Alation-specific) not in Lucide.
+import { AgentIcon, FlowIcon, CdeIcon } from '@alation/icons-neo';
 
 import { Button, IconButton, TextField, InputAdornment } from '@mui/material';
 
-// Custom Library — covers most actions.
-<Button variant="contained" startIcon={<PlusIcon />}>Build agent</Button>
-<Button variant="outlined" startIcon={<PencilIcon />}>Edit</Button>
-<IconButton size="small" aria-label="Edit"><PencilIcon /></IconButton>
+// Lucide Library — covers most everyday intents.
+<Button variant="contained" startIcon={<Plus />}>Build agent</Button>
+<Button variant="outlined" startIcon={<Pencil />}>Edit</Button>
+<IconButton size="small" aria-label="Edit"><Pencil /></IconButton>
 <TextField
   placeholder="Search"
   size="small"
   InputProps={{
     startAdornment: (
       <InputAdornment position="start">
-        <SearchIcon aria-hidden="true" />
+        <Search aria-hidden="true" />
       </InputAdornment>
     ),
   }}
 />
-<IconButton size="small" color="error" aria-label="Delete"><TrashIcon /></IconButton>
-
-// Lucide Library — only because these aren't in the Custom Library yet.
+<IconButton size="small" color="error" aria-label="Delete"><Trash2 /></IconButton>
 <IconButton size="small" aria-label="More actions"><EllipsisVertical /></IconButton>
-<IconButton size="small" aria-label="Collapse panel"><PanelLeftClose /></IconButton>
 <Button variant="text" startIcon={<Sparkles />}>Generate with AI</Button>
+
+// Custom Library — only because these are Alation-specific concepts not in Lucide.
+<Button variant="contained" startIcon={<AgentIcon />}>Open Agent</Button>
+<IconButton size="small" aria-label="Open flow"><FlowIcon /></IconButton>
+<IconButton size="small" aria-label="Open CD Manager"><CdeIcon /></IconButton>
 ```
 
 See [`Example.tsx`](./Example.tsx) for the canonical, runnable source.
