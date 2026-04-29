@@ -34,6 +34,14 @@ The primary Next.js 16 App Router shell. All routes live under `app/app/` (neste
 Shared component library imported as `@repo/ui`. Two key areas:
 
 - **Theme system** (`src/theme/`): `ThemeProvider` extends MUI's theme with custom `tokens`. A 12-family × 9-shade palette plus semantic tokens for border, background, text, and icon across default/hover/disabled/focused/error/warning/success states. 37+ component overrides in `componentOverrides/`. Access via `theme.tokens.color.text.primary`, `theme.tokens.palette.neutral[800]`.
+
+  **Runtime theme ↔ skill bundle protocol.** The alation-design skill ships a reference bundle at `.claude/skills/alation-design/references/theme/` with verbatim mirrors of production morpheus overrides. That folder is **reference only** — Claude reads it, the app does not import it.
+
+  **The runtime theme this app uses is `@alation/fabric-theme-morpheus`** (workspace package at `packages/fabric-theme-morpheus/`). `apps/alation-base-ui/app/client-layout.tsx` wires `<ThemeProvider theme={fabricThemeMorpheus}>` directly from that package. The override files MUI actually evaluates live at `packages/fabric-theme-morpheus/src/lib/Mui*.overrides.{ts,tsx}` and are wired into the `components` map in `packages/fabric-theme-morpheus/src/index.ts`. **This makes vibe-design a production-shape consumer** in the skill's protocol (`references/theme/_index.md` §1, case b — vendored morpheus).
+
+  The parallel `packages/ui/src/theme/componentOverrides/` barrel is leftover scaffolding from an earlier prototype shape and is **NOT wired to MUI in this app**. Anything mirrored into that folder is silently dead code. Always trace the `<ThemeProvider>` import to find the real destination.
+
+  When the skill's Contract Audit flags a missing theme prerequisite, mirror that single override file from the bundle into `packages/fabric-theme-morpheus/src/lib/` AND wire it into `packages/fabric-theme-morpheus/src/index.ts`. Note morpheus sets `html { font-size: '62.5%' }` (1rem = 10px), so px values from the bundle are safest — convert to `2.4rem` if you want morpheus-style rem consistency. After wiring, **verify with computed style** in the running app (DevTools → `getComputedStyle(el).fontSize` on a rendered instance). **Don't bulk-mirror** — surgical, as-needed only.
 - **Common layout** (`src/common/`): `AlationLayout` provides the full-viewport shell (sidebar, header, sub-nav, content area). These are **prototype-only scaffolding** — not production components.
 
 ### Key dependencies

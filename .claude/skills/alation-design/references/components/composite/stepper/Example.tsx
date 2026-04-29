@@ -12,6 +12,19 @@ import {
 // "Back" / "Next" / "Submit" buttons live outside the Stepper, in a wizard
 // pattern (TBD reference). All `activeStep` values below are fixed for the
 // demo; the user does not advance the flow inside this Example.
+//
+// FIXED-SIZE CONTRACT — do not bend it when you copy this file:
+//   - Step icon is always 24×24. The morpheus MuiStepIcon theme override
+//     owns this; never set
+//     `sx={{ '& .MuiStepIcon-root': { fontSize: … } }}` or pass
+//     `slotProps={{ stepIcon: { sx: { width, height } } }}` at the call site.
+//   - Label is always `body2` (MUI default for <StepLabel>). Never wrap label
+//     text in a <Typography variant="…"> to upsize it.
+//   - If the icon renders smaller than 24×24, the THEME is broken (the
+//     MuiStepIcon override is missing) — fix the theme, not the call site.
+//   - If the layout looks "spread out" in a wide Dialog or page, constrain
+//     the WRAPPER (max-width on the parent). The outer <Stack maxWidth={720}>
+//     below is the contract for ≤ 4 steps; bump to ~960 for 5–6 steps.
 
 const horizontalSteps = ['Connect source', 'Map schema', 'Review', 'Publish'];
 const altLabelSteps = ['Profile', 'Workspace', 'Invite team'];

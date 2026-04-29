@@ -74,7 +74,7 @@ Breadcrumb is a *secondary* navigation aid — never the primary way to move bet
 - The container renders as `<nav aria-label="…">` so screen readers announce it as a navigation landmark.
 - Items are an ordered list of `<Link>` (parents — clickable) or `<Typography>` (current — plain text).
 - Separator is the morpheus default — `ChevronRightIcon` from `@alation/icons-neo` — applied automatically by the `MuiBreadcrumbs` override.
-- Non-last items render in `text.secondary`; the last item renders in `text.primary` (handled by the override's `&:last-child *` rule).
+- Non-last items in the **Trail shape** render in `text.secondary`; the last item renders in `text.primary` (handled by the `MuiBreadcrumbs` override's `&:last-child *` rule). The **Back-to-parent shape** is outside the Breadcrumbs override's reach — its `<Link>` MUST set `color="text.secondary"` explicitly at the call site (see Prohibition below).
 - Focus-visible on any link uses the morpheus outline-style mixin; links are inline-block + carry `borderRadius` so the outline frames cleanly.
 - Past `maxItems`, items collapse into an ellipsis affordance — the morpheus override wires the ellipsis IconButton to `aria-haspopup="true"` and the click opens a `<Menu>` with the hidden items (this is what `StandardBreadcrumbs` provides).
 - The current page item carries `aria-current="page"` so assistive tech announces it correctly.
@@ -91,6 +91,7 @@ Breadcrumb is a *secondary* navigation aid — never the primary way to move bet
 - **Back-to-parent label is the parent's name only** — never `"Back to <parent>"`, never `"← Back"`, never any prefix word. The chevron carries the meaning; the label is the destination. If the destination is "Settings", the link reads `< Settings` — full stop.
 - No Back-to-parent shape when the page sits 2+ levels deep — switch to the Trail shape so the user sees the full chain. Conversely, no Trail shape with only one parent — switch to Back-to-parent.
 - The chevron in the Back-to-parent shape points **left** (`ChevronLeftIcon`) — never right, never up. Left is the universal "go back / up one level" direction.
+- The Back-to-parent `<Link>` MUST set `color="text.secondary"` (or `color="inherit"` if the surrounding context already sets the right tone). The `MuiBreadcrumbs` theme override that re-tints non-last items only fires inside `<Breadcrumbs>` markup — the Back-to-parent shape is a bare `<Link>` outside that wrapper, so it inherits MUI's default `color="primary"` and renders **brand-blue**. That looks like a primary action, not a secondary navigation aid. Skipping `color="text.secondary"` is one of the most common back-to-parent rendering bugs.
 - Nothing outside the Variants list (§5) is valid.
 
 ### Conditions
@@ -98,7 +99,7 @@ Breadcrumb is a *secondary* navigation aid — never the primary way to move bet
 - Page-header pairing — both shapes sit **above** the page title with `sx={{ mb: 1 }}` — see [Page Header](./page-header/usage.md) Variant D for the canonical composition.
 - For **catalog objects** (datasource → schema → table → column, folder hierarchies, agents in a workspace), use **`ObjectBreadcrumbs`** — it walks the otype tree, applies the right item construction per type, and handles polyhierarchy. Never reconstruct the otype trail by hand. Always Trail-shape; the wrapper does not produce a Back-to-parent variant.
 - For **non-catalog Trail hierarchies** (settings → notifications → email; admin → roles → permissions), use **`StandardBreadcrumbs`** — it accepts arbitrary children and handles collapse to an ellipsis menu past `maxItems`.
-- The **Back-to-parent shape** is built directly from MUI primitives — no production wrapper exists; assemble a `<MuiLink>` (or React Router `Link`) with a leading `ChevronLeftIcon` and the parent's name as the label. Wrap in a `<nav aria-label="…">` so the landmark name is announced.
+- The **Back-to-parent shape** is built directly from MUI primitives — no production wrapper exists; assemble a `<MuiLink>` (or React Router `Link`) with a leading `ChevronLeftIcon` and the parent's name as the label. Wrap in a `<nav aria-label="…">` so the landmark name is announced. The `<Link>` MUST set `color="text.secondary"` — without it, MUI defaults to brand-blue (`color="primary"`), which is wrong for a secondary navigation aid (see Prohibitions).
 - Items past `maxItems` (default `8` in `StandardBreadcrumbs`, `2` in `ObjectBreadcrumbs`) collapse to an ellipsis. `itemsBeforeCollapse` and `itemsAfterCollapse` control how many siblings flank the ellipsis (defaults: 1 / 1).
 - Long item labels (`noWrap` mode in `ObjectBreadcrumbs`) ellipsise with `text-overflow: ellipsis` and a tooltip on hover — never wrap to a second line in a header context.
 - Each item label is the destination's canonical name (object name, folder name, settings sub-page name) — not a verb, not a status, not a description.

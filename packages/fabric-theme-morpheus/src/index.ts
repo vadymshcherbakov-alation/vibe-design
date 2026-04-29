@@ -49,6 +49,7 @@ import {muiPopperOverrides} from './lib/MuiPopper.overrides';
 import {muiRadioOverrides} from './lib/MuiRadio.overrides';
 import {muiSelectOverrides, muiSelectShellOverrides} from './lib/MuiSelect.overrides';
 import {muiSnackbarOverrides} from './lib/MuiSnackbar.overrides';
+import {muiStepIconOverrides} from './lib/MuiStepIcon.overrides';
 import {muiSvgIconOverrides} from './lib/MuiSvgIcon.overrides';
 import {muiSwitchOverrides} from './lib/MuiSwitch.overrides';
 import {muiTableOverrides} from './lib/MuiTable.overrides';
@@ -150,6 +151,7 @@ const morpheusThemeConfig: ThemeOptions = {
     ...muiSelectOverrides,
     ...muiSelectOverrides,
     ...muiSnackbarOverrides,
+    ...muiStepIconOverrides,
     ...muiSvgIconOverrides,
     ...muiSwitchOverrides,
     ...muiTablePaginationOverrides,

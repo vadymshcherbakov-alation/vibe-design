@@ -30,6 +30,7 @@ export default function BreadcrumbExample() {
           <Link
             href="#"
             underline="hover"
+            color="text.secondary"
             sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}
           >
             <ChevronLeft size={16} aria-hidden="true" />

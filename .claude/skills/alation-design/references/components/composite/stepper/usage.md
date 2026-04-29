@@ -87,7 +87,8 @@ A **Stepper** shows the user where they are inside a multi-step flow and the pat
 - No `<Stepper>` without `activeStep` — the parent owns the index, children must not paint state independently.
 - No mixing `linear` and `nonLinear` modes within the same flow — pick one. Linear is the default; flip to `nonLinear` only for review-style flows where every step is reachable.
 - No hard-coded hex / px / font values inside the stepper or its children.
-- No `sx` overrides on `StepLabel` or `StepConnector` to change icon colour, label typography, or connector stroke — the theme and per-step state own these.
+- No `sx` overrides on `Stepper`, `StepLabel`, or `StepConnector` to change icon colour, icon size, label typography, label size, or connector stroke — the **morpheus `MuiStepIcon` theme override** locks the 24×24 icon contract; per-step state owns colour; `body2` owns label typography. Specifically forbidden at the call site: `sx={{ '& .MuiStepIcon-root': { fontSize: … } }}`, `slotProps={{ stepIcon: { sx: { width, height } } }}`, and wrapping `<StepLabel>` children in a `<Typography variant="…">` to upsize the label. If the icon does not render at 24×24, the **theme** is broken — fix the theme override, not the call site. If a designer asks for "bigger steps", the answer is *vertical orientation* or *fewer, more meaningful steps*, not a scale-up.
+- No stretching the Stepper to fill a very wide parent without bound — wrap horizontal steppers in a `max-width` container (≤ 720px for ≤ 4 steps, ≤ 960px for 5–6 steps) so connectors don't blow out and labels don't drift apart from their icons. In a Dialog or full-page wizard, constrain the Stepper's parent, not the Stepper itself.
 - No more than ~6 steps in a horizontal stepper. If you need more, split the flow or switch to vertical.
 - No step label longer than ~3 words. Use a noun phrase ("Map schema"), not a sentence ("Map the columns to types").
 - No clickable last step that fires a *different* action than the in-flow Submit — once you reach the terminal step, the flow's Submit button commits; the step itself is just a marker.
@@ -269,28 +270,27 @@ The step icon is a `24×24` filled circle (MUI default `<StepIcon>`):
 | Error | `palette.error.main` | Step number, white — colour change is the affordance, no glyph swap |
 | Disabled | `palette.text.disabled` (paler grey) | Step number, white |
 
-**MUI default vs NEO 2.1 — error state.** MUI's stock `<StepIcon>` swaps the step number for a warning glyph when `error` is set. NEO 2.1 keeps the step number and only changes the circle colour to `error.main`. To match Figma in code, override `StepIconComponent` at the call site so the number always renders:
+**Step icon size is a theme contract, not a call-site responsibility.** The morpheus `MuiStepIcon` override (and its `@repo/ui` mirror in prototype workspaces) locks the icon at `1.5rem` (24×24). The label is always `body2`. Do **not** ship `sx={{ '& .MuiStepIcon-root': { fontSize: … } }}`, do **not** size the icon via `slotProps={{ stepIcon: { sx: { width, height } } }}`, and do **not** wrap `<StepLabel>` children in a `<Typography variant="…">` to upsize the label. Those patterns predate the theme override and are deprecated.
+
+> **Why the override exists.** The base `MuiSvgIcon` override in morpheus sets `root: { fontSize: 'inherit' }`, which kills MUI's default `1.5rem` for `StepIcon` (it ships as `<SvgIcon fontSize="inherit">`). Without an explicit `MuiStepIcon` override, the icon collapses to `body2`'s 13px and inherits the label's font size. The `MuiStepIcon` override restores the 24×24 contract globally so the canonical Example renders correctly with no call-site `sx`.
+
+If the Stepper renders smaller than 24×24 in a consumer app, the **theme** is missing or broken — fix the theme override, not the call site.
+
+**MUI default vs NEO 2.1 — error state.** MUI's stock `<StepIcon>` swaps the step number for a warning glyph when `error` is set. NEO 2.1 keeps the step number and only changes the circle colour to `error.main`. To match Figma in code, override `StepIconComponent` at the call site so the number always renders — keep the rendered circle at `24×24`:
 
 ```tsx
 import { StepIconProps } from '@mui/material';
 
 function StepNumberIcon({ active, completed, error, icon }: StepIconProps) {
-  // … render a 24×24 filled circle whose background flips by state, with the
+  // Render a 24×24 filled circle whose background flips by state, with the
   // raw `icon` (the step number) inside even when `error` is true.
+  // Do NOT scale the circle — the design size is 24×24, full stop.
 }
 
 <StepLabel StepIconComponent={StepNumberIcon} error={…}>{label}</StepLabel>
 ```
 
-Production code does not theme `MuiStepper` globally — call sites bump the icon size with inline `sx`:
-
-```tsx
-<Stepper sx={{ '& .MuiStepIcon-root': { fontSize: '2.4rem' } }}>…</Stepper>
-// or per-StepLabel:
-<StepLabel slotProps={{ stepIcon: { sx: { width: 24, height: 24 } } }}>…</StepLabel>
-```
-
-This pattern is used in `WizardStepper` (`@alation/data-products/product-ui`) and `StepsSidebar` (`@alation/cde/ui`). Mirror it; do not invent custom step icons.
+**Historical note.** `WizardStepper` (`@alation/data-products/product-ui`) and `StepsSidebar` (`@alation/cde/ui`) carry legacy inline `sx` that bumped the icon size before the morpheus `MuiStepIcon` override existed. Strip that `sx` on next touch — the theme handles sizing now. If you need the NEO-style error icon, copy only the `StepNumberIcon` shape above; do not import the historical size overrides those modules may still carry.
 
 ## 8. Mock data content
 

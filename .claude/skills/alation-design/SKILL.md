@@ -33,6 +33,10 @@ Each reference lives in a per-element folder that contains three files:
 - `Example.tsx` — the canonical runnable pattern. Copy this as the starting point for generated code — do not reconstruct from prose.
 - `preview.html` — static homepage preview (for the browsable catalog; humans view this, AI reads `usage.md` + `Example.tsx`)
 
+> **MANDATORY — `usage.md` is non-skippable.** For every intent in the request, you MUST open the matching `usage.md` and read its **Contract Block** (Guarantees / Prohibitions / Conditions) **before** writing any code. `Example.tsx` alone is **not** sufficient — it shows a pattern but does not encode prohibitions, conditions, or "do not use when" rules. Reading only `Example.tsx` will silently violate prohibitions you didn't know existed (e.g. `subtitle1` vs `subtitle2` labels inside a Dialog, multi-step flows belonging on a page not a Dialog, `size="xsmall"` on Chip not being supported by the local theme override). The pre-flight Contract Audit (see `design-checklist.md` §3) requires you to **list, in your response, the Prohibitions and Conditions you extracted from each `usage.md`**. If you cannot list them, you have not done the read — go back and do it.
+
+> **When `usage.md` cites `MuiX.overrides.ts/tsx`**, the bundled mirror lives at `references/theme/MuiX.overrides.ts/tsx` (see "Theme bundle" below). Open that file when you need to verify what the override does or confirm it is mirrored into the consumer workspace.
+
 | Intent | Reference |
 |---|---|
 | Any colour or palette decision | `references/foundations/colours/usage.md` |
@@ -68,6 +72,23 @@ Each reference lives in a per-element folder that contains three files:
 | Any collapsible content section / disclosure surface (settings sections, FAQ, optional config, side-panel groups) | `references/components/composite/accordion/usage.md` |
 
 **Workflow:** After opening `usage.md` for an element, also open the sibling `Example.tsx`. That file is the canonical, tested pattern — use it as the baseline for what you generate and deviate only when the request demands it.
+
+## Theme bundle (runtime prerequisite)
+
+The skill ships a runtime theme bundle at `references/theme/`. Every override file a `usage.md` attributes to "the morpheus theme" has its canonical mirror in this folder. See `references/theme/_index.md` for the full file list, the per-element mapping, and the gaps.
+
+**Mapping rule:**
+- `usage.md` cites `MuiButton.overrides.ts` → bundled file is `references/theme/MuiButton.overrides.ts` (same basename).
+- This applies to every override file referenced in any `usage.md`.
+
+**Why this matters:** `Example.tsx` is call-site code — it assumes the theme override is registered globally. If the consumer workspace's `componentOverrides` barrel does not include the bundled override, the call-site code renders incorrectly even though it follows every rule in `usage.md`. The `MuiStepIcon` / tiny-step-circle bug is the canonical example.
+
+**Before generating UI in a consumer workspace:**
+1. Verify each override file the request depends on is mirrored into the consumer's `componentOverrides` barrel (typical path: `packages/ui/src/theme/componentOverrides/`).
+2. If any are missing, mirror them from `references/theme/` — verbatim copy, no edits.
+3. If you cannot mirror (read-only workspace, locked package), surface it in the Contract Audit's "Conflicts" line and stop. Do not author inline `sx` workarounds at the call site to compensate — that violates the prohibition the override exists to enforce.
+
+The bundle is **append-only and verbatim**. Never edit a file in `references/theme/` to fix a per-consumer issue — fix it in production morpheus first, then re-mirror.
 
 ## Post-flight
 
