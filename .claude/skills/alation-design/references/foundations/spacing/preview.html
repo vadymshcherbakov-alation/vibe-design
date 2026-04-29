@@ -80,6 +80,7 @@
       font-weight: 500;
     }
     .row .stripe {
+      box-sizing: content-box; /* width = inner gap; borders are visual ticks outside it */
       height: 16px;
       background: var(--primary-soft);
       border-left: 2px solid var(--primary-main);
@@ -108,6 +109,8 @@
       border: 1px solid var(--neutral-400);
       border-radius: var(--radius-2);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     .example .label {
       font-family: var(--font-mono);
@@ -121,7 +124,8 @@
     .ex-page {
       background: var(--neutral-300);
       padding: 32px;  /* p: 4 */
-      height: 160px;
+      min-height: 160px;
+      flex: 1;
     }
     .ex-page .inner {
       background: var(--paper);

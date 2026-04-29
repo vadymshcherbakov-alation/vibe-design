@@ -18,8 +18,10 @@
       --divider:        #D4DDE2;
       --primary-main:   #0073DD;
       --primary-dark:   #0056A6;
+      --primary-soft:   #D9EEFF;
       --error-main:     #CA334A;
       --error-dark:     #A62839;
+      --shell-dark:     #0D1322;
       --radius-btn:    6px;
       --radius-input:  4px;
       --radius-2:      12px;
@@ -40,10 +42,15 @@
       font-size: 28px; font-weight: 600; line-height: 1.25;
       letter-spacing: -0.01em; margin: 0 0 8px 0;
     }
-    p.page-sub {
+    .page-sub {
       font-size: 14px; line-height: 1.6; color: var(--text-secondary);
       margin: 0 0 32px 0;
     }
+    .page-sub p { margin: 0 0 10px 0; }
+    .page-sub p:last-child { margin-bottom: 0; }
+    .page-sub strong { font-weight: 600; color: var(--text-primary); }
+    .page-sub em { font-style: italic; }
+    .page-sub a { color: var(--primary-main); text-decoration: underline; }
     h2.section {
       font-size: 14px; font-weight: 500; color: var(--text-secondary);
       letter-spacing: 0.06em; text-transform: uppercase;
@@ -66,37 +73,38 @@
       padding: 20px 24px;
       margin-bottom: 12px;
       display: grid;
-      grid-template-columns: 180px 1fr;
+      grid-template-columns: 160px 220px 1fr;
       gap: 24px;
       align-items: baseline;
     }
-    .specimen .meta {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
+    .specimen .meta { line-height: 1.5; }
     .specimen .meta .name {
-      color: var(--text-primary); font-weight: 500; display: block; margin-bottom: 2px;
       font-family: var(--font-body);
+      font-size: 13px; font-weight: 500;
+      color: var(--text-primary); display: block; margin-bottom: 2px;
+    }
+    .specimen .meta .figma {
+      font-family: var(--font-body);
+      font-size: 11.5px; color: var(--text-secondary);
+    }
+    .specimen .meta .figma strong { color: var(--text-primary); font-weight: 500; }
+    .specimen .desc {
+      font-family: var(--font-body);
+      font-size: 12.5px; color: var(--text-secondary); line-height: 1.5;
     }
     .specimen .sample { color: var(--text-primary); }
 
-    /* Variant samples */
-    .v-h1        { font-size: 28px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
-    .v-h3        { font-size: 22px; font-weight: 600; line-height: 1.3; }
-    .v-h4        { font-size: 18px; font-weight: 600; line-height: 1.35; }
-    .v-h5        { font-size: 16px; font-weight: 500; line-height: 1.4; }
-    .v-subtitle1 { font-size: 14px; font-weight: 500; line-height: 1.43; }
-    .v-subtitle2 { font-size: 13px; font-weight: 500; line-height: 1.43; }
-    .v-body0     { font-size: 15px; font-weight: 400; line-height: 1.5; }
-    .v-body1     { font-size: 14px; font-weight: 400; line-height: 1.5; }
-    .v-body2     { font-size: 13px; font-weight: 400; line-height: 1.5; }
-    .v-caption   { font-size: 12px; font-weight: 400; line-height: 1.5; color: var(--text-secondary); }
-    .v-overline  { font-size: 11px; font-weight: 500; line-height: 1.5; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
-    .v-hero      { font-size: 44px; font-weight: 400; line-height: 1.1; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; }
-    .v-machine1  { font-family: var(--font-mono); font-size: 14px; font-weight: 400; line-height: 1.5; }
-    .v-machine2  { font-family: var(--font-mono); font-size: 13px; font-weight: 400; line-height: 1.5; }
+    /* Figma-aligned variant samples (NEO 2.1 text styles) */
+    .v-h1        { font-family: var(--font-body); font-size: 22px; font-weight: 500; line-height: 1.45; }
+    .v-h2        { font-family: var(--font-body); font-size: 18px; font-weight: 500; line-height: 1.33; }
+    .v-h3        { font-family: var(--font-body); font-size: 16px; font-weight: 500; line-height: 1.5; }
+    .v-subtitle1 { font-family: var(--font-body); font-size: 14px; font-weight: 500; line-height: 1.5; }
+    .v-subtitle2 { font-family: var(--font-body); font-size: 13px; font-weight: 500; line-height: 1.5; }
+    .v-body1     { font-family: var(--font-body); font-size: 13px; font-weight: 400; line-height: 1.54; }
+    .v-body2     { font-family: var(--font-body); font-size: 12px; font-weight: 400; line-height: 1.33; }
+    .v-button    { font-family: var(--font-body); font-size: 13px; font-weight: 500; line-height: 1.54; }
+    .v-machine1  { font-family: var(--font-mono); font-size: 13px; font-weight: 400; line-height: 1.43; letter-spacing: -0.025em; }
+    .v-machine2  { font-family: var(--font-mono); font-size: 12px; font-weight: 400; line-height: 1.23; letter-spacing: -0.025em; }
 
     .note {
       font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
@@ -146,7 +154,7 @@
 <body>
   <div class="shell">
     <h1 class="page-title">Typography</h1>
-    <p class="page-sub">The Alation type system. Every variant encodes a specific role on the page — page title, card title, body, metadata, big-number display — and carries the font, size, weight, and line-height that match that role.</p>
+    <div class="page-sub"><p>The Alation type system. Every variant encodes a specific role on the page — page title, card title, body, metadata, big-number display — and carries the font, size, weight, and line-height that match that role.</p></div>
 
     <!-- classification-begin -->
     <h2 class="section">Classification</h2>
@@ -160,74 +168,99 @@
 
 <h2 class="section">Type families</h2>
     <div class="family">
-      <div class="sample-inter">Inter — Aa Bb 1234567890</div>
+      <div class="sample-inter">Inter — The quick brown fox jumps over the lazy dog</div>
       <div class="name">Body</div>
-      <div class="stack">Inter, ui-sans-serif, system-ui, sans-serif, "Open Sans", "Lucida Grande", "Segoe UI", Arial</div>
-      <div class="used-by">Used by <strong>h1–h5</strong>, <strong>subtitle1/2</strong>, <strong>body0–body2</strong>, <strong>caption</strong>, <strong>overline</strong>, <strong>hero</strong>.</div>
+      <div class="stack">font/family/body · Inter, ui-sans-serif, system-ui, sans-serif, "Open Sans", "Lucida Grande", "Segoe UI", Arial</div>
+      <div class="used-by">Used by every non-monospace variant: <strong>h1–h3</strong>, <strong>subtitle1/2</strong>, <strong>body0–body2</strong>, <strong>caption</strong>, <strong>overline</strong>, <strong>hero*</strong>, <strong>button*</strong>.</div>
     </div>
     <div class="family">
-      <div class="sample-mono">JetBrains Mono — Aa Bb 1234567890</div>
+      <div class="sample-mono">JetBrains Mono — 0x1A2B3C4D5E</div>
       <div class="name">Machine</div>
-      <div class="stack">"JetBrains Mono", Consolas, "Liberation Mono", Courier, monospace</div>
-      <div class="used-by">Used by <strong>machineBody1</strong>, <strong>machineBody2</strong> — identifiers, code, hashes.</div>
+      <div class="stack">font/family/mono-body · "JetBrains Mono", Consolas, "Liberation Mono", Courier, monospace</div>
+      <div class="used-by">Used by <strong>machineBody1</strong>, <strong>machineBody2</strong> and other <strong>machine*</strong> variants — identifiers, code, hashes.</div>
     </div>
 
     <h2 class="section">Type scale</h2>
+    <p class="page-sub" style="margin-bottom: 16px;">The ten Figma text styles from the NEO 2.1 Typography page. Each MUI variant maps 1:1 to a Figma text style — pick a row by what the text <em>does</em>, not the size you want.</p>
     <div class="specimen">
-      <div class="meta"><span class="name">h1</span>Page titles — inside PageHeaderSection</div>
+      <div class="meta">
+        <span class="name">h1</span>
+        <span class="figma">Figma · <strong>Header - H1</strong></span>
+      </div>
+      <div class="desc">Page titles. One per page, inside the Page Header. 22px / Semibold.</div>
       <div class="sample v-h1">Data sources settings</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">h3</span>Major section headings inside a page</div>
-      <div class="sample v-h3">Connected sources</div>
+      <div class="meta">
+        <span class="name">h2</span>
+        <span class="figma">Figma · <strong>Header - H2</strong></span>
+      </div>
+      <div class="desc">Major section title within a page. 18px / Semibold.</div>
+      <div class="sample v-h2">Connected sources</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">h4</span>Section headings inside a page</div>
-      <div class="sample v-h4">Recent activity</div>
+      <div class="meta">
+        <span class="name">h3</span>
+        <span class="figma">Figma · <strong>Header - H3</strong></span>
+      </div>
+      <div class="desc">Section heading inside a page or large card. 16px / Medium.</div>
+      <div class="sample v-h3">Recent activity</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">h5</span>Legacy — prefer subtitle1 for new work</div>
-      <div class="sample v-h5">Card heading (legacy)</div>
-    </div>
-    <div class="specimen">
-      <div class="meta"><span class="name">subtitle1</span>Card and panel titles · 14px / 500 · renders as &lt;h6&gt;</div>
+      <div class="meta">
+        <span class="name">subtitle1</span>
+        <span class="figma">Figma · <strong>Subtitle1</strong></span>
+      </div>
+      <div class="desc">Card and panel titles. Form-field labels. 14px / Medium.</div>
       <div class="sample v-subtitle1">Total catalog objects</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">subtitle2</span>Secondary card label · 13px / 500</div>
+      <div class="meta">
+        <span class="name">subtitle2</span>
+        <span class="figma">Figma · <strong>Subtitle2</strong></span>
+      </div>
+      <div class="desc">Secondary card label · compact heading inside dense surfaces. 13px / Medium.</div>
       <div class="sample v-subtitle2">Last synced 2 hours ago</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">body0</span>Slightly larger body · Alation custom</div>
-      <div class="sample v-body0">Connect and manage data sources across your organization.</div>
-    </div>
-    <div class="specimen">
-      <div class="meta"><span class="name">body1</span>Primary body text</div>
+      <div class="meta">
+        <span class="name">body1</span>
+        <span class="figma">Figma · <strong>Body1</strong></span>
+      </div>
+      <div class="desc">Default paragraph text — the base reading size. 13px / Regular · 20px line.</div>
       <div class="sample v-body1">Alation indexes tables, columns, and business terms across every source you connect, so search results work the same everywhere.</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">body2</span>Secondary body · descriptions</div>
+      <div class="meta">
+        <span class="name">body2</span>
+        <span class="figma">Figma · <strong>Body2</strong></span>
+      </div>
+      <div class="desc">Secondary body · descriptions, helper text, dense table rows. 12px / Regular.</div>
       <div class="sample v-body2">Adds approximately 12,400 tables to the catalog. Indexing begins within 10 minutes of connection.</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">caption</span>Timestamps, metadata, fine print</div>
-      <div class="sample v-caption">Updated 2 hours ago · Owner: vadym.shcherbakov@alation.com</div>
+      <div class="meta">
+        <span class="name">button</span>
+        <span class="figma">Figma · <strong>Button</strong></span>
+      </div>
+      <div class="desc">Theme-owned · consumed by &lt;Button&gt;. Never pass to Typography directly. 13px / Medium.</div>
+      <div class="sample v-button">Connect source</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">overline</span>Category labels · eyebrow text</div>
-      <div class="sample v-overline">Governance · Data quality</div>
-    </div>
-    <div class="specimen">
-      <div class="meta"><span class="name">hero</span>Large display numbers · big-number stat cards</div>
-      <div class="sample v-hero">21,265,450</div>
-    </div>
-    <div class="specimen">
-      <div class="meta"><span class="name">machineBody1</span>Monospace body · code, identifiers</div>
+      <div class="meta">
+        <span class="name">machineBody1</span>
+        <span class="figma">Figma · <strong>Mono - Body1</strong></span>
+      </div>
+      <div class="desc">Monospace body — code, identifiers, hashes. 13px / Regular.</div>
       <div class="sample v-machine1">src/lib/MuiTypography.overrides.ts</div>
     </div>
     <div class="specimen">
-      <div class="meta"><span class="name">machineBody2</span>Monospace compact · inline code</div>
-      <div class="sample v-machine2">const theme = createTheme(morpheus);</div>
+      <div class="meta">
+        <span class="name">machineBody2</span>
+        <span class="figma">Figma · <strong>Mono - Body2</strong></span>
+      </div>
+      <div class="desc">Monospace compact — inline code, short identifiers. 12px / Regular.</div>
+      <div class="sample v-machine2">const data = { key: 'value' };</div>
     </div>
 
   </div>
@@ -363,7 +396,7 @@
   }
 </style>
 
-<div class="md-viewer" data-open="closed" data-exclude-h2="classification,example,examples,purpose,type,type families,type scale,variants" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IHR5cG9ncmFwaHkKdGl0bGU6IFR5cG9ncmFwaHkKY2F0ZWdvcnk6IGZvdW5kYXRpb24KbGFzdF91cGRhdGVkOiAyMDI2LTA0LTI0CgpkZXNjcmlwdGlvbjogPgogIFRoZSBBbGF0aW9uIHR5cGUgc3lzdGVtLiBHb3Zlcm5zIGV2ZXJ5IHBpZWNlIG9mIHZpc2libGUgdGV4dCB2aWEgYDxUeXBvZ3JhcGh5IHZhcmlhbnQ9IuKApiI+YC4gTmV2ZXIgcmVuZGVyIHRleHQgdGhyb3VnaCByYXcgSFRNTDsgbmV2ZXIgb3ZlcnJpZGUgZm9udCBzdHlsaW5nIHZpYSBgc3hgLgp0YWdzOiBbZm91bmRhdGlvbiwgdHlwb2dyYXBoeSwgdGV4dF0KCmZpZ21hX3VybDogImh0dHBzOi8vd3d3LmZpZ21hLmNvbS9kZXNpZ24vY0hrYW1kdlB6MUlrbVFTd2pxV0hkWC9ORU8tMi4xLS0tRGVzaWduLVN5c3RlbT9tPWF1dG8mbm9kZS1pZD0yOTczLTY1ODMmdD1lUzVSZVNENFpzQ01hMDhhLTEiCmNvZGVfcmVmZXJlbmNlOiBmYWJyaWMtdGhlbWUtbW9ycGhldXMvc3JjL2xpYi9NdWlUeXBvZ3JhcGh5Lm92ZXJyaWRlcy50cwpleGFtcGxlX3BhdGg6IC4vRXhhbXBsZS50c3gKCm11aV9iYXNlOiB0eXBvZ3JhcGh5CmRlcGVuZHNfb25fdG9rZW5zOiBbXQpkZXBlbmRzX29uX2NvbXBvbmVudHM6IFtdCi0tLQoKIyBUeXBvZ3JhcGh5CgojIyAxLiBDbGFzc2lmaWNhdGlvbgoKLSAqKlR5cGU6KiogRm91bmRhdGlvbgotICoqTVVJIGJhc2U6KiogYHR5cG9ncmFwaHlgCi0gKipGaWdtYToqKiBbVHlwZSBzdHlsZXMgwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP209YXV0byZub2RlLWlkPTI5NzMtNjU4MyZ0PWVTNVJlU0Q0WnNDTWEwOGEtMSkKLSAqKkNvZGU6KiogYGZhYnJpYy10aGVtZS1tb3JwaGV1c2Ag4oCUIGBzcmMvbGliL011aVR5cG9ncmFwaHkub3ZlcnJpZGVzLnRzYAoKIyMgMi4gUHVycG9zZQoKCgpUaGUgQWxhdGlvbiB0eXBlIHN5c3RlbS4gRXZlcnkgdmFyaWFudCBlbmNvZGVzIGEgc3BlY2lmaWMgcm9sZSBvbiB0aGUgcGFnZSDigJQgcGFnZSB0aXRsZSwgY2FyZCB0aXRsZSwgYm9keSwgbWV0YWRhdGEsIGJpZy1udW1iZXIgZGlzcGxheSDigJQgYW5kIGNhcnJpZXMgdGhlIGZvbnQsIHNpemUsIHdlaWdodCwgYW5kIGxpbmUtaGVpZ2h0IHRoYXQgbWF0Y2ggdGhhdCByb2xlLgoKIyMgMy4gSG93IHRvIHVzZQoKCgpUeXBvZ3JhcGh5IGlzIHZhcmlhbnQtZHJpdmVuLiBQaWNrIGEgdmFyaWFudCBiYXNlZCBvbiB3aGF0IHRoZSB0ZXh0ICpkb2VzKiBvbiB0aGUgcGFnZSwgbm90IHRoZSBzaXplIHlvdSB3YW50IGl0IHRvIGJlIOKAlCB0aGUgdGhlbWUgYmFrZXMgaW4gdGhlIGNvcnJlY3QgZmFtaWx5LCBzaXplLCB3ZWlnaHQsIGFuZCBsaW5lLWhlaWdodCBmb3IgZWFjaCByb2xlLgoKLSAqKkJvZHkgZmFtaWx5Kiog4oCUIHRoZSBkZWZhdWx0IFVJIGZhY2UsIHVzZWQgYnkgZXZlcnkgbm9uLW1vbm9zcGFjZSB2YXJpYW50IChoZWFkaW5ncywgc3VidGl0bGVzLCBib2R5LCBjYXB0aW9uLCBvdmVybGluZSwgaGVybykuCi0gKipNYWNoaW5lIGZhbWlseSoqIOKAlCByZXNlcnZlZCBmb3IgaWRlbnRpZmllcnMsIGNvZGUsIGhhc2hlcy4gQWNjZXNzZWQgb25seSB0aHJvdWdoIHRoZSBgbWFjaGluZSpgIHZhcmlhbnRzLiBOZXZlciB0b2dnbGUgaXQgb250byBhIGJvZHkgdmFyaWFudC4KLSAqKkRpc3BsYXkgbnVtYmVycyoqIOKAlCB1c2UgYGhlcm9gIGZvciBiaWctbnVtYmVyIHN0YXQgY2FyZHM7IGBoZXJvTGdgIC8gYGhlcm9YbGAgZm9yIHJhcmUgZGFzaGJvYXJkIG9yIG1hcmtldGluZyBoZXJvIHNsb3RzLgotICoqQ2FyZCBhbmQgcGFuZWwgdGl0bGVzKiog4oCUIHVzZSBgc3VidGl0bGUxYC4gSXQgcmVuZGVycyBhcyBhbiBgPGg2PmAgYW5kIG1hdGNoZXMgdGhlIHdlaWdodCAvIHNpemUgb3VyIHBhbmVscyBleHBlY3QuCgpJZiBhIGRlc2lnbiBjYWxscyBmb3IgYSBzaXplIG9yIHdlaWdodCB0aGF0IG5vIHZhcmlhbnQgY292ZXJzLCB0aGF0IGlzIGEgc2lnbmFsIHRvIHByb3Bvc2UgYSBuZXcgdmFyaWFudCBhZ2FpbnN0IHRoZSB0aGVtZSDigJQgbm90IHRvIGhhbmQtdHVuZSBgZm9udFNpemVgIG9yIGBmb250V2VpZ2h0YCB2aWEgYHN4YC4KCiMjIDQuIENvbnRyYWN0CgoKCiMjIyBHdWFyYW50ZWVzCi0gRXZlcnkgdmFyaWFudCBzaGlwcyBhIHRoZW1lLWJha2VkIGZhbWlseSwgc2l6ZSwgd2VpZ2h0LCBhbmQgbGluZS1oZWlnaHQg4oCUIHVzaW5nIGEgdmFyaWFudCBndWFyYW50ZWVzIGNvbnNpc3RlbnQgdmVydGljYWwgcmh5dGhtIGFuZCB3ZWlnaHQgYWNyb3NzIHRoZSBhcHAuCi0gYGNvbG9yPSJ0ZXh0LnByaW1hcnkiYCAvIGAidGV4dC5zZWNvbmRhcnkiYCAvIGAidGV4dC5kaXNhYmxlZCJgIG1lZXQgV0NBRyBBQSBjb250cmFzdCBvbiBgYmFja2dyb3VuZC5kZWZhdWx0YCAvIGBiYWNrZ3JvdW5kLnBhcGVyYC4KLSBgPFR5cG9ncmFwaHk+YCByZW5kZXJzIHRoZSBjb3JyZWN0IHNlbWFudGljIEhUTUwgZWxlbWVudCAoYGgxYCwgYGg2YCwgYHBgLCBgc3BhbmApIGJhc2VkIG9uIGl0cyB2YXJpYW50LgotIGBmYWJyaWMtdGhlbWUtbW9ycGhldXMvc3JjL2xpYi9NdWlUeXBvZ3JhcGh5Lm92ZXJyaWRlcy50c2AgcmVnaXN0ZXJzIGV2ZXJ5IGN1c3RvbSB2YXJpYW50IChgYm9keTBgLCBgaGVybypgLCBgc3VidGl0bGUxLzJgLCBgbWFjaGluZSpgLCBldGMuKSBhcyBhIGZpcnN0LWNsYXNzIHR5cG9ncmFwaHkga2V5LgoKIyMjIFByb2hpYml0aW9ucwotIE5ldmVyIHJlbmRlciByYXcgSFRNTCB0ZXh0IGVsZW1lbnRzIOKAlCBubyBgPHA+YCwgYDxzcGFuPmAsIGA8aDE+YOKAk2A8aDY+YCwgYDxsYWJlbD5gLCBgPHNtYWxsPmAuIEFsd2F5cyBgPFR5cG9ncmFwaHkgdmFyaWFudD0i4oCmIj5gLgotIE5ldmVyIG92ZXJyaWRlIGBmb250U2l6ZWAsIGBmb250V2VpZ2h0YCwgYGZvbnRGYW1pbHlgLCBgbGV0dGVyU3BhY2luZ2AsIG9yIGBsaW5lSGVpZ2h0YCB2aWEgYHN4YC4gUGljayB0aGUgcmlnaHQgdmFyaWFudCBpbnN0ZWFkLgotIE5ldmVyIGhhcmQtY29kZSBoZXggY29sb3VycyBpbiB0ZXh0IOKAlCB1c2UgdGhlIGBjb2xvcj0idGV4dC5zZWNvbmRhcnkiYCBwcm9wIChvciB0aGUgbWF0Y2hpbmcgc2VtYW50aWMgdG9rZW4pLgotIE5ldmVyIHRvZ2dsZSB0aGUgbW9ub3NwYWNlIGZhbWlseSBvbnRvIGEgYm9keSB2YXJpYW50IOKAlCB1c2UgYG1hY2hpbmVCb2R5MWAgLyBgbWFjaGluZUJvZHkyYC4KLSBOZXZlciB3cmFwIGA8VHlwb2dyYXBoeT5gIGluc2lkZSBhIGA8QnV0dG9uPmAsIGA8Q2hpcD5gLCBvciBmb3JtIGlucHV0IOKAlCB0aG9zZSBjb21wb25lbnRzIHJlbmRlciB0aGVpciBvd24gdGhlbWUtYmFrZWQgdGV4dC4KLSBOb3RoaW5nIG91dHNpZGUgwqc1IFZhcmlhbnRzIGlzIHZhbGlkLgoKIyMjIENvbmRpdGlvbnMKLSBJZiBhIHZhcmlhbnQgZG9lcyBub3QgZXhpc3QgZm9yIHdoYXQgdGhlIGRlc2lnbiBuZWVkcywgc3RvcCBhbmQgZmxhZyDigJQgcHJvcG9zZSBhIG5ldyB2YXJpYW50IGFnYWluc3QgbW9ycGhldXMsIGRvIG5vdCBzaW11bGF0ZSB3aXRoIGBzeGAuCi0gVGhlIG9ubHkgYHN4YCBvdmVycmlkZSBhbGxvd2VkIG9uIGA8VHlwb2dyYXBoeT5gIGlzIGBjb2xvcmAsIGFuZCBwcmVmZXIgdGhlIGBjb2xvcj0idGV4dC5zZWNvbmRhcnkiYCBwcm9wIHdoZW4gYSBzZW1hbnRpYyB0b2tlbiBleGlzdHMuCgojIyA1LiBWYXJpYW50cwoKCgojIyMgNS4xIERpc3BsYXkgJiBoZWFkaW5ncwoKfCBWYXJpYW50IHwgVXNlIGZvciB8CnwtLS18LS0tfAp8IGBoZXJvWGxgIHwgRXh0cmEtbGFyZ2UgZGlzcGxheSBudW1iZXJzIChyYXJlLCBsYW5kaW5nIC8gbWFya2V0aW5nKSB8CnwgYGhlcm9MZ2AgfCBMYXJnZSBkaXNwbGF5IG51bWJlcnMgKGhlcm8gbnVtYmVycyBvbiBkYXNoYm9hcmRzKSB8CnwgYGhlcm9gIHwgTGFyZ2UgZGlzcGxheSBudW1iZXJzIChiaWctbnVtYmVyIHN0YXQgY2FyZHMpIHwKfCBgaDFgIHwgUGFnZSB0aXRsZXMgfAp8IGBoMmAgfCBNYWpvciBzZWN0aW9uIHRpdGxlIHdpdGhpbiBhIHBhZ2UgfAp8IGBoM2AgfCBTZWN0aW9uIGhlYWRpbmcgaW5zaWRlIGEgcGFnZSB8CnwgYGg0YCB8IFN1Yi1zZWN0aW9uIGhlYWRpbmcgaW5zaWRlIGEgcGFnZSB8CnwgYGg1YCB8IENhcmQgb3IgcGFuZWwgaGVhZGluZyAobGVnYWN5IOKAlCBwcmVmZXIgYHN1YnRpdGxlMWApIHwKfCBgaDZgIHwgVmVyeSBjb21wYWN0IGhlYWRpbmcgKGxlZ2FjeSkgfAp8IGBzdWJ0aXRsZTFgIHwgQ2FyZCBhbmQgcGFuZWwgdGl0bGVzIOKAlCByZW5kZXJzIGFzIGA8aDY+YCB8CnwgYHN1YnRpdGxlMmAgfCBTZWNvbmRhcnkgY2FyZCBsYWJlbCBvciBjb21wYWN0IGhlYWRpbmcgfAoKIyMjIDUuMiBCb2R5ICYgbWV0YQoKfCBWYXJpYW50IHwgVXNlIGZvciB8CnwtLS18LS0tfAp8IGBib2R5MGAgfCBTbGlnaHRseSBsYXJnZXIgYm9keSAoQWxhdGlvbiBjdXN0b20g4oCUIHVzZWQgaW4gZm9ybS1maWVsZCBsYWJlbHMpIHwKfCBgYm9keTFgIHwgUHJpbWFyeSBib2R5IHRleHQgfAp8IGBib2R5MmAgfCBTZWNvbmRhcnkgYm9keSB0ZXh0LCBkZXNjcmlwdGlvbnMgfAp8IGBjYXB0aW9uYCB8IFRpbWVzdGFtcHMsIG1ldGFkYXRhLCBmaW5lIHByaW50IHwKfCBgb3ZlcmxpbmVgIHwgQ2F0ZWdvcnkgbGFiZWxzLCBleWVicm93IHRleHQgfAoKIyMjIDUuMyBCdXR0b24gdHlwb2dyYXBoeSAodGhlbWUtb3duZWQg4oCUIGNvbnN1bWVkIGJ5IGA8QnV0dG9uPmAsIG5ldmVyIHBhc3NlZCBkaXJlY3RseSkKCnwgVmFyaWFudCB8IFVzZSBmb3IgfAp8LS0tfC0tLXwKfCBgYnV0dG9uTGdgIHwgTGFyZ2UgQnV0dG9uIGxhYmVsIHwKfCBgYnV0dG9uYCB8IERlZmF1bHQgLyBtZWRpdW0gQnV0dG9uIGxhYmVsIHwKfCBgYnV0dG9uU21gIHwgU21hbGwgLyB4c21hbGwgQnV0dG9uIGxhYmVsIHwKCiMjIyA1LjQgTWFjaGluZSAobW9ub3NwYWNlIOKAlCBKZXRCcmFpbnMgTW9ubykKCnwgVmFyaWFudCB8IFVzZSBmb3IgfAp8LS0tfC0tLXwKfCBgbWFjaGluZUhlcm9gIHwgTGFyZ2UgbW9ub3NwYWNlIGRpc3BsYXkgKHJhcmUg4oCUIGlkZW50aWZpZXJzIGluIGhlcm8gc2xvdHMpIHwKfCBgbWFjaGluZUgxYOKAk2BtYWNoaW5lSDZgIHwgTW9ub3NwYWNlIGhlYWRpbmdzIHwKfCBgbWFjaGluZVN1YnRpdGxlMWAsIGBtYWNoaW5lU3VidGl0bGUyYCB8IE1vbm9zcGFjZSBzdWJ0aXRsZXMgfAp8IGBtYWNoaW5lQm9keTBgIHwgU2xpZ2h0bHkgbGFyZ2VyIG1vbm9zcGFjZSBib2R5IHwKfCBgbWFjaGluZUJvZHkxYCB8IE1vbm9zcGFjZSBib2R5IOKAlCBjb2RlLCBpZGVudGlmaWVycyB8CnwgYG1hY2hpbmVCb2R5MmAgfCBNb25vc3BhY2UgY29tcGFjdCDigJQgaW5saW5lIGNvZGUsIHNob3J0IGlkZW50aWZpZXJzIHwKfCBgbWFjaGluZU92ZXJsaW5lYCB8IE1vbm9zcGFjZSBleWVicm93IGxhYmVsIHwKfCBgbWFjaGluZUJ1dHRvbmAsIGBtYWNoaW5lQnV0dG9uTGdgLCBgbWFjaGluZUJ1dHRvblNtYCB8IE1vbm9zcGFjZSBidXR0b24gbGFiZWxzICh0aGVtZS1vd25lZCkgfAoKIyMjIDUuNSBUeXBlIGZhbWlsaWVzICh0aGVtZS1vd25lZCDigJQgdmFyaWFudHMgc2VsZWN0IHRoZSBmYW1pbHkgYXV0b21hdGljYWxseSkKCnwgRmFtaWx5IHwgU3RhY2sgfCBVc2VkIGJ5IHwKfC0tLXwtLS18LS0tfAp8IEJvZHkgfCBgSW50ZXIsIHVpLXNhbnMtc2VyaWYsIHN5c3RlbS11aSwgc2Fucy1zZXJpZiwgIk9wZW4gU2FucyIsICJMdWNpZGEgR3JhbmRlIiwgIlNlZ29lIFVJIiwgQXJpYWxgIHwgQWxsIG5vbi1tb25vc3BhY2UgdmFyaWFudHMgfAp8IE1hY2hpbmUgfCBgIkpldEJyYWlucyBNb25vIiwgQ29uc29sYXMsICJMaWJlcmF0aW9uIE1vbm8iLCBDb3VyaWVyLCBtb25vc3BhY2VgIHwgYG1hY2hpbmUqYCB2YXJpYW50cyB8CgojIyMgNS42IEljb24gc2l6ZSB0b2tlbnMgKHR5cG9ncmFwaHktbGV2ZWwg4oCUIGNvbnN1bWVkIGJ5IGljb24gY29udGFpbmVycykKCkljb24gc2l6ZXMgbGl2ZSBpbiB0aGUgdHlwb2dyYXBoeSBsYXllciBzbyBldmVyeSBpY29uIGNvbnRhaW5lciBjYW4gcmVhZCB0aGVtIGJ5IGtleS4gU2VlIFtpY29ub2dyYXBoeV0oLi4vaWNvbm9ncmFwaHkvdXNhZ2UubWQpIGZvciB0aGUgY29udGFpbmVyIOKGkiBzaXplIG1hcHBpbmcuCgp8IFRva2VuIHwgVmFsdWUgfAp8LS0tfC0tLXwKfCBgdHlwb2dyYXBoeS5pY29uWFNtYWxsYCB8IGAxLjJyZW1gIHwKfCBgdHlwb2dyYXBoeS5pY29uU21hbGxgIHwgYDEuNnJlbWAgfAp8IGB0eXBvZ3JhcGh5Lmljb25NZWRpdW1gIHwgYDJyZW1gIHwKfCBgdHlwb2dyYXBoeS5pY29uTGFyZ2VgIHwgYDIuNHJlbWAgfAoKIyMgMTEuIEV4YW1wbGUKCmBgYHRzeAppbXBvcnQgeyBUeXBvZ3JhcGh5IH0gZnJvbSAnQG11aS9tYXRlcmlhbCc7Cgo8VHlwb2dyYXBoeSB2YXJpYW50PSJoMSI+UGFnZSB0aXRsZTwvVHlwb2dyYXBoeT4KPFR5cG9ncmFwaHkgdmFyaWFudD0ic3VidGl0bGUxIj5Ub3RhbCBDREVzPC9UeXBvZ3JhcGh5Pgo8VHlwb2dyYXBoeSB2YXJpYW50PSJoZXJvIj4xLDI4NDwvVHlwb2dyYXBoeT4KPFR5cG9ncmFwaHkgdmFyaWFudD0iYm9keTEiPlByaW1hcnkgcGFyYWdyYXBoIGNvbnRlbnQuPC9UeXBvZ3JhcGh5Pgo8VHlwb2dyYXBoeSB2YXJpYW50PSJib2R5MiIgY29sb3I9InRleHQuc2Vjb25kYXJ5Ij5NdXRlZCBoZWxwZXIgdGV4dC48L1R5cG9ncmFwaHk+CjxUeXBvZ3JhcGh5IHZhcmlhbnQ9ImNhcHRpb24iPlVwZGF0ZWQgMiBob3VycyBhZ288L1R5cG9ncmFwaHk+CjxUeXBvZ3JhcGh5IHZhcmlhbnQ9Im1hY2hpbmVCb2R5MiI+c3JjL2xpYi9NdWlUeXBvZ3JhcGh5Lm92ZXJyaWRlcy50czwvVHlwb2dyYXBoeT4KYGBgCgpTZWUgW2BFeGFtcGxlLnRzeGBdKC4vRXhhbXBsZS50c3gpIGZvciB0aGUgY2Fub25pY2FsLCBydW5uYWJsZSBzb3VyY2UuCg==">
+<div class="md-viewer" data-open="closed" data-exclude-h2="classification,example,examples,purpose,type,type families,type scale,variants" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IHR5cG9ncmFwaHkKdGl0bGU6IFR5cG9ncmFwaHkKY2F0ZWdvcnk6IGZvdW5kYXRpb24KbGFzdF91cGRhdGVkOiAyMDI2LTA0LTI5CgpkZXNjcmlwdGlvbjogPgogIFRoZSBBbGF0aW9uIHR5cGUgc3lzdGVtLiBHb3Zlcm5zIGV2ZXJ5IHBpZWNlIG9mIHZpc2libGUgdGV4dCB2aWEgYDxUeXBvZ3JhcGh5IHZhcmlhbnQ9IuKApiI+YC4gTmV2ZXIgcmVuZGVyIHRleHQgdGhyb3VnaCByYXcgSFRNTDsgbmV2ZXIgb3ZlcnJpZGUgZm9udCBzdHlsaW5nIHZpYSBgc3hgLgp0YWdzOiBbZm91bmRhdGlvbiwgdHlwb2dyYXBoeSwgdGV4dF0KCmZpZ21hX3VybDogImh0dHBzOi8vd3d3LmZpZ21hLmNvbS9kZXNpZ24vY0hrYW1kdlB6MUlrbVFTd2pxV0hkWC9ORU8tMi4xLS0tRGVzaWduLVN5c3RlbT9tPWF1dG8mbm9kZS1pZD0yOTczLTY1ODMmdD1lUzVSZVNENFpzQ01hMDhhLTEiCmNvZGVfcmVmZXJlbmNlOiBmYWJyaWMtdGhlbWUtbW9ycGhldXMvc3JjL2xpYi9NdWlUeXBvZ3JhcGh5Lm92ZXJyaWRlcy50cwpleGFtcGxlX3BhdGg6IC4vRXhhbXBsZS50c3gKCm11aV9iYXNlOiB0eXBvZ3JhcGh5CmRlcGVuZHNfb25fdG9rZW5zOiBbXQpkZXBlbmRzX29uX2NvbXBvbmVudHM6IFtdCi0tLQoKIyBUeXBvZ3JhcGh5CgojIyAxLiBDbGFzc2lmaWNhdGlvbgoKLSAqKlR5cGU6KiogRm91bmRhdGlvbgotICoqTVVJIGJhc2U6KiogYHR5cG9ncmFwaHlgCi0gKipGaWdtYToqKiBbVHlwZSBzdHlsZXMgwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP209YXV0byZub2RlLWlkPTI5NzMtNjU4MyZ0PWVTNVJlU0Q0WnNDTWEwOGEtMSkKLSAqKkNvZGU6KiogYGZhYnJpYy10aGVtZS1tb3JwaGV1c2Ag4oCUIGBzcmMvbGliL011aVR5cG9ncmFwaHkub3ZlcnJpZGVzLnRzYAoKIyMgMi4gUHVycG9zZQoKCgpUaGUgQWxhdGlvbiB0eXBlIHN5c3RlbS4gRXZlcnkgdmFyaWFudCBlbmNvZGVzIGEgc3BlY2lmaWMgcm9sZSBvbiB0aGUgcGFnZSDigJQgcGFnZSB0aXRsZSwgY2FyZCB0aXRsZSwgYm9keSwgbWV0YWRhdGEsIGJpZy1udW1iZXIgZGlzcGxheSDigJQgYW5kIGNhcnJpZXMgdGhlIGZvbnQsIHNpemUsIHdlaWdodCwgYW5kIGxpbmUtaGVpZ2h0IHRoYXQgbWF0Y2ggdGhhdCByb2xlLgoKIyMgMy4gSG93IHRvIHVzZQoKCgpUeXBvZ3JhcGh5IGlzIHZhcmlhbnQtZHJpdmVuLiBQaWNrIGEgdmFyaWFudCBiYXNlZCBvbiB3aGF0IHRoZSB0ZXh0ICpkb2VzKiBvbiB0aGUgcGFnZSwgbm90IHRoZSBzaXplIHlvdSB3YW50IGl0IHRvIGJlIOKAlCB0aGUgdGhlbWUgYmFrZXMgaW4gdGhlIGNvcnJlY3QgZmFtaWx5LCBzaXplLCB3ZWlnaHQsIGFuZCBsaW5lLWhlaWdodCBmb3IgZWFjaCByb2xlLiBFYWNoIE1VSSB2YXJpYW50IG1hcHMgMToxIHRvIGEgRmlnbWEgdGV4dCBzdHlsZSAoZS5nLiBgaDFgIOKGlCAqKkhlYWRlciAtIEgxKiosIGBzdWJ0aXRsZTFgIOKGlCAqKlN1YnRpdGxlMSoqKSBzbyBkZXNpZ24gYW5kIGNvZGUgc3RheSBpbiBsb2Nrc3RlcC4KCi0gKipCb2R5IGZhbWlseSoqIChgZm9udC9mYW1pbHkvYm9keWAg4oCUIEludGVyKSDigJQgdGhlIGRlZmF1bHQgVUkgZmFjZSwgdXNlZCBieSBldmVyeSBub24tbW9ub3NwYWNlIHZhcmlhbnQgKGhlYWRpbmdzLCBzdWJ0aXRsZXMsIGJvZHksIGNhcHRpb24sIG92ZXJsaW5lLCBoZXJvKS4KLSAqKk1hY2hpbmUgZmFtaWx5KiogKGBmb250L2ZhbWlseS9tb25vLWJvZHlgIOKAlCBKZXRCcmFpbnMgTW9ubykg4oCUIHJlc2VydmVkIGZvciBpZGVudGlmaWVycywgY29kZSwgaGFzaGVzLiBBY2Nlc3NlZCBvbmx5IHRocm91Z2ggdGhlIGBtYWNoaW5lKmAgdmFyaWFudHMuIE5ldmVyIHRvZ2dsZSBpdCBvbnRvIGEgYm9keSB2YXJpYW50LgotICoqSGVhZGluZ3MqKiDigJQgRmlnbWEgb25seSBkZWZpbmVzICoqSDEgLyBIMiAvIEgzKiouIFVzZSBgaDFgIGZvciBwYWdlIHRpdGxlcywgYGgyYCBmb3IgbWFqb3Igc2VjdGlvbiB0aXRsZXMsIGBoM2AgZm9yIHNlY3Rpb24gaGVhZGluZ3MuIERvIG5vdCByZWFjaCBmb3IgYGg0YOKAk2BoNmA7IGRlZXBlciBoaWVyYXJjaHkgaXMgaGFuZGxlZCBieSBgc3VidGl0bGUxYCAvIGBzdWJ0aXRsZTJgLgotICoqQ2FyZCBhbmQgcGFuZWwgdGl0bGVzKiog4oCUIHVzZSBgc3VidGl0bGUxYCAoMTRweCAvIDUwMCkuIFVzZSBgc3VidGl0bGUyYCAoMTNweCAvIDUwMCkgZm9yIHNlY29uZGFyeSBsYWJlbHMuCi0gKipCb2R5Kiog4oCUIGBib2R5MWAgKDEzcHgpIGlzIHRoZSBkZWZhdWx0IHBhcmFncmFwaDsgYGJvZHkyYCAoMTJweCkgaXMgZm9yIHNlY29uZGFyeSBib2R5IGFuZCBkZXNjcmlwdGlvbnMuIGBib2R5MGAgKDE0cHgpIGlzIGFuIEFsYXRpb24tb25seSB2YXJpYW50IHJlc2VydmVkIGZvciBmb3JtLWZpZWxkIGxhYmVscy4KLSAqKkRpc3BsYXkgbnVtYmVycyoqIOKAlCB1c2UgYGhlcm9gIGZvciBiaWctbnVtYmVyIHN0YXQgY2FyZHM7IGBoZXJvTGdgIC8gYGhlcm9YbGAgZm9yIHJhcmUgZGFzaGJvYXJkIG9yIG1hcmtldGluZyBoZXJvIHNsb3RzLiAoQWxhdGlvbi1vbmx5IOKAlCBub3QgaW4gdGhlIEZpZ21hIHRleHQtc3R5bGUgc2V0LikKCklmIGEgZGVzaWduIGNhbGxzIGZvciBhIHNpemUgb3Igd2VpZ2h0IHRoYXQgbm8gdmFyaWFudCBjb3ZlcnMsIHRoYXQgaXMgYSBzaWduYWwgdG8gcHJvcG9zZSBhIG5ldyB2YXJpYW50IGFnYWluc3QgdGhlIHRoZW1lIOKAlCBub3QgdG8gaGFuZC10dW5lIGBmb250U2l6ZWAgb3IgYGZvbnRXZWlnaHRgIHZpYSBgc3hgLgoKIyMgNC4gQ29udHJhY3QKCgoKIyMjIEd1YXJhbnRlZXMKLSBFdmVyeSB2YXJpYW50IHNoaXBzIGEgdGhlbWUtYmFrZWQgZmFtaWx5LCBzaXplLCB3ZWlnaHQsIGFuZCBsaW5lLWhlaWdodCDigJQgdXNpbmcgYSB2YXJpYW50IGd1YXJhbnRlZXMgY29uc2lzdGVudCB2ZXJ0aWNhbCByaHl0aG0gYW5kIHdlaWdodCBhY3Jvc3MgdGhlIGFwcC4KLSBgY29sb3I9InRleHQucHJpbWFyeSJgIC8gYCJ0ZXh0LnNlY29uZGFyeSJgIC8gYCJ0ZXh0LmRpc2FibGVkImAgbWVldCBXQ0FHIEFBIGNvbnRyYXN0IG9uIGBiYWNrZ3JvdW5kLmRlZmF1bHRgIC8gYGJhY2tncm91bmQucGFwZXJgLgotIGA8VHlwb2dyYXBoeT5gIHJlbmRlcnMgdGhlIGNvcnJlY3Qgc2VtYW50aWMgSFRNTCBlbGVtZW50IChgaDFgLCBgaDZgLCBgcGAsIGBzcGFuYCkgYmFzZWQgb24gaXRzIHZhcmlhbnQuCi0gYGZhYnJpYy10aGVtZS1tb3JwaGV1cy9zcmMvbGliL011aVR5cG9ncmFwaHkub3ZlcnJpZGVzLnRzYCByZWdpc3RlcnMgZXZlcnkgY3VzdG9tIHZhcmlhbnQgKGBib2R5MGAsIGBoZXJvKmAsIGBzdWJ0aXRsZTEvMmAsIGBtYWNoaW5lKmAsIGV0Yy4pIGFzIGEgZmlyc3QtY2xhc3MgdHlwb2dyYXBoeSBrZXkuCgojIyMgUHJvaGliaXRpb25zCi0gTmV2ZXIgcmVuZGVyIHJhdyBIVE1MIHRleHQgZWxlbWVudHMg4oCUIG5vIGA8cD5gLCBgPHNwYW4+YCwgYDxoMT5g4oCTYDxoNj5gLCBgPGxhYmVsPmAsIGA8c21hbGw+YC4gQWx3YXlzIGA8VHlwb2dyYXBoeSB2YXJpYW50PSLigKYiPmAuCi0gTmV2ZXIgb3ZlcnJpZGUgYGZvbnRTaXplYCwgYGZvbnRXZWlnaHRgLCBgZm9udEZhbWlseWAsIGBsZXR0ZXJTcGFjaW5nYCwgb3IgYGxpbmVIZWlnaHRgIHZpYSBgc3hgLiBQaWNrIHRoZSByaWdodCB2YXJpYW50IGluc3RlYWQuCi0gTmV2ZXIgaGFyZC1jb2RlIGhleCBjb2xvdXJzIGluIHRleHQg4oCUIHVzZSB0aGUgYGNvbG9yPSJ0ZXh0LnNlY29uZGFyeSJgIHByb3AgKG9yIHRoZSBtYXRjaGluZyBzZW1hbnRpYyB0b2tlbikuCi0gTmV2ZXIgdG9nZ2xlIHRoZSBtb25vc3BhY2UgZmFtaWx5IG9udG8gYSBib2R5IHZhcmlhbnQg4oCUIHVzZSBgbWFjaGluZUJvZHkxYCAvIGBtYWNoaW5lQm9keTJgLgotIE5ldmVyIHdyYXAgYDxUeXBvZ3JhcGh5PmAgaW5zaWRlIGEgYDxCdXR0b24+YCwgYDxDaGlwPmAsIG9yIGZvcm0gaW5wdXQg4oCUIHRob3NlIGNvbXBvbmVudHMgcmVuZGVyIHRoZWlyIG93biB0aGVtZS1iYWtlZCB0ZXh0LgotIE5vdGhpbmcgb3V0c2lkZSDCpzUgVmFyaWFudHMgaXMgdmFsaWQuCgojIyMgQ29uZGl0aW9ucwotIElmIGEgdmFyaWFudCBkb2VzIG5vdCBleGlzdCBmb3Igd2hhdCB0aGUgZGVzaWduIG5lZWRzLCBzdG9wIGFuZCBmbGFnIOKAlCBwcm9wb3NlIGEgbmV3IHZhcmlhbnQgYWdhaW5zdCBtb3JwaGV1cywgZG8gbm90IHNpbXVsYXRlIHdpdGggYHN4YC4KLSBUaGUgb25seSBgc3hgIG92ZXJyaWRlIGFsbG93ZWQgb24gYDxUeXBvZ3JhcGh5PmAgaXMgYGNvbG9yYCwgYW5kIHByZWZlciB0aGUgYGNvbG9yPSJ0ZXh0LnNlY29uZGFyeSJgIHByb3Agd2hlbiBhIHNlbWFudGljIHRva2VuIGV4aXN0cy4KCiMjIDUuIFZhcmlhbnRzCgoKCiMjIyA1LjEgRGlzcGxheSAmIGhlYWRpbmdzCgp8IFZhcmlhbnQgfCBGaWdtYSB0ZXh0IHN0eWxlIHwgVXNlIGZvciB8CnwtLS18LS0tfC0tLXwKfCBgaGVyb1hsYCB8IOKAlCAoQWxhdGlvbi1vbmx5KSB8IEV4dHJhLWxhcmdlIGRpc3BsYXkgbnVtYmVycyAocmFyZSwgbGFuZGluZyAvIG1hcmtldGluZykgfAp8IGBoZXJvTGdgIHwg4oCUIChBbGF0aW9uLW9ubHkpIHwgTGFyZ2UgZGlzcGxheSBudW1iZXJzIChoZXJvIG51bWJlcnMgb24gZGFzaGJvYXJkcykgfAp8IGBoZXJvYCB8IOKAlCAoQWxhdGlvbi1vbmx5KSB8IExhcmdlIGRpc3BsYXkgbnVtYmVycyAoYmlnLW51bWJlciBzdGF0IGNhcmRzKSB8CnwgYGgxYCB8ICoqSGVhZGVyIC0gSDEqKiB8IFBhZ2UgdGl0bGVzIMK3IDIycHggfAp8IGBoMmAgfCAqKkhlYWRlciAtIEgyKiogfCBNYWpvciBzZWN0aW9uIHRpdGxlIHdpdGhpbiBhIHBhZ2UgwrcgMThweCB8CnwgYGgzYCB8ICoqSGVhZGVyIC0gSDMqKiB8IFNlY3Rpb24gaGVhZGluZyBpbnNpZGUgYSBwYWdlIMK3IDE2cHggfAp8IGBzdWJ0aXRsZTFgIHwgKipTdWJ0aXRsZTEqKiB8IENhcmQgYW5kIHBhbmVsIHRpdGxlcyDCtyAxNHB4IC8gNTAwIHwKfCBgc3VidGl0bGUyYCB8ICoqU3VidGl0bGUyKiogfCBTZWNvbmRhcnkgY2FyZCBsYWJlbCBvciBjb21wYWN0IGhlYWRpbmcgwrcgMTNweCAvIDUwMCB8CgojIyMgNS4yIEJvZHkgJiBtZXRhCgp8IFZhcmlhbnQgfCBGaWdtYSB0ZXh0IHN0eWxlIHwgVXNlIGZvciB8CnwtLS18LS0tfC0tLXwKfCBgYm9keTBgIHwg4oCUIChBbGF0aW9uLW9ubHkpIHwgU2xpZ2h0bHkgbGFyZ2VyIGJvZHkgwrcgMTRweCDigJQgdXNlZCBpbiBmb3JtLWZpZWxkIGxhYmVscyB8CnwgYGJvZHkxYCB8ICoqQm9keTEqKiB8IFByaW1hcnkgYm9keSB0ZXh0IMK3IDEzcHggLyA0MDAgfAp8IGBib2R5MmAgfCAqKkJvZHkyKiogfCBTZWNvbmRhcnkgYm9keSB0ZXh0LCBkZXNjcmlwdGlvbnMgwrcgMTJweCAvIDQwMCB8CnwgYGNhcHRpb25gIHwg4oCUIChBbGF0aW9uLW9ubHkpIHwgVGltZXN0YW1wcywgbWV0YWRhdGEsIGZpbmUgcHJpbnQgfAp8IGBvdmVybGluZWAgfCDigJQgKEFsYXRpb24tb25seSkgfCBDYXRlZ29yeSBsYWJlbHMsIGV5ZWJyb3cgdGV4dCB8CgojIyMgNS4zIEJ1dHRvbiB0eXBvZ3JhcGh5ICh0aGVtZS1vd25lZCDigJQgY29uc3VtZWQgYnkgYDxCdXR0b24+YCwgbmV2ZXIgcGFzc2VkIGRpcmVjdGx5KQoKfCBWYXJpYW50IHwgRmlnbWEgdGV4dCBzdHlsZSB8IFVzZSBmb3IgfAp8LS0tfC0tLXwtLS18CnwgYGJ1dHRvbkxnYCB8IOKAlCAoQWxhdGlvbi1vbmx5KSB8IExhcmdlIEJ1dHRvbiBsYWJlbCB8CnwgYGJ1dHRvbmAgfCAqKkJ1dHRvbioqIHwgRGVmYXVsdCAvIG1lZGl1bSBCdXR0b24gbGFiZWwgwrcgMTNweCAvIDUwMCB8CnwgYGJ1dHRvblNtYCB8IOKAlCAoQWxhdGlvbi1vbmx5KSB8IFNtYWxsIC8geHNtYWxsIEJ1dHRvbiBsYWJlbCB8CgojIyMgNS40IE1hY2hpbmUgKG1vbm9zcGFjZSDigJQgSmV0QnJhaW5zIE1vbm8pCgp8IFZhcmlhbnQgfCBGaWdtYSB0ZXh0IHN0eWxlIHwgVXNlIGZvciB8CnwtLS18LS0tfC0tLXwKfCBgbWFjaGluZUJvZHkxYCB8ICoqTW9ubyAtIEJvZHkxKiogfCBNb25vc3BhY2UgYm9keSDigJQgY29kZSwgaWRlbnRpZmllcnMgwrcgMTNweCB8CnwgYG1hY2hpbmVCb2R5MmAgfCAqKk1vbm8gLSBCb2R5MioqIHwgTW9ub3NwYWNlIGNvbXBhY3Qg4oCUIGlubGluZSBjb2RlLCBzaG9ydCBpZGVudGlmaWVycyDCtyAxMnB4IHwKfCBgbWFjaGluZUhlcm9gLCBgbWFjaGluZUgxYOKAk2BtYWNoaW5lSDZgIHwg4oCUIChBbGF0aW9uLW9ubHkpIHwgTW9ub3NwYWNlIGRpc3BsYXkgLyBoZWFkaW5nIHZhcmlhbnRzIHwKfCBgbWFjaGluZVN1YnRpdGxlMWAsIGBtYWNoaW5lU3VidGl0bGUyYCB8IOKAlCAoQWxhdGlvbi1vbmx5KSB8IE1vbm9zcGFjZSBzdWJ0aXRsZXMgfAp8IGBtYWNoaW5lQm9keTBgIHwg4oCUIChBbGF0aW9uLW9ubHkpIHwgU2xpZ2h0bHkgbGFyZ2VyIG1vbm9zcGFjZSBib2R5IHwKfCBgbWFjaGluZU92ZXJsaW5lYCB8IOKAlCAoQWxhdGlvbi1vbmx5KSB8IE1vbm9zcGFjZSBleWVicm93IGxhYmVsIHwKfCBgbWFjaGluZUJ1dHRvbmAsIGBtYWNoaW5lQnV0dG9uTGdgLCBgbWFjaGluZUJ1dHRvblNtYCB8IOKAlCAoQWxhdGlvbi1vbmx5KSB8IE1vbm9zcGFjZSBidXR0b24gbGFiZWxzICh0aGVtZS1vd25lZCkgfAoKIyMjIDUuNSBUeXBlIGZhbWlsaWVzICh0aGVtZS1vd25lZCDigJQgdmFyaWFudHMgc2VsZWN0IHRoZSBmYW1pbHkgYXV0b21hdGljYWxseSkKCnwgRmFtaWx5IHwgRmlnbWEgdG9rZW4gfCBTdGFjayB8IFVzZWQgYnkgfAp8LS0tfC0tLXwtLS18LS0tfAp8IEJvZHkgfCBgZm9udC9mYW1pbHkvYm9keWAgfCBgSW50ZXIsIHVpLXNhbnMtc2VyaWYsIHN5c3RlbS11aSwgc2Fucy1zZXJpZiwgIk9wZW4gU2FucyIsICJMdWNpZGEgR3JhbmRlIiwgIlNlZ29lIFVJIiwgQXJpYWxgIHwgQWxsIG5vbi1tb25vc3BhY2UgdmFyaWFudHMgfAp8IE1hY2hpbmUgfCBgZm9udC9mYW1pbHkvbW9uby1ib2R5YCB8IGAiSmV0QnJhaW5zIE1vbm8iLCBDb25zb2xhcywgIkxpYmVyYXRpb24gTW9ubyIsIENvdXJpZXIsIG1vbm9zcGFjZWAgfCBgbWFjaGluZSpgIHZhcmlhbnRzIHwKCiMjIyA1LjYgSWNvbiBzaXplIHRva2VucyAodHlwb2dyYXBoeS1sZXZlbCDigJQgY29uc3VtZWQgYnkgaWNvbiBjb250YWluZXJzKQoKSWNvbiBzaXplcyBsaXZlIGluIHRoZSB0eXBvZ3JhcGh5IGxheWVyIHNvIGV2ZXJ5IGljb24gY29udGFpbmVyIGNhbiByZWFkIHRoZW0gYnkga2V5LiBTZWUgW2ljb25vZ3JhcGh5XSguLi9pY29ub2dyYXBoeS91c2FnZS5tZCkgZm9yIHRoZSBjb250YWluZXIg4oaSIHNpemUgbWFwcGluZy4KCnwgVG9rZW4gfCBWYWx1ZSB8CnwtLS18LS0tfAp8IGB0eXBvZ3JhcGh5Lmljb25YU21hbGxgIHwgYDEuMnJlbWAgfAp8IGB0eXBvZ3JhcGh5Lmljb25TbWFsbGAgfCBgMS42cmVtYCB8CnwgYHR5cG9ncmFwaHkuaWNvbk1lZGl1bWAgfCBgMnJlbWAgfAp8IGB0eXBvZ3JhcGh5Lmljb25MYXJnZWAgfCBgMi40cmVtYCB8CgojIyAxMS4gRXhhbXBsZQoKYGBgdHN4CmltcG9ydCB7IFR5cG9ncmFwaHkgfSBmcm9tICdAbXVpL21hdGVyaWFsJzsKCjxUeXBvZ3JhcGh5IHZhcmlhbnQ9ImgxIj5QYWdlIHRpdGxlPC9UeXBvZ3JhcGh5Pgo8VHlwb2dyYXBoeSB2YXJpYW50PSJzdWJ0aXRsZTEiPlRvdGFsIENERXM8L1R5cG9ncmFwaHk+CjxUeXBvZ3JhcGh5IHZhcmlhbnQ9Imhlcm8iPjEsMjg0PC9UeXBvZ3JhcGh5Pgo8VHlwb2dyYXBoeSB2YXJpYW50PSJib2R5MSI+UHJpbWFyeSBwYXJhZ3JhcGggY29udGVudC48L1R5cG9ncmFwaHk+CjxUeXBvZ3JhcGh5IHZhcmlhbnQ9ImJvZHkyIiBjb2xvcj0idGV4dC5zZWNvbmRhcnkiPk11dGVkIGhlbHBlciB0ZXh0LjwvVHlwb2dyYXBoeT4KPFR5cG9ncmFwaHkgdmFyaWFudD0iY2FwdGlvbiI+VXBkYXRlZCAyIGhvdXJzIGFnbzwvVHlwb2dyYXBoeT4KPFR5cG9ncmFwaHkgdmFyaWFudD0ibWFjaGluZUJvZHkyIj5zcmMvbGliL011aVR5cG9ncmFwaHkub3ZlcnJpZGVzLnRzPC9UeXBvZ3JhcGh5PgpgYGAKClNlZSBbYEV4YW1wbGUudHN4YF0oLi9FeGFtcGxlLnRzeCkgZm9yIHRoZSBjYW5vbmljYWwsIHJ1bm5hYmxlIHNvdXJjZS4K">
   <div class="md-viewer-actions">
     <button class="md-viewer-toggle" type="button" data-action="rendered" aria-expanded="false">
       <span class="chev" aria-hidden="true">

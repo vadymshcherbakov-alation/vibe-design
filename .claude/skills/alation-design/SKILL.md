@@ -15,7 +15,7 @@ These apply everywhere and are short enough to stay inline. Anything longer live
 - **No visual `sx` overrides** on MUI components — layout `sx` on `<Box>` only
 - **All text uses `<Typography variant="…">`** — no raw `<h1>` / `<p>` / `<span>`
 - **Sentence case for UI text** (exceptions: product / module proper names)
-- **lucide-react for UI icons**; Alation SVG assets for the nav rail only
+- **Two icon libraries — Custom Library first, Lucide as backfill.** Always check `@alation/icons-neo` (Custom Library) before reaching for `lucide-react` (Lucide Library). Alation SVG assets are nav-rail only. See `references/foundations/iconography/usage.md`.
 
 ## Pre-flight
 
@@ -53,6 +53,7 @@ Each reference lives in a per-element folder that contains three files:
 | Any single-choice from a fixed short list (≤ ~20 options) | `references/components/base/select-input/usage.md` |
 | Any Autocomplete · DatePicker — wrapped by a **Form Field** composite | `references/components/composite/form-field/usage.md` |
 | Any single choice from 2–5 mutually-exclusive visible options — **Radio** group (wrap in a Form Field) | `references/components/base/radio/usage.md` |
+| Any compact in-place view / mode switch or single-axis filter pill (Grid / List, All / Mine / Shared, Daily / Weekly / Monthly) — **Content Switcher** segmented control | `references/components/base/content-switcher/usage.md` |
 | Any form-style selection · opt-in · multi-select row · acknowledgement ("I agree") — **Checkbox** (wrap in a `FormControlLabel` or a Form Field) | `references/components/base/checkbox/usage.md` |
 | Any On/Off toggle for a single binary setting (Active/Inactive, Enable/Disable, feature flag, notification on/off) — **Switch** (wrap in a `FormControlLabel`) | `references/components/base/switch/usage.md` |
 | Any bordered / padded surface (panel, container) — the **Card Wrapper** primitive. Not the composite Nav Card / Metric Card. | `references/components/base/card-wrapper/usage.md` |
@@ -70,6 +71,10 @@ Each reference lives in a per-element folder that contains three files:
 | Any parent-navigation above a Page Header — multi-step **Trail** (2+ levels: object detail, settings sub-page, folder path) or single-step **Back to parent** link (exactly one level deep) | `references/components/composite/breadcrumb/usage.md` |
 | Any multi-step ordered flow / wizard (2–~6 sequential steps with progress indicator — connect source, publish data product, onboarding) | `references/components/composite/stepper/usage.md` |
 | Any collapsible content section / disclosure surface (settings sections, FAQ, optional config, side-panel groups) | `references/components/composite/accordion/usage.md` |
+| Any full-page **wizard** for a multi-step task (2–~6 sequential steps; wizard-shaped header with close cross + Stepper + step body + sticky footer with Back / Complete Later / Confirm & Continue — connect a source, publish a data product, create monitor, build agent) | `references/page-templates/wizard-page/usage.md` |
+| Any **App Top Header** — global top strip (logo + search + settings + avatar) | `references/components/composite/app-top-header/usage.md` |
+| Any **App Side Bar** — left vertical icon rail with primary destination switching | `references/components/composite/app-side-bar/usage.md` |
+| Any **App Sub Navigation** (Wayfinder) — contextual second-level nav panel between the Side Bar and the page (Settings / Compose / Agent Studio sub-pages) | `references/components/composite/app-sub-navigation/usage.md` |
 
 **Workflow:** After opening `usage.md` for an element, also open the sibling `Example.tsx`. That file is the canonical, tested pattern — use it as the baseline for what you generate and deviate only when the request demands it.
 

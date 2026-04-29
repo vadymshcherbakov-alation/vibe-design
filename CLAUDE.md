@@ -55,6 +55,6 @@ MUI 7, Zustand 5, TanStack Table 8, Recharts 3, Lexical, React Markdown. Prefer 
 - No visual `sx` overrides on MUI components — layout `sx` on `<Box>` only.
 - All text uses `<Typography variant="…">`.
 - Sentence case for UI text (exceptions: product / module proper names).
-- `lucide-react` for UI icons; Alation SVG assets for nav rail only.
+- Two icon libraries: Custom Library (`@alation/icons-neo`) first, Lucide Library (`lucide-react`) as backfill. Alation SVG assets are nav-rail only. See `.claude/skills/alation-design/references/foundations/iconography/usage.md`.
 
 There are no tests in this codebase.

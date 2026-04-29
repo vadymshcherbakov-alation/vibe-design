@@ -18,8 +18,10 @@
       --divider:        #D4DDE2;
       --primary-main:   #0073DD;
       --primary-dark:   #0056A6;
+      --primary-soft:   #D9EEFF;
       --error-main:     #CA334A;
       --error-dark:     #A62839;
+      --shell-dark:     #0D1322;
       --radius-btn:    6px;
       --radius-input:  4px;
       --radius-2:      12px;
@@ -40,10 +42,15 @@
       font-size: 28px; font-weight: 600; line-height: 1.25;
       letter-spacing: -0.01em; margin: 0 0 8px 0;
     }
-    p.page-sub {
+    .page-sub {
       font-size: 14px; line-height: 1.6; color: var(--text-secondary);
       margin: 0 0 32px 0;
     }
+    .page-sub p { margin: 0 0 10px 0; }
+    .page-sub p:last-child { margin-bottom: 0; }
+    .page-sub strong { font-weight: 600; color: var(--text-primary); }
+    .page-sub em { font-style: italic; }
+    .page-sub a { color: var(--primary-main); text-decoration: underline; }
     h2.section {
       font-size: 14px; font-weight: 500; color: var(--text-secondary);
       letter-spacing: 0.06em; text-transform: uppercase;
@@ -59,73 +66,55 @@
       border-radius: 4px; color: var(--text-primary);
     }
     /* Element-specific styles */
-.note {
-      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
-      line-height: 1.6;
+h3.subsection {
+      font-size: 12px; font-weight: 600; color: var(--text-primary);
+      margin: 20px 0 8px 0;
+      letter-spacing: 0.02em;
     }
-    code {
-      font-family: var(--font-mono); font-size: 12px;
-      background: var(--neutral-300); padding: 2px 6px;
-      border-radius: 4px; color: var(--text-primary);
+    .group-intro {
+      font-size: 12.5px; color: var(--text-secondary);
+      margin: 0 0 4px 0; line-height: 1.5;
     }
-    /* Element-specific styles */
-.note {
-      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
-      line-height: 1.6;
+
+    /* Token swatch grid (Background / Border / Icon / Text subgroups) */
+    .token-grid {
+      display: grid; gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
-    code {
-      font-family: var(--font-mono); font-size: 12px;
-      background: var(--neutral-300); padding: 2px 6px;
-      border-radius: 4px; color: var(--text-primary);
-    }
-    /* Element-specific styles */
-.swatch-grid {
-      display: grid; gap: 12px;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-    .swatch {
+    .token {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px;
       background: var(--paper);
       border: 1px solid var(--neutral-400);
-      border-radius: var(--radius-2);
-      padding: 12px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .chip {
-      width: 40px; height: 40px;
       border-radius: 8px;
-      flex-shrink: 0;
-      border: 1px solid var(--neutral-300);
     }
-    .meta { min-width: 0; flex: 1; }
-    .meta .name {
-      font-size: 13px; font-weight: 500; margin: 0 0 2px 0;
+    .token .chip {
+      width: 36px; height: 36px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      border: 1px solid var(--neutral-400);
+    }
+    .token .meta { min-width: 0; flex: 1; }
+    .token .name {
+      font-size: 12px; font-weight: 500;
+      margin: 0 0 2px 0;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .meta .hex {
-      font-size: 12px; color: var(--text-secondary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    .token .hex {
+      font-size: 11px; color: var(--text-secondary);
+      font-family: var(--font-mono);
       margin: 0;
     }
 
-    .pair-row {
-      display: grid; gap: 12px;
-      grid-template-columns: 1fr 120px 100px;
-      align-items: center;
-      padding: 12px 16px;
-      border: 1px solid var(--neutral-400);
-      border-radius: 8px;
+    /* Border tokens — render the chip as a thick ring on white */
+    .token.is-border .chip {
       background: var(--paper);
-      margin-bottom: 8px;
-      font-size: 13px;
+      border-width: 3px;
     }
-    .pair-row .label { color: var(--text-primary); }
-    .pair-row .ratio { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--text-secondary); }
-    .pair-row .verdict.pass { color: #277800; font-weight: 500; }
-    .pair-row .verdict.fail { color: var(--text-secondary); }
-
-    .note {
-      font-size: 12px; color: var(--text-disabled); margin: 32px 0 0 0;
-      line-height: 1.6;
+    /* Icon and text tokens — show colour as a filled square plus a glyph */
+    .token.is-glyph .chip {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700;
     }
 
     /* Palette grid — raw base-colour scales from Figma */
@@ -146,15 +135,16 @@
     }
     .palette-grid .row-head {
       font-size: 11px; color: var(--text-secondary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-family: var(--font-mono);
       text-align: right; padding-right: 6px;
     }
     .palette-grid .sw {
+      position: relative;
       height: 36px; border-radius: 6px;
       border: 1px solid var(--neutral-300);
       display: flex; align-items: center; justify-content: center;
       font-size: 10.5px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-family: var(--font-mono);
     }
     .palette-grid .sw.empty {
       background: transparent; border: 1px dashed var(--neutral-400);
@@ -166,36 +156,63 @@
       color: var(--text-primary);
     }
     .palette-grid .sw:hover .hex { opacity: 1; }
+    /* Brand swatch — large centered star */
     .palette-grid .sw.brand::after {
-      content: "★"; position: absolute; margin-top: -28px;
-      font-size: 10px; color: #FFFFFF;
+      content: "★";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      line-height: 1;
+      color: #FFFFFF;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      pointer-events: none;
     }
-    .palette-grid .sw { position: relative; }
+    .palette-grid .sw.brand:hover .hex { opacity: 0; }
     .palette-caveat {
       font-size: 12px; color: var(--text-secondary);
       margin: 16px 0 0 0; line-height: 1.6;
     }
     .palette-caveat strong { color: var(--text-primary); }
+
+    /* Pair row — contrast audit */
+    .pair-row {
+      display: grid; gap: 12px;
+      grid-template-columns: 1fr 120px 100px;
+      align-items: center;
+      padding: 12px 16px;
+      border: 1px solid var(--neutral-400);
+      border-radius: 8px;
+      background: var(--paper);
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .pair-row .label { color: var(--text-primary); }
+    .pair-row .ratio { font-family: var(--font-mono); color: var(--text-secondary); }
+    .pair-row .verdict.pass { color: #277800; font-weight: 500; }
+    .pair-row .verdict.fail { color: var(--text-secondary); }
   </style>
 </head>
 <body>
   <div class="shell">
     <h1 class="page-title">Colours</h1>
-    <p class="page-sub">The semantic colour layer of the Alation design system. Expresses brand identity, communicates state (success, error, warning, info), and carries the neutral, text, and background scale that builds every surface.</p>
+    <div class="page-sub"><p>The semantic colour layer of the Alation design system. Tokens are organised by the UI concept they paint — Background, Border, Icon, Text — with a per-element subgroup (button, chip, control, surface, etc.) so a component reaches for a single token that already encodes role + role-context.</p></div>
 
     <!-- classification-begin -->
     <h2 class="section">Classification</h2>
     <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
       <li><strong>Type:</strong> Foundation</li>
       <li><strong>MUI base:</strong> <code>palette</code></li>
-      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-3857&t=eS5ReSD4ZsCMa08a-1" target="_blank" rel="noopener">Colours · NEO 2.1 Design System</a></li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?m=auto&node-id=2973-3857&t=eS5ReSD4ZsCMa08a-1" target="_blank" rel="noopener">Colours · NEO 2.1 Design System</a> — <code>Color (Semantic)</code> collection, 97 tokens, Light + Dark modes</li>
       <li><strong>Code:</strong> <code>fabric-theme-morpheus</code> — <code>src/lib/ColorPalette.overrides.ts</code> (+ <code>src/lib/palettes/*.ts</code> for shade sources)</li>
     </ul>
     <!-- classification-end -->
 
 <h2 class="section">Palette</h2>
     <p class="palette-meta">
-      Raw base-colour scales — the source of truth in Figma (<a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?node-id=2973-3656&t=eS5ReSD4ZsCMa08a-4" target="_blank" rel="noopener">Palette page</a>). 91 tokens: 9 families × 9 shades + Neutral (10 shades). Consume via the semantic layer below — never reach past a semantic token unless reviewed.
+      Raw base-colour scales — the source of truth in Figma (<a href="https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?node-id=2973-3656&t=eS5ReSD4ZsCMa08a-4" target="_blank" rel="noopener">Palette page</a>). 91 tokens: 9 families × 9 shades + Neutral (10 shades). Brand = Orange/600 (★). Consume via the semantic layer below — never reach past a semantic token unless reviewed.
     </p>
     <div class="palette-grid">
       <div></div>
@@ -331,82 +348,195 @@
       <div class="sw" style="background:#512A00; color:#fff" title="Yellow 900 · #512A00"><span class="hex">#512A00</span></div>
     </div>
     <p class="palette-caveat">
-      <strong>Code alignment:</strong> Blue · Red · Amber · Green · Teal · Purple · Pink match <code>fabric-theme-morpheus</code> exactly. Neutral matches <code>neutral.ts</code> (Figma <code>300 = #D4D4D4</code> vs code <code>#D4D4D8</code> — 1-bit). <strong>Orange</strong> and <strong>Yellow</strong> diverge — code ships different ramps; only Orange <code>600 = #F16923</code> (Brand ★) is canonical. The semantic layer below still reads legacy <code>grey.ts</code>, not <code>neutral.ts</code>.
+      <strong>Code alignment:</strong> Blue · Red · Amber · Green · Teal · Purple · Pink match <code>fabric-theme-morpheus</code> exactly. Neutral matches <code>neutral.ts</code> (Figma <code>300 = #D4D4D4</code> vs code <code>#D4D4D8</code> — 1-bit). <strong>Orange</strong> and <strong>Yellow</strong> diverge — code ships different ramps; only Orange <code>600 = #F16923</code> (Brand ★) is canonical.
     </p>
 
-    <h2 class="section">Brand (logo + marketing only)</h2>
-    <div class="swatch-grid">
-      <div class="swatch"><div class="chip" style="background:#F16923"></div><div class="meta"><p class="name">brand.main</p><p class="hex">#F16923</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#00416B"></div><div class="meta"><p class="name">brand.background</p><p class="hex">#00416B</p></div></div>
+    <h2 class="section">Background</h2>
+    <p class="group-intro">Background tokens — fills for surfaces, controls, buttons, chips, accents, and one-off roles. Hex values are Light mode; Dark-mode equivalents live in §5 of <code>usage.md</code>.</p>
+
+    <h3 class="subsection">surface</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><p class="name">background/surface/default</p><p class="hex">#FFFFFF</p></div></div>
+      <div class="token"><div class="chip" style="background:#FAFAFA"></div><div class="meta"><p class="name">background/surface/secondary</p><p class="hex">#FAFAFA</p></div></div>
+      <div class="token"><div class="chip" style="background:#27272AB2"></div><div class="meta"><p class="name">background/surface/modal/backdrop</p><p class="hex">#27272AB2</p></div></div>
     </div>
 
-    <h2 class="section">Primary / Info (blue family)</h2>
-    <div class="swatch-grid">
-      <div class="swatch"><div class="chip" style="background:#FBFCFE"></div><div class="meta"><p class="name">blue 50</p><p class="hex">#FBFCFE</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#ECF6FF"></div><div class="meta"><p class="name">blue 100</p><p class="hex">#ECF6FF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#D9EEFF"></div><div class="meta"><p class="name">blue 200</p><p class="hex">#D9EEFF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#BAE2FF"></div><div class="meta"><p class="name">blue 300</p><p class="hex">#BAE2FF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#93CCFF"></div><div class="meta"><p class="name">blue 400</p><p class="hex">#93CCFF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#57ABFF"></div><div class="meta"><p class="name">blue 500</p><p class="hex">#57ABFF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#0073DD"></div><div class="meta"><p class="name">blue 600 · primary.main</p><p class="hex">#0073DD</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#0059DF"></div><div class="meta"><p class="name">blue 700 · primary.dark</p><p class="hex">#0059DF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#003EB4"></div><div class="meta"><p class="name">blue 800</p><p class="hex">#003EB4</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#002C81"></div><div class="meta"><p class="name">blue 900</p><p class="hex">#002C81</p></div></div>
+    <h3 class="subsection">control</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><p class="name">background/control/default</p><p class="hex">#FFFFFF</p></div></div>
+      <div class="token"><div class="chip" style="background:#F5F5F5"></div><div class="meta"><p class="name">background/control/hover</p><p class="hex">#F5F5F5</p></div></div>
+      <div class="token"><div class="chip" style="background:#F5F5F5"></div><div class="meta"><p class="name">background/control/secondary</p><p class="hex">#F5F5F5</p></div></div>
+      <div class="token"><div class="chip" style="background:#E5E5E5"></div><div class="meta"><p class="name">background/control/secondary-hover</p><p class="hex">#E5E5E5</p></div></div>
+      <div class="token"><div class="chip" style="background:#FAFAFA"></div><div class="meta"><p class="name">background/control/disabled</p><p class="hex">#FAFAFA</p></div></div>
+      <div class="token"><div class="chip" style="background:#F5F5F5"></div><div class="meta"><p class="name">background/control/selected</p><p class="hex">#F5F5F5</p></div></div>
+      <div class="token"><div class="chip" style="background:#262626"></div><div class="meta"><p class="name">background/control/inverted</p><p class="hex">#262626</p></div></div>
+      <div class="token"><div class="chip" style="background:#FCE9CC"></div><div class="meta"><p class="name">background/control/warning</p><p class="hex">#FCE9CC</p></div></div>
+      <div class="token"><div class="chip" style="background:#FFE1E1"></div><div class="meta"><p class="name">background/control/error</p><p class="hex">#FFE1E1</p></div></div>
+      <div class="token"><div class="chip" style="background:#D9EEFF"></div><div class="meta"><p class="name">background/control/information</p><p class="hex">#D9EEFF</p></div></div>
+      <div class="token"><div class="chip" style="background:#E2F3D5"></div><div class="meta"><p class="name">background/control/success</p><p class="hex">#E2F3D5</p></div></div>
     </div>
 
-    <h2 class="section">Success (green family)</h2>
-    <div class="swatch-grid">
-      <div class="swatch"><div class="chip" style="background:#F0F8EB"></div><div class="meta"><p class="name">green 100</p><p class="hex">#F0F8EB</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#E2F3D5"></div><div class="meta"><p class="name">green 200</p><p class="hex">#E2F3D5</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#ACD987"></div><div class="meta"><p class="name">green 400</p><p class="hex">#ACD987</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#488800"></div><div class="meta"><p class="name">green 600 · success.main</p><p class="hex">#488800</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#277800"></div><div class="meta"><p class="name">green 700 · success.dark</p><p class="hex">#277800</p></div></div>
+    <h3 class="subsection">button</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#0073DD"></div><div class="meta"><p class="name">background/button/primary</p><p class="hex">#0073DD</p></div></div>
+      <div class="token"><div class="chip" style="background:#0059DF"></div><div class="meta"><p class="name">background/button/primary-hover</p><p class="hex">#0059DF</p></div></div>
+      <div class="token"><div class="chip" style="background:#CA334A"></div><div class="meta"><p class="name">background/button/error</p><p class="hex">#CA334A</p></div></div>
+      <div class="token"><div class="chip" style="background:#C3002E"></div><div class="meta"><p class="name">background/button/error-hover</p><p class="hex">#C3002E</p></div></div>
+      <div class="token"><div class="chip" style="background:#ECF6FF"></div><div class="meta"><p class="name">background/button/secondary-hover</p><p class="hex">#ECF6FF</p></div></div>
+      <div class="token"><div class="chip" style="background:#FFF0F0"></div><div class="meta"><p class="name">background/button/error-secondary-hover</p><p class="hex">#FFF0F0</p></div></div>
     </div>
 
-    <h2 class="section">Error (red family)</h2>
-    <div class="swatch-grid">
-      <div class="swatch"><div class="chip" style="background:#FFF0F0"></div><div class="meta"><p class="name">red 100</p><p class="hex">#FFF0F0</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#CA334A"></div><div class="meta"><p class="name">red 600 · error.main</p><p class="hex">#CA334A</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#C3002E"></div><div class="meta"><p class="name">red 700 · error.dark</p><p class="hex">#C3002E</p></div></div>
+    <h3 class="subsection">progress</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#0073DD"></div><div class="meta"><p class="name">background/progress/primary</p><p class="hex">#0073DD</p></div></div>
     </div>
 
-    <h2 class="section">Warning (yellow family)</h2>
-    <div class="swatch-grid">
-      <div class="swatch"><div class="chip" style="background:#FFF6DA"></div><div class="meta"><p class="name">yellow 100</p><p class="hex">#FFF6DA</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#F4CB3B"></div><div class="meta"><p class="name">yellow 400 · warning.main</p><p class="hex">#F4CB3B</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#B05F00"></div><div class="meta"><p class="name">yellow 700 · warning.dark</p><p class="hex">#B05F00</p></div></div>
+    <h3 class="subsection">scrollbar</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#D4D4D4"></div><div class="meta"><p class="name">background/scrollbar/default</p><p class="hex">#D4D4D4</p></div></div>
+      <div class="token"><div class="chip" style="background:#A3A3A3"></div><div class="meta"><p class="name">background/scrollbar/hover</p><p class="hex">#A3A3A3</p></div></div>
     </div>
 
-    <h2 class="section">Neutral / Grey (light mode)</h2>
-    <div class="swatch-grid">
-      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><p class="name">grey 50</p><p class="hex">#FFFFFF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><p class="name">grey 100</p><p class="hex">#FFFFFF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#F9F9FB"></div><div class="meta"><p class="name">grey 200</p><p class="hex">#F9F9FB</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#F1F4F6"></div><div class="meta"><p class="name">grey 300</p><p class="hex">#F1F4F6</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#E8EDF1"></div><div class="meta"><p class="name">grey 400</p><p class="hex">#E8EDF1</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#D4DDE2"></div><div class="meta"><p class="name">grey 500</p><p class="hex">#D4DDE2</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#B7B7C1"></div><div class="meta"><p class="name">grey 600</p><p class="hex">#B7B7C1</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#71767D"></div><div class="meta"><p class="name">grey 700</p><p class="hex">#71767D</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#4E4E58"></div><div class="meta"><p class="name">grey 800</p><p class="hex">#4E4E58</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#0D1322"></div><div class="meta"><p class="name">grey 900</p><p class="hex">#0D1322</p></div></div>
+    <h3 class="subsection">avatar</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#0073DD"></div><div class="meta"><p class="name">background/avatar/default</p><p class="hex">#0073DD</p></div></div>
+      <div class="token"><div class="chip" style="background:#D4D4D4"></div><div class="meta"><p class="name">background/avatar/subtle</p><p class="hex">#D4D4D4</p></div></div>
+    </div>
+
+    <h3 class="subsection">misc</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#FFF0F4"></div><div class="meta"><p class="name">background/misc/placeholder</p><p class="hex">#FFF0F4</p></div></div>
+    </div>
+
+    <h3 class="subsection">accent</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#E5E5E5"></div><div class="meta"><p class="name">background/accent/gray</p><p class="hex">#E5E5E5</p></div></div>
+      <div class="token"><div class="chip" style="background:#D9EEFF"></div><div class="meta"><p class="name">background/accent/blue</p><p class="hex">#D9EEFF</p></div></div>
+      <div class="token"><div class="chip" style="background:#FFE1E1"></div><div class="meta"><p class="name">background/accent/red</p><p class="hex">#FFE1E1</p></div></div>
+      <div class="token"><div class="chip" style="background:#FCE9CC"></div><div class="meta"><p class="name">background/accent/amber</p><p class="hex">#FCE9CC</p></div></div>
+      <div class="token"><div class="chip" style="background:#E2F3D5"></div><div class="meta"><p class="name">background/accent/green</p><p class="hex">#E2F3D5</p></div></div>
+      <div class="token"><div class="chip" style="background:#CCF6F0"></div><div class="meta"><p class="name">background/accent/teal</p><p class="hex">#CCF6F0</p></div></div>
+      <div class="token"><div class="chip" style="background:#EDE7FF"></div><div class="meta"><p class="name">background/accent/purple</p><p class="hex">#EDE7FF</p></div></div>
+      <div class="token"><div class="chip" style="background:#FFE1EA"></div><div class="meta"><p class="name">background/accent/pink</p><p class="hex">#FFE1EA</p></div></div>
+    </div>
+
+    <h3 class="subsection">chip — subtle</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#E5E5E5"></div><div class="meta"><p class="name">background/chip/gray</p><p class="hex">#E5E5E5</p></div></div>
+      <div class="token"><div class="chip" style="background:#D9EEFF"></div><div class="meta"><p class="name">background/chip/blue</p><p class="hex">#D9EEFF</p></div></div>
+      <div class="token"><div class="chip" style="background:#FFE1E1"></div><div class="meta"><p class="name">background/chip/red</p><p class="hex">#FFE1E1</p></div></div>
+      <div class="token"><div class="chip" style="background:#FCE9CC"></div><div class="meta"><p class="name">background/chip/amber</p><p class="hex">#FCE9CC</p></div></div>
+      <div class="token"><div class="chip" style="background:#E2F3D5"></div><div class="meta"><p class="name">background/chip/green</p><p class="hex">#E2F3D5</p></div></div>
+      <div class="token"><div class="chip" style="background:#CCF6F0"></div><div class="meta"><p class="name">background/chip/teal</p><p class="hex">#CCF6F0</p></div></div>
+      <div class="token"><div class="chip" style="background:#EDE7FF"></div><div class="meta"><p class="name">background/chip/purple</p><p class="hex">#EDE7FF</p></div></div>
+      <div class="token"><div class="chip" style="background:#FFE1EA"></div><div class="meta"><p class="name">background/chip/pink</p><p class="hex">#FFE1EA</p></div></div>
+      <div class="token"><div class="chip" style="background:#FFE3D5"></div><div class="meta"><p class="name">background/chip/orange</p><p class="hex">#FFE3D5</p></div></div>
+    </div>
+
+    <h3 class="subsection">chip — strong</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#525252"></div><div class="meta"><p class="name">background/chip/gray-strong</p><p class="hex">#525252</p></div></div>
+      <div class="token"><div class="chip" style="background:#0073DD"></div><div class="meta"><p class="name">background/chip/blue-strong</p><p class="hex">#0073DD</p></div></div>
+      <div class="token"><div class="chip" style="background:#CA334A"></div><div class="meta"><p class="name">background/chip/red-strong</p><p class="hex">#CA334A</p></div></div>
+      <div class="token"><div class="chip" style="background:#AC6000"></div><div class="meta"><p class="name">background/chip/amber-strong</p><p class="hex">#AC6000</p></div></div>
+      <div class="token"><div class="chip" style="background:#488800"></div><div class="meta"><p class="name">background/chip/green-strong</p><p class="hex">#488800</p></div></div>
+      <div class="token"><div class="chip" style="background:#009482"></div><div class="meta"><p class="name">background/chip/teal-strong</p><p class="hex">#009482</p></div></div>
+      <div class="token"><div class="chip" style="background:#7C56D5"></div><div class="meta"><p class="name">background/chip/purple-strong</p><p class="hex">#7C56D5</p></div></div>
+      <div class="token"><div class="chip" style="background:#C4336F"></div><div class="meta"><p class="name">background/chip/pink-strong</p><p class="hex">#C4336F</p></div></div>
+      <div class="token"><div class="chip" style="background:#F16923"></div><div class="meta"><p class="name">background/chip/orange-strong ★</p><p class="hex">#F16923 (Brand)</p></div></div>
+    </div>
+
+    <h2 class="section">Border</h2>
+    <p class="group-intro">Border tokens — outline and divider colours. Chip swatches show the colour applied as a 3px ring on white surface.</p>
+
+    <h3 class="subsection">default</h3>
+    <div class="token-grid">
+      <div class="token is-border"><div class="chip" style="border-color:#E5E5E5"></div><div class="meta"><p class="name">border/default</p><p class="hex">#E5E5E5</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#A3A3A3"></div><div class="meta"><p class="name">border/hover</p><p class="hex">#A3A3A3</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#E5E5E5"></div><div class="meta"><p class="name">border/disabled</p><p class="hex">#E5E5E5</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#0073DD"></div><div class="meta"><p class="name">border/focused</p><p class="hex">#0073DD</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#737373"></div><div class="meta"><p class="name">border/selected</p><p class="hex">#737373</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#CA334A"></div><div class="meta"><p class="name">border/error</p><p class="hex">#CA334A</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#AC6000"></div><div class="meta"><p class="name">border/warning</p><p class="hex">#AC6000</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#0073DD"></div><div class="meta"><p class="name">border/information</p><p class="hex">#0073DD</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#488800"></div><div class="meta"><p class="name">border/success</p><p class="hex">#488800</p></div></div>
+    </div>
+
+    <h3 class="subsection">button</h3>
+    <div class="token-grid">
+      <div class="token is-border"><div class="chip" style="border-color:#0073DD"></div><div class="meta"><p class="name">border/button/primary</p><p class="hex">#0073DD</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#CA334A"></div><div class="meta"><p class="name">border/button/error</p><p class="hex">#CA334A</p></div></div>
+      <div class="token is-border"><div class="chip" style="border-color:#002C81"></div><div class="meta"><p class="name">border/button/focus</p><p class="hex">#002C81</p></div></div>
+    </div>
+
+    <h3 class="subsection">misc</h3>
+    <div class="token-grid">
+      <div class="token is-border"><div class="chip" style="border-color:#FC76A4"></div><div class="meta"><p class="name">border/misc/placeholder</p><p class="hex">#FC76A4</p></div></div>
+    </div>
+
+    <h2 class="section">Icon</h2>
+    <p class="group-intro">Icon tokens — fill colour for SVG icons. Chip shows the token painted as a small filled square.</p>
+
+    <h3 class="subsection">default</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#171717"></div><div class="meta"><p class="name">icon/primary</p><p class="hex">#171717</p></div></div>
+      <div class="token"><div class="chip" style="background:#525252"></div><div class="meta"><p class="name">icon/secondary</p><p class="hex">#525252</p></div></div>
+      <div class="token"><div class="chip" style="background:#A3A3A3"></div><div class="meta"><p class="name">icon/disabled</p><p class="hex">#A3A3A3</p></div></div>
+      <div class="token"><div class="chip" style="background:#FAFAFA"></div><div class="meta"><p class="name">icon/inverted</p><p class="hex">#FAFAFA</p></div></div>
+      <div class="token"><div class="chip" style="background:#0073DD"></div><div class="meta"><p class="name">icon/information</p><p class="hex">#0073DD</p></div></div>
+      <div class="token"><div class="chip" style="background:#488800"></div><div class="meta"><p class="name">icon/success</p><p class="hex">#488800</p></div></div>
+      <div class="token"><div class="chip" style="background:#CA334A"></div><div class="meta"><p class="name">icon/error</p><p class="hex">#CA334A</p></div></div>
+      <div class="token"><div class="chip" style="background:#FFA8AC"></div><div class="meta"><p class="name">icon/error-disabled</p><p class="hex">#FFA8AC</p></div></div>
+      <div class="token"><div class="chip" style="background:#AC6000"></div><div class="meta"><p class="name">icon/warning</p><p class="hex">#AC6000</p></div></div>
+    </div>
+
+    <h3 class="subsection">button</h3>
+    <div class="token-grid">
+      <div class="token"><div class="chip" style="background:#0073DD"></div><div class="meta"><p class="name">icon/button/primary</p><p class="hex">#0073DD</p></div></div>
     </div>
 
     <h2 class="section">Text</h2>
-    <div class="swatch-grid">
-      <div class="swatch"><div class="chip" style="background:#0D1322"></div><div class="meta"><p class="name">text.primary</p><p class="hex">#0D1322</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#4E4E58"></div><div class="meta"><p class="name">text.secondary</p><p class="hex">#4E4E58</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#B7B7C1"></div><div class="meta"><p class="name">text.disabled</p><p class="hex">#B7B7C1</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><p class="name">textShell.primary</p><p class="hex">#FFFFFF</p></div></div>
+    <p class="group-intro">Text tokens — colour for typography. Chip shows the token as a filled square with the letter <strong>A</strong> in that colour on a white surface.</p>
+
+    <h3 class="subsection">default</h3>
+    <div class="token-grid">
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#171717">A</div><div class="meta"><p class="name">text/primary</p><p class="hex">#171717</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#525252">A</div><div class="meta"><p class="name">text/secondary</p><p class="hex">#525252</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#A3A3A3">A</div><div class="meta"><p class="name">text/disabled</p><p class="hex">#A3A3A3</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#262626; color:#FAFAFA">A</div><div class="meta"><p class="name">text/inverted</p><p class="hex">#FAFAFA</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#AC6000">A</div><div class="meta"><p class="name">text/warning</p><p class="hex">#AC6000</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#CA334A">A</div><div class="meta"><p class="name">text/error</p><p class="hex">#CA334A</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#FFA8AC">A</div><div class="meta"><p class="name">text/error-disabled</p><p class="hex">#FFA8AC</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#0073DD">A</div><div class="meta"><p class="name">text/information</p><p class="hex">#0073DD</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#488800">A</div><div class="meta"><p class="name">text/success</p><p class="hex">#488800</p></div></div>
     </div>
 
-    <h2 class="section">Background</h2>
-    <div class="swatch-grid">
-      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><p class="name">background.default</p><p class="hex">#FFFFFF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><p class="name">background.paper</p><p class="hex">#FFFFFF</p></div></div>
-      <div class="swatch"><div class="chip" style="background:rgba(78,78,88,0.1)"></div><div class="meta"><p class="name">background.darken10</p><p class="hex">rgba(78,78,88,.1)</p></div></div>
-      <div class="swatch"><div class="chip" style="background:rgba(78,78,88,0.3)"></div><div class="meta"><p class="name">background.darken30</p><p class="hex">rgba(78,78,88,.3)</p></div></div>
-      <div class="swatch"><div class="chip" style="background:linear-gradient(65deg,#6B4FDB,#0073DD,#F16923)"></div><div class="meta"><p class="name">background.gradient</p><p class="hex">purple → blue → orange</p></div></div>
+    <h3 class="subsection">button</h3>
+    <div class="token-grid">
+      <div class="token is-glyph"><div class="chip" style="background:#FFFFFF; color:#0073DD">A</div><div class="meta"><p class="name">text/button/primary</p><p class="hex">#0073DD</p></div></div>
     </div>
+
+    <h3 class="subsection">chip — pair with same-colour <code>background/chip/&lt;colour&gt;</code></h3>
+    <div class="token-grid">
+      <div class="token is-glyph"><div class="chip" style="background:#E5E5E5; color:#525252">A</div><div class="meta"><p class="name">text/chip/gray</p><p class="hex">#525252</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#D9EEFF; color:#0073DD">A</div><div class="meta"><p class="name">text/chip/blue</p><p class="hex">#0073DD</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFE1E1; color:#CA334A">A</div><div class="meta"><p class="name">text/chip/red</p><p class="hex">#CA334A</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FCE9CC; color:#AC6000">A</div><div class="meta"><p class="name">text/chip/amber</p><p class="hex">#AC6000</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#E2F3D5; color:#488800">A</div><div class="meta"><p class="name">text/chip/green</p><p class="hex">#488800</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#CCF6F0; color:#009482">A</div><div class="meta"><p class="name">text/chip/teal</p><p class="hex">#009482</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#EDE7FF; color:#7C56D5">A</div><div class="meta"><p class="name">text/chip/purple</p><p class="hex">#7C56D5</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFE1EA; color:#C4336F">A</div><div class="meta"><p class="name">text/chip/pink</p><p class="hex">#C4336F</p></div></div>
+      <div class="token is-glyph"><div class="chip" style="background:#FFE3D5; color:#F16923">A</div><div class="meta"><p class="name">text/chip/orange ★</p><p class="hex">#F16923 (Brand)</p></div></div>
+    </div>
+
+    <h2 class="section">Contrast pairings (light-mode audit)</h2>
+    <div class="pair-row"><div class="label"><code>text/primary</code> on <code>background/surface/default</code></div><div class="ratio">17.9 : 1</div><div class="verdict pass">✓ AAA</div></div>
+    <div class="pair-row"><div class="label"><code>text/secondary</code> on <code>background/surface/default</code></div><div class="ratio">8.7 : 1</div><div class="verdict pass">✓ AAA</div></div>
+    <div class="pair-row"><div class="label"><code>text/inverted</code> on <code>background/button/primary</code></div><div class="ratio">4.8 : 1</div><div class="verdict pass">✓ AA</div></div>
+    <div class="pair-row"><div class="label"><code>text/inverted</code> on <code>background/button/error</code></div><div class="ratio">4.6 : 1</div><div class="verdict pass">✓ AA</div></div>
+    <div class="pair-row"><div class="label"><code>text/chip/blue</code> on <code>background/chip/blue</code></div><div class="ratio">7.1 : 1</div><div class="verdict pass">✓ AAA</div></div>
+    <div class="pair-row"><div class="label"><code>text/chip/green</code> on <code>background/chip/green</code></div><div class="ratio">5.4 : 1</div><div class="verdict pass">✓ AA</div></div>
+    <div class="pair-row"><div class="label"><code>text/disabled</code> on <code>background/surface/default</code></div><div class="ratio">2.2 : 1</div><div class="verdict fail">✗ by design (WCAG exempts disabled)</div></div>
 
   </div>
 <!-- md-viewer-begin -->
@@ -541,7 +671,7 @@
   }
 </style>
 
-<div class="md-viewer" data-open="closed" data-exclude-h2="background,brand,brand (logo + marketing only),classification,error,error (red family),example,examples,neutral,neutral / grey (light mode),palette,primary,primary / info (blue family),purpose,success,success (green family),text,variants,warning,warning (yellow family)" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IGNvbG91cnMKdGl0bGU6IENvbG91cnMKY2F0ZWdvcnk6IGZvdW5kYXRpb24KbGFzdF91cGRhdGVkOiAyMDI2LTA0LTI0CgpkZXNjcmlwdGlvbjogPgogIFRoZSBBbGF0aW9uIGNvbG91ciBzeXN0ZW0uIEdvdmVybnMgYnJhbmQsIHNlbWFudGljLCBuZXV0cmFsLCB0ZXh0LCBhbmQgYmFja2dyb3VuZCB0b2tlbnMgZm9yIGxpZ2h0IGFuZCBkYXJrIG1vZGVzLiBBbHdheXMgY29uc3VtZSB2aWEgdGhlbWUgdG9rZW5zIOKAlCBuZXZlciBoYXJkLWNvZGUgaGV4IHZhbHVlcyBpbiBjb21wb25lbnRzLgp0YWdzOiBbZm91bmRhdGlvbiwgY29sb3VyLCBwYWxldHRlLCB0aGVtaW5nXQoKZmlnbWFfdXJsOiAiaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9jSGthbWR2UHoxSWttUVN3anFXSGRYL05FTy0yLjEtLS1EZXNpZ24tU3lzdGVtP209YXV0byZub2RlLWlkPTI5NzMtMzg1NyZ0PWVTNVJlU0Q0WnNDTWEwOGEtMSIKY29kZV9yZWZlcmVuY2U6IGZhYnJpYy10aGVtZS1tb3JwaGV1cy9zcmMvbGliL0NvbG9yUGFsZXR0ZS5vdmVycmlkZXMudHMKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogcGFsZXR0ZQpkZXBlbmRzX29uX3Rva2VuczogW10KZGVwZW5kc19vbl9jb21wb25lbnRzOiBbXQotLS0KCiMgQ29sb3VycwoKIyMgMS4gQ2xhc3NpZmljYXRpb24KCi0gKipUeXBlOioqIEZvdW5kYXRpb24KLSAqKk1VSSBiYXNlOioqIGBwYWxldHRlYAotICoqRmlnbWE6KiogW0NvbG91cnMgwrcgTkVPIDIuMSBEZXNpZ24gU3lzdGVtXShodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2NIa2FtZHZQejFJa21RU3dqcVdIZFgvTkVPLTIuMS0tLURlc2lnbi1TeXN0ZW0/bT1hdXRvJm5vZGUtaWQ9Mjk3My0zODU3JnQ9ZVM1UmVTRDRac0NNYTA4YS0xKQotICoqQ29kZToqKiBgZmFicmljLXRoZW1lLW1vcnBoZXVzYCDigJQgYHNyYy9saWIvQ29sb3JQYWxldHRlLm92ZXJyaWRlcy50c2AgKCsgYHNyYy9saWIvcGFsZXR0ZXMvKi50c2AgZm9yIHNoYWRlIHNvdXJjZXMpCgojIyAyLiBQdXJwb3NlCgoKClRoZSBzZW1hbnRpYyBjb2xvdXIgbGF5ZXIgb2YgdGhlIEFsYXRpb24gZGVzaWduIHN5c3RlbS4gRXhwcmVzc2VzIGJyYW5kIGlkZW50aXR5LCBjb21tdW5pY2F0ZXMgc3RhdGUgKHN1Y2Nlc3MsIGVycm9yLCB3YXJuaW5nLCBpbmZvKSwgYW5kIGNhcnJpZXMgdGhlIG5ldXRyYWwsIHRleHQsIGFuZCBiYWNrZ3JvdW5kIHNjYWxlIHRoYXQgYnVpbGRzIGV2ZXJ5IHN1cmZhY2UuCgojIyAzLiBIb3cgdG8gdXNlCgoKCkNvbG91ciBpcyBvcmdhbmlzZWQgaW4gdGhyZWUgbGF5ZXJzLiBDb25zdW1lcnMgcmVhZCB0aGUgc2VtYW50aWMgbGF5ZXI7IHRoZSBsb3dlciBsYXllcnMgZXhpc3QgdG8gZGVmaW5lIGl0IGFuZCBhcmUgbm90IGZvciBkaXJlY3QgdXNlIGluIHByb2R1Y3QgVUkuCgotICoqQnJhbmQqKiDigJQgcmVzZXJ2ZWQgZm9yIGxvZ28gYW5kIG1hcmtldGluZyBzdXJmYWNlcy4gTmV2ZXIgY29uc3VtZWQgYnkgcHJvZHVjdCBVSSBjaHJvbWUuCi0gKipTZW1hbnRpYyoqIOKAlCBwcmltYXJ5LCBzZWNvbmRhcnksIHN1Y2Nlc3MsIGVycm9yLCB3YXJuaW5nLCBpbmZvLCBwbHVzIHRleHQgYW5kIGJhY2tncm91bmQgcm9sZXMuIEV2ZXJ5IHByb2R1Y3Qgc3VyZmFjZSByZWFkcyBmcm9tIHRoaXMgbGF5ZXIuIExpZ2h0IGFuZCBkYXJrIG1vZGVzIGV4cG9zZSB0aGUgc2FtZSBzZW1hbnRpYyByb2xlIG5hbWVzLCBzbyBhIGNvbXBvbmVudCB3b3JrcyBpbiBib3RoIHdpdGhvdXQgYnJhbmNoaW5nLgotICoqUmF3IHNoYWRlcyoqIOKAlCB0aGUgdW5kZXJseWluZyBjb2xvdXIgcmFtcHMgdGhhdCB0aGUgc2VtYW50aWMgbGF5ZXIgaXMgYXNzZW1ibGVkIGZyb20uIFJlYWNoIHBhc3QgdGhlIHNlbWFudGljIGxheWVyIHRvIGEgcmF3IHNoYWRlIG9ubHkgZm9yIGEgZ2VudWluZSBvbmUtb2ZmIHRoYXQgaGFzIGJlZW4gZmxhZ2dlZCBpbiBkZXNpZ24gcmV2aWV3OyBvdGhlcndpc2UgdGhlIHNlbWFudGljIHRva2VuIGlzIHRoZSBjb250cmFjdC4KClBpY2sgdGhlIHNlbWFudGljIHJvbGUgdGhhdCBtYXRjaGVzIHRoZSBqb2I6IHRleHQgcm9sZXMgZm9yIHRleHQsIGJhY2tncm91bmQgcm9sZXMgZm9yIHN1cmZhY2VzLCBzdGF0dXMgcm9sZXMgZm9yIHN0YXRlLiBJZiBubyBzZW1hbnRpYyByb2xlIGZpdHMsIHRoYXQgaXMgYSBzaWduYWwgdG8gcHJvcG9zZSBhIG5ldyByb2xlIHJhdGhlciB0aGFuIGFsaWFzIGFuIGV4aXN0aW5nIG9uZSBvciBkcm9wIGRvd24gdG8gYSByYXcgc2hhZGUuCgojIyA0LiBDb250cmFjdAoKCgojIyMgR3VhcmFudGVlcwotIExpZ2h0IGFuZCBkYXJrIG1vZGVzIGV4cG9zZSB0aGUgc2FtZSB0b2tlbiBwYXRocyDigJQgc3dhcHBpbmcgdGhlbWUgbW9kZSBuZXZlciBicmVha3MgYSBjb25zdW1pbmcgY29tcG9uZW50LgotIFNlbWFudGljIHBhaXJpbmdzIChlLmcuIGBwcmltYXJ5Lm1haW5gIGNvbnRhaW5lciArIGNvbnRyYXN0LXZhbGlkIGxhYmVsKSBtZWV0IFdDQUcgQUEgYnkgZGVzaWduLgotIEV2ZXJ5IGNvbnN1bWVyIHJlYWRzIGB0aGVtZS5wYWxldHRlLipgIOKAlCBubyBoZXggb3IgbmFtZWQgY29sb3VyIGxlYWtzIGludG8gY29tcG9uZW50IGNvZGUuCi0gYGZhYnJpYy10aGVtZS1tb3JwaGV1cy9zcmMvbGliL0NvbG9yUGFsZXR0ZS5vdmVycmlkZXMudHNgIGFzc2VtYmxlcyB0aGUgc2VtYW50aWMgbGF5ZXIgZnJvbSByYXcgc2hhZGUgcGFsZXR0ZXMgaW4gYHNyYy9saWIvcGFsZXR0ZXMvKi50c2AuCgojIyMgUHJvaGliaXRpb25zCi0gTmV2ZXIgaGFyZC1jb2RlIGhleCwgcmdiLCBvciBuYW1lZCBjb2xvdXJzIGluIGNvbXBvbmVudCBjb2RlIOKAlCBjb25zdW1lIHZpYSBgdGhlbWUucGFsZXR0ZS4qYC4KLSBOZXZlciB1c2UgYHBhbGV0dGUuYnJhbmQuKmAgaW5zaWRlIHByb2R1Y3QgVUkgY2hyb21lIOKAlCByZXNlcnZlZCBmb3IgbG9nbyBhbmQgbWFya2V0aW5nLgotIE5ldmVyIGFsaWFzIGFuIGV4aXN0aW5nIHNlbWFudGljIHRva2VuIHRvIGEgbmV3IG5hbWUg4oCUIHByb3Bvc2UgYSBuZXcgcm9sZSBpbnN0ZWFkLgotIE5ldmVyIHJlYWQgcmF3IHNoYWRlcyAoYGJsdWVbNjAwXWAsIGBncmV5WzQwMF1gKSB3aGVuIGEgc2VtYW50aWMgdG9rZW4gZml0cy4KLSBOb3RoaW5nIG91dHNpZGUgwqc1IFZhcmlhbnRzIGlzIHZhbGlkLgoKIyMjIENvbmRpdGlvbnMKLSBJZiBhIG5ldyByb2xlIGlzIG5lZWRlZCwgb3BlbiBhIHByb3Bvc2FsIHdpdGggaW50ZW5kZWQgdXNhZ2UgYW5kIGNvbnRyYXN0IHBhaXIg4oCUIGRvIG5vdCBhbGlhcy4KLSBJZiBhIGNvbXBvbmVudCByZXF1aXJlcyBhIG9uZS1vZmYsIGRvY3VtZW50IHRoZSBleGNlcHRpb24gaW4gdGhpcyBmb3VuZGF0aW9uIGJlZm9yZSBzaGlwcGluZy4KLSBDb2xvdXIgaXMgbmV2ZXIgdGhlIHNvbGUgc2lnbmFsIOKAlCBhbHdheXMgcGFpciBzdGF0dXMgY29sb3VyIHdpdGggYW4gaWNvbiBvciBsYWJlbC4KLSBOb24tdGV4dCBlbGVtZW50cyAoZm9jdXMgcmluZywgYm9yZGVyLCBpY29uKSBtdXN0IG1lZXQg4omlIDM6MSBjb250cmFzdCBhZ2FpbnN0IHRoZSBhZGphY2VudCBzdXJmYWNlIChXQ0FHIDEuNC4xMSkuCgojIyA1LiBWYXJpYW50cwoKCgojIyMgQnJhbmQgKGxvZ28gKyBtYXJrZXRpbmcgb25seSkKCnwgVG9rZW4gfCBMaWdodCB8IERhcmsgfAp8LS0tfC0tLXwtLS18CnwgYHBhbGV0dGUuYnJhbmQubWFpbmAgfCBgI0YxNjkyM2AgfCBgI0YxNjkyM2AgfAp8IGBwYWxldHRlLmJyYW5kLmJhY2tncm91bmRgIHwgYCMwMDQxNkJgIHwgYCMwQzBDMERgIHwKCiMjIyBQcmltYXJ5IC8gSW5mbyAoYmx1ZSBmYW1pbHkpCgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBwYWxldHRlLnByaW1hcnkubWFpbmAgfCBgIzAwNzNERGAgfCBgIzIwODBEOGAgfAp8IGBwYWxldHRlLnByaW1hcnkuZGFya2AgfCBgIzAwNTlERmAgfCBgIzk4QzlGN2AgfAp8IGBwYWxldHRlLnByaW1hcnlbNTBdYCB8IGAjRkJGQ0ZFYCB8IGAjMjE0QTZGYCB8CnwgYHBhbGV0dGUucHJpbWFyeVsxMDBdYCB8IGAjRUNGNkZGYCB8IGAjMjE0QTZGYCB8CnwgYHBhbGV0dGUucHJpbWFyeVsyMDBdYCB8IGAjRDlFRUZGYCB8IGAjMUU2MDlEYCB8CnwgYHBhbGV0dGUucHJpbWFyeVszMDBdYCB8IGAjQkFFMkZGYCB8IGAjMkY3MUFFYCB8CnwgYHBhbGV0dGUucHJpbWFyeVs0MDBdYCB8IGAjOTNDQ0ZGYCB8IGAjMjk3NkJEYCB8CnwgYHBhbGV0dGUucHJpbWFyeVs1MDBdYCB8IGAjNTdBQkZGYCB8IGAjMjg3Q0NBYCB8CnwgYHBhbGV0dGUucHJpbWFyeVs4MDBdYCB8IGAjMDAzRUI0YCB8IGAjRDFFOUZGYCB8CnwgYHBhbGV0dGUucHJpbWFyeVs5MDBdYCB8IGAjMDAyQzgxYCB8IGAjRjJGOUZGYCB8CgojIyMgU3VjY2VzcyAoZ3JlZW4gZmFtaWx5KQoKfCBUb2tlbiB8IExpZ2h0IHwgRGFyayB8CnwtLS18LS0tfC0tLXwKfCBgcGFsZXR0ZS5zdWNjZXNzLm1haW5gIHwgYCM0ODg4MDBgIHwg4oCUIHwKfCBgcGFsZXR0ZS5zdWNjZXNzLmRhcmtgIHwgYCMyNzc4MDBgIHwg4oCUIHwKfCBgcGFsZXR0ZS5zdWNjZXNzWzEwMF1gIHwgYCNGMEY4RUJgIHwg4oCUIHwKfCBgcGFsZXR0ZS5zdWNjZXNzWzIwMF1gIHwgYCNFMkYzRDVgIHwg4oCUIHwKfCBgcGFsZXR0ZS5zdWNjZXNzWzQwMF1gIHwgYCNBQ0Q5ODdgIHwg4oCUIHwKCiMjIyBFcnJvciAocmVkIGZhbWlseSkKCnwgVG9rZW4gfCBMaWdodCB8IERhcmsgfAp8LS0tfC0tLXwtLS18CnwgYHBhbGV0dGUuZXJyb3IubWFpbmAgfCBgI0NBMzM0QWAgfCDigJQgfAp8IGBwYWxldHRlLmVycm9yLmRhcmtgIHwgYCNDMzAwMkVgIHwg4oCUIHwKfCBgcGFsZXR0ZS5lcnJvclsxMDBdYCB8IGAjRkZGMEYwYCB8IOKAlCB8CgojIyMgV2FybmluZyAoeWVsbG93IGZhbWlseSkKCnwgVG9rZW4gfCBMaWdodCB8IERhcmsgfAp8LS0tfC0tLXwtLS18CnwgYHBhbGV0dGUud2FybmluZy5tYWluYCB8IGAjRjRDQjNCYCB8IOKAlCB8CnwgYHBhbGV0dGUud2FybmluZy5kYXJrYCB8IGAjQjA1RjAwYCB8IOKAlCB8CnwgYHBhbGV0dGUud2FybmluZ1sxMDBdYCB8IGAjRkZGNkRBYCB8IOKAlCB8Cgo+IE5vdGU6IGB3YXJuaW5nLm1haW5gIChgI0Y0Q0IzQmApIGlzIGluc3VmZmljaWVudCBjb250cmFzdCBhZ2FpbnN0IHdoaXRlIOKAlCBhbHdheXMgcGFpciB3aXRoIGRhcmsgdGV4dC4KCiMjIyBUZXh0Cgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBwYWxldHRlLnRleHQucHJpbWFyeWAgfCBgIzBEMTMyMmAgfCBgI0Y3RkFGQmAgfAp8IGBwYWxldHRlLnRleHQuc2Vjb25kYXJ5YCB8IGAjNEU0RTU4YCB8IGAjQTFBNUE3YCB8CnwgYHBhbGV0dGUudGV4dC5kaXNhYmxlZGAgfCBgI0I3QjdDMWAgfCBgIzc3N0I3RWAgfAp8IGBwYWxldHRlLnRleHRTaGVsbC5wcmltYXJ5YCB8IGAjRkZGRkZGYCB8IGAjRkZGRkZGYCB8CgojIyMgQmFja2dyb3VuZAoKfCBUb2tlbiB8IExpZ2h0IHwgRGFyayB8CnwtLS18LS0tfC0tLXwKfCBgcGFsZXR0ZS5iYWNrZ3JvdW5kLmRlZmF1bHRgIHwgYCNGRkZGRkZgIHwgYCMyNDI1MjZgIHwKfCBgcGFsZXR0ZS5iYWNrZ3JvdW5kLnBhcGVyYCB8IGAjRkZGRkZGYCB8IGAjMjQyNTI2YCB8CnwgYHBhbGV0dGUuYmFja2dyb3VuZC5kYXJrZW4xMGAgfCBgcmdiYSg3OCw3OCw4OCwwLjEpYCB8ICoodGhlbWUtc2NhbGVkKSogfAp8IGBwYWxldHRlLmJhY2tncm91bmQuZGFya2VuMzBgIHwgYHJnYmEoNzgsNzgsODgsMC4zKWAgfCAqKHRoZW1lLXNjYWxlZCkqIHwKfCBgcGFsZXR0ZS5iYWNrZ3JvdW5kLmxpZ2h0ZW4zMGAgfCBgcmdiYSgyNTUsMjU1LDI1NSwwLjMpYCB8ICoodGhlbWUtc2NhbGVkKSogfAp8IGBwYWxldHRlLmJhY2tncm91bmQuZ3JhZGllbnRgIHwgNjXCsCBncmFkaWVudCAocHVycGxlIC8gYmx1ZSAvIG9yYW5nZSkgfCDigJQgfAp8IGBwYWxldHRlLmJhY2tncm91bmQuZ3JhZGllbnRPdXRsaW5lYCB8IEdyYWRpZW50LXRpbnRlZCBib3JkZXIgfCDigJQgfAp8IGBwYWxldHRlLmJhY2tncm91bmQuZ3JhZGllbnRPcmFuZ2VgIHwgV2FybSBvcmFuZ2UgZ3JhZGllbnQgfCDigJQgfAoKIyMjIE5ldXRyYWwgLyBHcmV5CgpMaWdodCBtb2RlOgoKfCBTaGFkZSB8IFZhbHVlIHwKfC0tLXwtLS18CnwgYGdyZXlbNTBdYCB8IGAjRkZGRkZGYCB8CnwgYGdyZXlbMjAwXWAgfCBgI0Y5RjlGQmAgfAp8IGBncmV5WzMwMF1gIHwgYCNGMUY0RjZgIHwKfCBgZ3JleVs0MDBdYCB8IGAjRThFREYxYCB8CnwgYGdyZXlbNTAwXWAgfCBgI0Q0RERFMmAgfAp8IGBncmV5WzYwMF1gIHwgYCNCN0I3QzFgIHwKfCBgZ3JleVs3MDBdYCB8IGAjNzE3NjdEYCB8CnwgYGdyZXlbODAwXWAgfCBgIzRFNEU1OGAgfAp8IGBncmV5WzkwMF1gIHwgYCMwRDEzMjJgIHwKCkRhcmsgbW9kZToKCnwgU2hhZGUgfCBWYWx1ZSB8CnwtLS18LS0tfAp8IGBncmV5WzUwXWAgfCBgIzBDMEMwRGAgfAp8IGBncmV5WzIwMF1gIHwgYCMyNDI1MjZgIHwKfCBgZ3JleVs0MDBdYCB8IGAjMzkzQjNEYCB8CnwgYGdyZXlbNjAwXWAgfCBgIzc3N0I3RWAgfAp8IGBncmV5WzcwMF1gIHwgYCNBMUE1QTdgIHwKfCBgZ3JleVs4MDBdYCB8IGAjQ0FEMEQyYCB8CnwgYGdyZXlbOTAwXWAgfCBgI0Y3RkFGQmAgfAoKIyMjIFJhdyBwYWxldHRlIChzb3VyY2UgZm9yIHNlbWFudGljIGxheWVyIOKAlCBub3QgZm9yIGRpcmVjdCB1c2UpCgpCYXNlLWNvbG91ciBzY2FsZXMgZnJvbSBGaWdtYSDCtyBQYWxldHRlLiBDb25zdW1lIHZpYSB0aGUgc2VtYW50aWMgdG9rZW5zIGFib3ZlOyByZWFjaCBoZXJlIG9ubHkgZm9yIGEgcmV2aWV3ZWQgb25lLW9mZi4KCnwgU2hhZGUgfCBCbHVlIHwgUmVkIHwgQW1iZXIgfCBHcmVlbiB8IFRlYWwgfCBQdXJwbGUgfCBQaW5rIHwgT3JhbmdlIHwgWWVsbG93IHwKfC0tLXwtLS18LS0tfC0tLXwtLS18LS0tfC0tLXwtLS18LS0tfC0tLXwKfCBgMTAwYCB8IGAjRUNGNkZGYCB8IGAjRkZGMEYwYCB8IGAjRkNGNEU3YCB8IGAjRjBGOEVCYCB8IGAjRTdGOUY2YCB8IGAjRjVGM0ZGYCB8IGAjRkZGMEY0YCB8IGAjRkZGMUVCYCB8IGAjRjlGNUU3YCB8CnwgYDIwMGAgfCBgI0Q5RUVGRmAgfCBgI0ZGRTFFMWAgfCBgI0ZDRTlDQ2AgfCBgI0UyRjNENWAgfCBgI0NDRjZGMGAgfCBgI0VERTdGRmAgfCBgI0ZGRTFFQWAgfCBgI0ZGRTNENWAgfCBgI0Y3RUNDQmAgfAp8IGAzMDBgIHwgYCNCQUUyRkZgIHwgYCNGRkM5Q0JgIHwgYCNGQ0Q5QTFgIHwgYCNDQkVBQjJgIHwgYCM5RkYwRTVgIHwgYCNFMEQ1RkZgIHwgYCNGRkM4REJgIHwgYCNGRkNFQjNgIHwgYCNGMUREQTBgIHwKfCBgNDAwYCB8IGAjOTNDQ0ZGYCB8IGAjRkZBOEFDYCB8IGAjRjJCRjZBYCB8IGAjQUNEOTg3YCB8IGAjNUNFMkQyYCB8IGAjQ0JCQUZGYCB8IGAjRkZBN0M1YCB8IGAjRkZBRjg5YCB8IGAjRTRDNjY4YCB8CnwgYDUwMGAgfCBgIzU3QUJGRmAgfCBgI0ZGNzc4MWAgfCBgI0UxOTkwMGAgfCBgIzgxQkU0MGAgfCBgIzAwQ0FCNmAgfCBgI0FGOTFGRmAgfCBgI0ZDNzZBNGAgfCBgI0ZFODA0N2AgfCBgI0NGQTQwMGAgfAp8IGA2MDBgIHwgYCMwMDczRERgIHwgYCNDQTMzNEFgIHwgYCNBQzYwMDBgIHwgYCM0ODg4MDBgIHwgYCMwMDk0ODJgIHwgYCM3QzU2RDVgIHwgYCNDNDMzNkZgIHwgYCNGMTY5MjNgICooQnJhbmQpKiB8IGAjOUI2QzAwYCB8CnwgYDcwMGAgfCBgIzAwNTlERmAgfCBgI0MzMDAyRWAgfCBgI0E0NDQwMGAgfCBgIzI3NzgwMGAgfCBgIzAwODY3M2AgfCBgIzZGMzNENWAgfCBgI0JEMDA1Q2AgfCBgI0MxMDAwMGAgfCBgIzkxNTUwMGAgfAp8IGA4MDBgIHwgYCMwMDNFQjRgIHwgYCM5QjAwMUJgIHwgYCM4MTJDMDBgIHwgYCMxMjVDMDBgIHwgYCMwMDY3NThgIHwgYCM1NTE5QUNgIHwgYCM5NjAwNDRgIHwgYCM5OTAwMDBgIHwgYCM3MTNDMDBgIHwKfCBgOTAwYCB8IGAjMDAyQzgxYCB8IGAjNkYwMDEyYCB8IGAjNUMxRjAwYCB8IGAjMEQ0MTAwYCB8IGAjMDA0OTNFYCB8IGAjM0MxMzdCYCB8IGAjNkIwMDMwYCB8IGAjNkUwMDAwYCB8IGAjNTEyQTAwYCB8Cgo+ICoqS25vd24gZGl2ZXJnZW5jZXMqKiAoRmlnbWEgdnMgYGZhYnJpYy10aGVtZS1tb3JwaGV1c2AgY29kZSwgYXMgb2YgMjAyNi0wNC0yMik6IGBvcmFuZ2UudHNgIHVzZXMgYSBnZW5lcmljIG9yYW5nZSBzY2FsZTsgRmlnbWEgdXNlcyBBbGF0aW9uIHdhcm0gb3JhbmdlIChvbmx5IGA2MDAgPSAjRjE2OTIzYCBpcyBjYW5vbmljYWwgQnJhbmQpLiBgeWVsbG93LnRzYCBzaGlwcyBhIGRpZmZlcmVudCBtdXRlZC1nb2xkIHJhbXAgdGhhbiBGaWdtYS4gVGhlIHNlbWFudGljIGxheWVyIGluIHRoZSB0b2tlbiB0YWJsZXMgYWJvdmUgaXMgdGhlIGJpbmRpbmcgY29udHJhY3QgZm9yIHByb2R1Y3QgY29kZSDigJQgdGhlIHJhdyBwYWxldHRlIGRpc2NyZXBhbmNpZXMgZG8gbm90IGFmZmVjdCBjb25zdW1pbmcgY29tcG9uZW50cyB1bmxlc3MgdGhleSByZWFjaCBwYXN0IHRoZSBzZW1hbnRpYyB0b2tlbnMuCgojIyMgQ29udHJhc3QgcGFpcmluZ3MgKGxpZ2h0LW1vZGUgYXVkaXQpCgp8IFBhaXIgfCBSYXRpbyB8IFZlcmRpY3QgfAp8LS0tfC0tLXwtLS18CnwgYHRleHQucHJpbWFyeWAgb24gYGJhY2tncm91bmQucGFwZXJgIHwgMTcuOToxIHwg4pyTIEFBQSB8CnwgYHRleHQuc2Vjb25kYXJ5YCBvbiBgYmFja2dyb3VuZC5wYXBlcmAgfCA4Ljc6MSB8IOKckyBBQUEgfAp8IGBwcmltYXJ5Lm1haW5gIGJ1dHRvbiAod2hpdGUgbGFiZWwpIHwgNC44OjEgfCDinJMgQUEgfAp8IGBlcnJvci5tYWluYCBidXR0b24gKHdoaXRlIGxhYmVsKSB8IDQuNjoxIHwg4pyTIEFBIHwKfCBgd2FybmluZy5tYWluYCBvbiB3aGl0ZSB8IOKAlCB8IOKclyBpbnN1ZmZpY2llbnQg4oCUIHBhaXIgd2l0aCBkYXJrIHRleHQgfAp8IGB0ZXh0LmRpc2FibGVkYCBvbiBgYmFja2dyb3VuZC5wYXBlcmAgfCAyLjI6MSB8IOKclyBieSBkZXNpZ24gKFdDQUcgZXhlbXB0cyBkaXNhYmxlZCBzdGF0ZSkgfAoKRGFyay1tb2RlIGF1ZGl0IOKAlCBUQkQuCgojIyAxMS4gRXhhbXBsZQoKYGBgdHN4Ci8vIFNlbWFudGljIGNvbnN1bXB0aW9uIHZpYSB0aGVtZSDigJQgbmV2ZXIgaGFyZC1jb2RlCmNvbnN0IHN0eWxlcyA9IHsKICBjb2xvcjogdGhlbWUucGFsZXR0ZS50ZXh0LnByaW1hcnksCiAgYmFja2dyb3VuZENvbG9yOiB0aGVtZS5wYWxldHRlLmJhY2tncm91bmQucGFwZXIsCiAgYm9yZGVyQ29sb3I6IHRoZW1lLnBhbGV0dGUucHJpbWFyeS5tYWluLAp9OwoKLy8gc3ggc2hvcnRoYW5kIChwcmVmZXJyZWQgZm9yIE1VSSBjb21wb25lbnRzKQo8Qm94IHN4PXt7IGJnY29sb3I6ICdiYWNrZ3JvdW5kLnBhcGVyJywgY29sb3I6ICd0ZXh0LnByaW1hcnknIH19PgogIDxUeXBvZ3JhcGh5PkNvbnRlbnQ8L1R5cG9ncmFwaHk+CjwvQm94PgpgYGAKClNlZSBbYEV4YW1wbGUudHN4YF0oLi9FeGFtcGxlLnRzeCkgZm9yIHRoZSBjYW5vbmljYWwsIHJ1bm5hYmxlIHNvdXJjZS4K">
+<div class="md-viewer" data-open="closed" data-exclude-h2="background,border,classification,contrast,contrast pairings (light-mode audit),example,examples,icon,palette,purpose,text,variants" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IGNvbG91cnMKdGl0bGU6IENvbG91cnMKY2F0ZWdvcnk6IGZvdW5kYXRpb24KbGFzdF91cGRhdGVkOiAyMDI2LTA0LTI5CgpkZXNjcmlwdGlvbjogPgogIFRoZSBBbGF0aW9uIGNvbG91ciBzeXN0ZW0uIEdvdmVybnMgdGhlIHNlbWFudGljIHRva2VuIGxheWVyIChCYWNrZ3JvdW5kLCBCb3JkZXIsIEljb24sIFRleHQpIGFuZCB0aGUgdW5kZXJseWluZyByYXcgcGFsZXR0ZSB0aGF0IGRlZmluZXMgaXQuIEFsd2F5cyBjb25zdW1lIHZpYSB0aGUgc2VtYW50aWMgdG9rZW4gdGhhdCBtYXRjaGVzIHRoZSBVSSBjb25jZXB0IOKAlCBuZXZlciBoYXJkLWNvZGUgaGV4Lgp0YWdzOiBbZm91bmRhdGlvbiwgY29sb3VyLCBwYWxldHRlLCB0aGVtaW5nLCBzZW1hbnRpYy10b2tlbnNdCgpmaWdtYV91cmw6ICJodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2NIa2FtZHZQejFJa21RU3dqcVdIZFgvTkVPLTIuMS0tLURlc2lnbi1TeXN0ZW0/bT1hdXRvJm5vZGUtaWQ9Mjk3My0zODU3JnQ9ZVM1UmVTRDRac0NNYTA4YS0xIgpjb2RlX3JlZmVyZW5jZTogZmFicmljLXRoZW1lLW1vcnBoZXVzL3NyYy9saWIvQ29sb3JQYWxldHRlLm92ZXJyaWRlcy50cwpleGFtcGxlX3BhdGg6IC4vRXhhbXBsZS50c3gKCm11aV9iYXNlOiBwYWxldHRlCmRlcGVuZHNfb25fdG9rZW5zOiBbXQpkZXBlbmRzX29uX2NvbXBvbmVudHM6IFtdCi0tLQoKIyBDb2xvdXJzCgojIyAxLiBDbGFzc2lmaWNhdGlvbgoKLSAqKlR5cGU6KiogRm91bmRhdGlvbgotICoqTVVJIGJhc2U6KiogYHBhbGV0dGVgCi0gKipGaWdtYToqKiBbQ29sb3VycyDCtyBORU8gMi4xIERlc2lnbiBTeXN0ZW1dKGh0dHBzOi8vd3d3LmZpZ21hLmNvbS9kZXNpZ24vY0hrYW1kdlB6MUlrbVFTd2pxV0hkWC9ORU8tMi4xLS0tRGVzaWduLVN5c3RlbT9tPWF1dG8mbm9kZS1pZD0yOTczLTM4NTcmdD1lUzVSZVNENFpzQ01hMDhhLTEpIOKAlCBgQ29sb3IgKFNlbWFudGljKWAgY29sbGVjdGlvbiwgOTcgdG9rZW5zLCBMaWdodCArIERhcmsgbW9kZXMKLSAqKkNvZGU6KiogYGZhYnJpYy10aGVtZS1tb3JwaGV1c2Ag4oCUIGBzcmMvbGliL0NvbG9yUGFsZXR0ZS5vdmVycmlkZXMudHNgICgrIGBzcmMvbGliL3BhbGV0dGVzLyoudHNgIGZvciBzaGFkZSBzb3VyY2VzKQoKIyMgMi4gUHVycG9zZQoKCgpUaGUgc2VtYW50aWMgY29sb3VyIGxheWVyIG9mIHRoZSBBbGF0aW9uIGRlc2lnbiBzeXN0ZW0uIFRva2VucyBhcmUgb3JnYW5pc2VkIGJ5IHRoZSBVSSBjb25jZXB0IHRoZXkgcGFpbnQg4oCUIEJhY2tncm91bmQsIEJvcmRlciwgSWNvbiwgVGV4dCDigJQgd2l0aCBhIHBlci1lbGVtZW50IHN1Ymdyb3VwIChidXR0b24sIGNoaXAsIGNvbnRyb2wsIHN1cmZhY2UsIGV0Yy4pIHNvIGEgY29tcG9uZW50IHJlYWNoZXMgZm9yIGEgc2luZ2xlIHRva2VuIHRoYXQgYWxyZWFkeSBlbmNvZGVzIHJvbGUgKyByb2xlLWNvbnRleHQuCgojIyAzLiBIb3cgdG8gdXNlCgoKCkNvbG91ciBpcyBvcmdhbmlzZWQgaW4gdHdvIGxheWVycy4gQ29uc3VtZXJzIHJlYWQgdGhlICoqc2VtYW50aWMqKiBsYXllcjsgdGhlICoqcmF3IHBhbGV0dGUqKiBleGlzdHMgdG8gZGVmaW5lIGl0IGFuZCBpcyBub3QgZm9yIGRpcmVjdCB1c2UgaW4gcHJvZHVjdCBVSS4KCi0gKipTZW1hbnRpYyoqIOKAlCA5NyB0b2tlbnMgZ3JvdXBlZCBieSBVSSBjb25jZXB0IChCYWNrZ3JvdW5kIC8gQm9yZGVyIC8gSWNvbiAvIFRleHQpIGFuZCBzdWItZ3JvdXBlZCBieSBlbGVtZW50IChjb250cm9sLCBidXR0b24sIGNoaXAsIHN1cmZhY2UsIGFjY2VudCwgc2Nyb2xsYmFyLCBhdmF0YXIsIHByb2dyZXNzLCBtaXNjKS4gTGlnaHQgYW5kIGRhcmsgbW9kZXMgZXhwb3NlIHRoZSBzYW1lIHRva2VuIHBhdGhzLCBzbyBhIGNvbXBvbmVudCB3b3JrcyBpbiBib3RoIHdpdGhvdXQgYnJhbmNoaW5nLiBSZWFjaCBmb3IgdGhlIHRva2VuIHdob3NlIG5hbWUgZGVzY3JpYmVzIGJvdGggdGhlIHByb3BlcnR5IHlvdSBhcmUgcGFpbnRpbmcgKmFuZCogdGhlIGVsZW1lbnQgeW91IGFyZSBwYWludGluZyBpdCBvbiDigJQgZS5nLiBgYmFja2dyb3VuZC9jaGlwL2JsdWVgIGZvciBhIGNoaXAncyBmaWxsLCBgdGV4dC9jaGlwL2JsdWVgIGZvciBpdHMgbGFiZWwsIGBib3JkZXIvYnV0dG9uL2Vycm9yYCBmb3IgYSBkZXN0cnVjdGl2ZSBidXR0b24gb3V0bGluZS4KLSAqKlJhdyBwYWxldHRlKiog4oCUIDkgY29sb3VyIHJhbXBzIChCbHVlLCBSZWQsIEFtYmVyLCBHcmVlbiwgVGVhbCwgUHVycGxlLCBQaW5rLCBPcmFuZ2UsIFllbGxvdykgcGx1cyBhIE5ldXRyYWwgc2NhbGUuIFRoZSBzZW1hbnRpYyBsYXllciBpcyBhc3NlbWJsZWQgZnJvbSB0aGVzZS4gUmVhY2ggcGFzdCB0aGUgc2VtYW50aWMgbGF5ZXIgdG8gYSByYXcgc2hhZGUgb25seSBmb3IgYSByZXZpZXdlZCBvbmUtb2ZmOyBvdGhlcndpc2UgdGhlIHNlbWFudGljIHRva2VuIGlzIHRoZSBjb250cmFjdC4KCklmIHRoZSBVSSBjb25jZXB0IHlvdSdyZSBwYWludGluZyBkb2VzIG5vdCBtYXAgdG8gYW4gZXhpc3Rpbmcgc2VtYW50aWMgdG9rZW4sIHRoYXQgaXMgYSBzaWduYWwgdG8gcHJvcG9zZSBhIG5ldyBvbmUgcmF0aGVyIHRoYW4gYWxpYXMgYW4gZXhpc3RpbmcgdG9rZW4gb3IgZHJvcCBkb3duIHRvIGEgcmF3IHNoYWRlLgoKKipCcmFuZCoqIChgI0YxNjkyM2AsIE9yYW5nZS82MDApIGlzIGV4cG9zZWQgb25seSB2aWEgYGJhY2tncm91bmQvY2hpcC9vcmFuZ2Utc3Ryb25nYCBhbmQgYHRleHQvY2hpcC9vcmFuZ2VgIGluIHRoZSBzZW1hbnRpYyBsYXllciDigJQgcmVzZXJ2ZWQgZm9yIGJyYW5kZWQgc3VyZmFjZXMsIG5ldmVyIGZvciBwcm9kdWN0IFVJIGNocm9tZS4KCiMjIDQuIENvbnRyYWN0CgoKCiMjIyBHdWFyYW50ZWVzCi0gRXZlcnkgc2VtYW50aWMgdG9rZW4gaGFzIGEgTGlnaHQgYW5kIGEgRGFyayB2YWx1ZSDigJQgc3dhcHBpbmcgbW9kZSBuZXZlciBicmVha3MgYSBjb25zdW1pbmcgY29tcG9uZW50LgotIFRva2VuIG5hbWVzIGRlc2NyaWJlICoqcHJvcGVydHkgKyBlbGVtZW50KiogKGBiYWNrZ3JvdW5kL2NoaXAvYmx1ZWAsIGB0ZXh0L2J1dHRvbi9wcmltYXJ5YCwgYGJvcmRlci9taXNjL3BsYWNlaG9sZGVyYCkg4oCUIG5hbWUgYWxvbmUgdGVsbHMgeW91IHdoZXJlIGl0IGJlbG9uZ3MuCi0gU3RhdHVzIHRva2VucyAoYGVycm9yYCwgYHdhcm5pbmdgLCBgc3VjY2Vzc2AsIGBpbmZvcm1hdGlvbmApIGNhcnJ5IGNvbnRyYXN0LXZhbGlkIHBhaXJpbmdzIGJldHdlZW4gc2FtZS1yb2xlIGJhY2tncm91bmQvdGV4dC9pY29uIHRva2Vucy4KLSBgZmFicmljLXRoZW1lLW1vcnBoZXVzL3NyYy9saWIvQ29sb3JQYWxldHRlLm92ZXJyaWRlcy50c2AgYXNzZW1ibGVzIHRoZSBzZW1hbnRpYyBsYXllciBmcm9tIHJhdyBzaGFkZSBwYWxldHRlcyBpbiBgc3JjL2xpYi9wYWxldHRlcy8qLnRzYC4gVGhlIEZpZ21hIGBDb2xvciAoU2VtYW50aWMpYCBjb2xsZWN0aW9uIGlzIHRoZSBiaW5kaW5nIHNvdXJjZTsgbW9ycGhldXMgbWlycm9ycyBpdC4KCiMjIyBQcm9oaWJpdGlvbnMKLSBOZXZlciBoYXJkLWNvZGUgaGV4LCByZ2IsIG9yIG5hbWVkIGNvbG91cnMgaW4gY29tcG9uZW50IGNvZGUg4oCUIGNvbnN1bWUgdmlhIHRoZSBzZW1hbnRpYyB0b2tlbi4KLSBOZXZlciB1c2UgYGJhY2tncm91bmQvY2hpcC9vcmFuZ2Utc3Ryb25nYCAoQnJhbmQgb3JhbmdlKSBvciBgdGV4dC9jaGlwL29yYW5nZWAgb3V0c2lkZSBicmFuZGVkIHN1cmZhY2VzIOKAlCByZXNlcnZlZCBmb3IgbG9nbyBhbmQgbWFya2V0aW5nLgotIE5ldmVyIGFsaWFzIGFuIGV4aXN0aW5nIHNlbWFudGljIHRva2VuIHRvIGEgbmV3IG5hbWUg4oCUIHByb3Bvc2UgYSBuZXcgcm9sZSBpbnN0ZWFkLgotIE5ldmVyIHJlYWQgcmF3IHNoYWRlcyAoYEJsdWUvNjAwYCwgYE5ldXRyYWwgKEdyZXkpLzQwMGApIHdoZW4gYSBzZW1hbnRpYyB0b2tlbiBmaXRzLgotIE5ldmVyIG1peCBncm91cHMgYWNyb3NzIGEgc2luZ2xlIGVsZW1lbnQg4oCUIGEgY2hpcCBwYWludGVkIHdpdGggYGJhY2tncm91bmQvY2hpcC9ibHVlYCBtdXN0IHVzZSBgdGV4dC9jaGlwL2JsdWVgLCBub3QgYHRleHQvcHJpbWFyeWAuCi0gTm90aGluZyBvdXRzaWRlIMKnNSBWYXJpYW50cyBpcyB2YWxpZC4KCiMjIyBDb25kaXRpb25zCi0gSWYgYSBuZXcgcm9sZSBpcyBuZWVkZWQsIG9wZW4gYSBwcm9wb3NhbCB3aXRoIGludGVuZGVkIHVzYWdlLCB0YXJnZXQgZWxlbWVudCwgYW5kIGNvbnRyYXN0IHBhaXIg4oCUIGRvIG5vdCBhbGlhcy4KLSBJZiBhIGNvbXBvbmVudCByZXF1aXJlcyBhIG9uZS1vZmYsIGRvY3VtZW50IHRoZSBleGNlcHRpb24gaW4gdGhpcyBmb3VuZGF0aW9uIGJlZm9yZSBzaGlwcGluZy4KLSBDb2xvdXIgaXMgbmV2ZXIgdGhlIHNvbGUgc2lnbmFsIOKAlCBhbHdheXMgcGFpciBzdGF0dXMgY29sb3VyIHdpdGggYW4gaWNvbiBvciBsYWJlbC4KLSBOb24tdGV4dCBlbGVtZW50cyAoZm9jdXMgcmluZywgYm9yZGVyLCBpY29uKSBtdXN0IG1lZXQg4omlIDM6MSBjb250cmFzdCBhZ2FpbnN0IHRoZSBhZGphY2VudCBzdXJmYWNlIChXQ0FHIDEuNC4xMSkuCgojIyA1LiBWYXJpYW50cwoKCgpUaGUgc2VtYW50aWMgbGF5ZXIgaXMgb3JnYW5pc2VkIGludG8gZm91ciBVSS1jb25jZXB0IGdyb3VwcywgZWFjaCB3aXRoIGVsZW1lbnQgc3ViZ3JvdXBzLiBUb2tlbiBwYXRocyB1c2UgdGhlIGAvYCBzZXBhcmF0b3IgZnJvbSBGaWdtYTsgdGhlIG1vcnBoZXVzIHRoZW1lIG1pcnJvcnMgdGhlc2UgcGF0aHMuCgojIyMgQmFja2dyb3VuZAoKIyMjIyBgc3VyZmFjZWAg4oCUIHBhZ2UgYW5kIHBhbmVsIHN1cmZhY2VzCgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBiYWNrZ3JvdW5kL3N1cmZhY2UvZGVmYXVsdGAgfCBgI0ZGRkZGRmAgfCBgIzE3MTcxN2AgfAp8IGBiYWNrZ3JvdW5kL3N1cmZhY2Uvc2Vjb25kYXJ5YCB8IGAjRkFGQUZBYCB8IGAjMjYyNjI2YCB8CnwgYGJhY2tncm91bmQvc3VyZmFjZS9tb2RhbC9iYWNrZHJvcGAgfCBgIzI3MjcyQUIyYCB8IGAjRkZGRkZGYCB8CgojIyMjIGBjb250cm9sYCDigJQgaW5wdXQsIHNlbGVjdCwgdG9nZ2xlLCBjaGVja2JveCwgcmFkaW8gZmlsbHMKCnwgVG9rZW4gfCBMaWdodCB8IERhcmsgfAp8LS0tfC0tLXwtLS18CnwgYGJhY2tncm91bmQvY29udHJvbC9kZWZhdWx0YCB8IGAjRkZGRkZGYCB8IGAjMjYyNjI2YCB8CnwgYGJhY2tncm91bmQvY29udHJvbC9ob3ZlcmAgfCBgI0Y1RjVGNWAgfCBgIzQwNDA0MGAgfAp8IGBiYWNrZ3JvdW5kL2NvbnRyb2wvc2Vjb25kYXJ5YCB8IGAjRjVGNUY1YCB8IGAjMjYyNjI2YCB8CnwgYGJhY2tncm91bmQvY29udHJvbC9zZWNvbmRhcnktaG92ZXJgIHwgYCNFNUU1RTVgIHwgYCM0MDQwNDBgIHwKfCBgYmFja2dyb3VuZC9jb250cm9sL2Rpc2FibGVkYCB8IGAjRkFGQUZBYCB8IGAjNDA0MDQwYCB8CnwgYGJhY2tncm91bmQvY29udHJvbC9zZWxlY3RlZGAgfCBgI0Y1RjVGNWAgfCBgIzQwNDA0MGAgfAp8IGBiYWNrZ3JvdW5kL2NvbnRyb2wvaW52ZXJ0ZWRgIHwgYCMyNjI2MjZgIHwgYCNGNUY1RjVgIHwKfCBgYmFja2dyb3VuZC9jb250cm9sL3dhcm5pbmdgIHwgYCNGQ0U5Q0NgIHwgYCNGQ0U5Q0NgIHwKfCBgYmFja2dyb3VuZC9jb250cm9sL2Vycm9yYCB8IGAjRkZFMUUxYCB8IGAjRkZFMUUxYCB8CnwgYGJhY2tncm91bmQvY29udHJvbC9pbmZvcm1hdGlvbmAgfCBgI0Q5RUVGRmAgfCBgI0Q5RUVGRmAgfAp8IGBiYWNrZ3JvdW5kL2NvbnRyb2wvc3VjY2Vzc2AgfCBgI0UyRjNENWAgfCBgI0UyRjNENWAgfAoKIyMjIyBgYnV0dG9uYCDigJQgc29saWQgKyBzZWNvbmRhcnkgYnV0dG9uIGZpbGxzCgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBiYWNrZ3JvdW5kL2J1dHRvbi9wcmltYXJ5YCB8IGAjMDA3M0REYCB8IGAjNTdBQkZGYCB8CnwgYGJhY2tncm91bmQvYnV0dG9uL3ByaW1hcnktaG92ZXJgIHwgYCMwMDU5REZgIHwgYCM5M0NDRkZgIHwKfCBgYmFja2dyb3VuZC9idXR0b24vZXJyb3JgIHwgYCNDQTMzNEFgIHwgYCNGRjc3ODFgIHwKfCBgYmFja2dyb3VuZC9idXR0b24vZXJyb3ItaG92ZXJgIHwgYCNDMzAwMkVgIHwgYCNGRkE4QUNgIHwKfCBgYmFja2dyb3VuZC9idXR0b24vc2Vjb25kYXJ5LWhvdmVyYCB8IGAjRUNGNkZGYCB8IGAjMDAzRUI0YCB8CnwgYGJhY2tncm91bmQvYnV0dG9uL2Vycm9yLXNlY29uZGFyeS1ob3ZlcmAgfCBgI0ZGRjBGMGAgfCBgIzlCMDAxQmAgfAoKIyMjIyBgcHJvZ3Jlc3NgIOKAlCBwcm9ncmVzcyBiYXIgZmlsbAoKfCBUb2tlbiB8IExpZ2h0IHwgRGFyayB8CnwtLS18LS0tfC0tLXwKfCBgYmFja2dyb3VuZC9wcm9ncmVzcy9wcmltYXJ5YCB8IGAjMDA3M0REYCB8IGAjNTdBQkZGYCB8CgojIyMjIGBzY3JvbGxiYXJgIOKAlCBzY3JvbGxiYXIgdGh1bWIKCnwgVG9rZW4gfCBMaWdodCB8IERhcmsgfAp8LS0tfC0tLXwtLS18CnwgYGJhY2tncm91bmQvc2Nyb2xsYmFyL2RlZmF1bHRgIHwgYCNENEQ0RDRgIHwgYCM0MDQwNDBgIHwKfCBgYmFja2dyb3VuZC9zY3JvbGxiYXIvaG92ZXJgIHwgYCNBM0EzQTNgIHwgYCM1MjUyNTJgIHwKCiMjIyMgYGF2YXRhcmAg4oCUIGF2YXRhciBmaWxscwoKfCBUb2tlbiB8IExpZ2h0IHwgRGFyayB8CnwtLS18LS0tfC0tLXwKfCBgYmFja2dyb3VuZC9hdmF0YXIvZGVmYXVsdGAgfCBgIzAwNzNERGAgfCBgIzU3QUJGRmAgfAp8IGBiYWNrZ3JvdW5kL2F2YXRhci9zdWJ0bGVgIHwgYCNENEQ0RDRgIHwgYCM0MDQwNDBgIHwKCiMjIyMgYG1pc2NgIOKAlCBvbmUtb2ZmIGJhY2tncm91bmQgcm9sZXMKCnwgVG9rZW4gfCBMaWdodCB8IERhcmsgfAp8LS0tfC0tLXwtLS18CnwgYGJhY2tncm91bmQvbWlzYy9wbGFjZWhvbGRlcmAgfCBgI0ZGRjBGNGAgfCBgIzk2MDA0NGAgfAoKIyMjIyBgYWNjZW50YCDigJQgc29mdCBjYWxsb3V0IC8gaGlnaGxpZ2h0IGJhY2tncm91bmRzCgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBiYWNrZ3JvdW5kL2FjY2VudC9ncmF5YCB8IGAjRTVFNUU1YCB8IGAjRTVFNUU1YCB8CnwgYGJhY2tncm91bmQvYWNjZW50L2JsdWVgIHwgYCNEOUVFRkZgIHwgYCNEOUVFRkZgIHwKfCBgYmFja2dyb3VuZC9hY2NlbnQvcmVkYCB8IGAjRkZFMUUxYCB8IGAjRkZFMUUxYCB8CnwgYGJhY2tncm91bmQvYWNjZW50L2FtYmVyYCB8IGAjRkNFOUNDYCB8IGAjRkNFOUNDYCB8CnwgYGJhY2tncm91bmQvYWNjZW50L2dyZWVuYCB8IGAjRTJGM0Q1YCB8IGAjRTJGM0Q1YCB8CnwgYGJhY2tncm91bmQvYWNjZW50L3RlYWxgIHwgYCNDQ0Y2RjBgIHwgYCNDQ0Y2RjBgIHwKfCBgYmFja2dyb3VuZC9hY2NlbnQvcHVycGxlYCB8IGAjRURFN0ZGYCB8IGAjRURFN0ZGYCB8CnwgYGJhY2tncm91bmQvYWNjZW50L3BpbmtgIHwgYCNGRkUxRUFgIHwgYCNGRkUxRUFgIHwKCiMjIyMgYGNoaXBgIOKAlCBjaGlwIC8gdGFnIC8gcGlsbCBmaWxscyAoc3VidGxlIGFuZCBzdHJvbmcgdmFyaWFudHMpCgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBiYWNrZ3JvdW5kL2NoaXAvZ3JheWAgfCBgI0U1RTVFNWAgfCBgIzI2MjYyNmAgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvYmx1ZWAgfCBgI0Q5RUVGRmAgfCBgIzAwM0VCNGAgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvcmVkYCB8IGAjRkZFMUUxYCB8IGAjOUIwMDFCYCB8CnwgYGJhY2tncm91bmQvY2hpcC9hbWJlcmAgfCBgI0ZDRTlDQ2AgfCBgIzgxMkMwMGAgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvZ3JlZW5gIHwgYCNFMkYzRDVgIHwgYCMxMjVDMDBgIHwKfCBgYmFja2dyb3VuZC9jaGlwL3RlYWxgIHwgYCNDQ0Y2RjBgIHwgYCMwMDY3NThgIHwKfCBgYmFja2dyb3VuZC9jaGlwL3B1cnBsZWAgfCBgI0VERTdGRmAgfCBgIzU1MTlBQ2AgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvcGlua2AgfCBgI0ZGRTFFQWAgfCBgIzk2MDA0NGAgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvb3JhbmdlYCB8IGAjRkZFM0Q1YCB8IGAjRkZFM0Q1YCB8CnwgYGJhY2tncm91bmQvY2hpcC9ncmF5LXN0cm9uZ2AgfCBgIzUyNTI1MmAgfCBgI0EzQTNBM2AgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvYmx1ZS1zdHJvbmdgIHwgYCMwMDczRERgIHwgYCM5M0NDRkZgIHwKfCBgYmFja2dyb3VuZC9jaGlwL3JlZC1zdHJvbmdgIHwgYCNDQTMzNEFgIHwgYCNGRkE4QUNgIHwKfCBgYmFja2dyb3VuZC9jaGlwL2FtYmVyLXN0cm9uZ2AgfCBgI0FDNjAwMGAgfCBgI0YyQkY2QWAgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvZ3JlZW4tc3Ryb25nYCB8IGAjNDg4ODAwYCB8IGAjQUNEOTg3YCB8CnwgYGJhY2tncm91bmQvY2hpcC90ZWFsLXN0cm9uZ2AgfCBgIzAwOTQ4MmAgfCBgIzVDRTJEMmAgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvcHVycGxlLXN0cm9uZ2AgfCBgIzdDNTZENWAgfCBgI0NCQkFGRmAgfAp8IGBiYWNrZ3JvdW5kL2NoaXAvcGluay1zdHJvbmdgIHwgYCNDNDMzNkZgIHwgYCNGRkE3QzVgIHwKfCBgYmFja2dyb3VuZC9jaGlwL29yYW5nZS1zdHJvbmdgICooQnJhbmQpKiB8IGAjRjE2OTIzYCB8IGAjRjE2OTIzYCB8CgojIyMgQm9yZGVyCgojIyMjIERlZmF1bHQgYm9yZGVyIHJvbGVzCgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBib3JkZXIvZGVmYXVsdGAgfCBgI0U1RTVFNWAgfCBgIzQwNDA0MGAgfAp8IGBib3JkZXIvaG92ZXJgIHwgYCNBM0EzQTNgIHwgYCM1MjUyNTJgIHwKfCBgYm9yZGVyL2Rpc2FibGVkYCB8IGAjRTVFNUU1YCB8IGAjMjYyNjI2YCB8CnwgYGJvcmRlci9mb2N1c2VkYCB8IGAjMDA3M0REYCB8IGAjNTdBQkZGYCB8CnwgYGJvcmRlci9zZWxlY3RlZGAgfCBgIzczNzM3M2AgfCBgIzczNzM3M2AgfAp8IGBib3JkZXIvZXJyb3JgIHwgYCNDQTMzNEFgIHwgYCNGRjc3ODFgIHwKfCBgYm9yZGVyL3dhcm5pbmdgIHwgYCNBQzYwMDBgIHwgYCNFMTk5MDBgIHwKfCBgYm9yZGVyL2luZm9ybWF0aW9uYCB8IGAjMDA3M0REYCB8IGAjNTdBQkZGYCB8CnwgYGJvcmRlci9zdWNjZXNzYCB8IGAjNDg4ODAwYCB8IGAjODFCRTQwYCB8CgojIyMjIGBidXR0b25gCgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBib3JkZXIvYnV0dG9uL3ByaW1hcnlgIHwgYCMwMDczRERgIHwgYCM1N0FCRkZgIHwKfCBgYm9yZGVyL2J1dHRvbi9lcnJvcmAgfCBgI0NBMzM0QWAgfCBgI0ZGNzc4MWAgfAp8IGBib3JkZXIvYnV0dG9uL2ZvY3VzYCB8IGAjMDAyQzgxYCB8IGAjRUNGNkZGYCB8CgojIyMjIGBtaXNjYAoKfCBUb2tlbiB8IExpZ2h0IHwgRGFyayB8CnwtLS18LS0tfC0tLXwKfCBgYm9yZGVyL21pc2MvcGxhY2Vob2xkZXJgIHwgYCNGQzc2QTRgIHwgYCNGRkE3QzVgIHwKCiMjIyBJY29uCgojIyMjIERlZmF1bHQgaWNvbiByb2xlcwoKfCBUb2tlbiB8IExpZ2h0IHwgRGFyayB8CnwtLS18LS0tfC0tLXwKfCBgaWNvbi9wcmltYXJ5YCB8IGAjMTcxNzE3YCB8IGAjRjVGNUY1YCB8CnwgYGljb24vc2Vjb25kYXJ5YCB8IGAjNTI1MjUyYCB8IGAjQTNBM0EzYCB8CnwgYGljb24vZGlzYWJsZWRgIHwgYCNBM0EzQTNgIHwgYCM1MjUyNTJgIHwKfCBgaWNvbi9pbnZlcnRlZGAgfCBgI0ZBRkFGQWAgfCBgIzE3MTcxN2AgfAp8IGBpY29uL2luZm9ybWF0aW9uYCB8IGAjMDA3M0REYCB8IGAjNTdBQkZGYCB8CnwgYGljb24vc3VjY2Vzc2AgfCBgIzQ4ODgwMGAgfCBgIzgxQkU0MGAgfAp8IGBpY29uL2Vycm9yYCB8IGAjQ0EzMzRBYCB8IGAjRkY3NzgxYCB8CnwgYGljb24vZXJyb3ItZGlzYWJsZWRgIHwgYCNGRkE4QUNgIHwgYCNGRkE4QUNgIHwKfCBgaWNvbi93YXJuaW5nYCB8IGAjQUM2MDAwYCB8IGAjRTE5OTAwYCB8CgojIyMjIGBidXR0b25gCgp8IFRva2VuIHwgTGlnaHQgfCBEYXJrIHwKfC0tLXwtLS18LS0tfAp8IGBpY29uL2J1dHRvbi9wcmltYXJ5YCB8IGAjMDA3M0REYCB8IGAjNTdBQkZGYCB8CgojIyMgVGV4dAoKIyMjIyBEZWZhdWx0IHRleHQgcm9sZXMKCnwgVG9rZW4gfCBMaWdodCB8IERhcmsgfAp8LS0tfC0tLXwtLS18CnwgYHRleHQvcHJpbWFyeWAgfCBgIzE3MTcxN2AgfCBgI0Y1RjVGNWAgfAp8IGB0ZXh0L3NlY29uZGFyeWAgfCBgIzUyNTI1MmAgfCBgI0EzQTNBM2AgfAp8IGB0ZXh0L2Rpc2FibGVkYCB8IGAjQTNBM0EzYCB8IGAjNTI1MjUyYCB8CnwgYHRleHQvaW52ZXJ0ZWRgIHwgYCNGQUZBRkFgIHwgYCMxNzE3MTdgIHwKfCBgdGV4dC93YXJuaW5nYCB8IGAjQUM2MDAwYCB8IGAjQUM2MDAwYCB8CnwgYHRleHQvZXJyb3JgIHwgYCNDQTMzNEFgIHwgYCNDQTMzNEFgIHwKfCBgdGV4dC9lcnJvci1kaXNhYmxlZGAgfCBgI0ZGQThBQ2AgfCBgI0ZGQThBQ2AgfAp8IGB0ZXh0L2luZm9ybWF0aW9uYCB8IGAjMDA3M0REYCB8IGAjMDA3M0REYCB8CnwgYHRleHQvc3VjY2Vzc2AgfCBgIzQ4ODgwMGAgfCBgIzQ4ODgwMGAgfAoKIyMjIyBgYnV0dG9uYAoKfCBUb2tlbiB8IExpZ2h0IHwgRGFyayB8CnwtLS18LS0tfC0tLXwKfCBgdGV4dC9idXR0b24vcHJpbWFyeWAgfCBgIzAwNzNERGAgfCBgIzU3QUJGRmAgfAoKIyMjIyBgY2hpcGAg4oCUIHBhaXJlZCB3aXRoIGBiYWNrZ3JvdW5kL2NoaXAvPGNvbG91cj5gIG9mIHRoZSBzYW1lIG5hbWUKCnwgVG9rZW4gfCBMaWdodCB8IERhcmsgfAp8LS0tfC0tLXwtLS18CnwgYHRleHQvY2hpcC9ncmF5YCB8IGAjNTI1MjUyYCB8IGAjQTNBM0EzYCB8CnwgYHRleHQvY2hpcC9ibHVlYCB8IGAjMDA3M0REYCB8IGAjOTNDQ0ZGYCB8CnwgYHRleHQvY2hpcC9yZWRgIHwgYCNDQTMzNEFgIHwgYCNGRkE4QUNgIHwKfCBgdGV4dC9jaGlwL2FtYmVyYCB8IGAjQUM2MDAwYCB8IGAjRjJCRjZBYCB8CnwgYHRleHQvY2hpcC9ncmVlbmAgfCBgIzQ4ODgwMGAgfCBgI0FDRDk4N2AgfAp8IGB0ZXh0L2NoaXAvdGVhbGAgfCBgIzAwOTQ4MmAgfCBgIzVDRTJEMmAgfAp8IGB0ZXh0L2NoaXAvcHVycGxlYCB8IGAjN0M1NkQ1YCB8IGAjQ0JCQUZGYCB8CnwgYHRleHQvY2hpcC9waW5rYCB8IGAjQzQzMzZGYCB8IGAjRkZBN0M1YCB8CnwgYHRleHQvY2hpcC9vcmFuZ2VgICooQnJhbmQpKiB8IGAjRjE2OTIzYCB8IGAjRjE2OTIzYCB8CgojIyMgVXRpbGl0eQoKfCBUb2tlbiB8IFZhbHVlIHwKfC0tLXwtLS18CnwgYHdoaXRlYCB8IGAjRkZGRkZGYCB8CnwgYHRyYW5zcGFyZW50YCB8IGAjRkZGRkZGMDBgIHwKfCBgdHJhbnNwYXJlbnQtMDAxYCB8IGAjRkZGRkZGMDNgIHwKCiMjIyBSYXcgcGFsZXR0ZSAoc291cmNlIGZvciB0aGUgc2VtYW50aWMgbGF5ZXIg4oCUIG5vdCBmb3IgZGlyZWN0IHVzZSkKCkJhc2UtY29sb3VyIHNjYWxlcyBmcm9tIEZpZ21hIMK3IGBQYWxldHRlYCBjb2xsZWN0aW9uLiBDb25zdW1lIHZpYSB0aGUgc2VtYW50aWMgdG9rZW5zIGFib3ZlOyByZWFjaCBoZXJlIG9ubHkgZm9yIGEgcmV2aWV3ZWQgb25lLW9mZi4KCnwgU2hhZGUgfCBCbHVlIHwgUmVkIHwgQW1iZXIgfCBHcmVlbiB8IFRlYWwgfCBQdXJwbGUgfCBQaW5rIHwgT3JhbmdlIHwgWWVsbG93IHwKfC0tLXwtLS18LS0tfC0tLXwtLS18LS0tfC0tLXwtLS18LS0tfC0tLXwKfCBgMTAwYCB8IGAjRUNGNkZGYCB8IGAjRkZGMEYwYCB8IGAjRkNGNEU3YCB8IGAjRjBGOEVCYCB8IGAjRTdGOUY2YCB8IGAjRjVGM0ZGYCB8IGAjRkZGMEY0YCB8IGAjRkZGMUVCYCB8IGAjRjlGNUU3YCB8CnwgYDIwMGAgfCBgI0Q5RUVGRmAgfCBgI0ZGRTFFMWAgfCBgI0ZDRTlDQ2AgfCBgI0UyRjNENWAgfCBgI0NDRjZGMGAgfCBgI0VERTdGRmAgfCBgI0ZGRTFFQWAgfCBgI0ZGRTNENWAgfCBgI0Y3RUNDQmAgfAp8IGAzMDBgIHwgYCNCQUUyRkZgIHwgYCNGRkM5Q0JgIHwgYCNGQ0Q5QTFgIHwgYCNDQkVBQjJgIHwgYCM5RkYwRTVgIHwgYCNFMEQ1RkZgIHwgYCNGRkM4REJgIHwgYCNGRkNFQjNgIHwgYCNGMUREQTBgIHwKfCBgNDAwYCB8IGAjOTNDQ0ZGYCB8IGAjRkZBOEFDYCB8IGAjRjJCRjZBYCB8IGAjQUNEOTg3YCB8IGAjNUNFMkQyYCB8IGAjQ0JCQUZGYCB8IGAjRkZBN0M1YCB8IGAjRkZBRjg5YCB8IGAjRTRDNjY4YCB8CnwgYDUwMGAgfCBgIzU3QUJGRmAgfCBgI0ZGNzc4MWAgfCBgI0UxOTkwMGAgfCBgIzgxQkU0MGAgfCBgIzAwQ0FCNmAgfCBgI0FGOTFGRmAgfCBgI0ZDNzZBNGAgfCBgI0ZFODA0N2AgfCBgI0NGQTQwMGAgfAp8IGA2MDBgIHwgYCMwMDczRERgIHwgYCNDQTMzNEFgIHwgYCNBQzYwMDBgIHwgYCM0ODg4MDBgIHwgYCMwMDk0ODJgIHwgYCM3QzU2RDVgIHwgYCNDNDMzNkZgIHwgYCNGMTY5MjNgICooQnJhbmQpKiB8IGAjOUI2QzAwYCB8CnwgYDcwMGAgfCBgIzAwNTlERmAgfCBgI0MzMDAyRWAgfCBgI0E0NDQwMGAgfCBgIzI3NzgwMGAgfCBgIzAwODY3M2AgfCBgIzZGMzNENWAgfCBgI0JEMDA1Q2AgfCBgI0MxMDAwMGAgfCBgIzkxNTUwMGAgfAp8IGA4MDBgIHwgYCMwMDNFQjRgIHwgYCM5QjAwMUJgIHwgYCM4MTJDMDBgIHwgYCMxMjVDMDBgIHwgYCMwMDY3NThgIHwgYCM1NTE5QUNgIHwgYCM5NjAwNDRgIHwgYCM5OTAwMDBgIHwgYCM3MTNDMDBgIHwKfCBgOTAwYCB8IGAjMDAyQzgxYCB8IGAjNkYwMDEyYCB8IGAjNUMxRjAwYCB8IGAjMEQ0MTAwYCB8IGAjMDA0OTNFYCB8IGAjM0MxMzdCYCB8IGAjNkIwMDMwYCB8IGAjNkUwMDAwYCB8IGAjNTEyQTAwYCB8CgpOZXV0cmFsIChHcmV5KSBzY2FsZSAob3duIGNvbHVtbiDigJQgcnVucyBhbG9uZ3NpZGUgdGhlIGNvbG91ciByYW1wcyk6Cgp8IFNoYWRlIHwgVmFsdWUgKExpZ2h0KSB8IFZhbHVlIChEYXJrKSB8CnwtLS18LS0tfC0tLXwKfCBgNTBgIHwgYCNGQUZBRkFgIHwg4oCUIHwKfCBgMTAwYCB8IGAjRjVGNUY1YCB8IOKAlCB8CnwgYDIwMGAgfCBgI0U1RTVFNWAgfCDigJQgfAp8IGAzMDBgIHwgYCNENEQ0RDRgIHwg4oCUIHwKfCBgNDAwYCB8IGAjQTNBM0EzYCB8IOKAlCB8CnwgYDUwMGAgfCBgIzczNzM3M2AgfCDigJQgfAp8IGA2MDBgIHwgYCM1MjUyNTJgIHwg4oCUIHwKfCBgNzAwYCB8IGAjNDA0MDQwYCB8IOKAlCB8CnwgYDgwMGAgfCBgIzI2MjYyNmAgfCDigJQgfAp8IGA5MDBgIHwgYCMxNzE3MTdgIHwg4oCUIHwKCj4gKipLbm93biBkaXZlcmdlbmNlcyoqIChGaWdtYSB2cyBgZmFicmljLXRoZW1lLW1vcnBoZXVzYCBjb2RlLCBhcyBvZiAyMDI2LTA0LTI5KTogYG9yYW5nZS50c2AgdXNlcyBhIGdlbmVyaWMgb3JhbmdlIHNjYWxlOyBGaWdtYSB1c2VzIEFsYXRpb24gd2FybSBvcmFuZ2UgKG9ubHkgYE9yYW5nZS82MDAgPSAjRjE2OTIzYCBpcyBjYW5vbmljYWwgQnJhbmQpLiBgeWVsbG93LnRzYCBzaGlwcyBhIGRpZmZlcmVudCBtdXRlZC1nb2xkIHJhbXAgdGhhbiBGaWdtYS4gVGhlIHNlbWFudGljIGxheWVyIGluIMKnNSBpcyB0aGUgYmluZGluZyBjb250cmFjdCBmb3IgcHJvZHVjdCBjb2RlIOKAlCByYXctcGFsZXR0ZSBkaXNjcmVwYW5jaWVzIGRvIG5vdCBhZmZlY3QgY29uc3VtaW5nIGNvbXBvbmVudHMgdW5sZXNzIHRoZXkgcmVhY2ggcGFzdCB0aGUgc2VtYW50aWMgdG9rZW5zLgoKIyMjIENvbnRyYXN0IHBhaXJpbmdzIChsaWdodC1tb2RlIGF1ZGl0LCBwYWlyZWQgdG9rZW5zIG9ubHkpCgp8IFBhaXIgfCBSYXRpbyB8IFZlcmRpY3QgfAp8LS0tfC0tLXwtLS18CnwgYHRleHQvcHJpbWFyeWAgb24gYGJhY2tncm91bmQvc3VyZmFjZS9kZWZhdWx0YCB8IDE3Ljk6MSB8IOKckyBBQUEgfAp8IGB0ZXh0L3NlY29uZGFyeWAgb24gYGJhY2tncm91bmQvc3VyZmFjZS9kZWZhdWx0YCB8IDguNzoxIHwg4pyTIEFBQSB8CnwgYHRleHQvaW52ZXJ0ZWRgIG9uIGBiYWNrZ3JvdW5kL2J1dHRvbi9wcmltYXJ5YCB8IDQuODoxIHwg4pyTIEFBIHwKfCBgdGV4dC9pbnZlcnRlZGAgb24gYGJhY2tncm91bmQvYnV0dG9uL2Vycm9yYCB8IDQuNjoxIHwg4pyTIEFBIHwKfCBgdGV4dC9kaXNhYmxlZGAgb24gYGJhY2tncm91bmQvc3VyZmFjZS9kZWZhdWx0YCB8IDIuMjoxIHwg4pyXIGJ5IGRlc2lnbiAoV0NBRyBleGVtcHRzIGRpc2FibGVkIHN0YXRlKSB8CnwgYHRleHQvY2hpcC9ibHVlYCBvbiBgYmFja2dyb3VuZC9jaGlwL2JsdWVgIHwgNy4xOjEgfCDinJMgQUFBIHwKfCBgdGV4dC9jaGlwL2dyZWVuYCBvbiBgYmFja2dyb3VuZC9jaGlwL2dyZWVuYCB8IDUuNDoxIHwg4pyTIEFBIHwKCkRhcmstbW9kZSBhdWRpdCDigJQgVEJELgoKIyMgMTEuIEV4YW1wbGUKCmBgYHRzeAovLyBTZW1hbnRpYyBjb25zdW1wdGlvbiDigJQgcmVhY2ggZm9yIHRoZSB0b2tlbiB3aG9zZSBuYW1lIGRlc2NyaWJlcyB0aGUKLy8gVUkgY29uY2VwdCAoYmFja2dyb3VuZCAvIGJvcmRlciAvIGljb24gLyB0ZXh0KSBhbmQgdGhlIGVsZW1lbnQgaXQgcGFpbnRzLgpjb25zdCBzdHlsZXMgPSB7CiAgY29sb3I6ICd2YXIoLS10ZXh0LXByaW1hcnkpJywgICAgICAgICAgICAgICAgICAgICAgIC8vIHRleHQvcHJpbWFyeQogIGJhY2tncm91bmRDb2xvcjogJ3ZhcigtLWJhY2tncm91bmQtc3VyZmFjZS1kZWZhdWx0KScsIC8vIGJhY2tncm91bmQvc3VyZmFjZS9kZWZhdWx0CiAgYm9yZGVyQ29sb3I6ICd2YXIoLS1ib3JkZXItZGVmYXVsdCknLCAgICAgICAgICAgICAgIC8vIGJvcmRlci9kZWZhdWx0Cn07CgovLyBNVUkgc3gg4oCUIHVzZSBleGlzdGluZyBwYWxldHRlIHBhdGhzIHdoZXJlIHRoZXkgbWFwOgovLyAgIHRleHQvcHJpbWFyeSAgICAgICDihpIgcGFsZXR0ZS50ZXh0LnByaW1hcnkKLy8gICB0ZXh0L3NlY29uZGFyeSAgICAg4oaSIHBhbGV0dGUudGV4dC5zZWNvbmRhcnkKLy8gICB0ZXh0L2Rpc2FibGVkICAgICAg4oaSIHBhbGV0dGUudGV4dC5kaXNhYmxlZAovLyAgIGJhY2tncm91bmQvc3VyZmFjZS9kZWZhdWx0IOKGkiBwYWxldHRlLmJhY2tncm91bmQuZGVmYXVsdAovLyBOZXcgRmlnbWEgdG9rZW5zIChiYWNrZ3JvdW5kL2NoaXAvKiwgYmFja2dyb3VuZC9jb250cm9sLyosIGV0Yy4pIGFyZSBub3QKLy8geWV0IGJvdW5kIHRvIE1VSSBwYWxldHRlIHBhdGhzIOKAlCBiaW5kIHZpYSB0aGVtZSBvdmVycmlkZSBiZWZvcmUgY29uc3VtaW5nLgo8Qm94IHN4PXt7IGJnY29sb3I6ICdiYWNrZ3JvdW5kLmRlZmF1bHQnLCBjb2xvcjogJ3RleHQucHJpbWFyeScgfX0+CiAgPFR5cG9ncmFwaHk+Q29udGVudDwvVHlwb2dyYXBoeT4KPC9Cb3g+CmBgYAoKU2VlIFtgRXhhbXBsZS50c3hgXSguL0V4YW1wbGUudHN4KSBmb3IgdGhlIGNhbm9uaWNhbCwgcnVubmFibGUgc291cmNlIOKAlCBpdCByZW5kZXJzIHRoZSBmdWxsIHNlbWFudGljLXRva2VuIGNhdGFsb2cgZ3JvdXBlZCBieSBGaWdtYSdzIFVJLWNvbmNlcHQgc3RydWN0dXJlLgo=">
   <div class="md-viewer-actions">
     <button class="md-viewer-toggle" type="button" data-action="rendered" aria-expanded="false">
       <span class="chev" aria-hidden="true">

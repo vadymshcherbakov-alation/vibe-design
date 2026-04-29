@@ -6,8 +6,9 @@ last_updated: 2026-04-24
 
 description: >
   A short text hint shown on hover or keyboard focus. Use it to label icon-only
-  controls, expand truncated text, or surface supplementary description. Never
-  for interactive content, critical info, or anything the user must read.
+  controls, expand truncated text, or surface a brief supplementary description
+  (one line, or up to three wrapped lines). Never for interactive content,
+  critical info, paragraphs, or anything the user must read.
 tags: [tooltip, hint, hover, a11y]
 
 figma_url: "https://www.figma.com/design/cHkamdvPz1IkmQSwjqWHdX/NEO-2.1---Design-System?node-id=109-3056"
@@ -39,9 +40,9 @@ depends_on_components:
 
 ## 2. Purpose
 
-A Tooltip is a short text hint that appears on hover or keyboard focus. It labels an icon-only control, expands a truncated label, or adds a single line of supplementary description — the kind of thing a user would otherwise need to guess at.
+A Tooltip is a short text hint that appears on hover or keyboard focus. It labels an icon-only control, expands a truncated label, or adds a brief supplementary description — the kind of thing a user would otherwise need to guess at.
 
-Reach for it when the trigger is focusable, the hint is a short phrase, and the user can still complete the task without ever seeing it. If the content is critical, interactive, or longer than one line, pick a different affordance.
+Reach for it when the trigger is focusable, the hint is short (a phrase, or at most a 2–3 line wrapped description), and the user can still complete the task without ever seeing it. If the content is critical, interactive, or longer than ~300 characters, pick a different affordance.
 
 ## 3. When to use / When not to use
 
@@ -49,11 +50,12 @@ Reach for it when the trigger is focusable, the hint is a short phrase, and the 
 - An Icon Button or icon-only affordance needs a name on hover / focus
 - A truncated label needs its full text available on hover
 - A control needs a short supplementary description that isn't required to use it
+- A control needs a brief 2–3 line clarification (definition, format hint, status reason) — use the **multi-line** variant (§5.5)
 
 **Do not use when**
 - The content must be read to understand the action → put the label in the UI (or use a **Button** with visible text)
-- The content contains interactive elements (links, buttons, inputs) → use a **Popover** or **Dialog**
-- The content is longer than one line of running text → use a **Popover** or inline help text
+- The content contains interactive elements (links, buttons, inputs) → use a **Dialog**, or render the content inline near the trigger
+- The content runs longer than ~300 characters or would wrap to more than 3 lines → use inline help text below the field, an Alert, or a help link to docs
 - The trigger is not focusable (a plain `<div>`, a disabled button with no wrapper) → make it focusable first, or move the hint inline
 - The tooltip would be the only accessible name for the control → give the control an `aria-label` and use the tooltip as a visible echo
 
@@ -68,11 +70,12 @@ Reach for it when the trigger is focusable, the hint is a short phrase, and the 
 - Typography is `body2` (12px Inter Regular) at `spacing.1` / `spacing.2` padding with `shape.borderRadius` corners and `shadow.overlay` elevation.
 
 ### Prohibitions
-- No interactive content inside `title` — no links, buttons, form controls, or focusable nodes. Interactive hover content is a Popover / Dialog job.
+- No interactive content inside `title` — no links, buttons, form controls, or focusable nodes. Interactive hover content is a Dialog job (or render inline near the trigger).
 - No tooltip as the only accessible name. `aria-label` on the trigger is required; the tooltip is a visible echo, not a substitute.
 - No `sx` overrides of background, colour, radius, font, or shadow — the theme owns appearance.
 - No tooltip on a `disabled` MUI control without a `<span>` wrapper — disabled buttons don't fire events.
-- No long-form content. Keep `title` to one short phrase; if it wraps more than two lines in the bubble, it belongs elsewhere.
+- No long-form content. Single-line tooltips stay ≤ ~60 characters; multi-line stays ≤ ~300 characters and wraps to at most three lines. Anything longer belongs inline.
+- No manual `maxWidth` override on the bubble to fit more text — that bypasses the length contract. Trim the copy or move it inline instead.
 - No `open` prop used to pin a tooltip permanently in product UI (outside of controlled feedback like Copy-to-clipboard confirmations).
 - Nothing outside the Variants list (§5) is valid.
 
@@ -118,6 +121,22 @@ Twelve values. Default is `top`; MUI flips to the opposite side when the bubble 
 |---|---|---|
 | `enterDelay` | MUI default (100ms) | Dense toolbars where tooltips flicker on mouse transit → raise to 500ms |
 | `leaveDelay` | MUI default (0ms) | Rare — only to bridge a gap for `describeChild` follow-through |
+
+### 5.5 Length & wrapping (single-line vs multi-line)
+
+The bubble uses MUI's default `maxWidth: 300px` and wraps automatically — there is no API toggle. Pick the variant by content length, not by prop.
+
+| Length | Variant | When | Behaviour |
+|---|---|---|---|
+| ≤ ~60 characters | **Single-line** (default) | Icon-button labels, short hints ("More actions", "Copy link", "Filter") | Bubble fits on one line. No wrapping. |
+| ~60–300 characters · up to 3 lines | **Multi-line** | A brief definition, format hint, or status reason that needs context to read ("Published items are visible to everyone in the workspace and counted toward the data product score") | Bubble wraps automatically at ~300px. Keep to ≤ 3 lines. |
+| > ~300 characters · > 3 lines | **Don't use a tooltip** | Onboarding copy, policy text, paragraphs, anything with more than one idea | Move it inline (help text below the field, an Alert, or a help link to docs). The hard ceiling is 400 characters — never above. |
+
+**Heuristics**
+
+- Read the title once, out loud. If it takes more than ~5 seconds, it is too long for a tooltip.
+- If the copy needs a sentence break (period mid-content, then another clause), it is multi-line — *or* it should not be a tooltip at all.
+- Multi-line tooltips are still hover-only ephemeral content. If the user must re-read, scroll, or click inside, it is the wrong affordance.
 
 ## 6. Anatomy
 

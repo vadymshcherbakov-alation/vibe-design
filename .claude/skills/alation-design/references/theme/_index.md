@@ -44,7 +44,7 @@ the same basename lives in this folder.
 If a `usage.md` cites an override file that is **not** in this folder, see
 "Known gaps" below. Do not fabricate one.
 
-## Bundled files (26)
+## Bundled files (27)
 
 | File | Source | Used by |
 |---|---|---|
@@ -72,6 +72,7 @@ If a `usage.md` cites an override file that is **not** in this folder, see
 | `MuiSwitch.overrides.tsx` | morpheus mirror | switch |
 | `MuiTabs.overrides.ts` | morpheus mirror | tabs |
 | `MuiTextField.overrides.ts` | morpheus mirror | basic-text-field, multiline-text-area, select-input, form-field |
+| `MuiToggleButton.overrides.ts` | morpheus mirror | content-switcher (base ToggleButton + ToggleButtonGroup styling under the `MuiContentSwitcher` wrapper) |
 | `MuiTooltip.overrides.ts` | morpheus mirror | tooltip |
 | `MuiTypography.overrides.ts` | morpheus mirror | typography (foundational; registers `body0`, `hero*`, `machine*` variants used everywhere) |
 

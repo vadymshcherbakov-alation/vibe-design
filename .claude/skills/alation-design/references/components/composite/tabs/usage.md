@@ -2,7 +2,7 @@
 name: tabs
 title: Tabs
 category: composite-component
-last_updated: 2026-04-27
+last_updated: 2026-04-28
 
 description: >
   The view-switcher composite. A horizontal or vertical strip of `<Tab>` items
@@ -55,7 +55,7 @@ depends_on_components:
 
 Tabs split a single page into 2–~7 mutually-exclusive views — Imported / Published, Overview / Schema / Lineage, All / Mine / Shared. The strip sits at the top of the content area and shows the active view by name; switching tabs swaps the panel below it without navigating away from the page.
 
-Tabs live as a *view switcher inside one page*. They are not for filtering rows, choosing one of a small set of options inside a form, or navigating between top-level destinations — those jobs belong to a Content Switcher, a Radio group, or the app shell's nav rail.
+Tabs sit at one specific level of the navigation hierarchy: **in-page navigation** between heavy panels. Top-level destinations belong to the app shell — **App bar**, **Wayfinder**, or **Top Nav**. Smaller content blocks, single-axis filters above a table, and 2–5-option choices inside a form belong to a **Content Switcher** (segmented control) or a **Radio** group. Pick the level that matches the *weight* of the content being switched.
 
 ## 3. When to use / When not to use
 
@@ -67,7 +67,7 @@ Tabs live as a *view switcher inside one page*. They are not for filtering rows,
 **Do not use when**
 - The split is a single-axis filter on a list ("Databases / Dashboards / Agents") → use a **Content Switcher** (filter pill)
 - The user picks one option from a form → use **Radio** (2–5 options) or **Select Input** (≤ ~20)
-- The destinations are top-level app sections → use the app shell's nav rail, not tabs
+- The destinations are top-level app sections → use the app shell — **App bar**, **Wayfinder**, or **Top Nav** — not Tabs
 - The page would have one tab — render the content directly with no strip
 - The page would have more than ~7 tabs — split into a parent grouping or move to a left-side rail; horizontal scrolling is allowed (`variant="scrollable"`) but not as a routine answer to too many tabs
 

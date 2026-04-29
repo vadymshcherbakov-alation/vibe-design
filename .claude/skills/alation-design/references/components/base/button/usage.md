@@ -47,16 +47,14 @@ An action trigger. Commits the user's intent — submits, confirms, navigates, o
 - Confirming a reversible choice
 - Primary navigation that commits work (e.g. "Continue", "Save and exit")
 - Triggering an asynchronous operation with visible loading feedback
+- Highlighting the single, explicit "next action" the product is steering the user toward (submit, save, confirm, continue) — at most one **Primary** per page
 
 **Do not use when**
 - The action navigates without committing → use a **Link**
 - The control toggles a binary state → use a **Switch** or **Checkbox**
-- The label is an icon only and space is dense → use an [**IconButton**](./icon-button/usage.md)
-
-### Primary-button scarcity
-
-- **At most one Primary button on a page, by default.** A page has one primary commit action at a time — more than one dilutes the signal and leaves users guessing which step comes next.
-- **Do not emit a Primary button unless the page has an explicit, singular "next action"** the product is steering the user toward (submit, save, confirm, continue). If the actions on the page are peers — "Export", "Filter", "Share" — use **Blue secondary** or **Grey outlined** instead. Reach for Primary only when omitting it would leave the user unsure what to do next.
+- The label is an icon only and space is dense → use an **IconButton**
+- Multiple actions on the page are peers ("Export", "Filter", "Share") → use **Blue secondary** or **Grey outlined** instead of stacking Primary buttons
+- There is no explicit, singular next action — omit **Primary** entirely; reach for it only when omitting it would leave the user unsure what to do next
 
 ## 4. Contract
 
@@ -70,7 +68,7 @@ An action trigger. Commits the user's intent — submits, confirms, navigates, o
 - No hard-coded hex, px, or font values — consume via theme.
 - No `sx` overrides of colour / radius — use the named-style system (§5.1).
 - No `color="secondary"` — morpheus has no visual "secondary" style; use **Blue secondary** (outlined + primary) instead.
-- No more than one **Primary** button per page (default). See §3 "Primary-button scarcity" for when to omit it entirely.
+- No more than one **Primary** button per page (default). If actions are peers, use **Blue secondary** or **Grey outlined**; if no singular next action exists, omit Primary entirely.
 - No **Gradient** in product UI — brand / marketing only.
 - Nothing outside the Named styles list (§5.1) is valid.
 

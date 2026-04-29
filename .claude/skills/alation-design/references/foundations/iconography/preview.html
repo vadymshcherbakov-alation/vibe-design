@@ -42,10 +42,15 @@
       font-size: 28px; font-weight: 600; line-height: 1.25;
       letter-spacing: -0.01em; margin: 0 0 8px 0;
     }
-    p.page-sub {
+    .page-sub {
       font-size: 14px; line-height: 1.6; color: var(--text-secondary);
       margin: 0 0 32px 0;
     }
+    .page-sub p { margin: 0 0 10px 0; }
+    .page-sub p:last-child { margin-bottom: 0; }
+    .page-sub strong { font-weight: 600; color: var(--text-primary); }
+    .page-sub em { font-style: italic; }
+    .page-sub a { color: var(--primary-main); text-decoration: underline; }
     h2.section {
       font-size: 14px; font-weight: 500; color: var(--text-secondary);
       letter-spacing: 0.06em; text-transform: uppercase;
@@ -142,19 +147,16 @@
       color: var(--text-primary);
     }
 
-    /* SubNav demo */
+    /* SubNav (Wayfinder) demo — dark second-level nav panel */
     .subnav-demo {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 12px; border-radius: 6px;
-      background: var(--primary-soft); color: var(--primary-main);
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 6px;
+      background: var(--shell-dark); color: #FFFFFF;
       font-size: 13px; font-weight: 500;
     }
-
-    /* Nav-rail demo */
-    .navrail-demo {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--primary-main); color: #fff;
+    .subnav-demo svg { color: #FFFFFF; }
+    .subnav-demo.active {
+      background: rgba(255,255,255,0.08);
     }
 
     .note {
@@ -209,190 +211,311 @@
 <body>
   <div class="shell">
     <h1 class="page-title">Iconography</h1>
-    <p class="page-sub">The Alation icon system. One library per project, one stroke weight, one size scale — so every icon across the app reads as one family and sits in its container at the right size without per-call-site tuning.</p>
+    <div class="page-sub"><p>The Alation icon system. Two libraries — the <strong>Custom Library</strong> (<code>@alation/icons-neo</code>) is the primary source of truth and is always checked first; the <strong>Lucide Library</strong> (<code>lucide-react</code>) is the backfill for icons that the Custom Library does not yet ship.</p></div>
 
     <!-- classification-begin -->
     <h2 class="section">Classification</h2>
     <ul class="meta-bullets" style="list-style: disc; margin: 0 0 12px 0; padding: 0 0 0 20px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.55;">
       <li><strong>Type:</strong> Foundation</li>
       <li><strong>MUI base:</strong> <code>none</code></li>
-      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2899-12&t=nzfgSH01EOC6MqS6-4" target="_blank" rel="noopener">Iconography · NEO 2.1</a> · <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2452-565&t=nzfgSH01EOC6MqS6-1" target="_blank" rel="noopener">Icon library</a></li>
-      <li><strong>Code:</strong> <code>@alation/icons-neo</code> · <code>lucide-react</code> · <code>src/layout/assets/icon/*.svg?react</code></li>
+      <li><strong>Figma:</strong> <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2032-768&t=ReyfN2LWJiqbcriS-1" target="_blank" rel="noopener">Custom Library — NEO UI Icons</a> (canonical source for <code>@alation/icons-neo</code>)</li>
+      <li><strong>Code:</strong> <code>@alation/icons-neo</code> (Custom Library, primary) · <code>lucide-react</code> (Lucide Library, fallback)</li>
     </ul>
     <!-- classification-end -->
 
-<h2 class="section">Size conventions</h2>
+<h2 class="section">Two libraries — order of precedence</h2>
+
+    <div class="library-callout">
+      <div class="title">Always check the Custom Library first</div>
+      <div>The <strong>Custom Library</strong> (<code>@alation/icons-neo</code>) is the primary source. The <strong>Lucide Library</strong> (<code>lucide-react</code>) is the backfill — used <em>only</em> when an icon is not in the Custom Library. This rule applies to every project (production <code>alation-ui</code> and the <code>@repo/ui</code> prototype alike).</div>
+      <div class="secondary">Browse the Custom Library: <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2032-768&amp;t=ReyfN2LWJiqbcriS-1" target="_blank" rel="noopener">NEO — UI Icons (Figma)</a> · export list in <code>@alation/icons-neo/src/index.ts</code> · Browse Lucide: <a href="https://lucide.dev/icons/" target="_blank" rel="noopener">lucide.dev/icons</a></div>
+    </div>
+
+    <h2 class="section">Size conventions</h2>
+    <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px 0;">Size is theme-driven by the container. Do not pass <code>size={…}</code> on icons inside Alation containers — applies equally to Custom and Lucide icons. Morpheus sets <code>html { font-size: 62.5% }</code>, so 1rem = 10px and the rem values resolve to the px values shown.</p>
     <table class="table">
       <thead>
-        <tr><th style="width:280px">Context</th><th>Size</th></tr>
+        <tr><th style="width:340px">Context</th><th>Theme token</th><th>rem</th><th>px</th></tr>
       </thead>
       <tbody>
-        <tr><td>Button <code>startIcon</code> / <code>endIcon</code></td><td class="mono">size={16}</td></tr>
-        <tr><td>Standalone <code>IconButton</code></td><td class="mono">size={16}</td></tr>
-        <tr><td>SubNav item</td><td class="mono">width={16} height={16}</td></tr>
-        <tr><td>Nav rail</td><td class="mono">width={20} height={20}</td></tr>
+        <tr><td><code>IconButton size="xsmall"</code></td><td class="mono">typography.iconXSmall</td><td class="mono">1.2rem</td><td class="mono">12px</td></tr>
+        <tr><td><code>IconButton size="small"</code> · <code>Button</code> small <code>startIcon</code> · table cells · Chip <code>icon</code></td><td class="mono">typography.iconSmall</td><td class="mono">1.6rem</td><td class="mono">16px</td></tr>
+        <tr><td><code>IconButton size="medium"</code> · <code>Button</code> medium <code>startIcon</code> (default)</td><td class="mono">typography.iconMedium</td><td class="mono">2rem</td><td class="mono">20px</td></tr>
+        <tr><td><code>IconButton size="large"</code> · <code>Button</code> large <code>startIcon</code> · Alert severity</td><td class="mono">typography.iconLarge</td><td class="mono">2.4rem</td><td class="mono">24px</td></tr>
+        <tr><td>SubNav (Wayfinder) item</td><td class="mono">(theme-baked)</td><td class="mono">1.6rem</td><td class="mono">16px</td></tr>
       </tbody>
     </table>
 
-    <h2 class="section">Icon in context</h2>
+    <h2 class="section">Icon in context — Custom Library (primary)</h2>
     <div class="context-grid">
       <div class="context-card">
-        <span class="label">Button · startIcon · size 16</span>
+        <span class="label">Button · startIcon · PlusIcon</span>
         <button class="btn-demo" type="button">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.512 12c0-.741.672-1.342 1.502-1.342h15.77c.83 0 1.502.601 1.502 1.341 0 .741-.672 1.341-1.502 1.341H4.013c-.83 0-1.502-.6-1.501-1.34Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.899 2.612c.74 0 1.34.673 1.34 1.503v15.77c0 .83-.6 1.502-1.34 1.502-.74 0-1.34-.672-1.34-1.502V4.115c0-.83.6-1.502 1.34-1.503Z"/></svg>
           Build agent
         </button>
       </div>
       <div class="context-card">
-        <span class="label">IconButton · size 16</span>
+        <span class="label">IconButton · PencilIcon</span>
+        <button class="iconbtn-demo" type="button" aria-label="Edit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="m21.214 5.74-2.993-2.992C17.622 2.299 17.023 2 16.275 2c-.747 0-1.496.3-1.945.748L3.705 13.373c-.45.299-.749.749-.899 1.347v.15l-.747 5.686c-.15.45 0 .749.299 1.048.3.15.6.3.898.3l5.687-.75c.598 0 1.048-.299 1.496-.748L21.214 9.632c1.048-1.047 1.048-2.844 0-3.892ZM8.944 18.76c0 .149-.15.149-.15.149l-4.04.598.598-4.04c0-.15 0-.15.15-.3l7.196-7.197 3.572 3.463-7.326 7.326ZM19.718 7.985l-1.802 1.802-3.572-3.463 1.932-1.932c.103-.102.154-.147.154-.147l.146.147 3.142 3.144c.15.148.15.299 0 .449Z"/></svg>
+        </button>
+      </div>
+      <div class="context-card" style="background:var(--shell-dark);border-color:var(--shell-dark);padding:14px;">
+        <span class="label" style="color:rgba(255,255,255,0.6);">SubNav (Wayfinder) item · TableIcon · active state</span>
+        <div class="subnav-demo active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.353 3H4.647A2.636 2.636 0 0 0 2 5.647v13.236a2.636 2.636 0 0 0 2.647 2.647h14.706A2.636 2.636 0 0 0 22 18.883V5.647A2.636 2.636 0 0 0 19.353 3Zm-15 3.823h6.47v5h-6.47v-5Zm8.823 0h6.471v5h-6.47v-5Zm-8.823 12.06v-4.705h6.47v5H4.648c-.147-.002-.294-.149-.294-.295Zm15 .293h-6.177v-5h6.471v4.706a.317.317 0 0 1-.294.294Z"/></svg>
+          Tables
+        </div>
+        <div class="subnav-demo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.118 10.803C8.06 10.803 4 9.403 4 6.884c0-5.179 16.236-5.179 16.236 0 0 2.52-4.059 3.92-8.118 3.92Zm0-5.599c-3.919 0-5.879 1.26-5.879 1.68 0 .42 1.96 1.68 5.88 1.68 3.918 0 5.878-1.26 5.878-1.68 0-.42-1.96-1.68-5.879-1.68Z"/><path d="M12.118 16.401C7.5 16.401 4 14.441 4 11.922V6.884c0-.56.56-1.12 1.12-1.12s1.12.56 1.12 1.12v4.898c0 .98 2.379 2.38 5.878 2.38 3.5 0 5.879-1.4 5.879-2.38V6.884c0-.56.56-1.12 1.12-1.12s1.12.56 1.12 1.12v4.898c0 2.66-3.5 4.62-8.119 4.62Z"/><path d="M12.118 22C7.5 22 4 20.04 4 17.521v-5.039c0-.56.56-1.12 1.12-1.12s1.12.56 1.12 1.12v4.9c0 .979 2.379 2.379 5.878 2.379 3.5 0 5.879-1.4 5.879-2.38v-4.899c0-.56.56-1.12 1.12-1.12s1.12.56 1.12 1.12v4.9c0 2.659-3.5 4.618-8.119 4.618Z"/></svg>
+          Sources
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section">Icon in context — Lucide Library (backfill only)</h2>
+    <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px 0;">Use these only after confirming the icon does not exist in the Custom Library.</p>
+    <div class="context-grid">
+      <div class="context-card">
+        <span class="label">IconButton · EllipsisVertical (Lucide)</span>
         <button class="iconbtn-demo" type="button" aria-label="More actions">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
         </button>
       </div>
       <div class="context-card">
-        <span class="label">SubNav item · size 16</span>
-        <div class="subnav-demo">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-          Catalog
-        </div>
-      </div>
-      <div class="context-card">
-        <span class="label">Nav rail · size 20</span>
-        <div class="navrail-demo">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 2 9l10-7 10 7-1 3"/><path d="M5 10v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/><path d="M5 10 2 9"/><path d="m19 10 3-1"/></svg>
-        </div>
+        <span class="label">IconButton · PanelLeftClose (Lucide)</span>
+        <button class="iconbtn-demo" type="button" aria-label="Collapse panel">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg>
+        </button>
       </div>
     </div>
 
-    <h2 class="section">Icon library</h2>
+    <h2 class="section">Custom Library — sample icons</h2>
+    <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px 0;">A small sample. Full export list (~229 icons) lives in <code>@alation/icons-neo/src/index.ts</code>; the Figma mirror is the <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2452-565&amp;t=nzfgSH01EOC6MqS6-1" target="_blank" rel="noopener">NEO — UI Icons</a> page.</p>
 
-    <div class="library-callout">
-      <div class="title">Browse the full set at <a href="https://lucide.dev/icons/" target="_blank" rel="noopener">lucide.dev/icons</a></div>
-      <div>Search by name or category, copy the PascalCase name, then import it from <code>lucide-react</code> (<a href="https://www.npmjs.com/package/lucide-react" target="_blank" rel="noopener">npm</a>). Figma mirror: <a href="https://www.figma.com/design/gzsftXhK5hKlTaZOsip1hy/NEO---UI-Icons?node-id=2452-565&amp;t=nzfgSH01EOC6MqS6-1" target="_blank" rel="noopener">NEO — UI Icons</a>.</div>
-      <div class="secondary">A subset of the icons Alation uses most often is shown below the snippet — not exhaustive.</div>
-    </div>
+    <pre class="snippet">import { PlusIcon, SearchIcon, PencilIcon, TrashIcon } from '@alation/icons-neo';
 
-    <pre class="snippet">import { Plus, Search, MoreVertical, Trash2 } from 'lucide-react';
-
-&lt;Button startIcon={&lt;Plus size={16} /&gt;}&gt;New&lt;/Button&gt;
-&lt;IconButton aria-label="More"&gt;&lt;MoreVertical size={16} /&gt;&lt;/IconButton&gt;</pre>
+&lt;Button startIcon={&lt;PlusIcon /&gt;}&gt;Build agent&lt;/Button&gt;
+&lt;IconButton aria-label="Edit"&gt;&lt;PencilIcon /&gt;&lt;/IconButton&gt;</pre>
 
     <div class="icon-grid">
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-        <span class="name">Plus</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.512 12c0-.741.672-1.342 1.502-1.342h15.77c.83 0 1.502.601 1.502 1.341 0 .741-.672 1.341-1.502 1.341H4.013c-.83 0-1.502-.6-1.501-1.34Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.899 2.612c.74 0 1.34.673 1.34 1.503v15.77c0 .83-.6 1.502-1.34 1.502-.74 0-1.34-.672-1.34-1.502V4.115c0-.83.6-1.502 1.34-1.503Z"/></svg>
+        <span class="name">PlusIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-        <span class="name">X</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" d="M10.136 15.985a5.85 5.85 0 1 0 0-11.698 5.85 5.85 0 0 0 0 11.698Zm0 2.286a8.136 8.136 0 1 0-.002-16.27 8.136 8.136 0 0 0 .002 16.27Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M14.677 14.631a1.143 1.143 0 0 1 1.616.006l5.375 5.415a1.144 1.144 0 0 1-1.622 1.61l-5.376-5.415a1.143 1.143 0 0 1 .007-1.616Z" clip-rule="evenodd"/></svg>
+        <span class="name">SearchIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-        <span class="name">Check</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        <span class="name">CloseIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        <span class="name">Trash2</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.764 20c-.266 0-.533-.144-.8-.289L3.3 14.658c-.4-.434-.4-1.155 0-1.589a.99.99 0 0 1 1.466 0l3.865 4.188L19.159 4.406c.4-.433 1.067-.578 1.466-.144.4.433.533 1.155.134 1.588L9.43 19.567a.727.727 0 0 1-.666.433Z"/></svg>
+        <span class="name">CheckIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-        <span class="name">Pencil</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.974 5.164h-5.64l-.385-1.154c-.385-.897-1.026-1.41-1.795-1.41h-2.308c-.77 0-1.41.513-1.667 1.41l-.384 1.154h-5.77C2.514 5.164 2 5.677 2 6.19s.513 1.025 1.026 1.025h1.05c-.182 2.213-.242 4.505-.024 6.796.257 1.923.641 3.718 1.154 5.641.385 1.026 1.282 1.667 2.308 1.667h8.974c1.026 0 1.923-.641 2.308-1.667a39.959 39.959 0 0 0 1.154-5.64c.22-2.306.25-4.518.014-6.797h1.01c.513 0 1.026-.512 1.026-1.025 0-.513-.513-1.026-1.026-1.026Zm-3.204 8.59c-.128 1.796-.512 3.59-1.025 5.257 0 .129-.257.257-.385.257H7.514c-.256 0-.385-.128-.385-.257-.512-1.666-.769-3.461-1.025-5.256-.226-2.14-.154-4.376.04-6.54h11.714c.192 2.163.25 4.4-.088 6.54Z"/><path d="M9.436 16.19c-.513 0-1.026-.513-1.026-1.026v-3.846c0-.513.513-1.026 1.026-1.026s1.025.513 1.025 1.026v3.846c0 .513-.512 1.026-1.025 1.026ZM14.563 16.19c-.513 0-1.026-.513-1.026-1.026v-3.846c0-.513.513-1.026 1.026-1.026s1.026.513 1.026 1.026v3.846c0 .513-.512 1.026-1.026 1.026Z"/></svg>
+        <span class="name">TrashIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <span class="name">Search</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="m21.214 5.74-2.993-2.992C17.622 2.299 17.023 2 16.275 2c-.747 0-1.496.3-1.945.748L3.705 13.373c-.45.299-.749.749-.899 1.347v.15l-.747 5.686c-.15.45 0 .749.299 1.048.3.15.6.3.898.3l5.687-.75c.598 0 1.048-.299 1.496-.748L21.214 9.632c1.048-1.047 1.048-2.844 0-3.892ZM8.944 18.76c0 .149-.15.149-.15.149l-4.04.598.598-4.04c0-.15 0-.15.15-.3l7.196-7.197 3.572 3.463-7.326 7.326ZM19.718 7.985l-1.802 1.802-3.572-3.463 1.932-1.932c.103-.102.154-.147.154-.147l.146.147 3.142 3.144c.15.148.15.299 0 .449Z"/></svg>
+        <span class="name">PencilIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span class="name">MessageSquare</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41Z"/></svg>
+        <span class="name">ChevronDownIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        <span class="name">Info</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5.898 12.9h10.036l-4.385 4.384a.91.91 0 1 0 1.267 1.276l5.92-5.921a.898.898 0 0 0 0-1.267L12.825 5.443a.901.901 0 0 0-1.267 1.267l4.376 4.392H5.898a.898.898 0 1 0 0 1.798Z"/></svg>
+        <span class="name">ArrowRightIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-        <span class="name">AlertTriangle</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.118 10.803C8.06 10.803 4 9.403 4 6.884c0-5.179 16.236-5.179 16.236 0 0 2.52-4.059 3.92-8.118 3.92Zm0-5.599c-3.919 0-5.879 1.26-5.879 1.68 0 .42 1.96 1.68 5.88 1.68 3.918 0 5.878-1.26 5.878-1.68 0-.42-1.96-1.68-5.879-1.68Z"/><path d="M12.118 16.401C7.5 16.401 4 14.441 4 11.922V6.884c0-.56.56-1.12 1.12-1.12s1.12.56 1.12 1.12v4.898c0 .98 2.379 2.38 5.878 2.38 3.5 0 5.879-1.4 5.879-2.38V6.884c0-.56.56-1.12 1.12-1.12s1.12.56 1.12 1.12v4.898c0 2.66-3.5 4.62-8.119 4.62Z"/><path d="M12.118 22C7.5 22 4 20.04 4 17.521v-5.039c0-.56.56-1.12 1.12-1.12s1.12.56 1.12 1.12v4.9c0 .979 2.379 2.379 5.878 2.379 3.5 0 5.879-1.4 5.879-2.38v-4.899c0-.56.56-1.12 1.12-1.12s1.12.56 1.12 1.12v4.9c0 2.659-3.5 4.618-8.119 4.618Z"/></svg>
+        <span class="name">DatabaseIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.2-8.55"/><path d="M21 3v6h-6"/></svg>
-        <span class="name">RefreshCw</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.353 3H4.647A2.636 2.636 0 0 0 2 5.647v13.236a2.636 2.636 0 0 0 2.647 2.647h14.706A2.636 2.636 0 0 0 22 18.883V5.647A2.636 2.636 0 0 0 19.353 3Zm-15 3.823h6.47v5h-6.47v-5Zm8.823 0h6.471v5h-6.47v-5Zm-8.823 12.06v-4.705h6.47v5H4.648c-.147-.002-.294-.149-.294-.295Zm15 .293h-6.177v-5h6.471v4.706a.317.317 0 0 1-.294.294Z"/></svg>
+        <span class="name">TableIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-        <span class="name">MoreVertical</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21.293 4.794a.996.996 0 0 0-1.055.315.986.986 0 0 0-.183.34l-.413 1.365A9.288 9.288 0 0 0 3.301 8.43l-.248.626-.022.05a.988.988 0 0 0 .023.759.99.99 0 0 0 1.83-.057l.248-.627a7.303 7.303 0 0 1 9.926-3.822 7.304 7.304 0 0 1 2.95 2.585l-1.659-.52h-.044a.989.989 0 0 0-1.197.693.99.99 0 0 0 .661 1.213l3.788 1.159a.999.999 0 0 0 .756-.073.993.993 0 0 0 .482-.587l1.159-3.789a.992.992 0 0 0-.661-1.247ZM2.763 19.37a.99.99 0 0 0 1.184-.743l.325-1.3a9.288 9.288 0 0 0 9.013 3.888 9.292 9.292 0 0 0 7.473-6.364.993.993 0 0 0-1.027-1.29.988.988 0 0 0-.862.687 7.308 7.308 0 0 1-10.006 4.421 7.322 7.322 0 0 1-3.081-2.653l1.758.441a.991.991 0 0 0 1.102-1.467.995.995 0 0 0-.608-.456l-3.798-.942-.055-.015a.99.99 0 0 0-1.198.723l-.958 3.842v.045a.988.988 0 0 0 .738 1.183Z"/><path fill-rule="evenodd" d="M11.039 15.897c.307.231.615.386 1 .386.384 0 .691-.155.922-.386l2.921-2.928a1.351 1.351 0 0 0 0-1.926l-2.921-2.928a1.344 1.344 0 0 0-1.922 0l-2.922 2.928a1.351 1.351 0 0 0 0 1.926l2.922 2.928Zm.48-1.95c.154.116.308.193.5.193a.636.636 0 0 0 .461-.193l1.461-1.464a.676.676 0 0 0 0-.963l-1.46-1.464a.672.672 0 0 0-.962 0l-1.46 1.464a.675.675 0 0 0 0 .963l1.46 1.464Z" clip-rule="evenodd"/></svg>
+        <span class="name">WorkflowIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        <span class="name">ChevronDown</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" d="M13.879 7.648a3.85 3.85 0 0 1-.285-1.45c0-.524.105-.997.285-1.449H3.196C2.598 4.75 2 5.474 2 6.2c0 .724.598 1.45 1.196 1.45H13.88Zm6.96-1.38Z" clip-rule="evenodd"/><path d="M15.477 10.256c-.87 0-1.594-.435-2.174-1.16a5.226 5.226 0 0 1-.87-2.898c0-1.014.29-2.029.87-2.899.58-.724 1.305-1.159 2.174-1.159h3.479c.87 0 1.594.435 2.174 1.16.58.87.87 1.884.87 2.898 0 1.015-.29 2.03-.87 2.899-.58.724-1.305 1.16-2.174 1.16h-3.479Zm0-5.797c-.145 0-.145 0-.29.145-.29.435-.434 1.014-.434 1.594 0 .58.145 1.16.434 1.594 0 0 .145.145.29.145h3.479c.145 0 .145 0 .29-.145.29-.434.434-1.014.434-1.594 0-.58-.145-1.16-.434-1.594 0 0-.145-.145-.29-.145h-3.479Z"/><path fill-rule="evenodd" d="M10.514 18.953H20.84c.58 0 1.16-.58 1.16-1.16s-.58-1.159-1.16-1.159H10.514a3.779 3.779 0 0 1 0 2.319Z" clip-rule="evenodd"/><path d="M5.332 21.85c-.87 0-1.594-.434-2.174-1.16a5.226 5.226 0 0 1-.87-2.898c0-1.014.29-2.029.87-2.898.58-.725 1.305-1.16 2.174-1.16h3.479c.87 0 1.594.435 2.174 1.16.58.87.87 1.884.87 2.898 0 1.015-.29 2.03-.87 2.899-.58.725-1.305 1.16-2.174 1.16H5.332Zm0-5.797c-.145 0-.145 0-.29.145-.29.435-.434 1.014-.434 1.594 0 .58.145 1.16.434 1.595 0 0 .145.145.29.145h3.479c.145 0 .145 0 .29-.145.29-.435.434-1.015.434-1.595 0-.58-.145-1.16-.434-1.594 0 0-.145-.145-.29-.145H5.332Z"/></svg>
+        <span class="name">SettingsIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        <span class="name">ChevronLeft</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" d="M16.472 8.033a1.397 1.397 0 0 1-1.397-1.397v-3.24a1.397 1.397 0 0 1 2.794 0v3.24c0 .772-.626 1.397-1.397 1.397Zm2.587-1.048H20v11.238a.857.857 0 0 1-.857.858H4.857A.857.857 0 0 1 4 18.223V6.985h.99a3.097 3.097 0 0 1-.016-.314V3.756c0-.216.022-.426.064-.628h-.18A2.857 2.857 0 0 0 2 5.985v12.238a2.857 2.857 0 0 0 2.857 2.858h14.286A2.857 2.857 0 0 0 22 18.223V5.985a2.857 2.857 0 0 0-2.857-2.857h-.092c.02.149.032.302.032.458v3.001c0 .135-.008.268-.024.398ZM13.9 3.128h-3.774c.042.202.064.412.064.628v2.915c0 .106-.005.21-.015.314h3.717a3.282 3.282 0 0 1-.025-.398V3.586c0-.156.011-.31.033-.458ZM6.13 6.806a1.447 1.447 0 1 0 2.895 0V3.45a1.447 1.447 0 1 0-2.895 0v3.356Z" clip-rule="evenodd"/><path d="M7.07 11.994a1.708 1.708 0 0 1-.355-.317c-.118-.143-.178-.337-.178-.582 0-.456.28-.781.836-.976l1.482-.532h.431c.321 0 .579.097.773.292.194.194.291.451.291.772v6.714c-.093.025-.215.05-.367.076-.152.025-.321.038-.507.038-.38 0-.654-.064-.823-.19-.17-.127-.254-.368-.254-.722v-5.042l-1.33.469ZM12.155 10.727c0-.397.207-.7.62-.912.423-.21.972-.316 1.648-.316.48 0 .907.059 1.279.177.371.118.68.283.925.494.245.203.43.448.557.735.127.278.19.582.19.912 0 .456-.127.895-.38 1.317-.245.422-.633.853-1.165 1.292l-1.736 1.444h3.18c.042.076.084.182.126.317.043.135.064.274.064.418 0 .27-.06.468-.178.595-.118.118-.278.177-.481.177h-4.42c-.347-.236-.52-.59-.52-1.064 0-.253.05-.468.152-.646.11-.185.232-.337.367-.456l1.85-1.621c.447-.388.755-.705.924-.95.17-.253.254-.49.254-.71a.747.747 0 0 0-.304-.633c-.203-.16-.494-.24-.874-.24-.355 0-.668.055-.938.164a3.322 3.322 0 0 0-.671.342 1.412 1.412 0 0 1-.33-.342.85.85 0 0 1-.139-.494Z"/></svg>
+        <span class="name">CalendarIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        <span class="name">ChevronRight</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h11v14Z"/></svg>
+        <span class="name">CopyIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-        <span class="name">ChevronUp</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16.412 22H4.647A2.636 2.636 0 0 1 2 19.353V7.588a2.636 2.636 0 0 1 2.647-2.647H9.06c.588 0 1.177.588 1.177 1.176s-.589 1.176-1.177 1.176H4.647a.317.317 0 0 0-.294.295v11.765c0 .147.147.294.294.294h11.765a.317.317 0 0 0 .295-.294V14.94c0-.588.588-1.177 1.176-1.177s1.176.589 1.176 1.177v4.412A2.636 2.636 0 0 1 16.412 22Z"/><path d="M10.532 14.648c-.295 0-.589-.148-.883-.294a1.154 1.154 0 0 1 0-1.617L19.944 2.442c.44-.44 1.176-.44 1.617 0 .44.441.44 1.177 0 1.617L11.266 14.354c-.146.146-.44.294-.734.294Z"/><path d="M20.823 11.706c-.588 0-1.176-.589-1.176-1.177V4.353H13.47c-.589 0-1.177-.588-1.177-1.177 0-.588.588-1.176 1.177-1.176h7.352C21.411 2 22 2.588 22 3.176v7.353c0 .588-.589 1.177-1.177 1.177Z"/></svg>
+        <span class="name">ExternalLinkIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
-        <span class="name">ArrowLeft</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13.376 22c-.147 0-.44 0-.587-.15l-2.936-.746c-1.174-.298-2.055-1.492-2.055-2.686v-5.971L2.22 3.792c-.293-.298-.293-.895 0-1.194C2.367 2.149 2.807 2 3.248 2h17.614c.44 0 .881.299 1.028.597.147.448.147.896 0 1.194l-5.578 8.657v6.716c0 .15 0 .448-.147.746-.587 1.344-1.615 2.09-2.789 2.09ZM5.303 4.537l4.403 6.717c.294.447.44.895.44 1.492v5.821c0 .15.148.299.294.299l2.936.746c.147 0 .294 0 .294-.15v-6.716c0-.597.146-1.045.44-1.492l4.404-6.717H5.303Z"/></svg>
+        <span class="name">FilterIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
-        <span class="name">ArrowRight</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm1 17h-2v-2h2v2Zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25Z"/></svg>
+        <span class="name">HelpIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-        <span class="name">Ellipsis</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+        <span class="name">EmailIcon</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 6.34l1.41-1.41"/><path d="M22 12h-2"/><path d="M4 12H2"/><path d="M17.66 17.66l1.41 1.41"/><path d="M4.93 19.07l1.41-1.41"/><path d="M12 20v2"/><circle cx="12" cy="12" r="4"/></svg>
-        <span class="name">Settings</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2Zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2Z"/></svg>
+        <span class="name">NotificationIcon</span>
+      </div>
+    </div>
+
+    <h2 class="section">Lucide Library — sample icons (backfill)</h2>
+    <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px 0;">Use Lucide icons only when the icon does not exist in the Custom Library. Browse: <a href="https://lucide.dev/icons/" target="_blank" rel="noopener">lucide.dev/icons</a>.</p>
+
+    <pre class="snippet">// Only after confirming the icon is not in @alation/icons-neo:
+import { EllipsisVertical, PanelLeftClose, SquarePen, Sparkles } from 'lucide-react';</pre>
+
+    <div class="icon-grid">
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        <span class="name">EllipsisVertical</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
-        <span class="name">Settings2</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg>
+        <span class="name">PanelLeftClose</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
-        <span class="name">Download</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/></svg>
+        <span class="name">PanelLeftOpen</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-        <span class="name">Upload</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
+        <span class="name">SquarePen</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        <span class="name">Eye</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+        <span class="name">ArrowUpDown</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span class="name">Copy</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg>
+        <span class="name">CornerDownLeft</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        <span class="name">ExternalLink</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <span class="name">LayoutDashboard</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <span class="name">Play</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><rect x="9" y="9" width="6" height="6"/></svg>
+        <span class="name">CircleStop</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-        <span class="name">Database</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        <span class="name">Bot</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span class="name">Calendar</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><circle cx="12" cy="12" r="4"/></svg>
+        <span class="name">Bolt</span>
       </div>
       <div class="icon-tile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <span class="name">HelpCircle</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+        <span class="name">Zap</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        <span class="name">Globe</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+        <span class="name">Monitor</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21s-4-3-4-9 4-9 4-9"/><path d="M16 3s4 3 4 9-4 9-4 9"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+        <span class="name">Variable</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="M8 11h8"/><path d="M8 7h6"/></svg>
+        <span class="name">BookText</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+        <span class="name">ClipboardList</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/></svg>
+        <span class="name">ListChecks</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+        <span class="name">ChartColumn</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+        <span class="name">History</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" x2="16" y1="12" y2="12"/></svg>
+        <span class="name">Link2</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7"/><path d="M15 7h2a5 5 0 0 1 4 8"/><line x1="8" x2="12" y1="12" y2="12"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+        <span class="name">Link2Off</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1"/></svg>
+        <span class="name">MessagesSquare</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>
+        <span class="name">OctagonAlert</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/><path d="M7 10v12"/></svg>
+        <span class="name">ThumbsUp</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/><path d="M17 14V2"/></svg>
+        <span class="name">ThumbsDown</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+        <span class="name">Users</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        <span class="name">TriangleAlert</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></svg>
+        <span class="name">Hash</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+        <span class="name">Tag</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span class="name">Lock</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+        <span class="name">LockOpen</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        <span class="name">Shield</span>
+      </div>
+      <div class="icon-tile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+        <span class="name">Sparkles</span>
       </div>
     </div>
 
@@ -529,7 +652,7 @@
   }
 </style>
 
-<div class="md-viewer" data-open="closed" data-exclude-h2="classification,example,examples,icon,icon in context,icon library,purpose,size,size conventions,variants" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IGljb25vZ3JhcGh5CnRpdGxlOiBJY29ub2dyYXBoeQpjYXRlZ29yeTogZm91bmRhdGlvbgpsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjQKCmRlc2NyaXB0aW9uOiA+CiAgSWNvbiBkaXNjaXBsaW5lLiBQcm9kdWN0aW9uIHVzZXMgYEBhbGF0aW9uL2ljb25zLW5lb2AgKE1VSSBgU3ZnSWNvbmApOyB0aGUgYEByZXBvL3VpYCBwcm90b3R5cGUgdXNlcyBgbHVjaWRlLXJlYWN0YC4gU2l6ZSBpcyB0aGVtZS1kcml2ZW4gYnkgdGhlIGNvbnRhaW5lciwgbm90IHRoZSBpY29uIGBzaXplYCBwcm9wLgp0YWdzOiBbZm91bmRhdGlvbiwgaWNvbnMsIGljb25vZ3JhcGh5XQoKZmlnbWFfdXJsOiAiaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9nenNmdFhoSzVoS2xUYVpPc2lwMWh5L05FTy0tLVVJLUljb25zP25vZGUtaWQ9Mjg5OS0xMiZ0PW56ZmdTSDAxRU9DNk1xUzYtNCIKY29kZV9yZWZlcmVuY2U6ICJAYWxhdGlvbi9pY29ucy1uZW8gwrcgbHVjaWRlLXJlYWN0IMK3IHNyYy9sYXlvdXQvYXNzZXRzL2ljb24vKi5zdmc/cmVhY3QiCmV4YW1wbGVfcGF0aDogLi9FeGFtcGxlLnRzeAoKbXVpX2Jhc2U6IG5vbmUKZGVwZW5kc19vbl90b2tlbnM6IFtdCmRlcGVuZHNfb25fY29tcG9uZW50czogW10KLS0tCgojIEljb25vZ3JhcGh5CgojIyAxLiBDbGFzc2lmaWNhdGlvbgoKLSAqKlR5cGU6KiogRm91bmRhdGlvbgotICoqTVVJIGJhc2U6KiogYG5vbmVgCi0gKipGaWdtYToqKiBbSWNvbm9ncmFwaHkgwrcgTkVPIDIuMV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9nenNmdFhoSzVoS2xUYVpPc2lwMWh5L05FTy0tLVVJLUljb25zP25vZGUtaWQ9Mjg5OS0xMiZ0PW56ZmdTSDAxRU9DNk1xUzYtNCkgwrcgW0ljb24gbGlicmFyeV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9nenNmdFhoSzVoS2xUYVpPc2lwMWh5L05FTy0tLVVJLUljb25zP25vZGUtaWQ9MjQ1Mi01NjUmdD1uemZnU0gwMUVPQzZNcVM2LTEpCi0gKipDb2RlOioqIGBAYWxhdGlvbi9pY29ucy1uZW9gIMK3IGBsdWNpZGUtcmVhY3RgIMK3IGBzcmMvbGF5b3V0L2Fzc2V0cy9pY29uLyouc3ZnP3JlYWN0YAoKIyMgMi4gUHVycG9zZQoKCgpUaGUgQWxhdGlvbiBpY29uIHN5c3RlbS4gT25lIGxpYnJhcnkgcGVyIHByb2plY3QsIG9uZSBzdHJva2Ugd2VpZ2h0LCBvbmUgc2l6ZSBzY2FsZSDigJQgc28gZXZlcnkgaWNvbiBhY3Jvc3MgdGhlIGFwcCByZWFkcyBhcyBvbmUgZmFtaWx5IGFuZCBzaXRzIGluIGl0cyBjb250YWluZXIgYXQgdGhlIHJpZ2h0IHNpemUgd2l0aG91dCBwZXItY2FsbC1zaXRlIHR1bmluZy4KCiMjIDMuIEhvdyB0byB1c2UKCgoKSWNvbm9ncmFwaHkgaXMgb3JnYW5pc2VkIGFyb3VuZCB0d28gcnVsZXM6ICoqb25lIGxpYnJhcnkgcGVyIHByb2plY3QqKiwgYW5kICoqdGhlIGNvbnRhaW5lciBkcml2ZXMgdGhlIHNpemUqKi4KCi0gKipUd28gbGlicmFyaWVzLCBvbmUgdmlzdWFsIGNvbnRyYWN0LioqIFByb2R1Y3Rpb24gKGBhbGF0aW9uLXVpYCkgdXNlcyBgQGFsYXRpb24vaWNvbnMtbmVvYDsgdGhlIGBAcmVwby91aWAgcHJvdG90eXBlIHVzZXMgYGx1Y2lkZS1yZWFjdGAuIEJvdGggYXJlIHN0cm9rZS1iYXNlZCwgYm90aCByZXNwZWN0IGBjdXJyZW50Q29sb3JgLCBhbmQgYm90aCByZW5kZXIgaW5zaWRlIHRoZSBzYW1lIEFsYXRpb24gY29udGFpbmVycyAoQnV0dG9uIGBzdGFydEljb25gLCBJY29uQnV0dG9uLCBDaGlwIGBpY29uYCwgQWxlcnQgc2V2ZXJpdHkpLiBQaWNrIHRoZSBsaWJyYXJ5IHRoYXQgbWF0Y2hlcyB0aGUgcHJvamVjdCBhbmQgc3RheSBpbnNpZGUgaXQuCi0gKipOYXYgcmFpbCBpcyBpdHMgb3duIHRoaW5nLioqIFRoZSBsZWZ0IHJhaWwgdXNlcyBsb2NhbCBTVkcgYXNzZXRzOyBjYWxsZXJzIG5ldmVyIGltcG9ydCB0aG9zZSBkaXJlY3RseSDigJQgYE5hdkJ1dHRvbmAgaGFuZGxlcyBpdC4KLSAqKkNvbnRhaW5lciBkcml2ZXMgc2l6ZS4qKiBFdmVyeSBpY29uLWhvc3RpbmcgY29tcG9uZW50IGluIHRoZSBBbGF0aW9uIHRoZW1lIHNpemVzIGl0cyBpY29uIGZyb20gYHR5cG9ncmFwaHkuaWNvblhTbWFsbGAgLyBgaWNvblNtYWxsYCAvIGBpY29uTWVkaXVtYCAvIGBpY29uTGFyZ2VgLiBQaWNrIHRoZSByaWdodCBjb250YWluZXIgLyBzaXplLCBhbmQgdGhlIGljb24gZm9sbG93cy4gRG8gbm90IHBhc3MgYSBgc2l6ZWAgcHJvcCBvbiB0aGUgaWNvbiBpdHNlbGYgaW5zaWRlIGFuIEFsYXRpb24gY29udGFpbmVyLgotICoqQnJvd3NlIHRoZSBjYXRhbG9nLioqIFNlYXJjaCBbbHVjaWRlLmRldi9pY29uc10oaHR0cHM6Ly9sdWNpZGUuZGV2L2ljb25zLykgYnkgbmFtZSBvciBjYXRlZ29yeTsgdGhlIEZpZ21hIG1pcnJvciBsaXZlcyBvbiB0aGUgTkVPIOKAlCBVSSBJY29ucyBwYWdlIGxpbmtlZCBpbiBDbGFzc2lmaWNhdGlvbi4KCklmIGEgbmVlZGVkIGljb24gZG9lcyBub3QgZXhpc3QgaW4gdGhlIHByb2plY3QncyBsaWJyYXJ5LCBzdG9wIGFuZCBmbGFnIOKAlCBkbyBub3QgcmVhY2ggZm9yIGBAbXVpL2ljb25zLW1hdGVyaWFsYCwgZW1vamksIG9yIGEgaGFuZC1yb2xsZWQgU1ZHLiBQcm9wb3NlIGEgbmV3IGFzc2V0IGFnYWluc3QgdGhlIE5FTyBpY29uIGxpYnJhcnkgaW4gRmlnbWEuCgojIyA0LiBDb250cmFjdAoKCgojIyMgR3VhcmFudGVlcwotIEV2ZXJ5IGFwcCBzaGlwcyBpY29ucyBmcm9tIGEgc2luZ2xlIGxpYnJhcnkg4oCUIGBAYWxhdGlvbi9pY29ucy1uZW9gIGluIHByb2R1Y3Rpb24sIGBsdWNpZGUtcmVhY3RgIGluIHRoZSBgQHJlcG8vdWlgIHByb3RvdHlwZSDigJQgc28gdmlzdWFsIHdlaWdodCBhbmQgc3Ryb2tlIHN0eWxlIHN0YXkgY29uc2lzdGVudC4KLSBFdmVyeSBpY29uIGluIGJvdGggbGlicmFyaWVzIGlzIGV4cG9ydGVkIGJ5ICoqUGFzY2FsQ2FzZSBuYW1lKiouIEljb25zIGZyb20gYEBhbGF0aW9uL2ljb25zLW5lb2AgY2FycnkgYW4gYEljb25gIHN1ZmZpeCAoZS5nLiBgUGx1c0ljb25gLCBgU2VhcmNoSWNvbmApOyBsdWNpZGUgZXhwb3J0cyBkbyBub3QgKGUuZy4gYFBsdXNgLCBgU2VhcmNoYCkuCi0gU2l6ZSBpcyB0aGVtZS1kcml2ZW46IHRoZSBjb250YWluZXIgKEljb25CdXR0b24sIEJ1dHRvbiBgc3RhcnRJY29uYCwgQ2hpcCBgaWNvbmAsIEFsZXJ0IHNldmVyaXR5LCBzdWItbmF2IGl0ZW0pIHNldHMgdGhlIGljb24gc2l6ZSB2aWEgYHR5cG9ncmFwaHkuaWNvblhTbWFsbGAgLyBgaWNvblNtYWxsYCAvIGBpY29uTWVkaXVtYCAvIGBpY29uTGFyZ2VgLgotIEV2ZXJ5IGljb24gaXMgYW4gU1ZHIOKAlCBzY2FsZXMgY2xlYW5seSBhdCAyMDAgJSBicm93c2VyIHpvb20gYW5kIHJlc3BlY3RzIGBjdXJyZW50Q29sb3JgLgoKIyMjIFByb2hpYml0aW9ucwotIE5ldmVyIGltcG9ydCBmcm9tIGBAbXVpL2ljb25zLW1hdGVyaWFsYC4KLSBOZXZlciByZW5kZXIgYSByYXcgU1ZHIGxpdGVyYWwgb3IgYSBjdXN0b20gaWNvbiBjb21wb25lbnQgaW5zaWRlIHBhZ2UgY29tcG9uZW50cy4KLSBOZXZlciB1c2UgZW1vamkgYXMgYW4gaWNvbi4KLSBOZXZlciB1c2UgYW4gU1ZHIGZyb20gYHNyYy9sYXlvdXQvYXNzZXRzL2ljb24vYCBvdXRzaWRlIHRoZSBuYXYgcmFpbC4KLSBOZXZlciBoYXJkLWNvZGUgYW4gaWNvbiBzaXplIGluc2lkZSBhbiBBbGF0aW9uIGNvbnRhaW5lciDigJQgdGhlIGNvbnRhaW5lcidzIGBzaXplYCBwcm9wIGdvdmVybnMgaXQuCi0gTmV2ZXIgaGFyZC1jb2RlIGFuIGljb24gY29sb3VyIOKAlCBpY29ucyBpbmhlcml0IGZyb20gcGFyZW50IHZpYSBgY3VycmVudENvbG9yYCwgb3Igc2V0IGFuIGV4cGxpY2l0IHRoZW1lIHRva2VuIHZpYSB0aGUgY29udGFpbmVyJ3MgYGNvbG9yYCBwcm9wLgotIE5vdGhpbmcgb3V0c2lkZSDCpzUgVmFyaWFudHMgaXMgdmFsaWQuCgojIyMgQ29uZGl0aW9ucwotIERlY29yYXRpdmUgaWNvbnMgKHZpc3VhbGx5IHJlaW5mb3JjaW5nIGFuIGFkamFjZW50IGxhYmVsKSBtdXN0IGNhcnJ5IGBhcmlhLWhpZGRlbj0idHJ1ZSJgLgotIEljb24tb25seSBhZmZvcmRhbmNlcyAoZS5nLiBgSWNvbkJ1dHRvbmAgd2l0aG91dCBhIGxhYmVsKSByZXF1aXJlIGBhcmlhLWxhYmVsYCDigJQgb3duZWQgYnkgSWNvbkJ1dHRvbidzIG93biBjb250cmFjdCwgbm90IHRoaXMgZm91bmRhdGlvbi4KLSBMdWNpZGUgaWNvbnMgYWNjZXB0IGFuIG9wdGlvbmFsIGBzaXplPXsxNn1gIG9ubHkgd2hlbiB0aGUgaWNvbiBpcyB1c2VkIG91dHNpZGUgYW4gQWxhdGlvbiBjb250YWluZXIgKGUuZy4gYSBwbGFpbiBgPEJveD5gIG9yIGlubGluZSBpbiBwcm9zZSkuIEluc2lkZSBhbiBBbGF0aW9uIGNvbnRhaW5lciwgdGhlIGNvbnRhaW5lciB3aW5zLgotIElmIGEgbmVlZGVkIGljb24gZG9lcyBub3QgZXhpc3QgaW4gYEBhbGF0aW9uL2ljb25zLW5lb2AgKHByb2R1Y3Rpb24pIG9yIGBsdWNpZGUtcmVhY3RgIChwcm90b3R5cGUpLCBzdG9wIGFuZCBmbGFnLgoKIyMgNS4gVmFyaWFudHMKCgoKIyMjIDUuMSBMaWJyYXJpZXMKCnwgTGlicmFyeSB8IG5wbSBwYWNrYWdlIHwgU2NvcGUgfAp8LS0tfC0tLXwtLS18CnwgYEBhbGF0aW9uL2ljb25zLW5lb2AgfCBbYEBhbGF0aW9uL2ljb25zLW5lb2BdKGh0dHBzOi8vd3d3Lm5wbWpzLmNvbS9wYWNrYWdlL0BhbGF0aW9uL2ljb25zLW5lbykgfCBBbGwgaW4tcGFnZSBVSSBpY29ucyBpbiAqKnByb2R1Y3Rpb24qKiAoYGFsYXRpb24tdWlgKS4gRXZlcnkgZXhwb3J0IGlzIGEgTVVJIGBTdmdJY29uYC4gfAp8IGBsdWNpZGUtcmVhY3RgIHwgW2BsdWNpZGUtcmVhY3RgXShodHRwczovL3d3dy5ucG1qcy5jb20vcGFja2FnZS9sdWNpZGUtcmVhY3QpIHwgQWxsIGluLXBhZ2UgVUkgaWNvbnMgaW4gdGhlICoqYEByZXBvL3VpYCoqIHByb3RvdHlwZS4gQnJvd3NlIG5hbWVzIGF0IFtsdWNpZGUuZGV2L2ljb25zXShodHRwczovL2x1Y2lkZS5kZXYvaWNvbnMvKS4gfAp8IEFsYXRpb24gbmF2LXJhaWwgU1ZHcyB8IOKAlCB8IExvY2FsIGFzc2V0cyB1bmRlciBgc3JjL2xheW91dC9hc3NldHMvaWNvbi8qLnN2Zz9yZWFjdGAuIE5hdmlnYXRpb24gcmFpbCAqKm9ubHkqKiDigJQgbmV2ZXIgcGFnZSBjb250ZW50LiB8CgojIyMgNS4yIFNpemUgY29udmVudGlvbnMKClNpemUgaXMgdGhlbWUtZHJpdmVuIGJ5IHRoZSBjb250YWluZXIuIERvIG5vdCBwYXNzIGBzaXplPXvigKZ9YCBvbiBpY29ucyBpbnNpZGUgQWxhdGlvbiBjb250YWluZXJzLgoKfCBDb250ZXh0IHwgVGhlbWUgdG9rZW4gfCBSZW5kZXJlZCBzaXplIHwKfC0tLXwtLS18LS0tfAp8IGA8SWNvbkJ1dHRvbiBzaXplPSJ4c21hbGwiPmAgfCBgdHlwb2dyYXBoeS5pY29uWFNtYWxsYCB8IDEuMnJlbSB8CnwgYDxJY29uQnV0dG9uIHNpemU9InNtYWxsIj5gLCBgPEJ1dHRvbiBzaXplPSJzbWFsbCI+YCBgc3RhcnRJY29uYCAvIGBlbmRJY29uYCwgdGFibGUgY2VsbHMsIENoaXAgYGljb25gIHwgYHR5cG9ncmFwaHkuaWNvblNtYWxsYCB8IDEuNnJlbSB8CnwgYDxJY29uQnV0dG9uIHNpemU9Im1lZGl1bSI+YCwgYDxCdXR0b24gc2l6ZT0ibWVkaXVtIj5gIGBzdGFydEljb25gIC8gYGVuZEljb25gIChkZWZhdWx0KSB8IGB0eXBvZ3JhcGh5Lmljb25NZWRpdW1gIHwgMnJlbSB8CnwgYDxJY29uQnV0dG9uIHNpemU9ImxhcmdlIj5gLCBgPEJ1dHRvbiBzaXplPSJsYXJnZSI+YCBgc3RhcnRJY29uYCAvIGBlbmRJY29uYCwgQWxlcnQgc2V2ZXJpdHkgaWNvbiB8IGB0eXBvZ3JhcGh5Lmljb25MYXJnZWAgfCAyLjRyZW0gfAp8IFN1Yk5hdiBpdGVtIHwgKHRoZW1lLWJha2VkKSB8IDEuNnJlbSB8CnwgTmF2IHJhaWwgfCAodmlhIGBOYXZCdXR0b25gKSB8IDJyZW0gfAoKIyMjIDUuMyBDb21tb25seSB1c2VkIGx1Y2lkZSBpY29ucwoKTm90IGV4aGF1c3RpdmUg4oCUIHNlYXJjaCBbbHVjaWRlLmRldi9pY29uc10oaHR0cHM6Ly9sdWNpZGUuZGV2L2ljb25zLykgZm9yIGFueXRoaW5nIGVsc2UsIHRoZW4gaW1wb3J0IGJ5IGl0cyBQYXNjYWxDYXNlIG5hbWUuCgp8IENhdGVnb3J5IHwgTmFtZXMgfAp8LS0tfC0tLXwKfCBBY3Rpb24gfCBgUGx1c2AsIGBYYCwgYENoZWNrYCwgYFRyYXNoYCwgYFRyYXNoMmAsIGBTcXVhcmVQZW5gLCBgUGVuY2lsYCwgYENvcHlgLCBgRG93bmxvYWRgLCBgVXBsb2FkYCwgYEV4dGVybmFsTGlua2AsIGBSZWZyZXNoQ3dgLCBgUGxheWAsIGBFeWVgIHwKfCBOYXZpZ2F0aW9uIHwgYENoZXZyb25Eb3duYCwgYENoZXZyb25VcGAsIGBDaGV2cm9uTGVmdGAsIGBDaGV2cm9uUmlnaHRgLCBgQXJyb3dMZWZ0YCwgYEFycm93UmlnaHRgLCBgQXJyb3dVcGAsIGBBcnJvd0Rvd25gLCBgQXJyb3dVcERvd25gLCBgQ29ybmVyRG93bkxlZnRgLCBgUGFuZWxMZWZ0T3BlbmAsIGBQYW5lbExlZnRDbG9zZWAgfAp8IE1lbnUgJiBvdmVyZmxvdyB8IGBNb3JlVmVydGljYWxgLCBgRWxsaXBzaXNWZXJ0aWNhbGAsIGBFbGxpcHNpc2AgfAp8IFN0YXR1cyAmIGZlZWRiYWNrIHwgYEluZm9gLCBgQWxlcnRUcmlhbmdsZWAsIGBUcmlhbmdsZUFsZXJ0YCwgYE9jdGFnb25BbGVydGAsIGBIZWxwQ2lyY2xlYCwgYENpcmNsZVN0b3BgLCBgVGh1bWJzVXBgLCBgVGh1bWJzRG93bmAgfAp8IENvbW11bmljYXRpb24gfCBgU2VhcmNoYCwgYE1lc3NhZ2VTcXVhcmVgLCBgTWVzc2FnZXNTcXVhcmVgLCBgTWFpbGAsIGBCZWxsYCB8CnwgQ29udGVudCAmIG9iamVjdHMgfCBgRGF0YWJhc2VgLCBgVGFibGVgLCBgQm9va09wZW5gLCBgQm9va1RleHRgLCBgQm9va21hcmtgLCBgQ2xpcGJvYXJkTGlzdGAsIGBMaXN0Q2hlY2tzYCwgYENoYXJ0Q29sdW1uYCwgYEZpbGVUZXh0YCwgYENhbGVuZGFyYCwgYEhpc3RvcnlgLCBgTGlua2AsIGBMaW5rMmAsIGBMaW5rMk9mZmAgfAp8IEFnZW50ICYgd29ya2Zsb3cgfCBgQm90YCwgYEJvbHRgLCBgV29ya2Zsb3dgLCBgVmFyaWFibGVgLCBgR2xvYmVgLCBgTW9uaXRvcmAsIGBTZXR0aW5nc2AsIGBTZXR0aW5nczJgLCBgVXNlcnNgIHwKCiMjIDExLiBFeGFtcGxlCgpgYGB0c3gKLy8gUHJvZHVjdGlvbgppbXBvcnQgeyBQbHVzSWNvbiwgTW9yZVZlcnRpY2FsSWNvbiwgU2VhcmNoSWNvbiB9IGZyb20gJ0BhbGF0aW9uL2ljb25zLW5lbyc7CmltcG9ydCB7IEJ1dHRvbiwgSWNvbkJ1dHRvbiwgVGV4dEZpZWxkLCBJbnB1dEFkb3JubWVudCB9IGZyb20gJ0BtdWkvbWF0ZXJpYWwnOwoKPEJ1dHRvbiB2YXJpYW50PSJjb250YWluZWQiIHN0YXJ0SWNvbj17PFBsdXNJY29uIC8+fT5CdWlsZCBhZ2VudDwvQnV0dG9uPgo8SWNvbkJ1dHRvbiBzaXplPSJzbWFsbCIgYXJpYS1sYWJlbD0iTW9yZSBhY3Rpb25zIj48TW9yZVZlcnRpY2FsSWNvbiAvPjwvSWNvbkJ1dHRvbj4KCi8vIFByb3RvdHlwZSAoQHJlcG8vdWkpIOKAlCBzYW1lIHNoYXBlLCBsdWNpZGUtcmVhY3QKaW1wb3J0IHsgUGx1cywgTW9yZVZlcnRpY2FsIH0gZnJvbSAnbHVjaWRlLXJlYWN0JzsKCjxCdXR0b24gdmFyaWFudD0iY29udGFpbmVkIiBzdGFydEljb249ezxQbHVzIC8+fT5CdWlsZCBhZ2VudDwvQnV0dG9uPgo8SWNvbkJ1dHRvbiBzaXplPSJzbWFsbCIgYXJpYS1sYWJlbD0iTW9yZSBhY3Rpb25zIj48TW9yZVZlcnRpY2FsIC8+PC9JY29uQnV0dG9uPgpgYGAKClNlZSBbYEV4YW1wbGUudHN4YF0oLi9FeGFtcGxlLnRzeCkgZm9yIHRoZSBjYW5vbmljYWwsIHJ1bm5hYmxlIHNvdXJjZS4K">
+<div class="md-viewer" data-open="closed" data-exclude-h2="classification,custom,custom library — sample icons,example,examples,icon,icon in context — custom library (primary),icon in context — lucide library (backfill only),lucide,lucide library — sample icons (backfill),purpose,size,size conventions,two,two libraries — order of precedence,variants" data-truncate-after-h2="" data-md-b64="LS0tCm5hbWU6IGljb25vZ3JhcGh5CnRpdGxlOiBJY29ub2dyYXBoeQpjYXRlZ29yeTogZm91bmRhdGlvbgpsYXN0X3VwZGF0ZWQ6IDIwMjYtMDQtMjkKCmRlc2NyaXB0aW9uOiA+CiAgVHdvIGljb24gbGlicmFyaWVzIGNvZXhpc3QgaW4gZXZlcnkgcHJvamVjdCDigJQgdGhlIEFsYXRpb24gQ3VzdG9tIExpYnJhcnkgKGBAYWxhdGlvbi9pY29ucy1uZW9gKSBpcyBwcmltYXJ5LCB0aGUgTHVjaWRlIExpYnJhcnkgKGBsdWNpZGUtcmVhY3RgKSBpcyB0aGUgZmFsbGJhY2suIEFsd2F5cyBjaGVjayBDdXN0b20gZmlyc3Q7IG9ubHkgcmVhY2ggZm9yIEx1Y2lkZSB3aGVuIHRoZSBpY29uIGlzbid0IHRoZXJlLiBTaXplIGlzIHRoZW1lLWRyaXZlbiBieSB0aGUgY29udGFpbmVyLgp0YWdzOiBbZm91bmRhdGlvbiwgaWNvbnMsIGljb25vZ3JhcGh5XQoKZmlnbWFfdXJsOiAiaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9nenNmdFhoSzVoS2xUYVpPc2lwMWh5L05FTy0tLVVJLUljb25zP25vZGUtaWQ9MjAzMi03NjgmdD1SZXlmTjJMV0ppcWJjcmlTLTEiCmNvZGVfcmVmZXJlbmNlOiAiQGFsYXRpb24vaWNvbnMtbmVvIMK3IGx1Y2lkZS1yZWFjdCIKZXhhbXBsZV9wYXRoOiAuL0V4YW1wbGUudHN4CgptdWlfYmFzZTogbm9uZQpkZXBlbmRzX29uX3Rva2VuczogW10KZGVwZW5kc19vbl9jb21wb25lbnRzOiBbXQotLS0KCiMgSWNvbm9ncmFwaHkKCiMjIDEuIENsYXNzaWZpY2F0aW9uCgotICoqVHlwZToqKiBGb3VuZGF0aW9uCi0gKipNVUkgYmFzZToqKiBgbm9uZWAKLSAqKkZpZ21hOioqIFtDdXN0b20gTGlicmFyeSDigJQgTkVPIFVJIEljb25zXShodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2d6c2Z0WGhLNWhLbFRhWk9zaXAxaHkvTkVPLS0tVUktSWNvbnM/bm9kZS1pZD0yMDMyLTc2OCZ0PVJleWZOMkxXSmlxYmNyaVMtMSkgKGNhbm9uaWNhbCBzb3VyY2UgZm9yIGBAYWxhdGlvbi9pY29ucy1uZW9gKQotICoqQ29kZToqKiBgQGFsYXRpb24vaWNvbnMtbmVvYCAoQ3VzdG9tIExpYnJhcnksIHByaW1hcnkpIMK3IGBsdWNpZGUtcmVhY3RgIChMdWNpZGUgTGlicmFyeSwgZmFsbGJhY2spCgojIyAyLiBQdXJwb3NlCgoKClRoZSBBbGF0aW9uIGljb24gc3lzdGVtLiBUd28gbGlicmFyaWVzIOKAlCB0aGUgKipDdXN0b20gTGlicmFyeSoqIChgQGFsYXRpb24vaWNvbnMtbmVvYCkgaXMgdGhlIHByaW1hcnkgc291cmNlIG9mIHRydXRoIGFuZCBpcyBhbHdheXMgY2hlY2tlZCBmaXJzdDsgdGhlICoqTHVjaWRlIExpYnJhcnkqKiAoYGx1Y2lkZS1yZWFjdGApIGlzIHRoZSBiYWNrZmlsbCBmb3IgaWNvbnMgdGhhdCB0aGUgQ3VzdG9tIExpYnJhcnkgZG9lcyBub3QgeWV0IHNoaXAuCgojIyAzLiBIb3cgdG8gdXNlCgoKCkljb25vZ3JhcGh5IGlzIG9yZ2FuaXNlZCBhcm91bmQgdGhyZWUgcnVsZXM6ICoqQ3VzdG9tIExpYnJhcnkgZmlyc3QqKiwgKipMdWNpZGUgYXMgYmFja2ZpbGwqKiwgYW5kICoqdGhlIGNvbnRhaW5lciBkcml2ZXMgdGhlIHNpemUqKi4KCi0gKipDdXN0b20gTGlicmFyeSBpcyBwcmltYXJ5LioqIEV2ZXJ5IHByb2plY3Qg4oCUIHByb2R1Y3Rpb24gKGBhbGF0aW9uLXVpYCkgYW5kIHRoZSBgQHJlcG8vdWlgIHByb3RvdHlwZSBhbGlrZSDigJQgbXVzdCBjaGVjayBgQGFsYXRpb24vaWNvbnMtbmVvYCAqZmlyc3QqLiBJZiB0aGUgaWNvbiBleGlzdHMgdGhlcmUsIHVzZSBpdC4gVGhlIEN1c3RvbSBMaWJyYXJ5IGlzIHRoZSBicmFuZC1hbGlnbmVkIHNldCwgbWlycm9yZWQgMToxIHdpdGggdGhlIEZpZ21hIE5FTyBpY29uIGxpYnJhcnksIGFuZCBpcyB0aGUgb25seSBsaWJyYXJ5IHJldmlld2VkIGJ5IHRoZSBkZXNpZ24gc3lzdGVtIHRlYW0uCi0gKipMdWNpZGUgaXMgdGhlIGJhY2tmaWxsLioqIFdoZW4gdGhlIEN1c3RvbSBMaWJyYXJ5IGRvZXMgbm90IHlldCBzaGlwIGFuIGljb24geW91IG5lZWQsIGZhbGwgYmFjayB0byBgbHVjaWRlLXJlYWN0YC4gVGhpcyBpcyBhbGxvd2VkIGJ1dCBtdXN0IGJlIGEgZGVsaWJlcmF0ZSAibm90IGluIEN1c3RvbSIgZGVjaXNpb24g4oCUIG5vdCBhIGRlZmF1bHQuIEJvdGggbGlicmFyaWVzIGFyZSBzdHJva2UtYmFzZWQsIGJvdGggcmVzcGVjdCBgY3VycmVudENvbG9yYCwgYW5kIGJvdGggcmVuZGVyIGluc2lkZSB0aGUgc2FtZSBBbGF0aW9uIGNvbnRhaW5lcnMsIHNvIHZpc3VhbCBjb2hlc2lvbiBob2xkcyBhY3Jvc3MgdGhlIGJvdW5kYXJ5LgotICoqVHdvIGxpYnJhcmllcywgb25lIHZpc3VhbCBjb250cmFjdC4qKiBXaGljaGV2ZXIgbGlicmFyeSB5b3UgZHJhdyBmcm9tLCB0aGUgaWNvbiByZW5kZXJzIGluc2lkZSB0aGUgc2FtZSBBbGF0aW9uIGNvbnRhaW5lcnMgKEJ1dHRvbiBgc3RhcnRJY29uYCwgSWNvbkJ1dHRvbiwgQ2hpcCBgaWNvbmAsIEFsZXJ0IHNldmVyaXR5KSwgaW5oZXJpdHMgY29sb3VyIGZyb20gYGN1cnJlbnRDb2xvcmAsIGFuZCBpcyBzaXplZCBieSB0aGUgY29udGFpbmVyIOKAlCBub3QgYnkgYSBgc2l6ZWAgcHJvcCBvbiB0aGUgaWNvbi4KLSAqKkNvbnRhaW5lciBkcml2ZXMgc2l6ZS4qKiBFdmVyeSBpY29uLWhvc3RpbmcgY29tcG9uZW50IGluIHRoZSBBbGF0aW9uIHRoZW1lIHNpemVzIGl0cyBpY29uIGZyb20gYHR5cG9ncmFwaHkuaWNvblhTbWFsbGAgLyBgaWNvblNtYWxsYCAvIGBpY29uTWVkaXVtYCAvIGBpY29uTGFyZ2VgLiBQaWNrIHRoZSByaWdodCBjb250YWluZXIgLyBzaXplLCBhbmQgdGhlIGljb24gZm9sbG93cy4gRG8gbm90IHBhc3MgYSBgc2l6ZWAgcHJvcCBvbiB0aGUgaWNvbiBpdHNlbGYgaW5zaWRlIGFuIEFsYXRpb24gY29udGFpbmVyLgotICoqQnJvd3NlIHRoZSBjYXRhbG9ncy4qKiBDdXN0b20gTGlicmFyeTogdGhlIFtGaWdtYSBORU8gaWNvbiBsaWJyYXJ5XShodHRwczovL3d3dy5maWdtYS5jb20vZGVzaWduL2d6c2Z0WGhLNWhLbFRhWk9zaXAxaHkvTkVPLS0tVUktSWNvbnM/bm9kZS1pZD0yMDMyLTc2OCZ0PVJleWZOMkxXSmlxYmNyaVMtMSksIHBsdXMgdGhlIGV4cG9ydCBsaXN0IGluIGBAYWxhdGlvbi9pY29ucy1uZW8vc3JjL2luZGV4LnRzYC4gTHVjaWRlIExpYnJhcnk6IFtsdWNpZGUuZGV2L2ljb25zXShodHRwczovL2x1Y2lkZS5kZXYvaWNvbnMvKS4KCklmIGEgbmVlZGVkIGljb24gaXMgaW4gKipuZWl0aGVyKiogbGlicmFyeSwgc3RvcCBhbmQgZmxhZyDigJQgZG8gbm90IHJlYWNoIGZvciBgQG11aS9pY29ucy1tYXRlcmlhbGAsIGVtb2ppLCBvciBhIGhhbmQtcm9sbGVkIFNWRy4gUHJvcG9zZSBhIG5ldyBhc3NldCBhZ2FpbnN0IHRoZSBORU8gaWNvbiBsaWJyYXJ5IGluIEZpZ21hIHNvIHRoZSBDdXN0b20gTGlicmFyeSBncm93cyBvdmVyIHRpbWUuCgojIyMgSG93IHRvIGNob29zZSwgaW4gdGhyZWUgc3RlcHMKCjEuIE9wZW4gdGhlIEN1c3RvbSBMaWJyYXJ5IGV4cG9ydCBsaXN0IChgQGFsYXRpb24vaWNvbnMtbmVvL3NyYy9pbmRleC50c2ApIG9yIHRoZSBbRmlnbWEgTkVPIGljb24gbGlicmFyeV0oaHR0cHM6Ly93d3cuZmlnbWEuY29tL2Rlc2lnbi9nenNmdFhoSzVoS2xUYVpPc2lwMWh5L05FTy0tLVVJLUljb25zP25vZGUtaWQ9MjAzMi03NjgmdD1SZXlmTjJMV0ppcWJjcmlTLTEpLiBTZWFyY2ggYnkgaW50ZW50IChlLmcuICJlZGl0IiwgInRyYXNoIiwgInNlYXJjaCIpLgoyLiAqKkZvdW5kIGluIEN1c3RvbT8qKiBJbXBvcnQgZnJvbSBgQGFsYXRpb24vaWNvbnMtbmVvYC4gRG9uZS4KMy4gKipOb3QgaW4gQ3VzdG9tPyoqIFNlYXJjaCBbbHVjaWRlLmRldi9pY29uc10oaHR0cHM6Ly9sdWNpZGUuZGV2L2ljb25zLyksIGltcG9ydCBmcm9tIGBsdWNpZGUtcmVhY3RgLCBhbmQgbm90ZSB0aGUgZ2FwIHNvIGl0IGNhbiBiZSBhZGRlZCB0byB0aGUgQ3VzdG9tIExpYnJhcnkgbGF0ZXIuCgojIyA0LiBDb250cmFjdAoKCgojIyMgR3VhcmFudGVlcwotIEV2ZXJ5IHByb2plY3Qgc2hpcHMgaWNvbnMgZnJvbSAqKnR3byBsaWJyYXJpZXMqKjogdGhlIEN1c3RvbSBMaWJyYXJ5IChgQGFsYXRpb24vaWNvbnMtbmVvYCwgcHJpbWFyeSkgYW5kIHRoZSBMdWNpZGUgTGlicmFyeSAoYGx1Y2lkZS1yZWFjdGAsIGZhbGxiYWNrKS4gTm8gdGhpcmQgaWNvbiBsaWJyYXJ5IGlzIGFsbG93ZWQuCi0gVGhlIEN1c3RvbSBMaWJyYXJ5IGlzIGNoZWNrZWQgZmlyc3Q7IEx1Y2lkZSBpcyB1c2VkIG9ubHkgd2hlbiB0aGUgQ3VzdG9tIExpYnJhcnkgZG9lcyBub3QgeWV0IHNoaXAgdGhlIGljb24uIFRoaXMgcnVsZSBpcyBpZGVudGljYWwgaW4gcHJvZHVjdGlvbiAoYGFsYXRpb24tdWlgKSBhbmQgaW4gdGhlIGBAcmVwby91aWAgcHJvdG90eXBlICh2aWJlLWRlc2lnbikuCi0gRXZlcnkgaWNvbiBpbiBib3RoIGxpYnJhcmllcyBpcyBleHBvcnRlZCBieSAqKlBhc2NhbENhc2UgbmFtZSoqLiBDdXN0b20gTGlicmFyeSBleHBvcnRzIGNhcnJ5IGFuIGBJY29uYCBzdWZmaXggKGUuZy4gYFBsdXNJY29uYCwgYFNlYXJjaEljb25gLCBgVHJhc2hJY29uYCwgYFBlbmNpbEljb25gLCBgRWxsaXBzaXNJY29uYCk7IEx1Y2lkZSBleHBvcnRzIGRvIG5vdCAoZS5nLiBgUGx1c2AsIGBTZWFyY2hgLCBgVHJhc2gyYCwgYFNxdWFyZVBlbmAsIGBFbGxpcHNpc1ZlcnRpY2FsYCkuCi0gU2l6ZSBpcyB0aGVtZS1kcml2ZW46IHRoZSBjb250YWluZXIgKEljb25CdXR0b24sIEJ1dHRvbiBgc3RhcnRJY29uYCwgQ2hpcCBgaWNvbmAsIEFsZXJ0IHNldmVyaXR5LCBzdWItbmF2IGl0ZW0pIHNldHMgdGhlIGljb24gc2l6ZSB2aWEgYHR5cG9ncmFwaHkuaWNvblhTbWFsbGAgLyBgaWNvblNtYWxsYCAvIGBpY29uTWVkaXVtYCAvIGBpY29uTGFyZ2VgLgotIEV2ZXJ5IGljb24gaXMgYW4gU1ZHIOKAlCBzY2FsZXMgY2xlYW5seSBhdCAyMDAgJSBicm93c2VyIHpvb20gYW5kIHJlc3BlY3RzIGBjdXJyZW50Q29sb3JgLgoKIyMjIFByb2hpYml0aW9ucwotIE5ldmVyIGltcG9ydCBmcm9tIGBAbXVpL2ljb25zLW1hdGVyaWFsYC4KLSBOZXZlciByZWFjaCBmb3IgTHVjaWRlIHdpdGhvdXQgZmlyc3QgY29uZmlybWluZyB0aGUgaWNvbiBkb2VzIG5vdCBleGlzdCBpbiB0aGUgQ3VzdG9tIExpYnJhcnkuCi0gTmV2ZXIgcmVuZGVyIGEgcmF3IFNWRyBsaXRlcmFsIG9yIGEgY3VzdG9tIGljb24gY29tcG9uZW50IGluc2lkZSBwYWdlIGNvbXBvbmVudHMuCi0gTmV2ZXIgdXNlIGVtb2ppIGFzIGFuIGljb24uCi0gTmV2ZXIgaGFyZC1jb2RlIGFuIGljb24gc2l6ZSBpbnNpZGUgYW4gQWxhdGlvbiBjb250YWluZXIg4oCUIHRoZSBjb250YWluZXIncyBgc2l6ZWAgcHJvcCBnb3Zlcm5zIGl0LgotIE5ldmVyIGhhcmQtY29kZSBhbiBpY29uIGNvbG91ciDigJQgaWNvbnMgaW5oZXJpdCBmcm9tIHBhcmVudCB2aWEgYGN1cnJlbnRDb2xvcmAsIG9yIHNldCBhbiBleHBsaWNpdCB0aGVtZSB0b2tlbiB2aWEgdGhlIGNvbnRhaW5lcidzIGBjb2xvcmAgcHJvcC4KLSBOb3RoaW5nIG91dHNpZGUgwqc1IFZhcmlhbnRzIGlzIHZhbGlkLgoKIyMjIENvbmRpdGlvbnMKLSBEZWNvcmF0aXZlIGljb25zICh2aXN1YWxseSByZWluZm9yY2luZyBhbiBhZGphY2VudCBsYWJlbCkgbXVzdCBjYXJyeSBgYXJpYS1oaWRkZW49InRydWUiYC4KLSBJY29uLW9ubHkgYWZmb3JkYW5jZXMgKGUuZy4gYEljb25CdXR0b25gIHdpdGhvdXQgYSBsYWJlbCkgcmVxdWlyZSBgYXJpYS1sYWJlbGAg4oCUIG93bmVkIGJ5IEljb25CdXR0b24ncyBvd24gY29udHJhY3QsIG5vdCB0aGlzIGZvdW5kYXRpb24uCi0gTHVjaWRlIGljb25zIGFjY2VwdCBhbiBvcHRpb25hbCBgc2l6ZT17MTZ9YCBvbmx5IHdoZW4gdGhlIGljb24gaXMgdXNlZCBvdXRzaWRlIGFuIEFsYXRpb24gY29udGFpbmVyIChlLmcuIGEgcGxhaW4gYDxCb3g+YCBvciBpbmxpbmUgaW4gcHJvc2UpLiBJbnNpZGUgYW4gQWxhdGlvbiBjb250YWluZXIsIHRoZSBjb250YWluZXIgd2lucy4gQ3VzdG9tIExpYnJhcnkgaWNvbnMgZm9sbG93IHRoZSBzYW1lIHJ1bGUuCi0gSWYgYSBuZWVkZWQgaWNvbiBpcyBtaXNzaW5nIGZyb20gKipib3RoKiogbGlicmFyaWVzLCBzdG9wIGFuZCBmbGFnIOKAlCBkbyBub3QgaW1wcm92aXNlLgoKIyMgNS4gVmFyaWFudHMKCgoKIyMjIDUuMSBMaWJyYXJpZXMg4oCUIG9yZGVyIG9mIHByZWNlZGVuY2UKCnwgT3JkZXIgfCBMaWJyYXJ5IHwgbnBtIHBhY2thZ2UgfCBTY29wZSB8IFdoZW4gdG8gdXNlIHwKfC0tLXwtLS18LS0tfC0tLXwtLS18CnwgKioxIChhbHdheXMgY2hlY2sgZmlyc3QpKiogfCBDdXN0b20gTGlicmFyeSB8IFtgQGFsYXRpb24vaWNvbnMtbmVvYF0oaHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2UvQGFsYXRpb24vaWNvbnMtbmVvKSB8IEFsbCBwcm9qZWN0cyAocHJvZHVjdGlvbiArIHByb3RvdHlwZSkuIEV2ZXJ5IGV4cG9ydCBpcyBhIE1VSSBgU3ZnSWNvbmAuIHwgRGVmYXVsdC4gVXNlIHdoZW5ldmVyIHRoZSBpY29uIGV4aXN0cyBoZXJlLiB8CnwgKioyIChiYWNrZmlsbCkqKiB8IEx1Y2lkZSBMaWJyYXJ5IHwgW2BsdWNpZGUtcmVhY3RgXShodHRwczovL3d3dy5ucG1qcy5jb20vcGFja2FnZS9sdWNpZGUtcmVhY3QpIHwgQWxsIHByb2plY3RzLiBCcm93c2UgbmFtZXMgYXQgW2x1Y2lkZS5kZXYvaWNvbnNdKGh0dHBzOi8vbHVjaWRlLmRldi9pY29ucy8pLiB8IE9ubHkgd2hlbiB0aGUgQ3VzdG9tIExpYnJhcnkgZG9lcyBub3QgeWV0IHNoaXAgdGhlIGljb24uIHwKCiMjIyA1LjIgU2l6ZSBjb252ZW50aW9ucwoKU2l6ZSBpcyB0aGVtZS1kcml2ZW4gYnkgdGhlIGNvbnRhaW5lci4gRG8gbm90IHBhc3MgYHNpemU9e+KApn1gIG9uIGljb25zIGluc2lkZSBBbGF0aW9uIGNvbnRhaW5lcnMg4oCUIGFwcGxpZXMgZXF1YWxseSB0byBDdXN0b20gTGlicmFyeSBhbmQgTHVjaWRlIExpYnJhcnkgaWNvbnMuIE1vcnBoZXVzIHNldHMgYGh0bWwgeyBmb250LXNpemU6IDYyLjUlIH1gLCBzbyAxcmVtID0gMTBweCBhbmQgdGhlIHJlbSB2YWx1ZXMgYmVsb3cgcmVzb2x2ZSB0byB0aGUgcHggdmFsdWVzIHNob3duLgoKfCBDb250ZXh0IHwgVGhlbWUgdG9rZW4gfCBSZW5kZXJlZCBzaXplIHwKfC0tLXwtLS18LS0tfAp8IGA8SWNvbkJ1dHRvbiBzaXplPSJ4c21hbGwiPmAgfCBgdHlwb2dyYXBoeS5pY29uWFNtYWxsYCB8IDEuMnJlbSDCtyAxMnB4IHwKfCBgPEljb25CdXR0b24gc2l6ZT0ic21hbGwiPmAsIGA8QnV0dG9uIHNpemU9InNtYWxsIj5gIGBzdGFydEljb25gIC8gYGVuZEljb25gLCB0YWJsZSBjZWxscywgQ2hpcCBgaWNvbmAgfCBgdHlwb2dyYXBoeS5pY29uU21hbGxgIHwgMS42cmVtIMK3IDE2cHggfAp8IGA8SWNvbkJ1dHRvbiBzaXplPSJtZWRpdW0iPmAsIGA8QnV0dG9uIHNpemU9Im1lZGl1bSI+YCBgc3RhcnRJY29uYCAvIGBlbmRJY29uYCAoZGVmYXVsdCkgfCBgdHlwb2dyYXBoeS5pY29uTWVkaXVtYCB8IDJyZW0gwrcgMjBweCB8CnwgYDxJY29uQnV0dG9uIHNpemU9ImxhcmdlIj5gLCBgPEJ1dHRvbiBzaXplPSJsYXJnZSI+YCBgc3RhcnRJY29uYCAvIGBlbmRJY29uYCwgQWxlcnQgc2V2ZXJpdHkgaWNvbiB8IGB0eXBvZ3JhcGh5Lmljb25MYXJnZWAgfCAyLjRyZW0gwrcgMjRweCB8CnwgU3ViTmF2IChXYXlmaW5kZXIpIGl0ZW0gfCAodGhlbWUtYmFrZWQpIHwgMS42cmVtIMK3IDE2cHggfAoKIyMjIDUuMyBDb21tb25seSB1c2VkIGljb25zIOKAlCBDdXN0b20gTGlicmFyeSBmaXJzdAoKTm90IGV4aGF1c3RpdmUuIEZvciBDdXN0b206IHNlZSBgQGFsYXRpb24vaWNvbnMtbmVvL3NyYy9pbmRleC50c2AgZm9yIHRoZSBmdWxsIGV4cG9ydCBsaXN0ICh+MjI5IGljb25zKS4gRm9yIEx1Y2lkZTogc2VhcmNoIFtsdWNpZGUuZGV2L2ljb25zXShodHRwczovL2x1Y2lkZS5kZXYvaWNvbnMvKS4KCnwgQ2F0ZWdvcnkgfCBDdXN0b20gTGlicmFyeSAoYEBhbGF0aW9uL2ljb25zLW5lb2ApIHwgTHVjaWRlIExpYnJhcnkgKGBsdWNpZGUtcmVhY3RgKSDigJQgd2hlbiBub3QgaW4gQ3VzdG9tIHwKfC0tLXwtLS18LS0tfAp8IEFjdGlvbiB8IGBQbHVzSWNvbmAsIGBDbG9zZUljb25gLCBgQ2hlY2tJY29uYCwgYFRyYXNoSWNvbmAsIGBQZW5jaWxJY29uYCwgYENvcHlJY29uYCwgYENsb3VkVXBsb2FkSWNvbmAsIGBEb3dubG9hZENpcmNsZUljb25gLCBgVXBsb2FkQ2lyY2xlSWNvbmAsIGBFeHRlcm5hbExpbmtJY29uYCwgYEZpbHRlckljb25gIHwgYFNxdWFyZVBlbmAsIGBSZWZyZXNoQ3dgLCBgUGxheWAsIGBFeWVgIHwKfCBOYXZpZ2F0aW9uIHwgYENoZXZyb25Eb3duSWNvbmAsIGBDaGV2cm9uVXBJY29uYCwgYENoZXZyb25MZWZ0SWNvbmAsIGBDaGV2cm9uUmlnaHRJY29uYCwgYEFycm93TGVmdEljb25gLCBgQXJyb3dSaWdodEljb25gLCBgQXJyb3dVcEljb25gLCBgQXJyb3dEb3duSWNvbmAsIGBDYXJldERvd25TbWFsbEljb25gLCBgQ2FyZXRMZWZ0SWNvbmAsIGBDYXJldFJpZ2h0SWNvbmAsIGBDYXJldFVwU21hbGxJY29uYCB8IGBBcnJvd1VwRG93bmAsIGBDb3JuZXJEb3duTGVmdGAsIGBQYW5lbExlZnRPcGVuYCwgYFBhbmVsTGVmdENsb3NlYCB8CnwgTWVudSAmIG92ZXJmbG93IHwgYEVsbGlwc2lzRG93bkljb25gIChub3RlOiBgRWxsaXBzaXNJY29uYCBoYXMgYSBrbm93biBzdHJva2UvZmlsbCByZW5kZXJpbmcgYnVnIOKAlCBhdm9pZCB1bnRpbCBmaXhlZCkgfCBgRWxsaXBzaXNWZXJ0aWNhbGAsIGBFbGxpcHNpc2AgfAp8IFN0YXR1cyAmIGZlZWRiYWNrIHwgYEluZm9ybWF0aW9uSWNvbmAsIGBJbmZvcm1hdGlvbkZpbGxlZEljb25gLCBgV2FybmluZ091dGxpbmVJY29uYCwgYFdhcm5pbmdGaWxsZWRJY29uYCwgYEhlbHBJY29uYCwgYENoZWNrQ2lyY2xlSWNvbmAsIGBDaGVja0NpcmNsZUZpbGxlZEljb25gLCBgQ2xvc2VDaXJjbGVJY29uYCB8IGBDaXJjbGVTdG9wYCwgYFRodW1ic1VwYCwgYFRodW1ic0Rvd25gLCBgT2N0YWdvbkFsZXJ0YCB8CnwgQ29tbXVuaWNhdGlvbiB8IGBTZWFyY2hJY29uYCwgYEVtYWlsSWNvbmAsIGBBbHRlcm5hdGVFbWFpbEljb25gLCBgTm90aWZpY2F0aW9uSWNvbmAsIGBDb21tZW50T0ljb25gIHwgYE1lc3NhZ2VTcXVhcmVgLCBgTWVzc2FnZXNTcXVhcmVgIHwKfCBDb250ZW50ICYgb2JqZWN0cyB8IGBEYXRhYmFzZUljb25gLCBgVGFibGVJY29uYCwgYEJvb2tJY29uYCwgYEJvb2ttYXJrSWNvbmAsIGBBcnRpY2xlSWNvbmAsIGBDYWxlbmRhckljb25gLCBgSW5zZXJ0TGlua0ljb25gLCBgQ29sdW1uc0ljb25gLCBgQ29sdW1uVmVydGljYWxJY29uYCB8IGBCb29rVGV4dGAsIGBDbGlwYm9hcmRMaXN0YCwgYExpc3RDaGVja3NgLCBgQ2hhcnRDb2x1bW5gLCBgSGlzdG9yeWAsIGBMaW5rMmAsIGBMaW5rMk9mZmAgfAp8IEFnZW50ICYgd29ya2Zsb3cgfCBgQWdlbnRJY29uYCwgYEZsb3dJY29uYCwgYFRvb2xJY29uYCwgYFdvcmtmbG93SWNvbmAsIGBTZXR0aW5nc0ljb25gLCBgU2V0dGluZ3NDb2dJY29uYCwgYFVzZXJJY29uYCB8IGBCb3RgLCBgQm9sdGAsIGBWYXJpYWJsZWAsIGBHbG9iZWAsIGBNb25pdG9yYCwgYFNldHRpbmdzMmAsIGBVc2Vyc2AgfAoKPiBUaGUgbGlzdHMgYWJvdmUgYXJlIGlsbHVzdHJhdGl2ZSDigJQgdGhlIGNvbnRyYWN0IGlzIHRoZSAqKnByZWNlZGVuY2UgcnVsZSoqIGluIMKnNS4xLCBub3QgdGhlc2UgdGFibGVzLiBBbHdheXMgZ3JlcCBgQGFsYXRpb24vaWNvbnMtbmVvL3NyYy9pbmRleC50c2AgZmlyc3Q7IG9ubHkgZmFsbCBiYWNrIHRvIEx1Y2lkZSBmb3IgZ2VudWluZSBnYXBzLgoKIyMgMTEuIEV4YW1wbGUKCmBgYHRzeAovLyBQcmltYXJ5IOKAlCBDdXN0b20gTGlicmFyeSAoYWx3YXlzIGNoZWNrIGZpcnN0KS4KaW1wb3J0IHsgUGx1c0ljb24sIFNlYXJjaEljb24sIFBlbmNpbEljb24sIFRyYXNoSWNvbiB9IGZyb20gJ0BhbGF0aW9uL2ljb25zLW5lbyc7Ci8vIEJhY2tmaWxsIOKAlCBMdWNpZGUgTGlicmFyeSwgb25seSBmb3IgaWNvbnMgbm90IGluIHRoZSBDdXN0b20gTGlicmFyeS4KaW1wb3J0IHsgUGFuZWxMZWZ0Q2xvc2UsIEVsbGlwc2lzVmVydGljYWwsIFNwYXJrbGVzIH0gZnJvbSAnbHVjaWRlLXJlYWN0JzsKCmltcG9ydCB7IEJ1dHRvbiwgSWNvbkJ1dHRvbiwgVGV4dEZpZWxkLCBJbnB1dEFkb3JubWVudCB9IGZyb20gJ0BtdWkvbWF0ZXJpYWwnOwoKLy8gQ3VzdG9tIExpYnJhcnkg4oCUIGNvdmVycyBtb3N0IGFjdGlvbnMuCjxCdXR0b24gdmFyaWFudD0iY29udGFpbmVkIiBzdGFydEljb249ezxQbHVzSWNvbiAvPn0+QnVpbGQgYWdlbnQ8L0J1dHRvbj4KPEJ1dHRvbiB2YXJpYW50PSJvdXRsaW5lZCIgc3RhcnRJY29uPXs8UGVuY2lsSWNvbiAvPn0+RWRpdDwvQnV0dG9uPgo8SWNvbkJ1dHRvbiBzaXplPSJzbWFsbCIgYXJpYS1sYWJlbD0iRWRpdCI+PFBlbmNpbEljb24gLz48L0ljb25CdXR0b24+CjxUZXh0RmllbGQKICBwbGFjZWhvbGRlcj0iU2VhcmNoIgogIHNpemU9InNtYWxsIgogIElucHV0UHJvcHM9e3sKICAgIHN0YXJ0QWRvcm5tZW50OiAoCiAgICAgIDxJbnB1dEFkb3JubWVudCBwb3NpdGlvbj0ic3RhcnQiPgogICAgICAgIDxTZWFyY2hJY29uIGFyaWEtaGlkZGVuPSJ0cnVlIiAvPgogICAgICA8L0lucHV0QWRvcm5tZW50PgogICAgKSwKICB9fQovPgo8SWNvbkJ1dHRvbiBzaXplPSJzbWFsbCIgY29sb3I9ImVycm9yIiBhcmlhLWxhYmVsPSJEZWxldGUiPjxUcmFzaEljb24gLz48L0ljb25CdXR0b24+CgovLyBMdWNpZGUgTGlicmFyeSDigJQgb25seSBiZWNhdXNlIHRoZXNlIGFyZW4ndCBpbiB0aGUgQ3VzdG9tIExpYnJhcnkgeWV0Lgo8SWNvbkJ1dHRvbiBzaXplPSJzbWFsbCIgYXJpYS1sYWJlbD0iTW9yZSBhY3Rpb25zIj48RWxsaXBzaXNWZXJ0aWNhbCAvPjwvSWNvbkJ1dHRvbj4KPEljb25CdXR0b24gc2l6ZT0ic21hbGwiIGFyaWEtbGFiZWw9IkNvbGxhcHNlIHBhbmVsIj48UGFuZWxMZWZ0Q2xvc2UgLz48L0ljb25CdXR0b24+CjxCdXR0b24gdmFyaWFudD0idGV4dCIgc3RhcnRJY29uPXs8U3BhcmtsZXMgLz59PkdlbmVyYXRlIHdpdGggQUk8L0J1dHRvbj4KYGBgCgpTZWUgW2BFeGFtcGxlLnRzeGBdKC4vRXhhbXBsZS50c3gpIGZvciB0aGUgY2Fub25pY2FsLCBydW5uYWJsZSBzb3VyY2UuCg==">
   <div class="md-viewer-actions">
     <button class="md-viewer-toggle" type="button" data-action="rendered" aria-expanded="false">
       <span class="chev" aria-hidden="true">

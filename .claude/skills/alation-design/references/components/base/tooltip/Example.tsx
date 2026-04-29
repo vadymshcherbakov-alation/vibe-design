@@ -71,6 +71,26 @@ export default function TooltipExample() {
       </Stack>
 
       <Stack spacing={1}>
+        <Typography variant="overline" color="text.secondary">Single-line — short phrase ≤ ~60 characters</Typography>
+        <Tooltip title="Copy table name to clipboard">
+          <IconButton size="small" aria-label="Copy table name">
+            <Copy />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+
+      <Stack spacing={1}>
+        <Typography variant="overline" color="text.secondary">
+          Multi-line — 2–3 line clarification (~60–300 characters, wraps automatically at MUI's 300px max-width)
+        </Typography>
+        <Tooltip title="Published items are visible to everyone in the workspace and count toward the data product score. Unpublishing reverts both.">
+          <IconButton size="small" aria-label="Publish status help">
+            <Filter />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+
+      <Stack spacing={1}>
         <Typography variant="overline" color="text.secondary">Truncated text — tooltip reveals full value</Typography>
         <Tooltip title="finance_production_snowflake_warehouse_us_east">
           <Typography

@@ -2,7 +2,7 @@
 name: typography
 title: Typography
 category: foundation
-last_updated: 2026-04-24
+last_updated: 2026-04-29
 
 description: >
   The Alation type system. Governs every piece of visible text via `<Typography variant="…">`. Never render text through raw HTML; never override font styling via `sx`.
@@ -36,12 +36,14 @@ The Alation type system. Every variant encodes a specific role on the page — p
 
 <!-- Layering narrative for humans: variant-driven, family split, which layer to consume, when a one-off is OK. No file paths, no raw values. -->
 
-Typography is variant-driven. Pick a variant based on what the text *does* on the page, not the size you want it to be — the theme bakes in the correct family, size, weight, and line-height for each role.
+Typography is variant-driven. Pick a variant based on what the text *does* on the page, not the size you want it to be — the theme bakes in the correct family, size, weight, and line-height for each role. Each MUI variant maps 1:1 to a Figma text style (e.g. `h1` ↔ **Header - H1**, `subtitle1` ↔ **Subtitle1**) so design and code stay in lockstep.
 
-- **Body family** — the default UI face, used by every non-monospace variant (headings, subtitles, body, caption, overline, hero).
-- **Machine family** — reserved for identifiers, code, hashes. Accessed only through the `machine*` variants. Never toggle it onto a body variant.
-- **Display numbers** — use `hero` for big-number stat cards; `heroLg` / `heroXl` for rare dashboard or marketing hero slots.
-- **Card and panel titles** — use `subtitle1`. It renders as an `<h6>` and matches the weight / size our panels expect.
+- **Body family** (`font/family/body` — Inter) — the default UI face, used by every non-monospace variant (headings, subtitles, body, caption, overline, hero).
+- **Machine family** (`font/family/mono-body` — JetBrains Mono) — reserved for identifiers, code, hashes. Accessed only through the `machine*` variants. Never toggle it onto a body variant.
+- **Headings** — Figma only defines **H1 / H2 / H3**. Use `h1` for page titles, `h2` for major section titles, `h3` for section headings. Do not reach for `h4`–`h6`; deeper hierarchy is handled by `subtitle1` / `subtitle2`.
+- **Card and panel titles** — use `subtitle1` (14px / 500). Use `subtitle2` (13px / 500) for secondary labels.
+- **Body** — `body1` (13px) is the default paragraph; `body2` (12px) is for secondary body and descriptions. `body0` (14px) is an Alation-only variant reserved for form-field labels.
+- **Display numbers** — use `hero` for big-number stat cards; `heroLg` / `heroXl` for rare dashboard or marketing hero slots. (Alation-only — not in the Figma text-style set.)
 
 If a design calls for a size or weight that no variant covers, that is a signal to propose a new variant against the theme — not to hand-tune `fontSize` or `fontWeight` via `sx`.
 
@@ -73,57 +75,53 @@ If a design calls for a size or weight that no variant covers, that is a signal 
 
 ### 5.1 Display & headings
 
-| Variant | Use for |
-|---|---|
-| `heroXl` | Extra-large display numbers (rare, landing / marketing) |
-| `heroLg` | Large display numbers (hero numbers on dashboards) |
-| `hero` | Large display numbers (big-number stat cards) |
-| `h1` | Page titles |
-| `h2` | Major section title within a page |
-| `h3` | Section heading inside a page |
-| `h4` | Sub-section heading inside a page |
-| `h5` | Card or panel heading (legacy — prefer `subtitle1`) |
-| `h6` | Very compact heading (legacy) |
-| `subtitle1` | Card and panel titles — renders as `<h6>` |
-| `subtitle2` | Secondary card label or compact heading |
+| Variant | Figma text style | Use for |
+|---|---|---|
+| `heroXl` | — (Alation-only) | Extra-large display numbers (rare, landing / marketing) |
+| `heroLg` | — (Alation-only) | Large display numbers (hero numbers on dashboards) |
+| `hero` | — (Alation-only) | Large display numbers (big-number stat cards) |
+| `h1` | **Header - H1** | Page titles · 22px |
+| `h2` | **Header - H2** | Major section title within a page · 18px |
+| `h3` | **Header - H3** | Section heading inside a page · 16px |
+| `subtitle1` | **Subtitle1** | Card and panel titles · 14px / 500 |
+| `subtitle2` | **Subtitle2** | Secondary card label or compact heading · 13px / 500 |
 
 ### 5.2 Body & meta
 
-| Variant | Use for |
-|---|---|
-| `body0` | Slightly larger body (Alation custom — used in form-field labels) |
-| `body1` | Primary body text |
-| `body2` | Secondary body text, descriptions |
-| `caption` | Timestamps, metadata, fine print |
-| `overline` | Category labels, eyebrow text |
+| Variant | Figma text style | Use for |
+|---|---|---|
+| `body0` | — (Alation-only) | Slightly larger body · 14px — used in form-field labels |
+| `body1` | **Body1** | Primary body text · 13px / 400 |
+| `body2` | **Body2** | Secondary body text, descriptions · 12px / 400 |
+| `caption` | — (Alation-only) | Timestamps, metadata, fine print |
+| `overline` | — (Alation-only) | Category labels, eyebrow text |
 
 ### 5.3 Button typography (theme-owned — consumed by `<Button>`, never passed directly)
 
-| Variant | Use for |
-|---|---|
-| `buttonLg` | Large Button label |
-| `button` | Default / medium Button label |
-| `buttonSm` | Small / xsmall Button label |
+| Variant | Figma text style | Use for |
+|---|---|---|
+| `buttonLg` | — (Alation-only) | Large Button label |
+| `button` | **Button** | Default / medium Button label · 13px / 500 |
+| `buttonSm` | — (Alation-only) | Small / xsmall Button label |
 
 ### 5.4 Machine (monospace — JetBrains Mono)
 
-| Variant | Use for |
-|---|---|
-| `machineHero` | Large monospace display (rare — identifiers in hero slots) |
-| `machineH1`–`machineH6` | Monospace headings |
-| `machineSubtitle1`, `machineSubtitle2` | Monospace subtitles |
-| `machineBody0` | Slightly larger monospace body |
-| `machineBody1` | Monospace body — code, identifiers |
-| `machineBody2` | Monospace compact — inline code, short identifiers |
-| `machineOverline` | Monospace eyebrow label |
-| `machineButton`, `machineButtonLg`, `machineButtonSm` | Monospace button labels (theme-owned) |
+| Variant | Figma text style | Use for |
+|---|---|---|
+| `machineBody1` | **Mono - Body1** | Monospace body — code, identifiers · 13px |
+| `machineBody2` | **Mono - Body2** | Monospace compact — inline code, short identifiers · 12px |
+| `machineHero`, `machineH1`–`machineH6` | — (Alation-only) | Monospace display / heading variants |
+| `machineSubtitle1`, `machineSubtitle2` | — (Alation-only) | Monospace subtitles |
+| `machineBody0` | — (Alation-only) | Slightly larger monospace body |
+| `machineOverline` | — (Alation-only) | Monospace eyebrow label |
+| `machineButton`, `machineButtonLg`, `machineButtonSm` | — (Alation-only) | Monospace button labels (theme-owned) |
 
 ### 5.5 Type families (theme-owned — variants select the family automatically)
 
-| Family | Stack | Used by |
-|---|---|---|
-| Body | `Inter, ui-sans-serif, system-ui, sans-serif, "Open Sans", "Lucida Grande", "Segoe UI", Arial` | All non-monospace variants |
-| Machine | `"JetBrains Mono", Consolas, "Liberation Mono", Courier, monospace` | `machine*` variants |
+| Family | Figma token | Stack | Used by |
+|---|---|---|---|
+| Body | `font/family/body` | `Inter, ui-sans-serif, system-ui, sans-serif, "Open Sans", "Lucida Grande", "Segoe UI", Arial` | All non-monospace variants |
+| Machine | `font/family/mono-body` | `"JetBrains Mono", Consolas, "Liberation Mono", Courier, monospace` | `machine*` variants |
 
 ### 5.6 Icon size tokens (typography-level — consumed by icon containers)
 
